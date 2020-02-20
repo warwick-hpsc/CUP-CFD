@@ -34,22 +34,25 @@ def main():
 	db = None
 	db = sqlite3.connect(sys.argv[1])
 
-	# Select a function - uncomment to use for now until a command line arg is added
-#   Function 1
-#   Display Hotspots by Grouped Node Type Exclusive Time
-#   This will group all of the nodes of specific types - e.g. MPI call, compute etc.
-#	printSummaryExclusiveTimeByType(1, 1, db)
+	## Select a function - uncomment to use for now until a command line arg is added
 
-#   Function 2
-#   Display Full CallTree (All CallPath Nodes) alongside exclusive time spent in each function
-#   Note: There is no guarantee that the ordering is in order of first called (this is only
-#   tracked in trace mode), but all blocks will be correctly nested under blocks from which they were
-#   called. An indention indicates a nested block inside another block.
-	printAggregateDetailsCallPathTree(1, 1, db)
+	## Function 1
+	## Display Hotspots by Grouped Node Type Exclusive Time
+	## This will group all of the nodes of specific types - e.g. MPI call, compute etc.
+	# printSummaryExclusiveTimeByType(1, 1, db)
 
-#	printHotspotsAggregateExclusiveTime(1, 1, db)
+	## Function 2
+	## Display Full CallTree (All CallPath Nodes) alongside exclusive time spent in each function
+	## Note: There is no guarantee that the ordering is in order of first called (this is only
+	## tracked in trace mode), but all blocks will be correctly nested under blocks from which they were
+	## called. An indention indicates a nested block inside another block.
+	# printAggregateDetailsCallPathTree(1, 1, db)
 
-#	printHotspotsAggregateInclusiveTime(1, 1, db)
+	## Functions 3 & 4:
+	## These functions below print out the same data table, but they differ in how the rows 
+	## are ordered - whether to order descending by inclusive time or exclusive time.
+	printHotspotsAggregateExclusiveTime(1, 1, db)
+	# printHotspotsAggregateInclusiveTime(1, 1, db)
 
 	# Close Database
 	db.close()
