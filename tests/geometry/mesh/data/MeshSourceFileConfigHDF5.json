@@ -1,0 +1,6 @@
+{
+	"MeshSourceFile" : {
+		"FileFormat" : "HDF5",
+		"FilePath" : "../tests/geometry/mesh/data/MeshHDF5.hdf5"
+	}
+}

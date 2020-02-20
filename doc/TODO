@@ -1,0 +1,148 @@
+Known Tasks/Issues:
+
+
+Priority - Further Kernels:
+    Some Finite Volume Kernels are implemented, but should add as a priority:
+	(a) Limiter Kernels
+	(b) Combustion Kernels (FGM) Interface
+	(c) Residual Computation for Linear Solver Systems.
+
+	On the surface, it would seem that some of these components are not particuarly complicated or long (e.g. residual, limiter) and might be considered
+	'known/open' algorithms, but I am unsure as to how this might work with respect to export control if they were to be directly ported. If they were to be ported,
+	it could be done very quickly since the most difficult part would be integration with a geometry which is already complete or they can operate
+	on standalone arrays.
+
+	The combusion kernels are likely the trickiest, but timing runs so far have shown them to be of note but not as expensive as Gradient operations (although this could
+	change with different input decks).
+
+
+Priority (b) - Particles:
+	See above about Quantity state, need to integrate a state object into the particle source update function so that there is a generic interface where a particle can update
+    source data if needed (whether it actually does or not will depend on the particle specialisation).
+
+	Priority - ParticleSystemSimple - The remove particles function currently removes one particle at a time - this is going to be v. expensive due to vector shifting/copies.
+	This was written this way to get things operational, but it needs fine tuning - e.g. a singular remove of a group would be more efficient. Method is removeInactiveParticles.
+
+	updatePositionAtomic: IMPORTANT: There are a few edge cases that still need to be caught - e.g. if a particle is exactly on a vertex. The function itself may benefit from
+	a tidyup anyway.
+
+
+
+Code Cleanup/Refactoring/Cleanliness
+	Expanded use of shared pointers - these are used in some scenarios such as passing around a mesh, but ideally all const raw pointers
+	should be replaced with them where possible.
+
+	Tidyup of Templates: CRTP introduces a fair amount of template nesting (e.g. Class<A,B>, class A, class B should be reducible to Class<A,B>)
+	Should try to eliminate this where possible.
+
+	Tidyup of templates: There are a few instances of static cast in configuration builders due to passing around base class pointers rather
+	than specialisation pointers. Ideally don't want static casts at all, but doesn't break anything for the moment.
+	
+	Tidyup of code: There are a number of instances where code could now be replaced by a call to a reusable function (e.g. array copies, one or two
+	implicit MPI all-to-all operations that use loops rather than all-to-all etc). Sorts could probably be reduced to a generic sort interface and/or
+	C++ library sort rather than hand-coded merge-sort, unless a specific sort is desired for replicating certain performance behaviours.
+
+	Tidyup of code: More prolific use of consts - better code design and also permits direct use of output from other functions without
+	manually creating intermediate variables.
+
+Conversion Constructor: 
+	SparseMatrixCOO->SparseMatrixCSR
+	SparseMatrixCSR->SparseMatrixCOO
+
+	May be needed for benchmarking Matrix Construction times.
+
+SparseMatrix:
+	(a) This could benefit from an additional wrapper for a 'Distributed' Mesh object.
+	(b) Adding element by element, especially with error checking likely has a lot of expensive overhead - create a function or constructor that handles multiple values at once
+	(e.g. if a constructor we don't have to worry about searching through existing values for their position in a CSR).
+	This isn't so important if a one-off task such as initial matrix construction (unless it's super slow) but we might need it to be faster for matrix construction
+	performance testing.
+
+SparseMatrixSourceMeshGen: 
+	(a) Generate a Sparse Matrix From a Mesh. - Approach Meshes can give Connectivity Graphs that define the Mesh Non-Zero Structure (Cell + neighbours for a row)
+    Main thing needed is a means to generate numbers - i.e. target a condition number so we can try and compare like-for-like
+
+
+Error Code Tidyup/Expansion:
+	(a) There is a fair amount of error codes provided for error detection, but some of the Doxygen documentation may not report all of the possible
+	error codes for a function, so this should be reviewed.
+	(b) Performance - in some cases the error code checking overhead may be too expensive - e.g. in matrix set functions. It might be pertinent to wrap these
+	with a compile time flag to disable them for performance reasons.
+
+I/O:
+	(a) A HDF5 interface is provided for reading, but it is desirable to expand the interface for writes, so we can write out generated meshes, matrixes (for future generators)
+    and particle system states. This might be useful for visualisation, or just to cut down setup time/improve replicability by reusing previously generated data.
+
+Linear Solvers:
+	(a) PETSc interface is present and functional, but it could likely do with some tidying up with regards to setup for performance reasons.
+	(ai) Construction of the initial mesh and defining its non-zero structure will influence performance - this likely needs tuning.
+	(aii) Defining how mesh sources are split for distribution - should this be evenly spread, or try to mimic a mesh distribution? Currently no behaviour is defined so it is
+	disabled when used as a JSON option.
+
+Doxygen:
+	(a) A majority of the code is documented via doxygen, but I'm sure there are some errors and or incomplete sections that could benefit from a pass over all of the header
+	files.
+
+Header-Level defines:
+	(a) Many of the .cpp file contents could be transplated to .ipp files for header level defines. This is likely a trade-off between build times and improving inlining
+	of functions (especially if its meant to be a CRTP template, in which case it really sohuld be in a .ipp file to minimise the overhead of the call passthrough)
+
+Unit Tests:
+	(a) Most if not all of the core functionality should have unit-tests, but there are plenty of edge-cases that could benefit from further tests. Many of the non-critical sections
+	(e.g. JSON reading) could benefit from unit tests also if they do not have one defined yet.
+
+	(b) Since we make use of templates in the code, the unit tests should probably also be templated so that they can be reused for different class templates, rather than copy+paste.
+
+Quantity State:
+	Storage for stateful properties (e.g. U, V, W, temp., anything that is changing during a run) should be moved into a state object. This makes it easier to pass around (one
+    object vs multiple arrays) and it allows for easier integration into an interface.
+
+Benchmarks:
+	(a) Tidyup - Repetitions for BenchmarkParticleSystem is currently effectively a multiplier for ntimesteps since it does not reset (resetting requires us to rebuild from the original
+    data source which is not readily available in the benchmark function), so instead it just continues doing more timesteps. This is not a 'true' repetition, since the performance
+    of timesteps 11->20 might differ from 1->10, so we are not repeating/comparing like-for-like which is misleading.
+
+    (b) The kernel benchmark would benefit from an additional option to set the number of kernel calls per timing - this would help mitigate the impact of overheads for small
+	cell/face counts since we can then take the average of time/number of calls to get the average per kernel call (separate from repetitions, which is currently how many times
+	each individual kernel benchmark is done and encapsulates this whole block).
+
+    (c) Parameter storing - some parameters are stored for benchmarks (e.g. repetitions, number of cells for kernel benchmarks etc), but additional parameters would be good to store
+	such as matrix source, or at the more extreme perhaps the entire json file (or at the very least the location).
+
+CupCfd Class:
+	Currently just runs benchmarks straight after building them. Should store them under Benchmark pointers in members class and then run them all once all are built.
+
+Other:
+	Other issues are labelled under "ToDo" comments inside the codebase.
+
+Unstructured Mesh:
+	findCellID Method needs to be expanded a little to capture 'edge' cases (quite literally) - i.e. Where a search for point is on a vertex/face or face edge.
+
+Exchange Benchmark:
+	Would like to expand this to benchmark other types. Currently it will benchmark the floating point datatype set in the JSON, but it is templated such that
+	there is no reason we couldn't just benchmark all datatypes (int, float, double, vectors, any other custom MPI types etc).
+
+Benchmarking:
+	(a) Ensure that all relevant parameters are being tracked as part of benchmarks (e.g. message sizes, number of cells, number of faces etc)
+
+	(b) Ensure that global parameters are also tracked/stored by the timing library - e.g. compile time flags and/or values/overrides for header values (such as structure
+	    padding sizes). The current version should also be stored this way.
+	
+Optional Dependancies:
+	HDF5, Metis/parmetis and PETSc were added with the idea of them being optional in mind (hence the USE_<PACKAGE> flag). However, they have not been tested	
+	and so should currently be treated as required. 
+
+	This should be possible to make them optional with suitable use of ifdefs with the following caveats:
+	(a) Removal of HDF5 will disable some inpout sources
+	(b) Removal of Metis/Parmetis will leave only the naive partitioner (which is not a good partitioner - it only exists to act as a fallback/be predictable for testing)
+	(c) Removal of PETSc will leave no linear solver at all, and would have to disable that benchmark as an option.
+
+Build System:
+	The build system could probably do with a little cleanup r.e. consistency - e.g. the treetimer_libs flags points directly at the shared tree timer library rather
+	than a directory. This should probably be a custom find_package(TREETIMER REQUIRED) that passes through to a FindTREETIMER module that searchs for the treetimer library
+	and Sqlite library.
+
+Treetimer Library:
+	The treetimer library is a custom library used to track timers in a tree callpath structure along with tracking parameters and other runtime options if required.
+	However, it may be overengineered for this task, so it could potentially be replaced with a simpler timer (although I would still recommend a means of tracking
+	the parameters/machine configuration, as may be determined by the AsiMov project).

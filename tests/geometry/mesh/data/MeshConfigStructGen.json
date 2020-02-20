@@ -1,0 +1,18 @@
+{
+	"Mesh": {
+		"SourceType" : "StructGen",
+		"Partitioner" : 
+		{
+			"Method" : "Parmetis"
+		},
+		"CellX" : 127,
+		"CellY" : 301,
+		"CellZ" : 54,
+		"SpatialXMin" : -1.5,
+		"SpatialYMin" : -1.2,
+		"SpatialZMin" : -2.7,
+		"SpatialXMax" : 3.4,
+		"SpatialYMax" : 5.6,
+		"SpatialZMax" : 7.9
+	}	
+}

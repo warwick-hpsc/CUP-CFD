@@ -1,0 +1,11 @@
+{
+	"Mesh" : {
+		"SourceType" : "File",
+		"FileFormat" : "HDF5",
+		"Partitioner" : 
+		{
+			"Method" : "Metis"
+		},
+		"FilePath" : "../tests/geometry/mesh/data/MeshHDF5.hdf5"
+	}
+}

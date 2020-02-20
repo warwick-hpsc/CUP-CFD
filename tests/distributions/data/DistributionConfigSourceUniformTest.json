@@ -1,0 +1,8 @@
+{
+	"Level1": {
+		"UniformDistribution" : {
+			"lbound" : 12.0,
+			"ubound" : 14.7
+		}
+	}
+}

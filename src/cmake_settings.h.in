@@ -1,0 +1,54 @@
+/*
+#############################################################################
+# License:
+# File Name: cmake_settings.h.in
+# File Description: Target for cmake defined options
+# Author: University of Warwick
+# Comments:
+#############################################################################
+*/
+
+#ifndef __CMAKE_SETTINGS_H__
+#define __CMAKE_SETTINGS_H__
+
+// ============= Cupcfd Version Parameters =============
+#define CUPCFD_VERSION_MAJOR @cupcfd_VERSION_MAJOR@
+#define CUPCFD_VERSION_MINOR @cupcfd_VERSION_MINOR@
+
+// ============== Build Parameters ==========================
+#define CFLAGS "@CMAKE_C_FLAGS@"
+#define FFLAGS "@CMAKE_F_FLAGS@"
+#define CXXFLAGS "@CMAKE_CXX_FLAGS@"
+
+// ============= Optional Dependancies =============
+// Convert from cmake ON/OFF to bool
+
+// HDF5
+#if @USE_HDF5@ == ON
+#	define USE_HDF5 True
+#else
+#	define USE_HDF5 False
+#endif
+
+// METIS
+#if @USE_METIS@ == ON
+#	define USE_METIS True
+#else
+#	define USE_METIS False
+#endif
+
+// PARMETIS
+#if @USE_PARMETIS@ == ON
+#	define USE_PARMETIS True
+#else
+#	define USE_PARMETIS False
+#endif
+
+// PTSCOTCH
+#if @USE_PTSCOTCH@ == ON
+#	define USE_PTSCOTCH True
+#else
+#	define USE_PTSCOTCH False
+#endif
+
+#endif

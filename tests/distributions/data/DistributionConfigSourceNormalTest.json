@@ -1,0 +1,10 @@
+{
+	"Level1": {
+		"NormalDistribution" : {
+			"lbound" : 2.3,
+			"ubound" : 4.6,
+			"mean"   : 3.7,
+			"stdev"	 : 0.3
+		}
+	}
+}

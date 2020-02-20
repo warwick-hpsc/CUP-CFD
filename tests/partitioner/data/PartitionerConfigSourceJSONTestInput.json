@@ -1,0 +1,36 @@
+{
+	"TopLevel1" : 
+	{
+		"TopLevel2" : 
+		{
+			"Partitioner" : 
+			{
+				"Method" : "Naive"
+			}
+		},
+
+		"TopLevel3" : 
+		{
+			"Partitioner" : 
+			{
+				"Method" : "Metis"
+			}
+		}
+	},
+
+	"TopLevel4" : 
+	{
+		"Partitioner" : 
+		{
+			"Method" : "Parmetis"
+		}
+	},
+
+	"Test" : 
+	{
+		"Partitioner" : 
+		{
+			"Field1" : "Test2"
+		}
+	}
+}

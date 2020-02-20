@@ -1,0 +1,123 @@
+{
+	"DataTypes" : {
+		"IntDataType" : "int",
+		"FloatDataType" : "double",
+		"MeshDataType" : "MiniAoS"
+	},
+	"Mesh" : {
+		"Partitioner" : {
+			"ParmetisPartitioner" : {
+			}
+		},
+		"MeshSource": {
+			"MeshSourceStructGen": {
+				"CellX" : 11,
+				"CellY" : 12,
+				"CellZ" : 14,
+				"SpatialXMin" : 0.0,
+				"SpatialYMin" : 0.0,
+				"SpatialZMin" : 0.0,
+				"SpatialXMax" : 1.0,
+				"SpatialYMax" : 1.0,
+				"SpatialZMax" : 1.0
+			}	
+		}
+	},
+	"Benchmarks" :[
+		{
+			"BenchmarkKernels" : {
+				"BenchmarkName" : "KernelTest",
+				"Repetitions"	: 1000
+			}
+		},
+		{
+			"BenchmarkExchange" : {
+				"BenchmarkName" : "ExchangeTest",
+				"Repetitions"	: 10,
+				"ExchangePattern" : { "Method" : "NBTwoSided"}
+			}
+		},
+		{
+			"BenchmarkLinearSolver" : {
+				"BenchmarkName" : "LinearSolverTest",
+				"Repetitions"	: 10,
+				"LinearSolver"  : {
+					"LinearSolverPETSc" : {
+						"Algorithm" : "CGAMG",
+						"eTol"	: 1e-6,
+						"rTol"	: 1e-6
+					}
+				},
+				"SparseMatrix"  : {
+					"SparseMatrixFile" : {
+						"FilePath" : "../tests/linearsolvers/data/SolverMatrixInput.h5",
+						"FileFormat" : "HDF5"
+					}
+				},
+				"RHSVector" : {
+					"VectorFile" : {
+						"FilePath" : "../tests/linearsolvers/data/ZeroVector.h5",
+						"FileFormat" : "HDF5"
+					}
+				},
+				"SolVector" : {
+					"VectorFile" : {
+						"FilePath" : "../tests/linearsolvers/data/ZeroVector.h5",
+						"FileFormat" : "HDF5"
+					}
+				},
+				"DataDistribution"  : "Concurrent"
+			}
+		},
+		{
+			"BenchmarkParticleSystem" : {
+				"BenchmarkName" : "ParticleSystemSimpleTest",
+				"Repetitions"	: 1,	
+				"NTimesteps"	: 10,
+				"DtDistribution" : {"FixedDistribution" : {"value" : 0.13171}},
+				"ParticleSystemSimple" : {
+					"ParticleSourceSimple" : {
+						"FilePath" : "../tests/particles/data/ParticleSourceSimpleExample.h5",
+						"FileFormat" : "HDF5"
+					},
+					"Emitters": [
+						{
+							"ParticleEmitterSimple" : { 
+								"Position" : {"X": 0.05, "Y": 0.12, "Z": 0.16},
+								"Rate" : {"FixedDistribution" : {"value" : 0.1}},
+								"AngleXY" : {"FixedDistribution" : {"value" : 0.1}},
+								"AngleRotation" : {"FixedDistribution" : {"value" : 0.1}},
+								"Speed" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationX" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationY" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationZ" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkX" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkY" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkZ" : {"FixedDistribution" : {"value" : 0.1}},
+								"DecayRate" : {"FixedDistribution" : {"value" : 0.1}},
+								"DecayThreshold" : {"FixedDistribution" : {"value" : 0.1}}
+							}
+						},
+						{
+							"ParticleEmitterSimple" : { 
+								"Position" : {"X": 1.3, "Y": 1.72, "Z": -0.76},
+								"Rate" : {"FixedDistribution" : {"value" : 0.1}},
+								"AngleXY" : {"FixedDistribution" : {"value" : 0.1}},
+								"AngleRotation" : {"FixedDistribution" : {"value" : 0.1}},
+								"Speed" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationX" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationY" : {"FixedDistribution" : {"value" : 0.1}},
+								"AccelerationZ" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkX" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkY" : {"FixedDistribution" : {"value" : 0.1}},
+								"JerkZ" : {"FixedDistribution" : {"value" : 0.1}},
+								"DecayRate" : {"FixedDistribution" : {"value" : 0.1}},
+								"DecayThreshold" : {"FixedDistribution" : {"value" : 0.1}}
+							}
+						}
+					]
+				}
+			}
+		}
+	]
+}

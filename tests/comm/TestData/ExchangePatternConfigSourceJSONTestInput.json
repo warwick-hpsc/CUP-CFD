@@ -1,0 +1,29 @@
+{
+	"TopLevel1" : {
+		"TopLevel2" : {
+			"ExchangePattern" : {
+				"Method" : "NBOneSided"
+			}
+		},
+
+		"TopLevel3" : {
+			"ExchangePattern" : {
+				"Method" : "NBTwoSided"
+			}
+		}
+	},
+
+	"TopLevel4" : {
+		"ExchangePattern" : {
+			"Foo" : "Bar"
+		}
+	},
+
+	"TopLevel5" : {
+		"ExchangePattern" : {
+			"Method" : "IncorrectValue"
+		}
+	}
+}
+
+
