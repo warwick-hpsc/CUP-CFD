@@ -1,3 +1,14 @@
+#================================================================
+#======= Software dependencies ========
+#================================================================
+
+* [treetimer](https://github.com/warwick-hpsc/treetimer)
+* HDF5 parallel
+* ParMETIS
+* PETSC
+* sqlite
+
+#================================
 
 This README will cover some details of note for the CupCfd Proxy app.
 
@@ -9,9 +20,9 @@ Areas that might be of import to address are:
 but some others might be considered of import - in particular how benchmarks are setup/parameters stored/results presented.
 (e) A license should be decided upon, with the caveat that it must be compatible with the Apache License (see the file docs/IP).
 
-#====================================================================================================================================================
+#================================================================
 #======= Directory Structure ========
-#====================================================================================================================================================
+#================================================================
 
 doc - Documents
 	: README - Detail Build, Run and General Information
@@ -25,13 +36,13 @@ test - Unit tests
 examples - Any example files (some may also be found in test folders such as example matrix formats)
 scripts - Relevant scripts that might be of use
 
-#====================================================================================================================================================
+#================================================================
 #======= Build Guide ========
-#====================================================================================================================================================
+#================================================================
 
-#=================================================================================
+#================================
 (a) Running the build system 
-#=================================================================================
+#================================
 
 CupCfd uses a cmake build system
 
@@ -58,9 +69,9 @@ Note 2:
 	However this setup is untested and likely to break compilation currently, since there are likely components that need wrapping with ifdefs
 	(e.g. header includes, interface passthroughs). Expansion to make them optional is a future task.
 
-#=================================================================================
+#================================
 (b) Header Override Values
-#=================================================================================
+#================================
 
 The following values are defined in header files, but it may be desired for experimental purposes to override them:
 
@@ -90,9 +101,9 @@ CUPCFD_ZERO_COMP_TOL_F
 #Set the delta threshold for whether two double precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
 CUPCFD_ZERO_COMP_TOL_D
 
-#=================================================================================
+#================================
 (c) Unit Tests
-#=================================================================================
+#================================
 
 A number of units are provided for testing the code using Boost. The majority of the critical components should currently be covered (although there
 remains some further development to be done). However building these unit tests can significantly inflate the build time, and building them requires
@@ -104,9 +115,9 @@ If they are built, they can be run using the command "ctest" in the build direct
 (or could be changed in the CMakeLists.txt file).
 
 
-#====================================================================================================================================================
+#================================================================
 # ======== Run Guide ==========
-#====================================================================================================================================================
+#================================================================
 
 #================================
 # ==== Cupcfd Operation ====
