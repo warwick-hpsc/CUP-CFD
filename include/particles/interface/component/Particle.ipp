@@ -118,11 +118,11 @@ namespace cupcfd
 			return this->travelDt;
 		}
 		
-		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setInactive()
-		{
-			static_cast<P*>(this)->setInactive(inactive);
-		}
+		// template <class P, class I, class T>
+		// inline void Particle<P, I, T>::setInactive()
+		// {
+		// 	static_cast<P*>(this)->setInactive(inactive);
+		// }
 		
 		template <class P, class I, class T>
 		inline bool Particle<P, I, T>::getInactive() const
@@ -332,26 +332,26 @@ namespace cupcfd
 			}			
 		}
 
-		template <class P, class I, class T>
-		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
-		{
-			static_cast<P*>(this)->updateVelocityAtomic(mesh, cellLocalID, faceLocalID);
-		}
+		// template <class P, class I, class T>
+		// template <class M, class L>
+		// cupcfd::error::eCodes Particle<P, I, T>::updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
+		// {
+		// 	static_cast<P*>(this)->updateVelocityAtomic(mesh, cellLocalID, faceLocalID);
+		// }
 		
-		template <class P, class I, class T>
-		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
-		{
-			static_cast<P*>(this)->updateStateAtomic(mesh, cellLocalID, faceLocalID);
-		}														    
+		// template <class P, class I, class T>
+		// template <class M, class L>
+		// cupcfd::error::eCodes Particle<P, I, T>::updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
+		// {
+		// 	static_cast<P*>(this)->updateStateAtomic(mesh, cellLocalID, faceLocalID);
+		// }														    
 
-		template <class P, class I, class T>
-		template <class M, class L> 
-		cupcfd::error::eCodes Particle<P, I, T>::updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I faceLocalID)
-		{
-			static_cast<P*>(this)->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
-		}
+		// template <class P, class I, class T>
+		// template <class M, class L> 
+		// cupcfd::error::eCodes Particle<P, I, T>::updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I faceLocalID)
+		// {
+		// 	static_cast<P*>(this)->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
+		// }
 		
 		template <class P, class I, class T>
 		template <class M, class L> 
