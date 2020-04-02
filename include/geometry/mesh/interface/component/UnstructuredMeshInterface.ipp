@@ -364,7 +364,7 @@ namespace cupcfd
 			template <class M, class I, class T, class L>
 			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm)
 			{
-				return static_cast<M*>(this)->setFaceNorm(FaceID, norm);
+				return static_cast<M*>(this)->setFaceNorm(faceID, norm);
 			}
 
 			template <class M, class I, class T, class L>
@@ -586,7 +586,7 @@ namespace cupcfd
 			template <class M, class I, class T, class L>
 			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::setBoundaryDistance(I boundaryID, T distance)
 			{
-				return static_cast<M*>(this)->setBoundaryDistance(boundayID, distance);
+				return static_cast<M*>(this)->setBoundaryDistance(boundaryID, distance);
 			}
 
 			template <class M, class I, class T, class L>
