@@ -57,7 +57,11 @@ set (cupcfd_VERSION_MINOR 0)
 # ======== Set Compile Flags ===========
 # ======================================
 
-set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+if(COMPILER STREQUAL "intel")
+  set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+else()
+  set(CMAKE_CXX_FLAGS "-O2 -g")
+endif()
 
 # ====================================================================================================================================
 # ====================================================== Options =====================================================================
@@ -651,7 +655,11 @@ endif(USE_PETSC)
 # ===================================================
 # Timer Libraries
 set(ALL_LIBS ${CORE_LIBS} ${SQLITE_LIBS})
-set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS} ifcore)
+if(COMPILER STREQUAL "intel")
+  set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS} ifcore)
+else()
+  set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS})
+endif()
 
 set(ALL_LIBS cupcfd_lib ${ALL_LIBS})
 

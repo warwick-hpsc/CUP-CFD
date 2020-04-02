@@ -3,9 +3,13 @@
 set -e
 set -u
 
-## Intel MPI:
-export CC=mpiicc
-export CXX=mpicxx
+if [ "$COMPILER" = "gnu" ]; then
+	export CC=mpicc
+	export CXX=mpic++
+elif [ "$COMPILER" = "intel" ]; then
+	export CC=mpiicc
+	export CXX=mpicxx
+fi
 
 ## 3rd-party libraries:
 HDF5_ROOT=/path/to/hdf5-1.8.21-parallel
