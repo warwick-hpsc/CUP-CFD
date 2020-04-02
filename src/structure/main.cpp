@@ -81,11 +81,6 @@ int main (int argc, char ** argv)
 	// Use all processes
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
-	if (comm.size == 1) {
-		std::cout << "cup-cfd will crash and burn with just 1 process. Use more" << std::endl;
-		exit(-1);
-	}
-
 	// Register the custom MPI types
 	// ToDo: Would prefer to use static methods for these, but since we
 	// setup the interface via inheritance its difficult to do so
