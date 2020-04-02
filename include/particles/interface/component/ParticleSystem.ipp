@@ -65,7 +65,7 @@ namespace cupcfd
 		template <class S, class E, class P, class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystem<S,E,P,M,I,T,L>::updateSystem(T dt)
 		{
-			return static_cast<S*>(this)->updateSystem(T dt);
+			return static_cast<S*>(this)->updateSystem(dt);
 		}
 		
 		template <class S, class E, class P, class M, class I, class T, class L>
