@@ -1,6 +1,4 @@
-#================================================================
-#======= Software dependencies ========
-#================================================================
+# Software dependencies
 
 * [treetimer](https://github.com/warwick-hpsc/treetimer)
 * HDF5 parallel
@@ -8,129 +6,97 @@
 * PETSC
 * sqlite
 
-#================================
+# Directory Structure
 
-This README will cover some details of note for the CupCfd Proxy app.
+- doc - Documents
+  - doxygen - destination folder of Doxygen output
+  - TODO - Known issues/future tasks
 
-Areas that might be of import to address are:
-(a) Testing/any issues with the build system at large.
-(b) A code review of its components prior to any distribution to ensure that non-distributable parts are not present.
-(c) A review of any licensing issues and/or IP usage. This may also include how to access/whether dependancies can be distributed.
-(d) A list of known issues and/or future tasks is included in the file under docs/TODO. Some of these are merely wishlist items,
-but some others might be considered of import - in particular how benchmarks are setup/parameters stored/results presented.
-(e) A license should be decided upon, with the caveat that it must be compatible with the Apache License (see the file docs/IP).
+- cmake - Custom Cmake Modules
+- include - Headers
+- src - src files
+- tests - Unit tests
+- examples - Any example files (some may also be found in test folders such as example matrix formats)
+- scripts - Useful scripts
+  - doxygen-generate-docs.py - Run Doxygen
+  - treetimer-postprocessing.py - Post-process timer output
 
-#================================================================
-#======= Directory Structure ========
-#================================================================
+# Build Guide 
 
-doc - Documents
-	: README - Detail Build, Run and General Information
-	  IP - Details IP/licensing details that might be important about CupCfd during review/for later Ip documents
-	  TODO - Known issues/future tasks
+## Running the build system
 
-cmake - Custom Cmake Modules
-include - Headers
-src - src files
-test - Unit tests
-examples - Any example files (some may also be found in test folders such as example matrix formats)
-scripts - Relevant scripts that might be of use
+CUP-CFD uses a cmake build system.
 
-#================================================================
-#======= Build Guide ========
-#================================================================
+To assist with compilation, particularly with specifying location of dependencies, a Bash script has been provided:
 
-#================================
-(a) Running the build system 
-#================================
-
-CupCfd uses a cmake build system
+```Shell
+compile.sh
+```
 
 To build, run the following commands:
 
+```Shell
 mkdir build
 cd build
-cmake .. -DHDF5_ROOT=<Top Level HDF5 Root Directory> \
-         -DMETIS_ROOT=<Top Level Metis Root Directory> \
-         -DPARMETIS_ROOT=<Top Level Parmetis Root Directory> \
-         -DPETSC_ROOT=<Top Level Petsc Root Directory>
+cmake .. -DCMAKE_BUILD_TYPE=Release \
+         -DHDF5_ROOT="$HDF5_ROOT" \
+         -DMETIS_ROOT="$METIS_ROOT" \
+         -DPARMETIS_ROOT="$PARMETIS_ROOT" \
+         -DPETSC_ROOT="$PETSC_ROOT" \
+         -DSQLITE_LIBS="$SQLITE_ROOT"/lib/libsqlite3.so \
+         -DTREETIMER_LIBS="$TREETIMER_ROOT"/libtt.so \
+         -DTREETIMER_INCLUDE="$TREETIMER_ROOT"/include/timing_library/interface \
+         -DUSE_UNIT_TESTS=OFF
+```
 
-A functional example is provided in the example-build-script in the top-level directory of cupcfd
+To assist with compilation, a configurable Bash script is provided:
 
-The following parameters also need to be set (they are currently just set inside CMakeLists.txt, although perhaps setting them via command line
-would be prefereable)
+```Shell
+compile.sh
+```
 
-SQLITE_LIBS This is the full path to an SQLite shared library (i.e. <path>/libsqlite3.so) - dependancy for the treetimer library
-TREETIMER_LIBS This is a full path to the TreeTimer Library (i.e. <path>/libtt.so)
-TREETIMER_INCLUDE this is a full path to the interface include folder of the treetimer library (e.g. <toplevelpath>/include/timing_library/interface)
+There is a provision for disabling building with HDF5, Metis/Parmetis and/or PETSc via the USE_<Package> flags in CMakeLists.txt. However this setup is untested and likely to break compilation currently, since there are likely components that need wrapping with ifdefs (e.g. header includes, interface passthroughs). Expansion to make them optional is a future task.
 
-Note 2:
-	There is a provision for disabling building with HDF5, Metis/Parmetis and/or PETSc via the USE_<Package> flags in CMakeLists.txt.
-	However this setup is untested and likely to break compilation currently, since there are likely components that need wrapping with ifdefs
-	(e.g. header includes, interface passthroughs). Expansion to make them optional is a future task.
-
-#================================
-(b) Header Override Values
-#================================
+## Header Override Values
 
 The following values are defined in header files, but it may be desired for experimental purposes to override them:
 
-# Pad/Increase the size of the CupCfdAoSMeshBoundary class in an AoS Mesh beyond that of the required values
-# This is to measure the impact of the class size in an AoS setting.
-CUPCFD_AOS_MESH_BOUNDARY_PADDING
+- Pad/Increase the size of the CupCfdAoSMeshBoundary class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
+  - CUPCFD_AOS_MESH_BOUNDARY_PADDING
 
-# Pad/Increase the size of the CupCfdAoSMeshCell class in an AoS Mesh beyond that of the required values
-# This is to measure the impact of the class size in an AoS setting.
-CUPCFD_AOS_MESH_CELL_PADDING
+- Pad/Increase the size of the CupCfdAoSMeshCell class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
+  - CUPCFD_AOS_MESH_CELL_PADDING
 
-# Pad/Increase the size of the CupCfdAoSMeshFace class in an AoS Mesh beyond that of the required values
-# This is to measure the impact of the class size in an AoS setting.
-CUPCFD_AOS_MESH_FACE_PADDING
+- Pad/Increase the size of the CupCfdAoSMeshFace class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
+  - CUPCFD_AOS_MESH_FACE_PADDING
 
-# Pad/Increase the size of the CupCfdAoSMeshRegion class in an AoS Mesh beyond that of the required values
-# This is to measure the impact of the class size in an AoS setting.
-CUPCFD_AOS_MESH_REGION_PADDING
+- Pad/Increase the size of the CupCfdAoSMeshRegion class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
+  - CUPCFD_AOS_MESH_REGION_PADDING
 
-# Pad/Increase the size of the CupCfdAoSMeshVertex class in an AoS Mesh beyond that of the required values
-# This is to measure the impact of the class size in an AoS setting.
-CUPCFD_AOS_MESH_VERTEX_PADDING
+- Pad/Increase the size of the CupCfdAoSMeshVertex class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
+  - CUPCFD_AOS_MESH_VERTEX_PADDING
 
-# Set the delta threshold for whether two single-precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-CUPCFD_ZERO_COMP_TOL_F
+- Set the delta threshold for whether two single-precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
+  - CUPCFD_ZERO_COMP_TOL_F
 
-#Set the delta threshold for whether two double precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-CUPCFD_ZERO_COMP_TOL_D
+- Set the delta threshold for whether two double precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
+  - CUPCFD_ZERO_COMP_TOL_D
 
-#================================
-(c) Unit Tests
-#================================
+## Unit Tests
 
-A number of units are provided for testing the code using Boost. The majority of the critical components should currently be covered (although there
-remains some further development to be done). However building these unit tests can significantly inflate the build time, and building them requires
-a dependancy on the boost unit tests library (libboost-test-dev package under debian).
-As such they can be disabled via the use of the "USE_UNIT_TESTS" flag under the cmake system.
+A number of units are provided for testing the code using Boost. The majority of the critical components should currently be covered (although there remains some further development to be done). However building these unit tests can significantly inflate the build time, and building them requires a dependancy on the boost unit tests library. As such they can be disabled via the use of the *USE_UNIT_TESTS* flag under the cmake system.
 
-If they are built, they can be run using the command "ctest" in the build directory. Some tests test parallel functionality, and will run using
-4 MPI processes. The mpi command used to run this is defined by the "MPIRUN_EXEC" flag in the cmake system, but defaults to srun in CMakeLists.txt 
-(or could be changed in the CMakeLists.txt file).
+If they are built, they can be run using the command "ctest" in the build directory. Some tests test parallel functionality, and will run using 4 MPI processes. The mpi command used to run this is defined by the *MPIRUN_EXEC* flag in the cmake system, but defaults to srun in CMakeLists.txt (or could be changed in the CMakeLists.txt file).
 
+# Run Guide 
 
-#================================================================
-# ======== Run Guide ==========
-#================================================================
+## CUP-CFD Operation
 
-#================================
-# ==== Cupcfd Operation ====
-#================================
+CUP-CFD can be run simply with the command "<mpirun> -n <number of processes> cupcfd".
 
-Cupcfd can be run simply with the command "<mpirun> -n <number of processes> cupcfd".
+All options are taken from a json file called cupcfd.json, located in the same folder as the cupcfd binary. Access to any other files is defined inside this configuration file.
 
-All options are taken from a json file called cupcfd.json, located in the same folder as the cupcfd binary. Access to any other files
-is defined inside this configuration file.
-
-#================================
-# ==== JSON Parameters ====
-#================================
+## JSON Parameters
 
 This may not quite be comprehensive - if in doubt JSON options should be documented in comments or in the code itself, but here is a description of some expected formats.
 
@@ -309,18 +275,14 @@ Benchmarks:
 		}
 
 
-#================================
-# ==== TreeTimer ====
-#================================
+# TreeTimer
 
 The TreeTimer Library is a custom library intended to capture data about instrumented blocks in the code. It tracks the relationship
 between codeblocks based on how they are nested in one another akin to a callpath tree. In each block, as well as timing data, it can also
 store 'local' parameters that are associated with the block in which they are stored, and 'global' parameters that can be associated with an entire
 run.
 
-#================
-Usage
-#================
+# Usage
 
 Postprocessing:
 The library itself must be initialised with TreeTimerInit() prior to any blocks, and finalized with TreeTimerFinalize() to write out its results.
@@ -372,9 +334,7 @@ The data storage layout is too lengthy to detail here, but the schemas used can 
 
 Provision is made to store machine data in a location in the database, but this data is not currently captured and thus these tables in the database remain empty.
 
-#================
-RunTime Options
-#================
+# Runtime Options
 
 The TreeTimer Library has a number of configuration options that can be set at runtime via the use of enviromental parameters:
 
@@ -397,9 +357,7 @@ data including times, destinations, byte sizes, buffer sizes etc will be capture
 This particular options requires the use of LD_PRELOAD and a shared treetimer library to be effective, since it utilises PMPI to catch MPI calls. It may work without LD_PRELOAD
 or a static library, but is not guaranteed or recommended since it will likely depend upon linking orders.
 
-#====================================================================================================================================================
-# ======== Doxygen Guide ==========
-#====================================================================================================================================================
+# Doxygen Guide
 
 Most of the documentation for CupCfd can be found in the form of doxygen comments in the header files. This documentation can be generated using
 the doxygen scripts under ./scripts, and the documentation can be navigated from docs/doxygen/html/index.html.
