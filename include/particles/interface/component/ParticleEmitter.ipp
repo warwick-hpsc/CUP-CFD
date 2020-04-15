@@ -45,7 +45,7 @@ namespace cupcfd
 		template <class E, class P, class I, class T>
 		cupcfd::error::eCodes ParticleEmitter<E,P,I,T>::generateParticles(Particle<P,I,T> ** particles, I * nParticles, T dt)
 		{
-			static_cast<P*>(this)->generateParticles(particles, nParticles, dt);
+			return static_cast<P*>(this)->generateParticles(particles, nParticles, dt);
 		}
 	}
 }

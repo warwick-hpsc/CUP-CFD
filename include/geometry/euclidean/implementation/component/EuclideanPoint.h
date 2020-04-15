@@ -66,6 +66,9 @@ namespace cupcfd
 					 */
 					EuclideanPoint();
 
+
+					EuclideanPoint(const EuclideanPoint &point);
+
 					/**
 					 * Constructor - Sets dimensional coordinates of the point to those provided
 					 *
@@ -546,6 +549,8 @@ namespace cupcfd
 					cupcfd::error::eCodes deregisterMPIType();
 
 					inline bool isRegistered();
+
+					void print();
 			};
 		} // namespace euclidean
 	} // namespace geometry

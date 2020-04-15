@@ -16,6 +16,7 @@
 #define CUPCFD_PARTICLES_PARTICLE_IPP_H
 
 #include <iostream>
+#include <unistd.h>
 
 namespace cupcfd
 {
@@ -59,6 +60,34 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
+		inline void Particle<P, I, T>::setCellGlobalID(I id)
+		{
+			if (this->particleID == 86) {
+				std::cout << " P86 being moved from C" << this->cellGlobalID << " --> " << id << std::endl;
+				usleep(100*1000);
+			}
+			this->cellGlobalID = cellGlobalID;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getRank() const
+		{
+			return this->rank;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getParticleID() const
+		{
+			return this->particleID;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getCellGlobalID() const
+		{
+			return this->cellGlobalID;
+		}
+
+		template <class P, class I, class T>
 		inline void Particle<P, I, T>::setPos(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
 		{
 			this->pos = pos;
@@ -95,18 +124,6 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
-		{
-			this->cellGlobalID = cellGlobalID;
-		}
-
-		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getCellGlobalID()
-		{
-			return this->cellGlobalID;
-		}
-
-		template <class P, class I, class T>
 		inline void Particle<P, I, T>::setTravelTime(T dt)
 		{
 			this->travelDt = dt;
@@ -133,7 +150,7 @@ namespace cupcfd
 
 		template <class P, class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID)
+		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID, bool print_info)
 		{
 			// ToDo: Warning: I'm not certain how this code currently handles intersection points directly through vertices well (assigns first face it finds?)
 		
@@ -151,18 +168,29 @@ namespace cupcfd
 			{				
 				*exitFaceLocalID = -1;
 				*dt = T(0);
+				if (print_info) {
+					std::cout << "  > > > no travel time left" << std::endl;
+				}
 				return cupcfd::error::E_SUCCESS;
 			}
 		
 			// Get Cell Local ID - ToDo: Could store this inside cell - storage overhead vs graph lookup overhead
 			I node = mesh.cellConnGraph->globalToNode[this->cellGlobalID];
 			I localCellID;
-			mesh.cellConnGraph->connGraph.getNodeLocalIndex(node, &localCellID);
+			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(node, &localCellID);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+				return status;
+			}
 
 			// Identify which face the exiting vector intersects with
 			
 			I nFaces;
-			mesh.getCellNFaces(localCellID, &nFaces);
+			status = mesh.getCellNFaces(localCellID, &nFaces);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+				return status;
+			}
 
 			// Store the local ID of the face we are exiting by
 			I exitFaceID = -1;
@@ -178,6 +206,10 @@ namespace cupcfd
 			I intersectionCount = 0;
 
 			// Loop over the faces of the cell
+			bool face_was_found = false;
+			// if (print_info) {
+			// 	std::cout << "  > > > searching for exit face" << std::endl;
+			// }
 			for(I i = 0; i < nFaces; i++)
 			{
 				// Retrieve the faces of the cell
@@ -214,18 +246,19 @@ namespace cupcfd
 						// Skip any actions for this face - will not intersect						
 					}
 					else
-					{											
+					{
 						// Verify that the intersection point occurs within the triangle of the face, rather than just the plane
 						// Could also use static method directly rather than create an object
 						cupcfd::geometry::shapes::Triangle3D<T> shape(mesh.getVertexPos(faceVertex0ID), 
-																		   mesh.getVertexPos(faceVertex1ID), 
-																		   mesh.getVertexPos(faceVertex2ID));
+																	  mesh.getVertexPos(faceVertex1ID), 
+																	  mesh.getVertexPos(faceVertex2ID));
 							   
 						if(!shape.isPointInside(intersection))
 						{							
 							// Progress onto next face instead
 							continue;
 						}
+						face_was_found = true;
 							
 						intersectionCount = intersectionCount + 1;
 															
@@ -238,15 +271,23 @@ namespace cupcfd
 						
 						// Distance
 						T distance;
-						(intersection - this->inflightPos).length(&distance);
+						status = (intersection - this->inflightPos).length(&distance);
+						if (status != cupcfd::error::E_SUCCESS) {
+							std::cout << "ERROR: length() failed" << std::endl;
+							return status;
+						}
 						
 						// Speed
 						T speed;
-						this->velocity.length(&speed);
+						status = this->velocity.length(&speed);
+						if (status != cupcfd::error::E_SUCCESS) {
+							std::cout << "ERROR: length() failed" << std::endl;
+							return status;
+						}
 						
 						// Time
 						T travelTime = distance / speed;
-						
+
 						if(this->inflightPos + (this->velocity * travelTime) != intersection)
 						{
 							// Travelling in wrong direction to velocity, set time to negative
@@ -262,6 +303,9 @@ namespace cupcfd
 						
 						if((!arth::isEqual(travelTime, 0.0)) && travelTime > 0.0)
 						{
+							// if (print_info) {
+							// 	std::cout << "  > > > > found exit face" << std::endl;
+							// }
 							// Exiting the cell via this face if time permits			
 							exitFaceID = localFaceID;
 							exitIntersection = intersection;
@@ -277,12 +321,19 @@ namespace cupcfd
 												
 						if(arth::isEqual(travelTime, 0.0) && (exitFaceID == -1))
 						{
+							// if (print_info) {
+							// 	std::cout << "> did not find exit face, using current as fallback" << std::endl;
+							// }
 							exitFaceID = localFaceID;
 							exitIntersection = intersection;
 							exitTravelTime = 0.0;
 						}
 					}
 				}
+			}
+			if (!face_was_found) {
+				std::cout << "ERROR: Failed to find face that particle will intersect" << std::endl;
+				return cupcfd::error::E_ERROR;
 			}
 			
 			// Theoretically should either have to leave via one of the faces or stay inside the cell, assuming
@@ -302,6 +353,9 @@ namespace cupcfd
 			// (a) Does not exit cell
 			if(exitTravelTime > this->travelDt)
 			{
+				if (print_info) {
+					std::cout << "  > > > does not exit cell" << std::endl;
+				}
 				// Not enough travel time on the particle left to reach face
 				// Particle does not exit cell
 				*exitFaceLocalID = -1;
@@ -315,7 +369,35 @@ namespace cupcfd
 			}
 			else
 			{
+				// if (print_info) {
+				// 	// std::cout << "  > > > does exit cell, or stops on face" << std::endl;
+				// 	std::cout << "  > > > does exit cell after " << exitTravelTime << " seconds" << std::endl;
+				// }
+
 				// Stops either exactly on or exits via face.
+
+				// std::cout << "  particle exiting on/through face" << std::endl;
+				// for(I i = 0; i < nFaces; i++)
+				// {
+				// 	I localFaceID = mesh.getCellFaceID(localCellID, i);
+				// 	I nFaceVertices = mesh.getFaceNVertices(localFaceID);
+				// 	I faceVertex0ID = mesh.getFaceVertex(localFaceID, 0);
+				// 	I faceVertex1ID, faceVertex2ID;
+				// 	for(I j = 0; j < (nFaceVertices-2); j++)
+				// 	{
+				// 		faceVertex1ID = mesh.getFaceVertex(localFaceID, j+1);
+				// 		faceVertex2ID = mesh.getFaceVertex(localFaceID, j+2);
+					
+				// 		auto v0 = mesh.getVertexPos(faceVertex0ID);
+				// 		auto v1 = mesh.getVertexPos(faceVertex1ID);
+				// 		auto v2 = mesh.getVertexPos(faceVertex2ID);
+
+				// 		if (intersection == v0 || intersection == v1 || intersection == v2) {
+				// 			std::cout << "  ... and through a face vertex!" << std::endl;
+				// 		}
+				// 	}
+				// }
+
 				// In either scenario, we move the particle to the face (where it can be assigned to the next cell when its state is updated)
 				*exitFaceLocalID = exitFaceID;
 				*dt = exitTravelTime;
@@ -325,7 +407,7 @@ namespace cupcfd
 					
 				// Can reuse last computed distance/speed/travel time since the prior loop exited on the valid value
 				this->travelDt = this->travelDt - exitTravelTime;
-				
+
 				// Boundary conditions will be handed by other functions
 				
 				return cupcfd::error::E_SUCCESS;

@@ -846,6 +846,15 @@ namespace cupcfd
 			{
 				return EuclideanVector<T,N>::mpiDataTypeReg;
 			}
+
+			template <class T, unsigned int N>
+			inline void EuclideanVector<T,N>::print()
+			{
+				for(int i = 0; i < N; i++)
+				{
+					std::cout << "P_" << i << ": " << this->cmp[i] << ", ";
+				}
+			}
 				
 		} // namespace euclidean
 	} // namespace geometry

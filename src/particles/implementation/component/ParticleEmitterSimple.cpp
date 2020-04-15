@@ -55,6 +55,8 @@ namespace cupcfd
 			this->jerkZ = jerkZ->clone();
 			this->decayRate = decayRate->clone();
 			this->decayThreshold = decayThreshold->clone();
+
+			this->numParticlesEmitted = 0;
 		}
 
 		template <class I, class T>
@@ -74,6 +76,8 @@ namespace cupcfd
 			this->jerkZ = source.jerkZ->clone();
 			this->decayRate = source.decayRate->clone();
 			this->decayThreshold = source.decayThreshold->clone();
+
+			this->numParticlesEmitted = 0;
 		}
 
 		template <class I, class T>
@@ -96,6 +100,8 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt)
 		{
+			cupcfd::error::eCodes status;
+
 			// tCurrent is the current time in the dt period, relative to 0
 			// tInc is the amount of time that must pass before the next particle is generated.
 			T tCurrent, tInc;
@@ -207,6 +213,14 @@ namespace cupcfd
 				(*particles)[i].setDecayLevel(decayThreshold[i]);
 				(*particles)[i].setDecayRate(decayRate[i]);
 				(*particles)[i].rank = this->rank;				// ToDo: Should be setRank method
+
+				(*particles)[i].id = this->numParticlesEmitted;
+				this->numParticlesEmitted++;
+
+				if ((*particles)[i].id == 86) {
+					std::cout << "particle " << (*particles)[i].id << " emitted at POS: ";
+					(*particles)[i].getPos().print(); std::cout << std::endl;
+				}
 			}
 
 			free(accelerationX);
@@ -220,6 +234,8 @@ namespace cupcfd
 			free(angleRotation);
 			free(decayRate);
 			free(decayThreshold);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

@@ -48,16 +48,16 @@ namespace cupcfd
 					return false;
 				}
 
-				inline bool isEqual(float val, float target)
-				{
-					// C++ also uses abs as function name for floats, doubles
-					if(fabsf(val - target) < CUPCFD_ZERO_COMP_TOL_F)
-					{
-						return true;
-					}
+				// inline bool isEqual(float val, float target)
+				// {
+				// 	// C++ also uses abs as function name for floats, doubles
+				// 	if(fabsf(val - target) < CUPCFD_ZERO_COMP_TOL_F)
+				// 	{
+				// 		return true;
+				// 	}
 
-					return false;
-				}
+				// 	return false;
+				// }
 
 				inline bool isEqual(float val, float target, float tolerance)
 				{

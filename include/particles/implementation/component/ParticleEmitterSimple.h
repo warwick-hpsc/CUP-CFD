@@ -182,6 +182,8 @@ namespace cupcfd
 				cupcfd::error::eCodes generateParticles(ParticleSimple<I, T> ** particles, I * nParticles, T dt);
 
 				// Concrete Methods
+
+				long numParticlesEmitted;
 		};
 	}
 }

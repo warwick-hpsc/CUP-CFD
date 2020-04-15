@@ -503,6 +503,8 @@ namespace cupcfd
 					cupcfd::error::eCodes deregisterMPIType();
 
 					inline bool isRegistered();
+
+					void print();
 			};
 
 			// ToDo: Would prefer to have this as a member of the vector class, but this function makes no sense

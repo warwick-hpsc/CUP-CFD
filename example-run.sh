@@ -5,12 +5,12 @@ set -e
 cd examples
 
 ## Currently, cup-cfd loads a hard-coded json file:
-if [ ! -f cupcfd.json ]; then
-	ln -s examplejson.json cupcfd.json
-fi
+# ln -sf examplejson.json cupcfd.json
+ln -sf particlesOnGen.json cupcfd.json
 
 if [ -d tt_results ]; then
 	rm -r tt_results
 fi
 
-../build/cupcfd
+mpirun -n 2 xterm -fa 'Monospace' -fs 14 -e gdb ../build/cupcfd
+

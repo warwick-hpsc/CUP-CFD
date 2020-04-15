@@ -15,6 +15,8 @@
 
 #include "EuclideanVector.h"
 
+#include <iostream>
+
 namespace cupcfd
 {
 	namespace geometry
@@ -27,6 +29,15 @@ namespace cupcfd
 				for(int i = 0; i < N; i++)
 				{
 					this->cmp[i] = T(0);
+				}
+			}
+
+			template <class T, unsigned int N>
+			EuclideanPoint<T,N>::EuclideanPoint(const EuclideanPoint<T,N> &point)
+			{
+				for(int i = 0; i < N; i++)
+				{
+					this->cmp[i] = point.cmp[i];
 				}
 			}
 			
@@ -169,6 +180,15 @@ namespace cupcfd
 				EuclideanPoint<T,N>::mpiDataTypeReg = false;
 				return cupcfd::error::E_SUCCESS;
 			}		
+			
+			template <class T, unsigned int N>
+			inline void EuclideanPoint<T,N>::print()
+			{
+				for(int i = 0; i < N; i++)
+				{
+					std::cout << "P_" << i << ": " << this->cmp[i] << ", ";
+				}
+			}
 		} // namespace euclidean
 	} // namespace geometry
 } // namespace cupcfd

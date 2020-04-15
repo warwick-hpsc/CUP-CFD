@@ -48,7 +48,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
-				inline bool isEqual(float val, float target);
+				// inline bool isEqual(float val, float target);
 
 				/*
 				 * Compare whether two floats are equivalent within a tolerance.

@@ -56,6 +56,8 @@ namespace cupcfd
 			// a multiplier for the number of timesteps.
 			// Need to add a means to reset the Particle System!
 
+			cupcfd::error::eCodes status;
+
 			this->startBenchmarkBlock(this->benchmarkName);
 			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 			this->recordParameters();
@@ -70,7 +72,11 @@ namespace cupcfd
 
 					// Advance Particle System by one timestep
 					this->startBenchmarkBlock("UpdateParticleTimestep");
-					particleSystemPtr->updateSystem(timestep);
+					status = particleSystemPtr->updateSystem(timestep);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: updateSystem() failed" << std::endl;
+						return;
+					}
 					this->stopBenchmarkBlock("UpdateParticleTimestep");
 				}
 			}

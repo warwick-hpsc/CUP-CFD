@@ -60,7 +60,7 @@ set (cupcfd_VERSION_MINOR 0)
 if(COMPILER STREQUAL "intel")
   set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
 else()
-  set(CMAKE_CXX_FLAGS "-O2 -g")
+  set(CMAKE_CXX_FLAGS "-O2 -g -w")
 endif()
 
 # ====================================================================================================================================

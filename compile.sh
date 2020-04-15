@@ -1,29 +1,35 @@
 #!/bin/bash
 
-set -e
-set -u
-
 if [ "$COMPILER" = "gnu" ]; then
 	export CC=mpicc
 	export CXX=mpic++
 elif [ "$COMPILER" = "intel" ]; then
 	export CC=mpiicc
 	export CXX=mpicxx
+else
+	## Default to GNU, everything has that, right?
+	COMPILER=gnu
+	export CC=mpicc
+	export CXX=mpic++
 fi
 
+set -e
+set -u
+
 ## 3rd-party libraries:
-HDF5_ROOT=/path/to/hdf5-1.8.21-parallel
-METIS_ROOT=/path/to/metis-5.1.0
-PARMETIS_ROOT=/path/to/parmetis-4.0.3
-PETSC_ROOT=/path/to/petsc-3.12.0
-SQLITE_ROOT=/path/to/sqlite
+HDF5_ROOT="$HDF5_INSTALL_PATH"
+METIS_ROOT="$METIS_INSTALL_PATH"
+PARMETIS_ROOT="$PARMETIS_INSTALL_PATH"
+PETSC_ROOT="$PETSC_INSTALL_PATH"
+SQLITE_ROOT="$SQLITE_INSTALL_PATH"
 
 ## Link to treetimer library:
-TREETIMER_ROOT=`pwd`/../treetimer
+TREETIMER_ROOT="$TREETIMER_PATH"
 
 # ## Optional: clean previous build files:
 # rm -rf build
-# mkdir build
+
+mkdir -p build
 
 # Compile!
 RTYPE=Release
@@ -39,5 +45,6 @@ cmake .. -DHDF5_ROOT="$HDF5_ROOT" \
 		 -DTREETIMER_INCLUDE="$TREETIMER_ROOT"/include/timing_library/interface \
 		 -DUSE_UNIT_TESTS=OFF
 
-# make VERBOSE=1 -j 8
-make -j 8
+# make VERBOSE=1 -j`nproc`
+make -j`nproc`
+

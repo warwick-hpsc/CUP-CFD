@@ -31,6 +31,10 @@ namespace cupcfd
 {
 	namespace particles
 	{
+
+		template <class M, class I, class T, class L>
+		class ParticleSystemSimpleConfig<M,I,T,L>;
+
 		/**
 		 * This class is intended as an interface for specialised particle classes.
 		 *
@@ -63,6 +67,9 @@ namespace cupcfd
 		template <class P, class I, class T>
 		class Particle : public cupcfd::comm::mpi::CustomMPIType
 		{
+			template <class M, class L>
+			friend class cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L>;
+
 			public:
 				// === Members ===
 
@@ -90,7 +97,13 @@ namespace cupcfd
 				 * We use Global Over Local here since we can translate it to the local ID via a mesh,
 				 * and local IDs do not translate between processes when communicating.
 				 **/
-				I cellGlobalID;
+				// I cellGlobalID;
+
+				/**
+				 * Get the position of the particle
+				 *
+				 * @return The position of the particle
+				 */
 
 				/**
 				 * Stores the particles rank. If equal to current rank, it is not exchanged.
@@ -98,7 +111,7 @@ namespace cupcfd
 				 * must be exchanged at the next exchange stage (else we will not know what to
 				 * do with it during the next update position stage).
 				 */
-				I rank;
+				// I rank;
 
 				/** Stores the remaining time to travel for 'in-flight' particles **/
 				T travelDt;
@@ -195,7 +208,13 @@ namespace cupcfd
 				 *
 				 * @return The cell ID of the particle
 				 */
-				inline I getCellGlobalID();
+				inline I getCellGlobalID() const;
+
+				// inline void setParticleID(I particleID);
+				inline I getParticleID() const;
+
+				// inline void setRank(I rank);
+				inline I getRank() const;
 
 				/**
 				 * Set the remaining travel time of the particle within the current time period.
@@ -267,7 +286,7 @@ namespace cupcfd
 				template <class M, class L>
 				cupcfd::error::eCodes updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T * dt,
-																I * exitFaceLocalID);
+																I * exitFaceLocalID, bool print_info);
 
 				/**
 				 * Update the velocity of the particle after travelling through the identified cell for a period of dT.
@@ -400,6 +419,13 @@ namespace cupcfd
 				virtual cupcfd::error::eCodes registerMPIType();
 				virtual cupcfd::error::eCodes deregisterMPIType();
 				virtual inline bool isRegistered();
+
+				// I id;
+
+			protected:
+				I rank;
+				I cellGlobalID;
+				I particleID;
 		};
 	}
 }

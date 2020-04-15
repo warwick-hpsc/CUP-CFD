@@ -74,6 +74,7 @@ namespace cupcfd
 						status = emitterConfigJSON.buildParticleEmitterConfig(&emitterConfig);
 						if(status != cupcfd::error::E_SUCCESS)
 						{
+							std::cout << "ERROR: buildParticleEmitterConfig() failed" << std::endl;
 							return status;
 						}
 						
@@ -103,6 +104,7 @@ namespace cupcfd
 				if(status != cupcfd::error::E_SUCCESS)
 				{
 					// No more types to try, so return with error
+					std::cout << "ERROR: buildParticleSourceConfig() failed" << std::endl;
 					return status;
 				}
 			}
@@ -126,6 +128,7 @@ namespace cupcfd
 			status = this->getParticleEmitterConfigs(emitterConfigs);
 			if(status != cupcfd::error::E_SUCCESS)
 			{
+				std::cout << "ERROR: getParticleEmitterConfigs() failed" << std::endl;
 				return status;
 			}
 			
