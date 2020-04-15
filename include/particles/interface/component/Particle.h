@@ -31,9 +31,9 @@ namespace cupcfd
 {
 	namespace particles
 	{
-
-		template <class M, class I, class T, class L>
-		class ParticleSystemSimpleConfig<M,I,T,L>;
+		template<class M, class I, class T, class L>
+		// template<class M, I, T, class L>
+		class ParticleSystemSimpleConfig;
 
 		/**
 		 * This class is intended as an interface for specialised particle classes.
@@ -67,8 +67,8 @@ namespace cupcfd
 		template <class P, class I, class T>
 		class Particle : public cupcfd::comm::mpi::CustomMPIType
 		{
-			template <class M, class L>
-			friend class cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L>;
+			template <class A, class B, class C, class D>
+			friend class ParticleSystemSimpleConfig;
 
 			public:
 				// === Members ===

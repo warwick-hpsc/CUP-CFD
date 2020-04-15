@@ -26,6 +26,9 @@ namespace cupcfd
 {
 	namespace particles
 	{
+		// template <class P, class I, class T>
+		// class Particle<P,I,T>;
+
 		/**
 		 * Defines interface methods for basic particle emitter operations
 		 * such as particle generation etc.
