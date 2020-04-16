@@ -26,6 +26,7 @@ namespace cupcfd
 		Particle<P, I, T>::Particle()
 		:CustomMPIType(),
 		 cellGlobalID(-1),
+		 lastCellMoveGlobalID(-1),
 		 rank(-1),
 		 travelDt(T(0))
 		{
@@ -41,10 +42,11 @@ namespace cupcfd
 		 pos(pos),
 		 inflightPos(pos),
 		 cellGlobalID(cellGlobalID),
+		 lastCellMoveGlobalID(cellGlobalID),
 		 rank(rank),
 		 travelDt(travelDt)
 		{
-		
+
 		}
 
 		template <class P, class I, class T>
@@ -57,34 +59,6 @@ namespace cupcfd
 		inline void Particle<P, I, T>::operator=(Particle& source)
 		{
 			static_cast<P*>(this)->operator=(source);
-		}
-
-		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setCellGlobalID(I id)
-		{
-			if (this->particleID == 86) {
-				std::cout << " P86 being moved from C" << this->cellGlobalID << " --> " << id << std::endl;
-				usleep(100*1000);
-			}
-			this->cellGlobalID = cellGlobalID;
-		}
-
-		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getRank() const
-		{
-			return this->rank;
-		}
-
-		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getParticleID() const
-		{
-			return this->particleID;
-		}
-
-		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getCellGlobalID() const
-		{
-			return this->cellGlobalID;
 		}
 
 		template <class P, class I, class T>
@@ -122,6 +96,39 @@ namespace cupcfd
 		{
 			return this->velocity;
 		}
+
+		template <class P, class I, class T>
+		inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
+		{
+			if (this->cellGlobalID != this->lastCellMoveGlobalID) {
+				// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
+				throw std::exception();
+			}
+			if (this->particleID == 8601) {
+				std::cout << " P86 being moved from C" << this->cellGlobalID << " --> " << cellGlobalID << std::endl;
+				usleep(100*1000);
+			}
+			this->cellGlobalID = cellGlobalID;
+			this->lastCellMoveGlobalID = cellGlobalID;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getCellGlobalID() const
+		{
+			return this->cellGlobalID;
+		}
+
+		// template <class P, class I, class T>
+		// inline I Particle<P, I, T>::getRank() const
+		// {
+		// 	return this->rank;
+		// }
+
+		// template <class P, class I, class T>
+		// inline I Particle<P, I, T>::getParticleID() const
+		// {
+		// 	return this->particleID;
+		// }
 
 		template <class P, class I, class T>
 		inline void Particle<P, I, T>::setTravelTime(T dt)

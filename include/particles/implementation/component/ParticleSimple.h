@@ -37,9 +37,8 @@ namespace cupcfd
 {
 	namespace particles
 	{
-		template<class I, class T>
-		// template<class M, I, T, class L>
-		class ParticleEmitterSimple;
+		// template<class I, class T>
+		// class ParticleEmitterSimple;
 
 		/**
 		 * This defines a basic particle that has minimal interaction with the
@@ -53,8 +52,8 @@ namespace cupcfd
 		template <class I, class T>
 		class ParticleSimple : public Particle<ParticleSimple<I,T>, I, T>
 		{
-			template <class A, class B>
-			friend class ParticleEmitterSimple;
+			// template <class A, class B>
+			// friend class ParticleEmitterSimple;
 
 			public:
 				// === Members ===

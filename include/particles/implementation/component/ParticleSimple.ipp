@@ -37,17 +37,17 @@ namespace cupcfd
 			this->velocity = source.velocity;
 			this->acceleration = source.acceleration;
 			this->jerk = source.jerk;
+			this->cellGlobalID = source.cellGlobalID;
+			this->lastCellMoveGlobalID = source.lastCellMoveGlobalID;
+			this->particleID = source.particleID;
 			this->rank = source.rank;
 			this->travelDt = source.travelDt;
 			this->decayLevel = source.decayLevel;
 			this->decayRate = source.decayRate;
 
-			this->cellGlobalID = source.cellGlobalID;
-			
 			// Padding doesn't matter for setting initial values, 
 			// they're expected to be garbage
-
-			this->particleID = source.particleID;
+			
 		}
 		
 		template <class I, class T>
@@ -182,19 +182,16 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			// If we are sitting at the non-boundary face, all that remains is to set the correct new cell ID and/or identify if we are going off rank
+
+			if (this->cellGlobalID != this->lastCellMoveGlobalID) {
+				std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
+				throw std::exception();
+			}
 		
-			// ToDo: Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
-		
-			// Retrieve Cell1 and Cell2 ID of the Face, we need to know which we are not currently in (i.e.
-			// the direction we're crossing the face in)
+			// Get local IDs of the two cells either side of face:
 			I cell1LocalID = mesh.getFaceCell1ID(faceLocalID);
 			I cell2LocalID = mesh.getFaceCell2ID(faceLocalID);
-
-			if (cell1LocalID == cell2LocalID) {
-				std::cout << "ERROR: getFaceCell1ID() == getFaceCell12D() for face ID " << faceLocalID << std::endl;
-				return cupcfd::error::E_ERROR;
-			}
-					
+	
 			// Get the Global IDs
 			I node1, node2;
 			status = mesh.cellConnGraph->connGraph.getLocalIndexNode(cell1LocalID, &node1);
@@ -207,47 +204,84 @@ namespace cupcfd
 				std::cout << "ERROR: getLocalIndexNode() failed" << std::endl;
 				return status;
 			}
-					
 			I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
 
-			if(this->cellGlobalID == cell1GlobalID)
-			{
-				this->cellGlobalID = cell2GlobalID;
+			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
+				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
+				return cupcfd::error::E_ERROR;
+			}
 
-				if (this->particleID == 86) {
-					std::cout << " > moved to cell " << cell1GlobalID << " --> " << cell2GlobalID << std::endl;
-					usleep(100*1000);
+			// ToDo: Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
+			I fromCellGlobalID = this->cellGlobalID;
+			I fromCellLocalID;
+			I toCellGlobalID;
+			I toCellLocalID;
+			if(this->cellGlobalID == cell1GlobalID) {
+				fromCellLocalID = cell1LocalID;
+				toCellLocalID = cell2LocalID;
+				toCellGlobalID = cell2GlobalID;
+			} else if (this->cellGlobalID == cell2GlobalID) {
+				fromCellLocalID = cell2LocalID;
+				toCellLocalID = cell1LocalID;
+				toCellGlobalID = cell1GlobalID;
+			} else {
+				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
+				return cupcfd::error::E_ERROR;
+			}
+			bool localFaceAccessible = false;
+			I nFaces = 0;
+			status = mesh.getCellNFaces(fromCellLocalID, &nFaces);
+			if (status != cupcfd::error::E_SUCCESS || nFaces==0) {
+				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+				return status;
+			}
+			for (I i=0; i<nFaces; i++) {
+				I cellFaceID = mesh.getCellFaceID(fromCellLocalID, i);
+				if (cellFaceID == faceLocalID) {
+					localFaceAccessible = true;
+					break;
 				}
 			}
-			else
-			{
-				this->cellGlobalID = cell1GlobalID;
+			if (!localFaceAccessible) {
+				std::cout << "ERROR: Attempting to move particle " << this->particleID << " through inaccessible face" << std::endl;
+				// return cupcfd::error::E_ERROR;
+				throw std::exception();
+			}
 
-				if (this->particleID == 86) {
-					std::cout << " > moved to cell " << cell2GlobalID << " --> " << cell1GlobalID << std::endl;
-					usleep(100*1000);
-				}
+			if(this->cellGlobalID == cell1GlobalID) {
+				this->cellGlobalID = cell2GlobalID;
+			} else {
+				this->cellGlobalID = cell1GlobalID;
+			}
+
+			if (this->particleID == 8601) {
+				std::cout << " > P" << this->particleID << ": cell change: " << fromCellGlobalID << " --> " << toCellGlobalID << std::endl;
+				// std::cout << " > P" << this->particleID << ": cell change: " << oldCellGlobalID << " --> " << this->cellGlobalID << std::endl;
+				usleep(100*1000);
+				// usleep(500*1000);
+			}
+			this->lastCellMoveGlobalID = this->cellGlobalID;
+
+			if (this->cellGlobalID != toCellGlobalID) {
+				std::cout << "ERROR: cell face update failed" << std::endl;
+				throw std::exception();
+			}
+
+			if ((this->particleID == 8601) && (fromCellGlobalID==453)) {
+				std::cout << "ERROR: Check my STDOUT messages. Particle 8601 should be in cell 1062 after the previous face update, but it is in cell 453." << std::endl;
+				// the 'cellGlobalId' is a protected variable, and I am monitoring its setter and this method, the only two ways to modify it. How is 1062 being lost?
+				throw std::exception();
 			}
 
 			// I cellGlobalID = this->getCellGlobalID();
 			// if(cellGlobalID == cell1GlobalID)
 			// {
 			// 	this->setCellGlobalID(cell2GlobalID);
-
-			// 	if (this->particleID == 86) {
-			// 		std::cout << " > moved to cell " << cell1GlobalID << " --> " << cell2GlobalID << std::endl;
-			// 		usleep(100*1000);
-			// 	}
 			// }
 			// else
 			// {
 			// 	this->setCellGlobalID(cell1GlobalID);
-
-			// 	if (this->particleID == 86) {
-			// 		std::cout << " > moved to cell " << cell2GlobalID << " --> " << cell1GlobalID << std::endl;
-			// 		usleep(100*1000);
-			// 	}
 			// }
 			// cellGlobalID = this->getCellGlobalID();
 
@@ -308,7 +342,7 @@ namespace cupcfd
 			this->acceleration = this->acceleration - (2 * (this->acceleration.dotProduct(normal)) * normal);
 			this->jerk = this->jerk - (2 * (this->jerk.dotProduct(normal)) * normal);
 			
-			// Since we reflect, we do not change cell or rank
+			// Since we reflect, we do not change cell or rank		
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -380,9 +414,12 @@ namespace cupcfd
 			int count = 1;
 
 			// Keep as blocks of size 1 incase of compiler rearranging members
-			int blocklengths[11] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
-			MPI_Aint displ[11];
-			MPI_Datatype structTypes[11];
+			// int blocklengths[11] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			// MPI_Aint displ[11];
+			// MPI_Datatype structTypes[11];
+			int blocklengths[12] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			MPI_Aint displ[12];
+			MPI_Datatype structTypes[12];
 
 			// === Set types ===
 			MPI_Datatype componentType;
@@ -392,8 +429,8 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[0] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[1] = componentType;
 			
 			// Block 2: Points
@@ -401,21 +438,22 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[2] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[3] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[4] = componentType;
 			
 			// Block 3: Type I
 			status = cupcfd::comm::mpi::getMPIType(this->cellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[5] = componentType;
+			structTypes[11] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[6] = componentType;
 			
 			// Block 4: Type T
@@ -423,19 +461,19 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[7] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[8] = componentType;
 
-			status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			// status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[9] = componentType;
 			
 			// Block 5: Booleans (Padding)
 			status = cupcfd::comm::mpi::getMPIType(this->padding, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[10] = componentType;			
-			
+
 			// Displacements
 			displ[0] = (MPI_Aint) offsetof(class ParticleSimple, pos);
 			displ[1] = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
@@ -447,13 +485,14 @@ namespace cupcfd
 			displ[7] = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
 			displ[8] = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
 			displ[9] = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
-			displ[10] = (MPI_Aint) offsetof(class ParticleSimple, padding);				
-			
+			displ[10] = (MPI_Aint) offsetof(class ParticleSimple, padding);	
+			displ[11] = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
 			
 			MPI_Datatype vecType;
 			MPI_Datatype vecTypeResized;
 
-			mpiErr = MPI_Type_create_struct(11, blocklengths, displ, structTypes, &vecType);
+			// mpiErr = MPI_Type_create_struct(11, blocklengths, displ, structTypes, &vecType);
+			mpiErr = MPI_Type_create_struct(12, blocklengths, displ, structTypes, &vecType);
 
 			if(mpiErr != MPI_SUCCESS)
 			{

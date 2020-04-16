@@ -31,9 +31,8 @@ namespace cupcfd
 {
 	namespace particles
 	{
-		template<class M, class I, class T, class L>
-		// template<class M, I, T, class L>
-		class ParticleSystemSimpleConfig;
+		// template<class M, class I, class T, class L>
+		// class ParticleSystemSimpleConfig;
 
 		/**
 		 * This class is intended as an interface for specialised particle classes.
@@ -67,8 +66,8 @@ namespace cupcfd
 		template <class P, class I, class T>
 		class Particle : public cupcfd::comm::mpi::CustomMPIType
 		{
-			template <class A, class B, class C, class D>
-			friend class ParticleSystemSimpleConfig;
+			// template <class A, class B, class C, class D>
+			// friend class ParticleSystemSimpleConfig;
 
 			public:
 				// === Members ===
@@ -99,11 +98,9 @@ namespace cupcfd
 				 **/
 				// I cellGlobalID;
 
-				/**
-				 * Get the position of the particle
-				 *
-				 * @return The position of the particle
-				 */
+				I particleID;
+
+				I lastCellMoveGlobalID;
 
 				/**
 				 * Stores the particles rank. If equal to current rank, it is not exchanged.
@@ -111,7 +108,7 @@ namespace cupcfd
 				 * must be exchanged at the next exchange stage (else we will not know what to
 				 * do with it during the next update position stage).
 				 */
-				// I rank;
+				I rank;
 
 				/** Stores the remaining time to travel for 'in-flight' particles **/
 				T travelDt;
@@ -210,11 +207,11 @@ namespace cupcfd
 				 */
 				inline I getCellGlobalID() const;
 
-				// inline void setParticleID(I particleID);
-				inline I getParticleID() const;
+				// // inline void setParticleID(I particleID);
+				// inline I getParticleID() const;
 
-				// inline void setRank(I rank);
-				inline I getRank() const;
+				// // inline void setRank(I rank);
+				// inline I getRank() const;
 
 				/**
 				 * Set the remaining travel time of the particle within the current time period.
@@ -420,12 +417,13 @@ namespace cupcfd
 				virtual cupcfd::error::eCodes deregisterMPIType();
 				virtual inline bool isRegistered();
 
-				// I id;
+			// protected:
+				// I rank;
+				// I cellGlobalID;
+				// I particleID;
 
 			protected:
-				I rank;
 				I cellGlobalID;
-				I particleID;
 		};
 	}
 }

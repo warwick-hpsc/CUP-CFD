@@ -183,7 +183,7 @@ namespace cupcfd
 
 				// Concrete Methods
 
-				long numParticlesEmitted;
+				// long numParticlesEmitted;
 		};
 	}
 }

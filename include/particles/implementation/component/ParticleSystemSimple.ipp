@@ -163,7 +163,8 @@ namespace cupcfd
 
 			for(I i = 0; i < this->particles.size(); i++)
 			{
-				rankIDs[i] = this->particles[i].getRank();
+				rankIDs[i] = this->particles[i].rank;
+				// rankIDs[i] = this->particles[i].getRank();
 			}
 			
 			// Proxy behaviour - sorts and copies
@@ -213,9 +214,12 @@ namespace cupcfd
 
 			for(I i = 0; i < nParticles; i++)
 			{
-				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
+				if(this->particles[i].rank != this->mesh->cellConnGraph->comm->rank)
 				{
-					I index = neighbourIDMapping[this->particles[i].getRank()];
+					I index = neighbourIDMapping[this->particles[i].rank];
+				// if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
+				// {
+				// 	I index = neighbourIDMapping[this->particles[i].getRank()];
 					neighbourCount[index] = neighbourCount[index] + 1;
 				}
 			}
@@ -264,7 +268,8 @@ namespace cupcfd
 			I ptr = 0;
 			for(I i = 0; i < nParticles; i++)
 			{
-				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
+				if(this->particles[i].rank != this->mesh->cellConnGraph->comm->rank)
+				// if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
 				{
 					particleSendBuffer[ptr] = this->particles[i];
 					ptr = ptr + 1; 
@@ -314,7 +319,8 @@ namespace cupcfd
 			for(I i = 0; i < this->particles.size(); i++)
 			{
 				// Gone off-rank and was previously marked as active
-				if((this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
+				if((this->particles[i].rank != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
+				// if((this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
 				{
 					status = this->setParticleInactive(i);
 					if (status != cupcfd::error::E_SUCCESS) {
@@ -377,11 +383,17 @@ namespace cupcfd
 			I particle_86_idx = 0;
 			auto particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[0].getPos());
 			for (I i=0; i<particles.size(); i++) {
-				if (particles[i].getParticleID() == 86) {
+				// if (particles[i].particleID == 86) {
+				if (particles[i].particleID == 8601) {
+				// if (particles[i].getParticleID() == 86) {
+					if (have_particle_86) {
+						std::cout << "ERROR: Multiple particles have ID 8601" << std::endl;
+						throw std::exception();
+					}
 					have_particle_86 = true;
 					particle_86_idx = i;
 					auto particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[i].getPos());
-					break;
+					// break;
 				}
 			}
 
@@ -390,17 +402,17 @@ namespace cupcfd
 			bool first_pass = true;
 			int num_passes = 0;
 			int nGlobalParticles = nGlobalTravelParticles;
-			if (nGlobalParticles == 140) {
-				// Particle 86 becomes a problem at this point in simulation.
-				verbose = true;
-			}
+			// if (nGlobalParticles == 140) {
+			// 	// Particle 86 on emitter 0 becomes a problem at this point in simulation.
+			// 	verbose = true;
+			// }
 			while(nGlobalTravelParticles > 0)
 			{
-				if (first_pass) {
-					// std::cout << "  " << nGlobalTravelParticles << " global travellers" << std::endl;
-					std::cout << "  " << nGlobalTravelParticles << " global travellers, " << this->particles.size() << " local particles" << std::endl;
-					usleep(100*1000);
-				}
+				// if (first_pass) {
+				// 	// std::cout << "  " << nGlobalTravelParticles << " global travellers" << std::endl;
+				// 	std::cout << "  " << nGlobalTravelParticles << " global travellers, " << this->particles.size() << " local particles" << std::endl;
+				// 	usleep(100*1000);
+				// }
 
 				// Advance particles by at most one cell
 				status = this->updateSystemAtomic(verbose);
@@ -504,16 +516,16 @@ namespace cupcfd
 				}
 
 				num_passes++;
-				// int max_passes = this->particles.size() * 2;
-				int max_passes = nGlobalParticles * 2;
+				int max_passes = nGlobalParticles * 50;
 				if (num_passes > max_passes) {
-					std::cout << "ERROR: more than " << max_passes << " passes in system update" << std::endl;
+					std::cout << "ERROR: more than " << max_passes << " passes in update of system with just " << nGlobalParticles << " particles, that indicates an infinite loop bug" << std::endl;
 
 					std::cout << "       " << nGlobalTravelParticles << " particles still travelling:" << std::endl;
 					for (I i = 0; i < particles.size(); i++) {
 						if (this->particles[i].getTravelTime() > T(0)) {
-					std::cout << "       > P " << particles[i].getParticleID() << " is still travelling" << std::endl;
-					std::cout << "       > > POS: "; this->particles[i].getPos().print(); std::cout << std::endl;
+							std::cout << "       > P " << particles[i].particleID << " is still travelling" << std::endl;
+							// std::cout << "       > P " << particles[i].getParticleID() << " is still travelling" << std::endl;
+							std::cout << "       > > POS: "; this->particles[i].getPos().print(); std::cout << std::endl;
 						}
 					}
 
@@ -537,12 +549,13 @@ namespace cupcfd
 			// Would be faster if inactive particles are removed
 			for(I i = 0; i < this->particles.size(); i++)
 			{
-				// bool verbose = (particles[i].getParticleID() == 86);
-				bool verbose = (particles[i].getParticleID() == 86) && verbosePermitted;
+				// bool verbose = (particles[i].getParticleID() == 86) && verbosePermitted;
+				bool verbose = (particles[i].particleID == 86) && verbosePermitted;
 
 				if (verbose) {
 					// std::cout << "> Performing particle update" << std::endl;
-					std::cout << "> Updating particle " << particles[i].getParticleID() << std::endl;
+					std::cout << "> Updating particle " << particles[i].particleID << std::endl;
+					// std::cout << "> Updating particle " << particles[i].getParticleID() << std::endl;
 					usleep(100*1000);
 				}
 
@@ -572,7 +585,6 @@ namespace cupcfd
 					
 					// Perform an atomic positional update for every particle in the system, advancing them by at most one cell
 					// This will also update the travel time
-					// auto pos_before_mov = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(this->particles[i].getPos());
 					auto pos_before_mov = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(this->particles[i].getInFlightPos());
 					// status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID);
 					status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, verbose);
@@ -580,7 +592,6 @@ namespace cupcfd
 						std::cout << "ERROR: updatePositionAtomic() failed" << std::endl;
 						return status;
 					}
-					// auto pos_after_mov = this->particles[i].getPos();
 					auto pos_after_mov = this->particles[i].getInFlightPos();
 					if (verbose) {
 						// if (this->getNTravelParticles() == 1) {
@@ -642,7 +653,8 @@ namespace cupcfd
 						if(!this->mesh->getFaceIsBoundary(localFaceID))
 						{
 							// I globalCellIdBefore = this->particles[i].cellGlobalID;
-							I globalCellIdBefore = cellGlobalID;
+							I globalCellIdBefore = this->particles[i].getCellGlobalID();
+							// I globalCellIdBefore = cellGlobalID;
 							status = this->particles[i].updateNonBoundaryFace(*(this->mesh), localFaceID);
 							// I globalCellIdAfter = this->particles[i].cellGlobalID;
 							I globalCellIdAfter = this->particles[i].getCellGlobalID();
@@ -659,7 +671,7 @@ namespace cupcfd
 						else
 						{
 							// I globalCellIdBefore = this->particles[i].cellGlobalID;
-							I globalCellIdBefore = cellGlobalID;
+							I globalCellIdBefore = this->particles[i].getCellGlobalID();
 							I boundaryID = this->mesh->getFaceBoundaryID(localFaceID);
 							I regionID = this->mesh->getBoundaryRegionID(boundaryID);
 							cupcfd::geometry::mesh::RType boundaryType = this->mesh->getRegionType(regionID);
@@ -715,7 +727,8 @@ namespace cupcfd
 					if(!(this->particles[i].getTravelTime() > T(0)) && stepDt > T(0))
 					{
 						if (verbose) {
-							std::cout << "  > > P " << particles[i].getParticleID() << " has no travel time left" << std::endl;
+							std::cout << "  > > P " << particles[i].particleID << " has no travel time left" << std::endl;
+							// std::cout << "  > > P " << particles[i].getParticleID() << " has no travel time left" << std::endl;
 							usleep(1000*1000);
 						}
 						this->nTravelParticles = this->nTravelParticles - 1;

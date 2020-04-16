@@ -26,7 +26,7 @@ SQLITE_ROOT="$SQLITE_INSTALL_PATH"
 ## Link to treetimer library:
 TREETIMER_ROOT="$TREETIMER_PATH"
 
-# ## Optional: clean previous build files:
+## Optional: clean previous build files:
 # rm -rf build
 
 mkdir -p build

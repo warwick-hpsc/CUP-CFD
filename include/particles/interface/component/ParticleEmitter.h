@@ -39,6 +39,8 @@ namespace cupcfd
 		class ParticleEmitter
 		{
 			public:
+				// static int numEmitters;
+
 				// === Members ===
 
 				/**
@@ -56,10 +58,14 @@ namespace cupcfd
 				 */
 				I localCellID;
 
+				I emitterID;
+
 				/**
 				 * Associate this emitter with a certain rank
 				 */
 				I rank;
+
+				long numParticlesEmitted;
 
 				// === Constructors/Deconstructors ===
 
@@ -125,6 +131,16 @@ namespace cupcfd
 
 				// === Pure Virtual Methods ===
 		};
+
+		// class ParticleEmitterStatic
+		// {
+		// 	public:
+		// 		static long numEmitters;
+		// };
+
+		// long numEmitters;
+		// static long numEmitters = 1;
+		// long ParticleEmitterStatic::numEmitters = 0;
 	}
 }
 

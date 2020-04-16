@@ -19,15 +19,19 @@ namespace cupcfd
 {
 	namespace particles
 	{
+		static int numEmitters = 0;
+
 		template <class E, class P, class I, class T>
 		ParticleEmitter<E,P,I,T>::ParticleEmitter(const I localCellID, const I globalCellID, 
 												  const I rank, const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& position)
 		: position(position),
 		  localCellID(localCellID),
 		  globalCellID(globalCellID),
-		  rank(rank)
+		  emitterID(numEmitters),
+		  rank(rank),
+		  numParticlesEmitted(0)
 		{
-
+			numEmitters++;
 		}
 
 		template <class E, class P, class I, class T>

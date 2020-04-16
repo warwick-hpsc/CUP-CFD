@@ -214,13 +214,15 @@ namespace cupcfd
 				(*particles)[i].setDecayRate(decayRate[i]);
 				(*particles)[i].rank = this->rank;				// ToDo: Should be setRank method
 
-				(*particles)[i].particleID = this->numParticlesEmitted;
-				this->numParticlesEmitted++;
+				// (*particles)[i].particleID = this->numParticlesEmitted;
+				(*particles)[i].particleID = this->emitterID + 100*this->numParticlesEmitted;
 
-				if ((*particles)[i].particleID == 86) {
+				if ((*particles)[i].particleID == 8601) {
 					std::cout << "particle " << (*particles)[i].particleID << " emitted at POS: ";
 					(*particles)[i].getPos().print(); std::cout << std::endl;
 				}
+
+				this->numParticlesEmitted++;
 			}
 
 			free(accelerationX);

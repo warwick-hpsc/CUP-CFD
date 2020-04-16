@@ -84,6 +84,8 @@ namespace cupcfd
 		
 			// Build the initial system
 			*system = new ParticleSystemSimple<M,I,T,L>(meshPtr);
+
+			// cupcfd::particles::ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T>::numEmitters = 0;
 			
 			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the system
 			for(I i = 0; i < this->emitterConfigs.size(); i++)

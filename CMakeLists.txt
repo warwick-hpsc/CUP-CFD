@@ -57,10 +57,18 @@ set (cupcfd_VERSION_MINOR 0)
 # ======== Set Compile Flags ===========
 # ======================================
 
-if(COMPILER STREQUAL "intel")
-  set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+if(RTYPE STREQUAL "Debug")
+  if(COMPILER STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -mkl")
+  else()
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -w -Wfatal-errors")
+  endif()
 else()
-  set(CMAKE_CXX_FLAGS "-O2 -g -w")
+  if(COMPILER STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+  else()
+    set(CMAKE_CXX_FLAGS "-O2 -g -w -Wfatal-errors")
+  endif()
 endif()
 
 # ====================================================================================================================================

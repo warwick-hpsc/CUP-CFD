@@ -86,7 +86,7 @@ namespace cupcfd
 			{
 				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
-			
+
 			return cupcfd::error::E_SUCCESS;
 		}
 		
