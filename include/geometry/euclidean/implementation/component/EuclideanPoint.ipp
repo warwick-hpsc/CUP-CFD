@@ -184,10 +184,15 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline void EuclideanPoint<T,N>::print()
 			{
-				for(int i = 0; i < N; i++)
-				{
-					std::cout << "P_" << i << ": " << this->cmp[i] << ", ";
+				if (N > 0) {
+					std::cout << "[ " << this->cmp[0];
 				}
+				for(int i = 1; i < N; i++)
+				{
+					std::cout << ", " << this->cmp[i];
+				}
+				std::cout << " ]";
+				// std::cout << " ]" << std::endl;
 			}
 		} // namespace euclidean
 	} // namespace geometry

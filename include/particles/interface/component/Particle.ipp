@@ -275,7 +275,6 @@ namespace cupcfd
 							// Progress onto next face instead
 							continue;
 						}
-						face_was_found = true;
 							
 						intersectionCount = intersectionCount + 1;
 															
@@ -326,7 +325,8 @@ namespace cupcfd
 							// Exiting the cell via this face if time permits			
 							exitFaceID = localFaceID;
 							exitIntersection = intersection;
-							exitTravelTime = travelTime;							
+							exitTravelTime = travelTime;
+							face_was_found = true;
 							break;
 						}
 						
@@ -336,14 +336,20 @@ namespace cupcfd
 						// must be the one we leave by, else it will be overwritten by the correct face (and
 						// then the loop is exited via a break)
 												
+						// I think the following logic is faulty. For a start, 'intersection' has no relation to 
+						// 'localFaceID'.
+						std::cout << "ERROR: Failed to find cell face that particle " << this->particleID << " will exit through" << std::endl;
+						return cupcfd::error::E_ERROR;
+						// throw std::exception();
 						if(arth::isEqual(travelTime, 0.0) && (exitFaceID == -1))
 						{
-							// if (print_info) {
-							// 	std::cout << "> did not find exit face, using current as fallback" << std::endl;
-							// }
+							if (print_info) {
+								std::cout << "> did not find exit face, using current as fallback" << std::endl;
+							}
 							exitFaceID = localFaceID;
 							exitIntersection = intersection;
 							exitTravelTime = 0.0;
+							face_was_found = true;
 						}
 					}
 				}
@@ -370,9 +376,9 @@ namespace cupcfd
 			// (a) Does not exit cell
 			if(exitTravelTime > this->travelDt)
 			{
-				if (print_info) {
-					std::cout << "  > > > does not exit cell" << std::endl;
-				}
+				// if (print_info) {
+				// 	std::cout << "  > does not exit cell" << std::endl;
+				// }
 				// Not enough travel time on the particle left to reach face
 				// Particle does not exit cell
 				*exitFaceLocalID = -1;
@@ -386,10 +392,10 @@ namespace cupcfd
 			}
 			else
 			{
-				// if (print_info) {
-				// 	// std::cout << "  > > > does exit cell, or stops on face" << std::endl;
-				// 	std::cout << "  > > > does exit cell after " << exitTravelTime << " seconds" << std::endl;
-				// }
+				if (print_info) {
+					// std::cout << "  > > > does exit cell, or stops on face" << std::endl;
+					std::cout << "  >> exits cell after " << exitTravelTime << " seconds" << std::endl;
+				}
 
 				// Stops either exactly on or exits via face.
 

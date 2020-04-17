@@ -231,10 +231,10 @@ namespace cupcfd
 				// (*particles)[i].particleID = this->numParticlesEmitted;
 				(*particles)[i].particleID = this->emitterID + 100*this->numParticlesEmitted;
 
-				if ((*particles)[i].particleID == 8601) {
-					std::cout << "particle " << (*particles)[i].particleID << " emitted at POS: ";
-					(*particles)[i].getPos().print(); std::cout << std::endl;
-				}
+				// if ((*particles)[i].particleID == 8601) {
+				// 	std::cout << "particle " << (*particles)[i].particleID << " emitted at POS: ";
+				// 	(*particles)[i].getPos().print(); std::cout << std::endl;
+				// }
 
 				this->numParticlesEmitted++;
 			}

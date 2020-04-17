@@ -116,41 +116,41 @@ namespace cupcfd
 		}
 				
 
-		template <class I, class T>
-		inline cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocity(T dt)
-		{
-			// Change in velocity = acceleration * change in time
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> dV = this->acceleration * dt;
+		// template <class I, class T>
+		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocity(T dt)
+		// {
+		// 	// Change in velocity = acceleration * change in time
+		// 	cupcfd::geometry::euclidean::EuclideanVector<T,3> dV = this->acceleration * dt;
 
-			// Velocity = Start Velocity + Change in Velocity
-			this->velocity = this->velocity + dV;
+		// 	// Velocity = Start Velocity + Change in Velocity
+		// 	this->velocity = this->velocity + dV;
 
-			return cupcfd::error::E_SUCCESS;
-		}
+		// 	return cupcfd::error::E_SUCCESS;
+		// }
 		
-		template <class I, class T>
-		inline cupcfd::error::eCodes ParticleSimple<I,T>::updateAcceleration(T dt)
-		{
-			// Change in acceleration = jerk * change in time
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> dA = this->jerk * dt;
+		// template <class I, class T>
+		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateAcceleration(T dt)
+		// {
+		// 	// Change in acceleration = jerk * change in time
+		// 	cupcfd::geometry::euclidean::EuclideanVector<T,3> dA = this->jerk * dt;
 
-			// Velocity = Start Velocity + Change in Velocity
-			this->acceleration = this->acceleration + dA;
+		// 	// Velocity = Start Velocity + Change in Velocity
+		// 	this->acceleration = this->acceleration + dA;
 
-			return cupcfd::error::E_SUCCESS;
-		}
+		// 	return cupcfd::error::E_SUCCESS;
+		// }
 		
-		template <class I, class T>
-		inline cupcfd::error::eCodes ParticleSimple<I,T>::updateDecayLevel(T dt)
-		{
-			// Change in decay = rate of decay * change in time
-			T dR = this->decayRate * dt;
+		// template <class I, class T>
+		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateDecayLevel(T dt)
+		// {
+		// 	// Change in decay = rate of decay * change in time
+		// 	T dR = this->decayRate * dt;
 			
-			// ToDo: Should probably put a abs on decay here, but need to match appropriate one for template type....
-			this->decayLevel = this->decayLevel - dR;
+		// 	// ToDo: Should probably put a abs on decay here, but need to match appropriate one for template type....
+		// 	this->decayLevel = this->decayLevel - dR;
 			
-			return cupcfd::error::E_SUCCESS;
-		}	
+		// 	return cupcfd::error::E_SUCCESS;
+		// }	
 
 		template <class I, class T>
 		template <class M, class L>
@@ -258,12 +258,10 @@ namespace cupcfd
 				this->cellGlobalID = cell1GlobalID;
 			}
 
-			if (this->particleID == 8601) {
-				std::cout << " > P" << this->particleID << ": cell change: " << fromCellGlobalID << " --> " << toCellGlobalID << std::endl;
-				// std::cout << " > P" << this->particleID << ": cell change: " << oldCellGlobalID << " --> " << this->cellGlobalID << std::endl;
-				usleep(100*1000);
-				// usleep(500*1000);
-			}
+			// if (this->particleID == 8601) {
+			// 	std::cout << " > P" << this->particleID << ": cell change: " << fromCellGlobalID << " --> " << toCellGlobalID << std::endl;
+			// 	usleep(100*1000);
+			// }
 			this->lastCellMoveGlobalID = this->cellGlobalID;
 
 			if (this->cellGlobalID != toCellGlobalID) {
@@ -377,7 +375,7 @@ namespace cupcfd
 			return this->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID); 
 		}	
 		
-		
+
 		template <class I, class T>
 		inline cupcfd::error::eCodes ParticleSimple<I,T>::getMPIType(MPI_Datatype * dType)
 		{
