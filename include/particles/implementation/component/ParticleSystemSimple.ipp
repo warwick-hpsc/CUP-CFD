@@ -275,6 +275,29 @@ namespace cupcfd
 					ptr = ptr + 1; 
 				}
 			}
+
+			// if (totalSendCount > 0) {
+			// 	std::cout << "Sending " << totalSendCount << " particles to a neighbour" << std::endl;
+			// }
+			
+			// if (totalSendCount > 0) {
+			// 	std::cout << "Sending " << totalSendCount << " particles to a neighbour" << std::endl;
+			// 	if (totalSendCount < 5) {
+			// 		std::cout << "> IDs: ";
+			// 		std::cout << particleSendBuffer[0].particleID;
+			// 		for(I i = 1; i < totalSendCount; i++) {
+			// 			std::cout << ", " << particleSendBuffer[i].particleID;
+			// 		}
+			// 		std::cout << std::endl;
+
+			// 		std::cout << "> Cell IDs: ";
+			// 		std::cout << particleSendBuffer[0].getCellGlobalID() << " (last = " << particleSendBuffer[0].lastCellMoveGlobalID << ")";
+			// 		for(I i = 1; i < totalSendCount; i++) {
+			// 			std::cout << ", " << particleSendBuffer[i].getCellGlobalID() << " (last = " << particleSendBuffer[i].lastCellMoveGlobalID << ")";
+			// 		}
+			// 		std::cout << std::endl;
+			// 	}
+			// }
 			
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
 								   particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
@@ -289,8 +312,31 @@ namespace cupcfd
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
 			MPI_Waitall(nRequests, requests, statuses);
-			free(statuses);				   
-							   
+			free(statuses);
+
+			// if (totalRecvCount > 0) {
+			// 	std::cout << "Received " << totalRecvCount << " particles from a neighbour" << std::endl;
+			// }
+						
+			// if (totalRecvCount > 0) {
+			// 	std::cout << "Received " << totalRecvCount << " particles from a neighbour" << std::endl;
+			// 	if (totalRecvCount < 5) {
+			// 		std::cout << "> IDs: ";
+			// 		std::cout << particleRecvBuffer[0].particleID;
+			// 		for(I i = 1; i < totalRecvCount; i++) {
+			// 			std::cout << ", " << particleRecvBuffer[i].particleID;
+			// 		}
+			// 		std::cout << std::endl;
+					
+			// 		std::cout << "> Cell IDs: ";
+			// 		std::cout << particleRecvBuffer[0].getCellGlobalID() << " (last = " << particleRecvBuffer[0].lastCellMoveGlobalID << ")";
+			// 		for(I i = 1; i < totalRecvCount; i++) {
+			// 			std::cout << ", " << particleRecvBuffer[i].getCellGlobalID() << " (last = " << particleRecvBuffer[i].lastCellMoveGlobalID << ")";
+			// 		}
+			// 		std::cout << std::endl;
+			// 	}
+			// }
+
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
@@ -300,8 +346,6 @@ namespace cupcfd
 					return status;
 				}
 			}
-			// if (totalRecvCount > 0)
-			// 	std::cout << "Received " << totalRecvCount << " particles from a neighbour" << std::endl;
 			
 			// Tidyup Stage
 			// Free temporary buffers
@@ -336,6 +380,8 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystem(T dt)
 		{
+			// std::cout << "UPDATE SYSTEM" << std::endl;
+
 			// ToDo: Notes
 			// If a particle is not going off-rank, we could theoretically keep performing atomic updates for those
 			// particles till they run out of travel time in this dt period, or they go off-rank.
@@ -358,7 +404,7 @@ namespace cupcfd
 			{
 				particles[i].inflightPos = particles[i].pos;
 			}
-			
+
 			// (2) Generate any new particles from the emitter, and add them to the system (with the
 			// appropriate time remaining in this period depending on when they were generated)
 			status = this->generateEmitterParticles(dt);
@@ -379,21 +425,38 @@ namespace cupcfd
 				return status;
 			}
 
+			// Check for particles with same ID:
+			if (particles.size() > 0) {
+				for (I i=0; i<particles.size(); i++) {
+					for (I j=i+1; j<particles.size(); j++) {
+						if (particles[i].particleID == particles[j].particleID) {
+							std::cout << "ERROR: Detected duplicate of particle ID " << particles[i].particleID << std::endl;
+							std::cout << "       > original at idx=" << i << std::endl;
+							std::cout << "       > duplicate at idx=" << j << std::endl;
+							return cupcfd::error::E_ERROR;
+						}
+					}
+				}
+			}
+
 			bool have_particle_86 = false;
 			I particle_86_idx = 0;
-			auto particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[0].getPos());
-			for (I i=0; i<particles.size(); i++) {
-				// if (particles[i].particleID == 86) {
-				if (particles[i].particleID == 8601) {
-				// if (particles[i].getParticleID() == 86) {
-					if (have_particle_86) {
-						std::cout << "ERROR: Multiple particles have ID 8601" << std::endl;
-						throw std::exception();
+			cupcfd::geometry::euclidean::EuclideanPoint<T,3> particle_86_last_pos;
+			if (particles.size() > 0) {
+				particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[0].getPos());
+				for (I i=0; i<particles.size(); i++) {
+					// if (particles[i].particleID == 86) {
+					if (particles[i].particleID == 8601) {
+					// if (particles[i].getParticleID() == 86) {
+						if (have_particle_86) {
+							std::cout << "ERROR: Multiple particles have ID 8601" << std::endl;
+							throw std::exception();
+						}
+						have_particle_86 = true;
+						particle_86_idx = i;
+						particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[i].getPos());
+						// break;
 					}
-					have_particle_86 = true;
-					particle_86_idx = i;
-					auto particle_86_last_pos = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(particles[i].getPos());
-					// break;
 				}
 			}
 
@@ -740,6 +803,12 @@ namespace cupcfd
 		}
 		
 		template <class M, class I, class T, class L>
+		I ParticleSystemSimple<M,I,T,L>::getNEmitters()
+		{
+			return this->emitters.size();
+		}
+		
+		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNParticles()
 		{
 			return this->particles.size();
@@ -811,6 +880,14 @@ namespace cupcfd
 				
 				for(I j = 0; j < nNewParticles; j++)
 				{
+					// Check that new particle does not already exist:
+					for (I k=0; k<this->particles.size(); k++) {
+						if (this->particles[k].particleID == newParticles[j].particleID) {
+							std::cout << "ERROR: Particle with ID " << newParticles[j].particleID << " already in system" << std::endl;
+							return cupcfd::error::E_ERROR;
+						}
+					}
+
 					this->addParticle(newParticles[j]);
 				}
 				

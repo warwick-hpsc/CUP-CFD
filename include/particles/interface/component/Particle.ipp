@@ -100,14 +100,24 @@ namespace cupcfd
 		template <class P, class I, class T>
 		inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
 		{
+			// std::cout << "Request received to move particle ID " << this->particleID << " from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << std::endl;
+			// usleep(100*1000);
+
 			if (this->cellGlobalID != this->lastCellMoveGlobalID) {
-				// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
+				std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
 				throw std::exception();
 			}
-			if (this->particleID == 8601) {
-				std::cout << " P86 being moved from C" << this->cellGlobalID << " --> " << cellGlobalID << std::endl;
-				usleep(100*1000);
+			if (this->cellGlobalID == cellGlobalID) {
+				// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << " to " << cellGlobalID << " but it is already in that cell" << std::endl;
+				std::cout << "ERROR: Attempting to update a particle " << this->particleID << " to be in cell " << cellGlobalID << " but it is already in that cell" << std::endl;
+				throw std::exception();
 			}
+
+			// // if (this->particleID == 8601) {
+			// 	// std::cout << "Particle ID " << this->particleID << " being moved from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << std::endl;
+			// 	std::cout << "> request granted" << std::endl;
+			// 	usleep(100*1000);
+			// // }
 			this->cellGlobalID = cellGlobalID;
 			this->lastCellMoveGlobalID = cellGlobalID;
 		}

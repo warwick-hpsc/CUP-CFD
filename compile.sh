@@ -32,8 +32,8 @@ TREETIMER_ROOT="$TREETIMER_PATH"
 mkdir -p build
 
 # Compile!
-RTYPE=Release
-# RTYPE=Debug
+# RTYPE=Release
+RTYPE=Debug
 cd build
 cmake .. -DHDF5_ROOT="$HDF5_ROOT" \
          -DCMAKE_BUILD_TYPE="$RTYPE" \

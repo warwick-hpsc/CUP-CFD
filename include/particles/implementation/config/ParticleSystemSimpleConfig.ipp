@@ -67,7 +67,11 @@ namespace cupcfd
 				this->emitterConfigs.push_back(source.emitterConfigs[i]->clone());
 			}
 			
-			this->particleSourceConfig = source.particleSourceConfig->clone();
+			if (source.particleSourceConfig != nullptr) {
+				this->particleSourceConfig = source.particleSourceConfig->clone();
+			} else {
+				this->particleSourceConfig = nullptr;
+			}
 		}
 
 		template <class M, class I, class T, class L>
@@ -137,7 +141,7 @@ namespace cupcfd
 				}
 				
 			}
-			
+
 			// Once Particle Sources are done, repeat the same process for adding particles when we add a particle source to this method
 			// ToDo: Since we have to check whether every particle is in any of this ranks cells, this could get very expensive (m * n where both
 			// m and n could be large). Storing rank data doesn't work if the decomposition could change between loads - consider alternatives?
@@ -179,7 +183,7 @@ namespace cupcfd
 					std::cout << "ERROR: getParticles() failed" << std::endl;
 					return status;
 				}
-				
+
 				// Add particles to the system, but only if they exist on this ranks mesh partition
 				for(I i = 0; i < nParticles; i++)
 				{
@@ -220,6 +224,12 @@ namespace cupcfd
 				// Destroy particle source object
 				delete(particleSource);
 			}		
+			
+			// if(this->particleSourceConfig != nullptr) {
+			// 	std::cout << "This rank has " << (*system)->getNEmitters() << " particle emitters and one source" << std::endl;
+			// } else {
+			// 	std::cout << "This rank has " << (*system)->getNEmitters() << " particle emitters" << std::endl;
+			// }
 			
 			// Done
 			return cupcfd::error::E_SUCCESS;

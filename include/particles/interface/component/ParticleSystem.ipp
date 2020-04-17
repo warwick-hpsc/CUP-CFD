@@ -75,6 +75,12 @@ namespace cupcfd
 		}
 		
 		template <class S, class E, class P, class M, class I, class T, class L>
+		I ParticleSystem<S,E,P,M,I,T,L>::getNEmitters()
+		{
+			return static_cast<S*>(this)->getNEmitters();
+		}
+		
+		template <class S, class E, class P, class M, class I, class T, class L>
 		I ParticleSystem<S,E,P,M,I,T,L>::getNActiveParticles()
 		{
 			return static_cast<S*>(this)->getNActiveParticles();

@@ -65,6 +65,7 @@ namespace cupcfd
 				~ParticleSystemSimple();
 
 				// === Interface Methods ===
+				I getNEmitters();
 				I getNParticles();
 				I getNActiveParticles();
 				I getNTravelParticles();

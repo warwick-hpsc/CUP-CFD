@@ -184,7 +184,7 @@ namespace cupcfd
 			// If we are sitting at the non-boundary face, all that remains is to set the correct new cell ID and/or identify if we are going off rank
 
 			if (this->cellGlobalID != this->lastCellMoveGlobalID) {
-				std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
+				std::cout << "ERROR: Attempting to update cell of P" << this->particleID << ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
 				throw std::exception();
 			}
 		
@@ -206,6 +206,9 @@ namespace cupcfd
 			}
 			I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
+
+			// std::cout << "Request received to move particle ID " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << std::endl;
+			// usleep(100*1000);
 
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
@@ -264,15 +267,18 @@ namespace cupcfd
 			this->lastCellMoveGlobalID = this->cellGlobalID;
 
 			if (this->cellGlobalID != toCellGlobalID) {
-				std::cout << "ERROR: cell face update failed" << std::endl;
-				throw std::exception();
+				// std::cout << "ERROR: cell face update failed" << std::endl;
+				throw std::runtime_error("cell face update failed");
 			}
 
-			if ((this->particleID == 8601) && (fromCellGlobalID==453)) {
-				std::cout << "ERROR: Check my STDOUT messages. Particle 8601 should be in cell 1062 after the previous face update, but it is in cell 453." << std::endl;
-				// the 'cellGlobalId' is a protected variable, and I am monitoring its setter and this method, the only two ways to modify it. How is 1062 being lost?
-				throw std::exception();
-			}
+			// if ((this->particleID == 8601) && (fromCellGlobalID==453)) {
+			// 	std::cout << "Request received to move particle ID " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << std::endl;
+			// 	// usleep(100*1000);
+
+			// 	std::cout << "ERROR: Check my STDOUT messages. Particle 8601 should be in cell 1062 after the previous face update, but it is in cell 453." << std::endl;
+			// 	// the 'cellGlobalId' is a protected variable, and I am monitoring its setter and this method, the only two ways to modify it. How is 1062 being lost?
+			// 	throw std::exception();
+			// }
 
 			// I cellGlobalID = this->getCellGlobalID();
 			// if(cellGlobalID == cell1GlobalID)
@@ -413,86 +419,134 @@ namespace cupcfd
 			// Only need one block since all of same type
 			int count = 1;
 
+			// const int nb = 11;
+			// const int nb = 12;
+			const int nb = 13;
+
 			// Keep as blocks of size 1 incase of compiler rearranging members
-			// int blocklengths[11] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
-			// MPI_Aint displ[11];
-			// MPI_Datatype structTypes[11];
-			int blocklengths[12] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
-			MPI_Aint displ[12];
-			MPI_Datatype structTypes[12];
+			// int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			// int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			MPI_Aint displ[nb];
+			MPI_Datatype structTypes[nb];
 
 			// === Set types ===
 			MPI_Datatype componentType;
+
+			int idx = 0;
 						
-			// Block 1: Vectors
+			// Position
 			status = cupcfd::comm::mpi::getMPIType(this->pos, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[0] = componentType;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[1] = componentType;
+			// In-flight position
+			status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
+			idx++;
 			
-			// Block 2: Points
+			// Velocity
 			status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[2] = componentType;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[3] = componentType;
+			// Acceleration
+			status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[4] = componentType;
+			// Jerk
+			status = cupcfd::comm::mpi::getMPIType(this->jerk, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);	
+			idx++;
 			
-			// Block 3: Type I
+			// Particle ID
+			status = cupcfd::comm::mpi::getMPIType(this->particleID, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, particleID);
+			idx++;
+
+			// Cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->cellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[5] = componentType;
-			structTypes[11] = componentType;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[6] = componentType;
+			// Last cell global ID
+			status = cupcfd::comm::mpi::getMPIType(this->lastCellMoveGlobalID, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
+			idx++;
+
+			// Rank
+			status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
+			idx++;
 			
-			// Block 4: Type T
+			// Travel dt
 			status = cupcfd::comm::mpi::getMPIType(this->travelDt, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[7] = componentType;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[8] = componentType;
+			// Decay level
+			status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
+			idx++;
 
-			// status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[9] = componentType;
+			// Decay rate
+			status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
+			idx++;
 			
 			// Block 5: Booleans (Padding)
+			if (idx == nb) {
+				std::cout << "ERROR: Attempting to add too many items to ParticleSimple MPI_type" << std::endl;
+				throw std::exception();
+			}
 			status = cupcfd::comm::mpi::getMPIType(this->padding, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[10] = componentType;			
+			structTypes[idx] = componentType;
 
-			// Displacements
-			displ[0] = (MPI_Aint) offsetof(class ParticleSimple, pos);
-			displ[1] = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
-			displ[2] = (MPI_Aint) offsetof(class ParticleSimple, velocity);
-			displ[3] = (MPI_Aint) offsetof(class ParticleSimple, acceleration);		
-			displ[4] = (MPI_Aint) offsetof(class ParticleSimple, jerk);	
-			displ[5] = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
-			displ[6] = (MPI_Aint) offsetof(class ParticleSimple, rank);	
-			displ[7] = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
-			displ[8] = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
-			displ[9] = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
-			displ[10] = (MPI_Aint) offsetof(class ParticleSimple, padding);	
-			displ[11] = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
-			
+
+			// // Displacements
+			// displ[0]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
+			// displ[1]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
+			// displ[2]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
+			// displ[3]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);	
+			// displ[4]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);	
+			// displ[5]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
+			// displ[6]  = (MPI_Aint) offsetof(class ParticleSimple, rank);	
+			// displ[7]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
+			// displ[8]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
+			// displ[9]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
+			// displ[10] = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
+			// displ[nb-1] = (MPI_Aint) offsetof(class ParticleSimple, padding);	
+
 			MPI_Datatype vecType;
 			MPI_Datatype vecTypeResized;
 
-			// mpiErr = MPI_Type_create_struct(11, blocklengths, displ, structTypes, &vecType);
-			mpiErr = MPI_Type_create_struct(12, blocklengths, displ, structTypes, &vecType);
+			mpiErr = MPI_Type_create_struct(nb, blocklengths, displ, structTypes, &vecType);
 
 			if(mpiErr != MPI_SUCCESS)
 			{
