@@ -848,7 +848,7 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>
-			inline void EuclideanVector<T,N>::print()
+			inline void EuclideanVector<T,N>::print() const
 			{
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];

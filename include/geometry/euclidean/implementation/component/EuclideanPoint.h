@@ -550,7 +550,7 @@ namespace cupcfd
 
 					inline bool isRegistered();
 
-					void print();
+					inline void print() const;
 			};
 		} // namespace euclidean
 	} // namespace geometry

@@ -81,6 +81,8 @@ int main (int argc, char ** argv)
 	// Use all processes
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+	std::cout << "RANK " << comm.rank << std::endl;
+
 	// Register the custom MPI types
 	// ToDo: Would prefer to use static methods for these, but since we
 	// setup the interface via inheritance its difficult to do so

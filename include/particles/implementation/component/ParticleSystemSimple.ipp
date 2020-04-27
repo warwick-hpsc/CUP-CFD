@@ -499,7 +499,9 @@ namespace cupcfd
 						}
 					}
 				}
-				if (nGlobalParticles == 138 && have_bugged_particle) {
+				// if (nGlobalParticles == 138 && have_bugged_particle) {
+				if (nGlobalParticles == 138 && have_bugged_particle && this->mesh->cellConnGraph->comm->rank==0) {
+					// The error occurs just after bugged particle is transferred from rank 1 -> 0
 					verbose = true;
 				}
 
@@ -629,7 +631,8 @@ namespace cupcfd
 			{
 				// bool verbose = (particles[i].getParticleID() == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 8601) && verbosePermitted;
-				bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
+				// bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
+				bool verbose = (particles[i].particleID == 1);
 
 				if (verbose) {
 					// std::cout << "> Performing particle update" << std::endl;
@@ -658,6 +661,11 @@ namespace cupcfd
 						std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
 						return status;
 					}
+
+					if (verbose) {
+						this->particles[i].print();
+						usleep(1000*1000);
+					}
 					
 					// Note: For particles with no further travel time, the following steps must not change the state
 					// of the particle and system.
@@ -666,40 +674,30 @@ namespace cupcfd
 					// This will also update the travel time
 					auto pos_before_mov = cupcfd::geometry::euclidean::EuclideanPoint<T,3>(this->particles[i].getInFlightPos());
 					// status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID);
+					// status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, false);
 					status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, verbose);
+					// status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, true);
+					// try {
+					// 	status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, verbose);
+					// } catch (...) {
+					// 	std::cout << "Caught exception, repeating operation with vebose enabled" << std::endl;
+					// 	// Repeat with verbose enabled
+					// 	status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, true);
+					// }
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: updatePositionAtomic() failed" << std::endl;
 						return status;
 					}
 					auto pos_after_mov = this->particles[i].getInFlightPos();
 					if (verbose) {
-						// if (this->getNTravelParticles() == 1) {
-							// if (this->particles[i].getTravelTime() > T(0)) {
-								// if (pos_after_mov == pos_before_mov) {
-								bool movement = false;
-								for(int i=0; i<3; i++) {
-									if(!(cupcfd::utility::arithmetic::kernels::isEqual(pos_before_mov.cmp[i], pos_after_mov.cmp[i]))) {
-										movement = true;
-									}
-								}
-
-								if (movement) {
-									// std::cout << "  > > particle " << particles[i].getParticleID() << " did move (dt = " << stepDt << ")" << std::endl;
-									// std::cout << "  > > > flight delta = "; (pos_after_mov - pos_before_mov).print(); std::cout << std::endl;
-									std::cout << "  > post-flight POS = "; pos_after_mov.print(); std::cout << std::endl;
-								} else {
-									// std::cout << "  > > particle " << particles[i].getParticleID() << " did not move (dt = " << stepDt << ")" << std::endl;
-									std::cout << "  > no movement" << std::endl;
-								}
-							// }
-							// else {
-							// 	std::cout << "  > > particle " << particles[i].getParticleID() << " did not move (dt = " << stepDt << ")" << std::endl;
-							// }
+						// std::cout << "  > post-flight state:" << std::endl;
+						// bool movement = false;
+						// for(int i=0; i<3; i++) {
+						// 	if(!(cupcfd::utility::arithmetic::kernels::isEqual(pos_before_mov.cmp[i], pos_after_mov.cmp[i]))) {
+						// 		movement = true;
+						// 	}
 						// }
-						// std::cout << "  > > P " << particles[i].getParticleID() << " is in cell " << this->particles[i].cellGlobalID << std::endl;
-						// std::cout << "  > cell " << this->particles[i].cellGlobalID << std::endl;
-						std::cout << "  > cell " << cellGlobalID << std::endl;
-						std::cout << "  > travel time left = " << this->particles[i].getTravelTime() << std::endl;
+						this->particles[i].print();
 						usleep(1000*1000);
 					}
 	
@@ -740,8 +738,6 @@ namespace cupcfd
 							// I globalCellIdAfter = this->particles[i].cellGlobalID;
 							I globalCellIdAfter = this->particles[i].getCellGlobalID();
 							if (verbose) {
-								// std::cout << "  > > > particle " << 
-								// std::cout << "  > > P " << particles[i].getParticleID() << " moved from cell " << globalCellIdBefore << " --> " << globalCellIdAfter << std::endl;
 								std::cout << "  > > moved from cell " << globalCellIdBefore << " --> " << globalCellIdAfter << std::endl;
 							}
 							if (status != cupcfd::error::E_SUCCESS) {
@@ -808,7 +804,7 @@ namespace cupcfd
 					if(!(this->particles[i].getTravelTime() > T(0)) && stepDt > T(0))
 					{
 						if (verbose) {
-							std::cout << "  > > P " << particles[i].particleID << " has no travel time left" << std::endl;
+							std::cout << "  > P " << particles[i].particleID << " has no travel time left" << std::endl;
 							// std::cout << "  > > P " << particles[i].getParticleID() << " has no travel time left" << std::endl;
 							usleep(1000*1000);
 						}

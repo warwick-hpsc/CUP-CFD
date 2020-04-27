@@ -25,6 +25,8 @@
 
 #include <fstream>
 
+#include <typeinfo>
+
 namespace cupcfd
 {
 	namespace particles
@@ -203,7 +205,7 @@ namespace cupcfd
 					status = test1.buildDistributionConfig(distConfig);
 					return status;
 				}
-				
+
 				if(this->configData[fieldName].isMember("NormalDistribution"))
 				{
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["NormalDistribution"]);
@@ -223,6 +225,7 @@ namespace cupcfd
 			}
 			
 			// No viable JSON found for a distribution
+			std::cout << "ERROR: Field '" << fieldName << "' not found in ParticleEmitterSimple's json" << std::endl;
 			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 

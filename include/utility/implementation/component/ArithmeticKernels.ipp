@@ -21,7 +21,8 @@
 #endif
 
 #ifndef CUPCFD_ZERO_COMP_TOL_D
-#define CUPCFD_ZERO_COMP_TOL_D 1.0E-8
+// #define CUPCFD_ZERO_COMP_TOL_D 1.0E-8
+#define CUPCFD_ZERO_COMP_TOL_D 1.0E-18
 #endif
 
 namespace cupcfd

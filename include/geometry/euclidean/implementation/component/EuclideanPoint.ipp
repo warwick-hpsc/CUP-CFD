@@ -182,7 +182,7 @@ namespace cupcfd
 			}		
 			
 			template <class T, unsigned int N>
-			inline void EuclideanPoint<T,N>::print()
+			inline void EuclideanPoint<T,N>::print() const
 			{
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];

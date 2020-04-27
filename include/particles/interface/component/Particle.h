@@ -250,6 +250,11 @@ namespace cupcfd
 				 */
 				inline bool getInactive() const;
 
+
+
+				inline void print() const;
+				
+
 				/**
 				 * Using the currently set velocity, move the particle until it either reaches the
 				 * face of a cell, or runs out of travel time before exiting the cell.
