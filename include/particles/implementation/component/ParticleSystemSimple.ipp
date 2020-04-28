@@ -385,6 +385,8 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystem(T dt)
 		{
+			useconds_t verbose_sleep_period = 100;
+
 			// std::cout << "UPDATE SYSTEM" << std::endl;
 
 			// ToDo: Notes
@@ -482,7 +484,7 @@ namespace cupcfd
 					// std::cout << "  " << nGlobalTravelParticles << " global travellers" << std::endl;
 					// std::cout << "  " << nGlobalTravelParticles << " global travellers, " << this->particles.size() << " local particles" << std::endl;
 					std::cout << "Num travelling particles: global = " << nGlobalTravelParticles << ", local = " << this->getNTravelParticles() << std::endl;
-					usleep(100*1000);
+					usleep(verbose_sleep_period);
 				}
 
 				have_bugged_particle = false;
@@ -624,6 +626,8 @@ namespace cupcfd
 		{
 			cupcfd::error::eCodes status;
 
+			useconds_t verbose_sleep_period = 100;
+
 			// Loop over all particles in vector
 			// ToDo: This approach also loops over particles that are inactive or active but have no further travel time.
 			// Would be faster if inactive particles are removed
@@ -638,7 +642,7 @@ namespace cupcfd
 					// std::cout << "> Performing particle update" << std::endl;
 					std::cout << "> Updating particle " << particles[i].particleID << std::endl;
 					// std::cout << "> Updating particle " << particles[i].getParticleID() << std::endl;
-					usleep(100*1000);
+					usleep(verbose_sleep_period);
 				}
 
 				// Can't guarantee there are no inactive particles so have this check guard here.
@@ -664,7 +668,7 @@ namespace cupcfd
 
 					if (verbose) {
 						this->particles[i].print();
-						usleep(1000*1000);
+						usleep(verbose_sleep_period);
 					}
 					
 					// Note: For particles with no further travel time, the following steps must not change the state
@@ -698,7 +702,7 @@ namespace cupcfd
 						// 	}
 						// }
 						this->particles[i].print();
-						usleep(1000*1000);
+						usleep(verbose_sleep_period);
 					}
 	
 					// Perform an atomic velocity update for every particle in the system, reflecting the time they have advanced by
@@ -795,7 +799,7 @@ namespace cupcfd
 						}
 
 						if (verbose) {
-							usleep(1000*1000);
+							usleep(verbose_sleep_period);
 						}
 					}
 										
@@ -806,7 +810,7 @@ namespace cupcfd
 						if (verbose) {
 							std::cout << "  > P " << particles[i].particleID << " has no travel time left" << std::endl;
 							// std::cout << "  > > P " << particles[i].getParticleID() << " has no travel time left" << std::endl;
-							usleep(1000*1000);
+							usleep(verbose_sleep_period);
 						}
 						this->nTravelParticles = this->nTravelParticles - 1;
 

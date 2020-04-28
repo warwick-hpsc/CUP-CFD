@@ -266,17 +266,18 @@ namespace cupcfd
 
 			// Loop over the faces of the cell
 			bool face_was_found = false;
-			if (verbose) {
-				std::cout << "  > searching for exit face of particle " << this->particleID << std::endl;
-				usleep(verbose_sleep_period);
-			}
+			// if (verbose) {
+			// 	std::cout << "  > searching for exit face of particle " << this->particleID << std::endl;
+			// 	usleep(verbose_sleep_period);
+			// }
 			for(I i = 0; i < nFaces; i++)
 			{
 				// Retrieve the faces of the cell
 				I localFaceID = mesh.getCellFaceID(localCellID, i);
 
 				// bool face_verbose = verbose;
-				bool face_verbose = verbose && (localFaceID == 891);
+				// bool face_verbose = verbose && (localFaceID == 891);
+				bool face_verbose = verbose && (this->cellGlobalID == 1202);
 				
 				// Break the faces up into triangles and compute the intersection with the plane of each triangle and determine the time to reach
 				// Get the vertices/spatial coordinates for each face
@@ -284,7 +285,7 @@ namespace cupcfd
 				
 				if (face_verbose) {
 					std::cout << "    > checking face ID=" << localFaceID << ", #vertices=" << nFaceVertices << " (" << i+1 << " / " << nFaces << ")" << std::endl;
-					// usleep(verbose_sleep_period);
+					usleep(verbose_sleep_period);
 				}
 
 				// Get the first vertex
@@ -337,17 +338,21 @@ namespace cupcfd
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex0 = mesh.getVertexPos(faceVertex0ID);
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex1 = mesh.getVertexPos(faceVertex1ID);
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex2 = mesh.getVertexPos(faceVertex2ID);
-					if (face_verbose) {
-						std::cout << "      > vertices coordinates: " << std::endl;
-						std::cout << "        > " ; faceVertex0.print(); std::cout << std::endl;
-						std::cout << "        > " ; faceVertex1.print(); std::cout << std::endl;
-						std::cout << "        > " ; faceVertex2.print(); std::cout << std::endl;
-						usleep(verbose_sleep_period);
-					}
+					// if (face_verbose) {
+					// 	std::cout << "        > vertices coordinates: " << std::endl;
+					// 	std::cout << "          > " ; faceVertex0.print(); std::cout << std::endl;
+					// 	std::cout << "          > " ; faceVertex1.print(); std::cout << std::endl;
+					// 	std::cout << "          > " ; faceVertex2.print(); std::cout << std::endl;
+					// 	usleep(verbose_sleep_period);
+					// }
 					cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(faceVertex0,faceVertex1, faceVertex2);
 					
-					status = plane.linePlaneIntersection(this->velocity, this->inflightPos, intersection);
-					
+					// status = plane.linePlaneIntersection(this->velocity, this->inflightPos, intersection);
+					if (plane.isVectorParallel(this->velocity)) {
+						status = cupcfd::error::E_EUC_VEC_PARALLEL;
+					} else {
+						status = cupcfd::error::E_SUCCESS;
+					}
 					// Verify that the travel vector (velocity) is not parallel to or fully in the face.
 					if(status == cupcfd::error::E_EUC_VEC_PARALLEL)
 					{
@@ -363,21 +368,45 @@ namespace cupcfd
 					}
 					else
 					{
+						// if (face_verbose) {
+						// 	std::cout << "        > intersection point (old-method) is "; intersection.print() ; std::cout << std::endl;
+						// 	usleep(verbose_sleep_period);
+						// }
+
 						// Verify that the intersection point occurs within the triangle of the face, rather than just the plane
 						// Could also use static method directly rather than create an object
 						cupcfd::geometry::shapes::Triangle3D<T> shape(mesh.getVertexPos(faceVertex0ID), 
 																	  mesh.getVertexPos(faceVertex1ID), 
 																	  mesh.getVertexPos(faceVertex2ID));
 							   
-						if(!shape.isPointInside(intersection))
-						{
-							if (face_verbose) {
-								std::cout << "        > intersection is outside tri shape" << std::endl;
-								usleep(verbose_sleep_period);
-							}
+						// if(!shape.isPointInside(intersection))
+						// {
+						// 	if (face_verbose) {
+						// 		std::cout << "        > intersection is outside tri shape" << std::endl;
+						// 		usleep(verbose_sleep_period);
+						// 	}
+
+						// 	// Progress onto next triangle instead
+						// 	continue;
+						// }
+						// if (!shape.intersection(this->inflightPos, this->velocity, intersection)) {
+						if (!shape.intersection(this->inflightPos, this->velocity, intersection, face_verbose)) {
+							// if (face_verbose) {
+							// 	std::cout << "        > intersection is outside tri shape" << std::endl;
+							// 	usleep(verbose_sleep_period);
+							// }
 
 							// Progress onto next triangle instead
 							continue;
+						}
+						if (face_verbose) {
+							std::cout << "        > intersection point (new-method) is "; intersection.print() ; std::cout << std::endl;
+							std::cout << "        > vertices coordinates: " << std::endl;
+							std::cout << "          > " ; faceVertex0.print(); std::cout << std::endl;
+							std::cout << "          > " ; faceVertex1.print(); std::cout << std::endl;
+							std::cout << "          > " ; faceVertex2.print(); std::cout << std::endl;
+							usleep(verbose_sleep_period);
+							// return cupcfd::error::E_ERROR;
 						}
 							
 						intersectionCount = intersectionCount + 1;
@@ -413,11 +442,14 @@ namespace cupcfd
 						// Time
 						T travelTime = distance / speed;
 
-						// if(this->inflightPos + (this->velocity * travelTime) != intersection)
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3> Inflightpos_post = this->inflightPos + (this->velocity * travelTime);
-						T distance_post;
-						(intersection - Inflightpos_post).length(&distance_post);
-						if (distance_post > distance)
+						if (this->inflightPos + (this->velocity * travelTime) != intersection)
+						// cupcfd::geometry::euclidean::EuclideanPoint<T,3> Inflightpos_post = this->inflightPos + (this->velocity * travelTime);
+						// T distance_post;
+						// (intersection - Inflightpos_post).length(&distance_post);
+						// if (face_verbose) {
+						// 	std::cout << "        > post-travel intersection distance is " << distance_post << std::endl;
+						// }
+						// if (distance_post > distance)
 						{
 							// Travelling in wrong direction to velocity, set time to negative
 							travelTime = T(-1) * travelTime;
@@ -450,7 +482,7 @@ namespace cupcfd
 						{
 							if (face_verbose) {
 								std::cout << "        > will intersect this tri after non-zero travel time " << travelTime << " seconds" << std::endl;
-								std::cout << "          > intersection point is "; intersection.print() ; std::cout << std::endl;
+								// std::cout << "          > intersection point is "; intersection.print() ; std::cout << std::endl;
 								usleep(verbose_sleep_period);
 							}
 
@@ -476,10 +508,12 @@ namespace cupcfd
 							// }
 
 							if (!face_was_found || (travelTime < exitTravelTime)) {
-								if ((travelTime < exitTravelTime) && face_verbose) {
-									std::cout << "        > this face is nearer than previously-found face" << std::endl;
-								} else {
-									std::cout << "        > selecting this face" << std::endl;
+								if (face_verbose) {
+									if (travelTime < exitTravelTime) {
+										std::cout << "        > this face is nearer than previously-found face" << std::endl;
+									} else {
+										std::cout << "        > selecting this face" << std::endl;
+									}
 								}
 
 								exitFaceID = localFaceID;
@@ -496,12 +530,12 @@ namespace cupcfd
 						// 	}
 						// }
 
-						if (travelTime < 0.0) {
-							if (face_verbose) {
-								std::cout << "        > travelling away from tri, " << travelTime*(-1) << " seconds away" << std::endl;
-								usleep(verbose_sleep_period);
-							}
-						}
+						// if (travelTime < 0.0) {
+						// 	if (face_verbose) {
+						// 		std::cout << "        > travelling away from tri, " << travelTime*(-1) << " seconds away" << std::endl;
+						// 		usleep(verbose_sleep_period);
+						// 	}
+						// }
 						
 						// We can only exit via one face - if it is not set yet and the travel time is 0
 						// we are currently sitting on a face/vertex etc.
@@ -542,11 +576,11 @@ namespace cupcfd
 
 
 			if (exitDistance > max_inter_vertex_distance) {
-				std::cout << "ERROR: Particle distance to selected face intersection " << exitDistance << " is greater than max inter-vertex distance " << max_inter_vertex_distance << std::endl;
+				std::cout << "ERROR: Particle " << this->particleID << " distance to selected face intersection " << exitDistance << " is greater than max inter-vertex distance " << max_inter_vertex_distance << std::endl;
 				throw std::exception();
 				return cupcfd::error::E_ERROR;
 			}
-			
+
 			
 			// Theoretically should either have to leave via one of the faces or stay inside the cell, assuming
 			// it is a closed polyhedron. Therefore, at this point there should be at least a travelTime,

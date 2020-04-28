@@ -17,6 +17,8 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -97,7 +99,10 @@ namespace cupcfd
 					 * @retval true The point is inside the polygon
 					 * @retval false The point is outside the polygon
 					 */
-					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
+
+
+					inline bool intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect);
 
 					/**
 					 * Determine whether the provided point is inside the polygon.
@@ -112,7 +117,7 @@ namespace cupcfd
 					 * @retval true The point is inside the polygon
 					 * @retval false The point is outside the polygon
 					 */
-					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
+					//inline bool isPointInsideRayCasting(euc::EuclideanPoint<T,N>& point);
 
 					/**
 					 * Compute the area of the polygon
@@ -132,7 +137,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the polygon.
 					 */
-					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
+					inline euc::EuclideanVector<T,3> computeNormal();
 			};
 
 			// === Non-Class, but Generic Methods ===
@@ -151,7 +156,7 @@ namespace cupcfd
 			 * @return The area.
 			 */
 			template <class T>
-			inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
+			inline T computeArea(euc::EuclideanPoint<T,3> * points, int nPoints);
 
 
 			/**
@@ -173,7 +178,7 @@ namespace cupcfd
 			 * @retval false The ordering is anti-clockwise
 			 */
 			template <class T>
-			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
+			inline bool isVertexOrderClockwise(const euc::EuclideanPoint<T,3>& observation, euc::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}
 }

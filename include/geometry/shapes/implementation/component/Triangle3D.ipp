@@ -125,6 +125,50 @@ namespace cupcfd
 				// No intersections detected
 				return true;
 			}
+
+			template <class T>
+			// bool Triangle3D<T>::intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect) const
+			bool Triangle3D<T>::intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect, bool verbose) const
+			{
+				// http://www.lighthouse3d.com/tutorials/maths/ray-triangle-intersection
+				euc::EuclideanVector<T,3> e1 = this->vertices[1] - this->vertices[0];
+				euc::EuclideanVector<T,3> e2 = this->vertices[2] - this->vertices[0];
+
+				euc::EuclideanVector<T,3> h = 
+					euc::crossProduct(ray, e2);
+			
+				T a = e1.dotProduct(h);
+
+				T f = T(1)/a;
+
+				euc::EuclideanVector<T,3> s = ray0 - this->vertices[0];
+
+				T u = f * s.dotProduct(h);
+
+				euc::EuclideanVector<T,3> q = euc::crossProduct(s, e1);
+
+				// T v = f * ray.dotProduct(q);
+				T v = f * q.dotProduct(ray);
+
+				T t = f * q.dotProduct(e2);
+
+				intersect = (T(1)-u-v)*this->vertices[0] + u*this->vertices[1] + v*this->vertices[2];
+
+				// return cupcfd::error::E_SUCCESS;
+				if (u < T(0.0) || u > T(1.0)) {
+					return false;
+				}
+				// if (v < T(0.0) || v > T(1.0)) {
+				if (v < T(0.0) || (u+v) > T(1.0)) {
+					return false;
+				}
+				
+				if (verbose) {
+					std::cout << "          > u=" << u << ", v=" << v << ", t=" <<t << std::endl;
+				}
+
+				return true;
+			}
 			
 			// === Concrete Methods ===
 
