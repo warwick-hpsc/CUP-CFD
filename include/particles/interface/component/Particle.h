@@ -100,7 +100,8 @@ namespace cupcfd
 
 				I particleID;
 
-				I lastCellMoveGlobalID;
+				I lastCellGlobalID;
+				I lastLastCellGlobalID;
 
 				/**
 				 * Stores the particles rank. If equal to current rank, it is not exchanged.

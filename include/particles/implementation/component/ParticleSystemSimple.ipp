@@ -604,10 +604,11 @@ namespace cupcfd
 						if (this->particles[i].getTravelTime() > T(0)) {
 							std::cout << "       > P " << particles[i].particleID << " is still travelling" << std::endl;
 							// std::cout << "       > P " << particles[i].getParticleID() << " is still travelling" << std::endl;
-							std::cout << "       > > position: "; this->particles[i].getPos().print(); std::cout << std::endl;
-							std::cout << "       > > in-flight pos: "; this->particles[i].getInFlightPos().print(); std::cout << std::endl;
-							std::cout << "       > > travel time: " << this->particles[i].getTravelTime() << std::endl;
-							std::cout << "       > > active?: " << this->particles[i].getInactive() << std::endl;
+							// std::cout << "       > > position: "; this->particles[i].getPos().print(); std::cout << std::endl;
+							// std::cout << "       > > in-flight pos: "; this->particles[i].getInFlightPos().print(); std::cout << std::endl;
+							// std::cout << "       > > travel time: " << this->particles[i].getTravelTime() << std::endl;
+							// std::cout << "       > > active?: " << this->particles[i].getInactive() << std::endl;
+							particles[i].print();
 						}
 					}
 
@@ -633,10 +634,11 @@ namespace cupcfd
 			// Would be faster if inactive particles are removed
 			for(I i = 0; i < this->particles.size(); i++)
 			{
+				// bool verbose = false;
 				// bool verbose = (particles[i].getParticleID() == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
-				bool verbose = (particles[i].particleID == 1);
+				bool verbose = (particles[i].particleID == 101);
 
 				if (verbose) {
 					// std::cout << "> Performing particle update" << std::endl;

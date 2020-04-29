@@ -129,7 +129,11 @@ namespace cupcfd
 
 
 					// bool intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect) const;
-					bool intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect, bool verbose) const;
+					bool calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
+												euc::EuclideanPoint<T,3>& intersection, 
+												// euc::EuclideanVector<T,3>& intersectDistance,
+												T& timeToIntersect, 
+												bool verbose) const;
 
 					/**
 					 * Compute the area of the Triangle

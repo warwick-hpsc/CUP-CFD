@@ -38,7 +38,8 @@ namespace cupcfd
 			this->acceleration = source.acceleration;
 			this->jerk = source.jerk;
 			this->cellGlobalID = source.cellGlobalID;
-			this->lastCellMoveGlobalID = source.lastCellMoveGlobalID;
+			this->lastCellGlobalID = source.lastCellGlobalID;
+			this->lastLastCellGlobalID = source.lastLastCellGlobalID;
 			this->particleID = source.particleID;
 			this->rank = source.rank;
 			this->travelDt = source.travelDt;
@@ -183,11 +184,6 @@ namespace cupcfd
 
 			// If we are sitting at the non-boundary face, all that remains is to set the correct new cell ID and/or identify if we are going off rank
 
-			if (this->cellGlobalID != this->lastCellMoveGlobalID) {
-				std::cout << "ERROR: Attempting to update cell of P" << this->particleID << ", but its cellGlobalID=" << this->cellGlobalID << " != lastCellMoveGlobalID=" << this->lastCellMoveGlobalID << std::endl;
-				throw std::exception();
-			}
-		
 			// Get local IDs of the two cells either side of face:
 			I cell1LocalID = mesh.getFaceCell1ID(faceLocalID);
 			I cell2LocalID = mesh.getFaceCell2ID(faceLocalID);
@@ -215,7 +211,7 @@ namespace cupcfd
 				return cupcfd::error::E_ERROR;
 			}
 
-			// ToDo: Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
+
 			I fromCellGlobalID = this->cellGlobalID;
 			I fromCellLocalID;
 			I toCellGlobalID;
@@ -252,17 +248,21 @@ namespace cupcfd
 				throw std::exception();
 			}
 
-			if(this->cellGlobalID == cell1GlobalID) {
-				this->cellGlobalID = cell2GlobalID;
-			} else {
-				this->cellGlobalID = cell1GlobalID;
-			}
 
-			// if (this->particleID == 8601) {
-			// 	std::cout << " > P" << this->particleID << ": cell change: " << fromCellGlobalID << " --> " << toCellGlobalID << std::endl;
-			// 	usleep(100*1000);
+			// if (this->cellGlobalID == toCellGlobalID) {
+			// 	// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << " to " << cellGlobalID << " but it is already in that cell" << std::endl;
+			// 	std::cout << "ERROR: Attempting to update a particle " << this->particleID << " to be in cell " << toCellGlobalID << " but it is already in that cell" << std::endl;
+			// 	throw std::exception();
 			// }
-			this->lastCellMoveGlobalID = this->cellGlobalID;
+			// if ( (toCellGlobalID == this->lastLastCellGlobalID) || (toCellGlobalID == this->lastCellGlobalID) ) {
+			// 	std::cout << "ERROR: Attempting to move particle " << this->particleID << " to cell " << toCellGlobalID << " but it was there recently (recent history is " << this->lastLastCellGlobalID << " -> " << this->lastCellGlobalID << ")" << std::endl;
+			// 	this->print();
+			// 	throw std::exception();
+			// }
+			// this->lastLastCellGlobalID = this->lastCellGlobalID;
+			// this->lastCellGlobalID = this->cellGlobalID;
+			// this->cellGlobalID = toCellGlobalID;
+			this->setCellGlobalID(toCellGlobalID);
 
 			if (this->cellGlobalID != toCellGlobalID) {
 				// std::cout << "ERROR: cell face update failed" << std::endl;
@@ -348,6 +348,10 @@ namespace cupcfd
 			
 			// Since we reflect, we do not change cell or rank		
 
+			// Recent cell travel history:
+			this->lastLastCellGlobalID = -1;
+			this->lastCellGlobalID = -1;
+
 			return cupcfd::error::E_SUCCESS;
 		}
 																		  
@@ -419,12 +423,15 @@ namespace cupcfd
 
 			// const int nb = 11;
 			// const int nb = 12;
-			const int nb = 13;
+			// const int nb = 13;
+			const int nb = 14;
 
 			// Keep as blocks of size 1 incase of compiler rearranging members
-			// int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
-			// int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
-			int blocklengths[nb] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, PARTICLE_PADDING};
+			int blocklengths[nb];
+			for (int i=0; i<nb; i++) {
+				blocklengths[i] = 1;
+			}
+			blocklengths[nb-1] = PARTICLE_PADDING;
 			MPI_Aint displ[nb];
 			MPI_Datatype structTypes[nb];
 
@@ -483,10 +490,15 @@ namespace cupcfd
 			idx++;
 
 			// Last cell global ID
-			status = cupcfd::comm::mpi::getMPIType(this->lastCellMoveGlobalID, &componentType);
+			status = cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellGlobalID);
+			idx++;
+			status = cupcfd::comm::mpi::getMPIType(this->lastLastCellGlobalID, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastLastCellGlobalID);
 			idx++;
 
 			// Rank
@@ -526,20 +538,6 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 
-
-			// // Displacements
-			// displ[0]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
-			// displ[1]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
-			// displ[2]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
-			// displ[3]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);	
-			// displ[4]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);	
-			// displ[5]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
-			// displ[6]  = (MPI_Aint) offsetof(class ParticleSimple, rank);	
-			// displ[7]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
-			// displ[8]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
-			// displ[9]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
-			// displ[10] = (MPI_Aint) offsetof(class ParticleSimple, lastCellMoveGlobalID);
-			// displ[nb-1] = (MPI_Aint) offsetof(class ParticleSimple, padding);	
 
 			MPI_Datatype vecType;
 			MPI_Datatype vecTypeResized;
