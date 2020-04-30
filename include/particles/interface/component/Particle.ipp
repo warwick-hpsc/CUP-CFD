@@ -26,6 +26,7 @@ namespace cupcfd
 		Particle<P, I, T>::Particle()
 		:CustomMPIType(),
 		 cellGlobalID(-1),
+		 cellEntryFaceLocalID(-1),
 		 lastCellGlobalID(-1),
 		 lastLastCellGlobalID(-1),
 		 rank(-1),
@@ -42,6 +43,7 @@ namespace cupcfd
 		 pos(pos),
 		 inflightPos(pos),
 		 cellGlobalID(cellGlobalID),
+		 cellEntryFaceLocalID(-1),
 		 lastCellGlobalID(-1),
 		 lastLastCellGlobalID(-1),
 		 rank(rank),
@@ -98,9 +100,11 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
+		// inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
+		inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID)
 		{
 			// std::cout << "Request received to move particle ID " << this->particleID << " from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << std::endl;
+			// std::cout << "Request received to move particle ID " << this->particleID << " from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << " through face " << cellEntryFaceLocalID << std::endl;
 			// usleep(100*1000);
 
 			if (this->cellGlobalID == cellGlobalID) {
@@ -117,6 +121,14 @@ namespace cupcfd
 			this->lastLastCellGlobalID = this->lastCellGlobalID;
 			this->lastCellGlobalID = this->cellGlobalID;
 			this->cellGlobalID = cellGlobalID;
+
+			this->cellEntryFaceLocalID = cellEntryFaceLocalID;
+		}
+
+		template <class P, class I, class T>
+		inline void Particle<P, I, T>::setCellEntryFaceLocalID(I cellEntryFaceLocalID)
+		{
+			this->cellEntryFaceLocalID = cellEntryFaceLocalID;
 		}
 
 		template <class P, class I, class T>
@@ -166,7 +178,11 @@ namespace cupcfd
 		inline void Particle<P, I, T>::print() const
 		{
 			std::cout << "> Particle " << this->particleID << " state:" << std::endl;
-			std::cout << "  > Cell ID: " << cellGlobalID << std::endl;
+			if (this->cellEntryFaceLocalID != -1) {
+				std::cout << "  > Cell ID: " << cellGlobalID << " , entered through local face ID " << this->cellEntryFaceLocalID << std::endl;
+			} else{
+				std::cout << "  > Cell ID: " << cellGlobalID << std::endl;
+			}
 			std::cout << "  > POS: "; this->pos.print(); std::cout << std::endl;
 			std::cout << "  > In-flight POS: "; this->inflightPos.print(); std::cout << std::endl;
 			std::cout << "  > Velocity: "; this->velocity.print(); std::cout << std::endl;
@@ -240,28 +256,37 @@ namespace cupcfd
 
 			I intersectionCount = 0;
 
-			I faceVertex1ID;
-			I faceVertex2ID;
-			T max_inter_vertex_distance;
-			for(I i = 0; i < nFaces; i++) {
-				I localFaceID = mesh.getCellFaceID(localCellID, i);
-				I nFaceVertices = mesh.getFaceNVertices(localFaceID);
-				for(I j1 = 0; j1 < nFaceVertices; j1++) {
-					for(I j2 = j1+1; j2 < nFaceVertices; j2++) {
-						faceVertex1ID = mesh.getFaceVertex(localFaceID, j1);
-						faceVertex2ID = mesh.getFaceVertex(localFaceID, j2);
+			T max_inter_vertex_distance = T(-1);
+			for(I f1 = 0; f1 < nFaces; f1++) {
+				I localFaceID1 = mesh.getCellFaceID(localCellID, f1);
+				I nFaceVertices1 = mesh.getFaceNVertices(localFaceID1);
+				for(I j1 = 0; j1 < nFaceVertices1; j1++) {
+					I faceVertexID1 = mesh.getFaceVertex(localFaceID1, j1);
 
-						T face_edge_length;
-						( mesh.getVertexPos(faceVertex1ID) - mesh.getVertexPos(faceVertex2ID) ).length(&face_edge_length);
+					for (I f2 = 0; f2 < nFaces; f2++) {
+						I localFaceID2 = mesh.getCellFaceID(localCellID, f2);
+						I nFaceVertices2 = mesh.getFaceNVertices(localFaceID2);
+						for(I j2 = j1+1; j2 < nFaceVertices2; j2++) {
+							I faceVertexID2 = mesh.getFaceVertex(localFaceID2, j2);
 
-						if (i==0 && j1==0 && j2==1) {
-							max_inter_vertex_distance = face_edge_length;
-						}
-						else if (max_inter_vertex_distance < face_edge_length) {
-							max_inter_vertex_distance = face_edge_length;
+							if (faceVertexID1 != faceVertexID2) {
+								T face_edge_length;
+								( mesh.getVertexPos(faceVertexID1) - mesh.getVertexPos(faceVertexID2) ).length(&face_edge_length);
+
+								if (max_inter_vertex_distance == T(-1)) {
+									max_inter_vertex_distance = face_edge_length;
+								}
+								else if (max_inter_vertex_distance < face_edge_length) {
+									max_inter_vertex_distance = face_edge_length;
+								}
+							}
 						}
 					}
 				}
+			}
+
+			if (verbose) {
+				this->print();
 			}
 
 			// Loop over the faces of the cell
@@ -279,6 +304,18 @@ namespace cupcfd
 				// bool face_verbose = verbose;
 				// bool face_verbose = verbose && (this->cellGlobalID == 1202);
 				// bool face_verbose = verbose && (this->cellGlobalID == 77);
+				// bool face_verbose = verbose && ( (this->cellGlobalID == 77) || (this->cellGlobalID == 78) );
+				// bool face_verbose = verbose && (this->cellGlobalID == 1063);
+				// bool face_verbose = verbose && (this->cellGlobalID == 1202);
+				// bool face_verbose = verbose && (this->cellGlobalID == 5);
+				// bool face_verbose = verbose && ( (this->cellGlobalID == 326) || (this->cellGlobalID == 392) || (this->cellGlobalID == 1063) );
+
+				if (localFaceID == this->cellEntryFaceLocalID) {
+					if (face_verbose) {
+						std::cout << "    > skipping face ID " << localFaceID << " as particle " << this->particleID << " entered cell through it" << std::endl;
+					}
+					continue;
+				}
 				
 				// Break the faces up into triangles and compute the intersection with the plane of each triangle and determine the time to reach
 				// Get the vertices/spatial coordinates for each face
@@ -324,8 +361,8 @@ namespace cupcfd
 					// faceVertex1ID = mesh.getFaceVertex(localFaceID, j+1);
 					// faceVertex2ID = mesh.getFaceVertex(localFaceID, j+2);
 
-					faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
-					faceVertex2ID = mesh.getFaceVertex(localFaceID, j+1);
+					I faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
+					I faceVertex2ID = mesh.getFaceVertex(localFaceID, j+1);
 
 					if (face_verbose) {
 						std::cout << "      > checking tri formed by vertices: " << faceVertex0ID << ", " << faceVertex1ID << ", " << faceVertex2ID << ", " << std::endl;
@@ -400,11 +437,6 @@ namespace cupcfd
 							// Progress onto next triangle instead
 							continue;
 						}
-						if (timeToIntersect == T(0)) {
-							// Particle is already on the face. This can only occur when that particle has just been 
-							// transferred to this cell, ie this face is the entry face, so it cannot also be the exit face.
-							continue;
-						}
 						if (face_verbose) {
 							std::cout << "        > intersection point (new-method) is "; intersection.print() ; std::cout << std::endl;
 							std::cout << "        > vertices coordinates: " << std::endl;
@@ -468,6 +500,7 @@ namespace cupcfd
 						
 						// if ( (!arth::isEqual(timeToIntersect, 0.0)) && timeToIntersect > 0.0)
 						// if (timeToIntersect >= CUPCFD_ZERO_COMP_TOL_D)
+						if (timeToIntersect >= T(0))
 						// T tolerance;
 						// cupcfd::geometry::euclidean::EuclideanVector<T,3> faceEdge = mesh.getVertexPos(faceVertex2ID) - mesh.getVertexPos(faceVertex1ID);
 						// faceEdge.length(&tolerance);
@@ -478,7 +511,6 @@ namespace cupcfd
 						{
 							if (face_verbose) {
 								std::cout << "        > will intersect this tri after non-zero travel time " << timeToIntersect << " seconds" << std::endl;
-								printf("            > timeToIntersect = %.4e\n", timeToIntersect);
 								// std::cout << "          > intersection point is "; intersection.print() ; std::cout << std::endl;
 								usleep(verbose_sleep_period);
 							}
@@ -572,9 +604,9 @@ namespace cupcfd
 				return cupcfd::error::E_ERROR;
 			}
 
-			if (verbose) {
-				std::cout << "    > selected exit face ID is " << exitFaceID << std::endl;
-			}
+			// if (verbose) {
+			// 	std::cout << "    > selected exit face ID is " << exitFaceID << std::endl;
+			// }
 
 
 			if (exitDistance > max_inter_vertex_distance) {
@@ -662,27 +694,6 @@ namespace cupcfd
 			}			
 		}
 
-		// template <class P, class I, class T>
-		// template <class M, class L>
-		// cupcfd::error::eCodes Particle<P, I, T>::updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
-		// {
-		// 	static_cast<P*>(this)->updateVelocityAtomic(mesh, cellLocalID, faceLocalID);
-		// }
-		
-		// template <class P, class I, class T>
-		// template <class M, class L>
-		// cupcfd::error::eCodes Particle<P, I, T>::updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
-		// {
-		// 	static_cast<P*>(this)->updateStateAtomic(mesh, cellLocalID, faceLocalID);
-		// }														    
-
-		// template <class P, class I, class T>
-		// template <class M, class L> 
-		// cupcfd::error::eCodes Particle<P, I, T>::updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I faceLocalID)
-		// {
-		// 	static_cast<P*>(this)->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
-		// }
-		
 		template <class P, class I, class T>
 		template <class M, class L> 
 		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)

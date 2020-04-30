@@ -199,7 +199,9 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				inline void setCellGlobalID(I cellGlobalID);
+				inline void setCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID);
+
+				inline void setCellEntryFaceLocalID(I cellEntryFaceLocalID);
 
 				/**
 				 * Get the cell ID of the particle
@@ -429,7 +431,9 @@ namespace cupcfd
 				// I particleID;
 
 			protected:
-				I cellGlobalID;
+				I cellGlobalID; // current cell
+
+				I cellEntryFaceLocalID; // the face through which particle entered cell
 		};
 	}
 }

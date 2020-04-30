@@ -345,6 +345,8 @@ namespace cupcfd
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
+				particleRecvBuffer[i].setCellEntryFaceLocalID(I(-1));
+
 				status = this->addParticle(particleRecvBuffer[i]);
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: addParticle() failed" << std::endl;
@@ -501,11 +503,11 @@ namespace cupcfd
 						}
 					}
 				}
-				// if (nGlobalParticles == 138 && have_bugged_particle) {
-				if (nGlobalParticles == 138 && have_bugged_particle && this->mesh->cellConnGraph->comm->rank==0) {
-					// The error occurs just after bugged particle is transferred from rank 1 -> 0
-					verbose = true;
-				}
+				// // if (nGlobalParticles == 138 && have_bugged_particle) {
+				// if (nGlobalParticles == 138 && have_bugged_particle && this->mesh->cellConnGraph->comm->rank==0) {
+				// 	// The error occurs just after bugged particle is transferred from rank 1 -> 0
+				// 	verbose = true;
+				// }
 
 				// Advance particles by at most one cell
 				status = this->updateSystemAtomic(verbose);
@@ -638,7 +640,8 @@ namespace cupcfd
 				// bool verbose = (particles[i].getParticleID() == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
-				bool verbose = (particles[i].particleID == 101);
+				// bool verbose = (particles[i].particleID == 101);
+				bool verbose = (particles[i].particleID == 1);
 
 				if (verbose) {
 					// std::cout << "> Performing particle update" << std::endl;
@@ -668,10 +671,10 @@ namespace cupcfd
 						return status;
 					}
 
-					if (verbose) {
-						this->particles[i].print();
-						usleep(verbose_sleep_period);
-					}
+					// if (verbose) {
+					// 	this->particles[i].print();
+					// 	usleep(verbose_sleep_period);
+					// }
 					
 					// Note: For particles with no further travel time, the following steps must not change the state
 					// of the particle and system.
@@ -695,17 +698,17 @@ namespace cupcfd
 						return status;
 					}
 					auto pos_after_mov = this->particles[i].getInFlightPos();
-					if (verbose) {
-						// std::cout << "  > post-flight state:" << std::endl;
-						// bool movement = false;
-						// for(int i=0; i<3; i++) {
-						// 	if(!(cupcfd::utility::arithmetic::kernels::isEqual(pos_before_mov.cmp[i], pos_after_mov.cmp[i]))) {
-						// 		movement = true;
-						// 	}
-						// }
-						this->particles[i].print();
-						usleep(verbose_sleep_period);
-					}
+					// if (verbose) {
+					// 	// std::cout << "  > post-flight state:" << std::endl;
+					// 	// bool movement = false;
+					// 	// for(int i=0; i<3; i++) {
+					// 	// 	if(!(cupcfd::utility::arithmetic::kernels::isEqual(pos_before_mov.cmp[i], pos_after_mov.cmp[i]))) {
+					// 	// 		movement = true;
+					// 	// 	}
+					// 	// }
+					// 	this->particles[i].print();
+					// 	usleep(verbose_sleep_period);
+					// }
 	
 					// Perform an atomic velocity update for every particle in the system, reflecting the time they have advanced by
 					status = this->particles[i].updateVelocityAtomic(*(this->mesh), localCellID, stepDt);

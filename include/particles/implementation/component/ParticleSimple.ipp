@@ -38,6 +38,7 @@ namespace cupcfd
 			this->acceleration = source.acceleration;
 			this->jerk = source.jerk;
 			this->cellGlobalID = source.cellGlobalID;
+			this->cellEntryFaceLocalID = source.cellEntryFaceLocalID;
 			this->lastCellGlobalID = source.lastCellGlobalID;
 			this->lastLastCellGlobalID = source.lastLastCellGlobalID;
 			this->particleID = source.particleID;
@@ -262,7 +263,8 @@ namespace cupcfd
 			// this->lastLastCellGlobalID = this->lastCellGlobalID;
 			// this->lastCellGlobalID = this->cellGlobalID;
 			// this->cellGlobalID = toCellGlobalID;
-			this->setCellGlobalID(toCellGlobalID);
+
+			this->setCellGlobalID(toCellGlobalID, faceLocalID);
 
 			if (this->cellGlobalID != toCellGlobalID) {
 				// std::cout << "ERROR: cell face update failed" << std::endl;
@@ -345,6 +347,9 @@ namespace cupcfd
 			// (3) Mirror other properties that might be specific to this particle specialisation
 			this->acceleration = this->acceleration - (2 * (this->acceleration.dotProduct(normal)) * normal);
 			this->jerk = this->jerk - (2 * (this->jerk.dotProduct(normal)) * normal);
+
+			// Forget which face was entry point, as particle may now be exiting through it:
+			this->cellEntryFaceLocalID = I(-1);
 			
 			// Since we reflect, we do not change cell or rank		
 
@@ -418,14 +423,10 @@ namespace cupcfd
 
 			int mpiErr;
 
-			// Only need one block since all of same type
-			int count = 1;
-
-			// const int nb = 11;
-			// const int nb = 12;
-			// const int nb = 13;
 			const int nb = 14;
 
+			// Only need one block since all of same type
+			int count = 1;
 			// Keep as blocks of size 1 incase of compiler rearranging members
 			int blocklengths[nb];
 			for (int i=0; i<nb; i++) {
@@ -488,6 +489,13 @@ namespace cupcfd
 			structTypes[idx] = componentType;
 			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
 			idx++;
+
+			// // Cell entry face local Id
+			// status = cupcfd::comm::mpi::getMPIType(this->cellEntryFaceLocalID, &componentType);
+			// if (status != cupcfd::error::E_SUCCESS) return status;
+			// structTypes[idx] = componentType;
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellEntryFaceLocalID);
+			// idx++;
 
 			// Last cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);
