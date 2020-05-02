@@ -187,17 +187,17 @@ namespace cupcfd
 		template <class P, class I, class T>
 		inline void Particle<P, I, T>::print() const
 		{
-			std::cout << "> Particle " << this->particleID << " state:" << std::endl;
+			std::cout << "  > Particle " << this->particleID << " state:" << std::endl;
 			if (this->cellEntryFaceLocalID != -1) {
-				std::cout << "  > Cell ID: " << cellGlobalID << " , entered through local face ID " << this->cellEntryFaceLocalID << std::endl;
+				std::cout << "    > Cell ID: " << cellGlobalID << " , entered through local face ID " << this->cellEntryFaceLocalID << std::endl;
 			} else{
-				std::cout << "  > Cell ID: " << cellGlobalID << std::endl;
+				std::cout << "    > Cell ID: " << cellGlobalID << std::endl;
 			}
-			std::cout << "  > POS: "; this->pos.print(); std::cout << std::endl;
-			std::cout << "  > In-flight POS: "; this->inflightPos.print(); std::cout << std::endl;
-			std::cout << "  > Velocity: "; this->velocity.print(); std::cout << std::endl;
-			std::cout << "  > Travel time left: " << this->travelDt << std::endl;
-			std::cout << "  > Cell movement history: " << this->lastLastCellGlobalID << " -> " << this->lastCellGlobalID << " -> " << this->cellGlobalID << std::endl;
+			std::cout << "    > POS: "; this->pos.print(); std::cout << std::endl;
+			std::cout << "    > In-flight POS: "; this->inflightPos.print(); std::cout << std::endl;
+			std::cout << "    > Velocity: "; this->velocity.print(); std::cout << std::endl;
+			std::cout << "    > Travel time left: " << this->travelDt << std::endl;
+			std::cout << "    > Cell movement history: " << this->lastLastCellGlobalID << " -> " << this->lastCellGlobalID << " -> " << this->cellGlobalID << std::endl;
 		}
 
 		
@@ -260,6 +260,7 @@ namespace cupcfd
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
 			// cupcfd::geometry::euclidean::EuclideanVector<T,3> intersectionDistance;
 			T timeToIntersect;
+			bool intersectionOnEdge;
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> exitIntersection;
 			T exitTravelTime;
 			T exitDistance;
@@ -295,9 +296,9 @@ namespace cupcfd
 				}
 			}
 
-			if (verbose) {
-				this->print();
-			}
+			// if (verbose) {
+			// 	this->print();
+			// }
 
 			// Loop over the faces of the cell
 			bool face_was_found = false;
@@ -305,6 +306,8 @@ namespace cupcfd
 			// 	std::cout << "  > searching for exit face of particle " << this->particleID << std::endl;
 			// 	usleep(verbose_sleep_period);
 			// }
+			I num_faces_contacting_particle_on_edge = I(0);
+			I num_faces_contacting_particle_within_tri = I(0);
 			for(I i = 0; i < nFaces; i++)
 			{
 				// Retrieve the faces of the cell
@@ -438,7 +441,7 @@ namespace cupcfd
 						// 	continue;
 						// }
 						// if (!shape.intersection(this->inflightPos, this->velocity, intersection)) {
-						if (!shape.calculateIntersection(this->inflightPos, this->velocity, intersection, timeToIntersect, face_verbose)) {
+						if (!shape.calculateIntersection(this->inflightPos, this->velocity, intersection, timeToIntersect, intersectionOnEdge, face_verbose)) {
 							// if (face_verbose) {
 							// 	std::cout << "        > intersection is outside tri shape" << std::endl;
 							// 	usleep(verbose_sleep_period);
@@ -446,6 +449,13 @@ namespace cupcfd
 
 							// Progress onto next triangle instead
 							continue;
+						}
+						if (timeToIntersect == T(0.0)) {
+							if (intersectionOnEdge) {
+								num_faces_contacting_particle_on_edge++;
+							} else {
+								num_faces_contacting_particle_within_tri++;
+							}
 						}
 						if (face_verbose) {
 							std::cout << "        > intersection point (new-method) is "; intersection.print() ; std::cout << std::endl;
@@ -614,6 +624,12 @@ namespace cupcfd
 				return cupcfd::error::E_ERROR;
 			}
 
+			if (num_faces_contacting_particle_within_tri > 1) {
+				std::cout << "ERROR: Particle " << this->particleID << " of cell " << this->cellGlobalID << " is directly resting on " << num_faces_contacting_particle_within_tri << " triangles" << std::endl;
+				std::cout << "       Only " << num_faces_contacting_particle_on_edge << " of these have the particle on a triangle edge, indicating that triangles are overlapping" << std::endl;
+				return cupcfd::error::E_ERROR;
+			}
+
 			// if (verbose) {
 			// 	std::cout << "    > selected exit face ID is " << exitFaceID << std::endl;
 			// }
@@ -660,7 +676,7 @@ namespace cupcfd
 			else
 			{
 				if (verbose) {
-					std::cout << "    > exits cell in this timestep after " << exitTravelTime << " seconds" << std::endl;
+					std::cout << "    > exits cell in this timestep through face " << exitFaceID << " after " << exitTravelTime << " seconds" << std::endl;
 					usleep(verbose_sleep_period);
 				}
 

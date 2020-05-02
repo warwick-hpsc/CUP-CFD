@@ -133,6 +133,7 @@ namespace cupcfd
 												euc::EuclideanPoint<T,3>& intersection, 
 												// euc::EuclideanVector<T,3>& intersectDistance,
 												T& timeToIntersect, 
+												bool onEdge,
 												bool verbose) const;
 
 					/**

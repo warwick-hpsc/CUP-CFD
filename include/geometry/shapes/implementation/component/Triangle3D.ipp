@@ -132,6 +132,7 @@ namespace cupcfd
 														euc::EuclideanPoint<T,3>& intersection, 
 														// euc::EuclideanVector<T,3>& intersectDistance,
 														T& timeToIntersect, 
+														bool onEdge, 
 														bool verbose) const
 			{
 				// http://www.lighthouse3d.com/tutorials/maths/ray-triangle-intersection
@@ -168,10 +169,16 @@ namespace cupcfd
 				}
 
 				if (verbose) {
+				// if (verbose || (t == T(0))) {
 					std::cout << "          > u=" << u << ", v=" << v << ", t=" <<t << std::endl;
-					printf("            > t = %.4e\n", t);
 				}
 				timeToIntersect = t;
+
+				if (u == T(0.0) || u == T(1.0) || v == T(0.0) || v == T(1.0)) {
+					onEdge = true;
+				} else {
+					onEdge = false;
+				}
 
 				return true;
 			}

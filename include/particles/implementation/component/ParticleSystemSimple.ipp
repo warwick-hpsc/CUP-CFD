@@ -711,12 +711,12 @@ namespace cupcfd
 					throw std::exception();
 				}
 
-				if (verbose) {
-					// std::cout << "> Performing particle update" << std::endl;
-					std::cout << "> Updating particle " << particles[i].particleID << std::endl;
-					// std::cout << "> Updating particle " << particles[i].getParticleID() << std::endl;
-					usleep(verbose_sleep_period);
-				}
+				// if (verbose) {
+				// 	std::cout << "> Updating particle " << particles[i].particleID << std::endl;
+				// 	// std::cout << "> Updating particle " << particles[i].getParticleID() << std::endl;
+				// 	particles[i].print();
+				// 	usleep(verbose_sleep_period);
+				// }
 
 				// Can't guarantee there are no inactive particles so have this check guard here.
 				// If we can guarantee it we can remove it however (don't really want a branch inside a loop)
@@ -777,7 +777,18 @@ namespace cupcfd
 					// 	this->particles[i].print();
 					// 	usleep(verbose_sleep_period);
 					// }
-	
+
+					if (verbose && (localFaceID != I(-1)) && (stepDt==T(0)) ) {
+						// Print particle state and face vertices coordinates:
+						this->particles[i].print();	
+						I nFaceVertices = this->mesh->getFaceNVertices(localFaceID);
+						for(I j = 0; j < nFaceVertices; j++) {
+							I vertexID = this->mesh->getFaceVertex(localFaceID, j);
+							std::cout << "   > face vertex " << j << std::endl;
+							this->mesh->getVertexPos(vertexID).print();
+						}
+					}
+
 					// Perform an atomic velocity update for every particle in the system, reflecting the time they have advanced by
 					status = this->particles[i].updateVelocityAtomic(*(this->mesh), localCellID, stepDt);
 					if (status != cupcfd::error::E_SUCCESS) {
@@ -794,7 +805,8 @@ namespace cupcfd
 					}
 
 					// Check that it reached a face after moving
-					if(!(localFaceID == -1) && stepDt > T(0))
+					// if(!(localFaceID == -1) && stepDt > T(0))
+					if(!(localFaceID == I(-1)))
 					{
 						// Perform a face update - any cells that are trying to exit a cell are currently positioned at a face (boundary
 						// or non-boundary). This step updates their cell ID (if they are leaving a cell), their rank (if they are

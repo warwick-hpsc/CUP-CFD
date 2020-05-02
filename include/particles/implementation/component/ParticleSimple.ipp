@@ -330,11 +330,11 @@ namespace cupcfd
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = mesh.getFaceNorm(faceLocalID);
 			
 			// Check which direction it is facing
-			I cell1ID = mesh.getFaceCell1ID(faceLocalID);
+			I cell1LocalID = mesh.getFaceCell1ID(faceLocalID);
 			
-			// If cell1ID does not match the cell we traversed, then we are in cell 2 and the normal is facing into the cell
+			// If cell1LocalID does not match the cell we traversed, then we are in cell 2 and the normal is facing into the cell
 			// Make sure it faces inwards
-			if(cell1ID == cellLocalID)
+			if(cell1LocalID == cellLocalID)
 			{
 				normal = T(-1) * normal;
 			}
@@ -353,14 +353,14 @@ namespace cupcfd
 			this->acceleration = this->acceleration - (2 * (this->acceleration.dotProduct(normal)) * normal);
 			this->jerk = this->jerk - (2 * (this->jerk.dotProduct(normal)) * normal);
 
-			// Forget which face was entry point, as particle may now be exiting through it:
-			this->cellEntryFaceLocalID = I(-1);
-			
 			// Since we reflect, we do not change cell or rank		
 
-			// Recent cell travel history:
-			this->lastLastCellGlobalID = -1;
-			this->lastCellGlobalID = -1;
+			// Treat the boundary face as cell entry:
+			this->cellEntryFaceLocalID = faceLocalID;
+
+			// Reset cell travel history:
+			this->lastLastCellGlobalID = I(-1);
+			this->lastCellGlobalID = I(-1);
 
 			return cupcfd::error::E_SUCCESS;
 		}
