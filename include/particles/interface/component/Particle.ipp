@@ -122,6 +122,10 @@ namespace cupcfd
 			this->lastCellGlobalID = this->cellGlobalID;
 			this->cellGlobalID = cellGlobalID;
 
+			if (cellEntryFaceLocalID == I(-1)) {
+				std::cout << "ERROR: Particle::setCellGlobalID() called with invalid value of 'cellEntryFaceLocalID'" << std::endl;
+				throw std::exception();
+			}
 			this->cellEntryFaceLocalID = cellEntryFaceLocalID;
 		}
 
@@ -135,6 +139,12 @@ namespace cupcfd
 		inline I Particle<P, I, T>::getCellGlobalID() const
 		{
 			return this->cellGlobalID;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getCellEntryFaceLocalID() const
+		{
+			return this->cellEntryFaceLocalID;
 		}
 
 		// template <class P, class I, class T>

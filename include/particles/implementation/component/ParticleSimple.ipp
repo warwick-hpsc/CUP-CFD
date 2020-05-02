@@ -47,6 +47,11 @@ namespace cupcfd
 			this->decayLevel = source.decayLevel;
 			this->decayRate = source.decayRate;
 
+			if (this->cellEntryFaceLocalID == I(-1) && (this->lastCellGlobalID != I(-1))) {
+				std::cout << "ERROR: source particle has history of cell movement but cellEntryFaceLocalID is -1" << std::endl;
+				throw std::exception();
+			}
+
 			// Padding doesn't matter for setting initial values, 
 			// they're expected to be garbage
 			

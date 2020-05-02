@@ -345,7 +345,68 @@ namespace cupcfd
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
-				particleRecvBuffer[i].setCellEntryFaceLocalID(I(-1));
+				if (particleRecvBuffer[i].lastCellGlobalID == I(-1)) {
+					std::cout << "ERROR: Exchanged particle " << particleRecvBuffer[i].particleID << " has forgotten its cell travel history" << std::endl;
+					throw std::exception();
+				}
+
+				// When sending particles across process boundaries, particle will forget 
+				// which face it entered cell through. So need to manually identify and set here:
+				I cellGlobalID = particleRecvBuffer[i].getCellGlobalID();
+				I cellNode = this->mesh->cellConnGraph->globalToNode[cellGlobalID];
+				I cellLocalID;
+				status = this->mesh->cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+					throw std::exception();
+				}
+				I cellNumFaces;
+				status = this->mesh->getCellNFaces(cellLocalID, &cellNumFaces);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+					throw std::exception();
+				}
+
+				I lastCellGlobalID = particleRecvBuffer[i].lastCellGlobalID;
+				I lastCellNode = this->mesh->cellConnGraph->globalToNode[lastCellGlobalID];
+				I lastCellLocalID;
+				status = this->mesh->cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+					throw std::exception();
+				}
+				I lastCellNumFaces;
+				status = this->mesh->getCellNFaces(lastCellLocalID, &lastCellNumFaces);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+					throw std::exception();
+				}
+
+				I sharedFaceLocalID;
+				bool sharedFaceFound = false;
+				for (I fi1=0; fi1<cellNumFaces; fi1++) {
+					I f1 = this->mesh->getCellFaceID(cellLocalID, fi1);
+					for (I fi2=0; fi2<lastCellNumFaces; fi2++) {
+						I f2 = this->mesh->getCellFaceID(lastCellLocalID, fi2);
+
+						if (f1 == f2) {
+							sharedFaceFound = true;
+							sharedFaceLocalID = f1;
+							break;
+						}
+					}
+					if (sharedFaceFound) break;
+				}
+				if (!sharedFaceFound) {
+					std::cout << "ERROR: When manually detecting cell entry face of particle " << particleRecvBuffer[i].particleID << " after being sent across MPI boundary, detected failed" << std::endl;
+					throw std::exception();
+				}
+				particleRecvBuffer[i].setCellEntryFaceLocalID(sharedFaceLocalID);
+				if (particleRecvBuffer[i].particleID == 1) {
+					std::cout << "Manually updating particle " << particleRecvBuffer[i].particleID << " to have entry face local ID " << sharedFaceLocalID << std::endl;
+				}
+				// End of entry face identification.
+
 
 				status = this->addParticle(particleRecvBuffer[i]);
 				if (status != cupcfd::error::E_SUCCESS) {
@@ -492,9 +553,9 @@ namespace cupcfd
 				have_bugged_particle = false;
 				if (particles.size() > 0) {
 					for (I i=0; i<particles.size(); i++) {
-						if (particles[i].particleID == 4801) {
+						if (particles[i].particleID == 1) {
 							if (have_bugged_particle) {
-								std::cout << "ERROR: Multiple particles have ID 4801" << std::endl;
+								std::cout << "ERROR: Multiple particles have ID 1" << std::endl;
 								throw std::exception();
 							}
 							have_bugged_particle = true;
@@ -598,6 +659,7 @@ namespace cupcfd
 
 				num_passes++;
 				int max_passes = nGlobalParticles * 50;
+				// int max_passes = nGlobalParticles * 2;
 				if (num_passes > max_passes) {
 					std::cout << "ERROR: more than " << max_passes << " passes in update of system with just " << nGlobalParticles << " particles, that indicates an infinite loop bug" << std::endl;
 
@@ -642,6 +704,12 @@ namespace cupcfd
 				// bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 101);
 				bool verbose = (particles[i].particleID == 1);
+
+				// Manually validate particle state:
+				if (this->particles[i].getCellEntryFaceLocalID() == I(-1) && (this->particles[i].lastCellGlobalID != I(-1))) {
+					std::cout << "ERROR: particle " << this->particles[i].particleID << " has history of cell movement but cellEntryFaceLocalID is -1" << std::endl;
+					throw std::exception();
+				}
 
 				if (verbose) {
 					// std::cout << "> Performing particle update" << std::endl;

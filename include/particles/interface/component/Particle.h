@@ -210,6 +210,8 @@ namespace cupcfd
 				 */
 				inline I getCellGlobalID() const;
 
+				inline I getCellEntryFaceLocalID() const;
+
 				// // inline void setParticleID(I particleID);
 				// inline I getParticleID() const;
 
