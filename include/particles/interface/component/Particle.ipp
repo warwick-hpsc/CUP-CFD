@@ -259,11 +259,11 @@ namespace cupcfd
 			// Store the intersection point of that face
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
 			// cupcfd::geometry::euclidean::EuclideanVector<T,3> intersectionDistance;
-			T timeToIntersect;
+			T timeToIntersect = T(-1);
 			bool intersectionOnEdge;
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> exitIntersection;
-			T exitTravelTime;
-			T exitDistance;
+			T exitTravelTime = T(-1);
+			T exitDistance= T(-1);
 
 			I intersectionCount = 0;
 
@@ -361,21 +361,24 @@ namespace cupcfd
 				// }
 				
 				// Loop over the triangles of the face
-				// for(I j = 0; j < (nFaceVertices-2); j++)
-				// for(I j = 0; j <= (nFaceVertices-3); j++)
-				for(I j = 1; j < nFaceVertices; j++)
+				// // for(I j = 0; j < (nFaceVertices-2); j++)
+				// for(I j = 1; j < (nFaceVertices-1); j++)
+				// {
+				// 	// faceVertex1ID = mesh.getFaceVertex(localFaceID, j+1);
+				// 	// faceVertex2ID = mesh.getFaceVertex(localFaceID, j+2);
+				// 	faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
+				// 	faceVertex2ID = mesh.getFaceVertex(localFaceID, j);
+
+				for(I j = 1; j < (nFaceVertices-1); j++)
 				{
+					I faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
+					I faceVertex2ID = mesh.getFaceVertex(localFaceID, j+1);
+
 					// if (face_verbose) {
 					// 	// std::cout << "      > vertex " << j+1 << " / " << (nFaceVertices-2)+1 << std::endl;
 					// 	std::cout << "      > vertex " << j+1 << " / " << nFaceVertices << std::endl;
 					// 	usleep(verbose_sleep_period);
 					// }
-
-					// faceVertex1ID = mesh.getFaceVertex(localFaceID, j+1);
-					// faceVertex2ID = mesh.getFaceVertex(localFaceID, j+2);
-
-					I faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
-					I faceVertex2ID = mesh.getFaceVertex(localFaceID, j+1);
 
 					if (face_verbose) {
 						std::cout << "      > checking tri formed by vertices: " << faceVertex0ID << ", " << faceVertex1ID << ", " << faceVertex2ID << ", " << std::endl;
@@ -449,13 +452,6 @@ namespace cupcfd
 
 							// Progress onto next triangle instead
 							continue;
-						}
-						if (timeToIntersect == T(0.0)) {
-							if (intersectionOnEdge) {
-								num_faces_contacting_particle_on_edge++;
-							} else {
-								num_faces_contacting_particle_within_tri++;
-							}
 						}
 						if (face_verbose) {
 							std::cout << "        > intersection point (new-method) is "; intersection.print() ; std::cout << std::endl;
@@ -535,6 +531,14 @@ namespace cupcfd
 								usleep(verbose_sleep_period);
 							}
 
+							if (timeToIntersect == T(0.0)) {
+								if (intersectionOnEdge) {
+									num_faces_contacting_particle_on_edge++;
+								} else {
+									num_faces_contacting_particle_within_tri++;
+								}
+							}
+
 							// if (face_was_found) {
 							// 	// Only select this face if nearer than the previously-found face
 							// 	if (timeToIntersect < exitTravelTime) {
@@ -563,6 +567,13 @@ namespace cupcfd
 									} else {
 										std::cout << "        > selecting this face" << std::endl;
 									}
+								}
+
+								if (face_was_found && timeToIntersect==T(0) && exitTravelTime==T(0) && num_faces_contacting_particle_within_tri==2) {
+									// There are two face triangles which this particle is apparently directly resting on, away from their edges.
+									// This can only happen if two faces are directly overlapping in the same plane!
+									std::cout << "ERROR: Particle " << this->particleID << " is classified as making direct contact with at least 2 face triangles, when just 1 is expected" << std::endl;
+									throw std::exception();
 								}
 
 								exitFaceID = localFaceID;

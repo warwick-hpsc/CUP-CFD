@@ -402,9 +402,9 @@ namespace cupcfd
 					throw std::exception();
 				}
 				particleRecvBuffer[i].setCellEntryFaceLocalID(sharedFaceLocalID);
-				if (particleRecvBuffer[i].particleID == 1) {
-					std::cout << "Manually updating particle " << particleRecvBuffer[i].particleID << " to have entry face local ID " << sharedFaceLocalID << std::endl;
-				}
+				// if (particleRecvBuffer[i].particleID == 1) {
+				// 	std::cout << "Manually updating particle " << particleRecvBuffer[i].particleID << " to have entry face local ID " << sharedFaceLocalID << std::endl;
+				// }
 				// End of entry face identification.
 
 
@@ -698,12 +698,12 @@ namespace cupcfd
 			// Would be faster if inactive particles are removed
 			for(I i = 0; i < this->particles.size(); i++)
 			{
-				// bool verbose = false;
+				bool verbose = false;
 				// bool verbose = (particles[i].getParticleID() == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 8601) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 4801) && verbosePermitted;
 				// bool verbose = (particles[i].particleID == 101);
-				bool verbose = (particles[i].particleID == 1);
+				// bool verbose = (particles[i].particleID == 1);
 
 				// Manually validate particle state:
 				if (this->particles[i].getCellEntryFaceLocalID() == I(-1) && (this->particles[i].lastCellGlobalID != I(-1))) {
