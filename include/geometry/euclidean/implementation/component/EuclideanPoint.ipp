@@ -186,13 +186,12 @@ namespace cupcfd
 			{
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];
+					for(int i = 1; i < N; i++)
+					{
+						std::cout << ", " << this->cmp[i];
+					}
+					std::cout << " ]";
 				}
-				for(int i = 1; i < N; i++)
-				{
-					std::cout << ", " << this->cmp[i];
-				}
-				std::cout << " ]";
-				// std::cout << " ]" << std::endl;
 			}
 		} // namespace euclidean
 	} // namespace geometry

@@ -504,7 +504,7 @@ namespace cupcfd
 
 					inline bool isRegistered();
 
-					inline void print() const;
+					void print() const;
 			};
 
 			// ToDo: Would prefer to have this as a member of the vector class, but this function makes no sense

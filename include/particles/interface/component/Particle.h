@@ -110,6 +110,8 @@ namespace cupcfd
 				 * do with it during the next update position stage).
 				 */
 				I rank;
+				
+				I lastRank;
 
 				/** Stores the remaining time to travel for 'in-flight' particles **/
 				T travelDt;
@@ -199,7 +201,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				inline void setCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID);
+				inline cupcfd::error::eCodes setCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID);
 
 				inline void setCellEntryFaceLocalID(I cellEntryFaceLocalID);
 
@@ -258,7 +260,6 @@ namespace cupcfd
 
 
 				inline void print() const;
-				
 
 				/**
 				 * Using the currently set velocity, move the particle until it either reaches the
@@ -294,6 +295,32 @@ namespace cupcfd
 				cupcfd::error::eCodes updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T * dt,
 																I * exitFaceLocalID, bool print_info);
+				
+				template <class M, class L>
+				cupcfd::error::eCodes calculateFaceIntersection(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																I faceID, 
+																cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
+																cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+																bool verbose, 
+																bool& doesIntersect, 
+																cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
+																bool& intersectionOnEdge,
+																T& timeToIntersect);
+
+				/**
+				 * Detect entry face ID of current cell.
+				 *
+				 * Particle must maintain a record of which face it entered current cell through. But face ID is local to rank. 
+				 * Thus, when transferred between MPI ranks, ID must be redetected.
+				 *
+				 * @param mesh The object containing the mesh data
+				 *
+				 * @return An error status indicating the success or failure of the operation
+				 * @retval cupcfd::error::E_SUCCESS The method completed successfully and the particle
+				 * has no further travel time.
+				**/
+				template <class M, class L>
+				cupcfd::error::eCodes redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 				/**
 				 * Update the velocity of the particle after travelling through the identified cell for a period of dT.
@@ -413,8 +440,6 @@ namespace cupcfd
 				template <class M, class L>
 				cupcfd::error::eCodes updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 						  	  	  	  	  	  	  	  	  	  	  	I cellLocalID, I faceLocalID);
-
-
 
 				// === Inherited Overloaded Methods ===
 

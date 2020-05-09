@@ -199,7 +199,11 @@ namespace cupcfd
 					if(status == cupcfd::error::E_SUCCESS)
 					{
 						// particles[i]->setCellGlobalID(globalCellID);
-						particles[i]->setCellGlobalID(globalCellID, I(-1));
+						status = particles[i]->setCellGlobalID(globalCellID, I(-1));
+						if (status != cupcfd::error::E_SUCCESS) {
+                            throw std::exception();
+							// return status;
+						}
 						
 						// Set the inflight pos to current position for their starting point
 						particles[i]->inflightPos = particles[i]->pos;

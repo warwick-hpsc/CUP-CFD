@@ -43,6 +43,7 @@ namespace cupcfd
 			this->lastLastCellGlobalID = source.lastLastCellGlobalID;
 			this->particleID = source.particleID;
 			this->rank = source.rank;
+			this->lastRank = source.lastRank;
 			this->travelDt = source.travelDt;
 			this->decayLevel = source.decayLevel;
 			this->decayRate = source.decayRate;
@@ -215,6 +216,7 @@ namespace cupcfd
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
 				return cupcfd::error::E_ERROR;
+				// throw std::exception();
 			}
 
 
@@ -233,6 +235,7 @@ namespace cupcfd
 			} else {
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
 				return cupcfd::error::E_ERROR;
+				// throw std::exception();
 			}
 			bool localFaceAccessible = false;
 			I nFaces = 0;
@@ -269,7 +272,12 @@ namespace cupcfd
 			// this->lastCellGlobalID = this->cellGlobalID;
 			// this->cellGlobalID = toCellGlobalID;
 
-			this->setCellGlobalID(toCellGlobalID, faceLocalID);
+			status = this->setCellGlobalID(toCellGlobalID, faceLocalID);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "Call to setCellGlobalID() failed" << std::endl;
+                throw std::exception();
+				// return status;
+			}
 
 			if (this->cellGlobalID != toCellGlobalID) {
 				// std::cout << "ERROR: cell face update failed" << std::endl;
@@ -310,6 +318,7 @@ namespace cupcfd
 			if(isGhost)
 			{
 				// Update rank to be the rank that owns the ghost node
+				this->lastRank = this->rank;
 				this->rank = mesh.cellConnGraph->nodeOwner[node];
 			}
 
@@ -428,7 +437,7 @@ namespace cupcfd
 
 			int mpiErr;
 
-			const int nb = 14;
+			const int nb = 15;
 
 			// Only need one block since all of same type
 			int count = 1;
@@ -520,6 +529,12 @@ namespace cupcfd
 			structTypes[idx] = componentType;
 			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
 			idx++;
+
+			status = cupcfd::comm::mpi::getMPIType(this->lastRank, &componentType);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			structTypes[idx] = componentType;
+			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastRank);
+			idx++;
 			
 			// Travel dt
 			status = cupcfd::comm::mpi::getMPIType(this->travelDt, &componentType);
@@ -546,6 +561,7 @@ namespace cupcfd
 			if (idx == nb) {
 				std::cout << "ERROR: Attempting to add too many items to ParticleSimple MPI_type" << std::endl;
 				throw std::exception();
+				// return cupcfd::error::E_ERROR;
 			}
 			status = cupcfd::comm::mpi::getMPIType(this->padding, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;

@@ -174,7 +174,8 @@ namespace cupcfd
 				}
 				timeToIntersect = t;
 
-				if (u == T(0.0) || u == T(1.0) || v == T(0.0) || v == T(1.0)) {
+				// if (u == T(0.0) || u == T(1.0) || v == T(0.0) || v == T(1.0)) {
+				if (u == T(0.0) || u == T(1.0) || (u+v) == T(0.0) || (u+v) == T(1.0)) {
 					onEdge = true;
 				} else {
 					onEdge = false;
