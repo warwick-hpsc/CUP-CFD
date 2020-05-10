@@ -88,8 +88,6 @@ namespace cupcfd
 		
 			// Build the initial system
 			*system = new ParticleSystemSimple<M,I,T,L>(meshPtr);
-
-			// cupcfd::particles::ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T>::numEmitters = 0;
 			
 			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the system
 			for(I i = 0; i < this->emitterConfigs.size(); i++)
@@ -187,30 +185,34 @@ namespace cupcfd
 				// Add particles to the system, but only if they exist on this ranks mesh partition
 				for(I i = 0; i < nParticles; i++)
 				{
+					ParticleSimple<I,T> p = *(static_cast<ParticleSimple<I,T> *>(particles[i]));
+
 					// Find the cell this particle exists in on this rank, if it exists
 					I localCellID;
 					I globalCellID;
 					
 					
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos = particles[i]->getPos();
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos = p.getPos();
 					
 					status = meshPtr->findCellID(pos, &localCellID, &globalCellID);
 					
 					if(status == cupcfd::error::E_SUCCESS)
 					{
-						// particles[i]->setCellGlobalID(globalCellID);
-						status = particles[i]->setCellGlobalID(globalCellID, I(-1));
-						if (status != cupcfd::error::E_SUCCESS) {
-                            throw std::exception();
-							// return status;
-						}
-						
-						// Set the inflight pos to current position for their starting point
-						particles[i]->inflightPos = particles[i]->pos;
-						
-						// ToDo: No set rank function?
-						particles[i]->rank = meshPtr->cellConnGraph->comm->rank;
-						status = (*system)->addParticle( *(static_cast<ParticleSimple<I,T> *>(particles[i])));
+						ParticleSimple<I,T> allocatedParticle = 
+							ParticleSimple<I,T>(
+								p.pos,
+								p.velocity,
+								p.acceleration,
+								p.jerk,
+								p.getParticleID(),
+								globalCellID,
+								meshPtr->cellConnGraph->comm->rank,
+								p.decayLevel,
+								p.decayRate,
+								p.travelDt);
+						allocatedParticle.inflightPos = p.pos;
+						status = (*system)->addParticle(allocatedParticle);
+
 						if(status != cupcfd::error::E_SUCCESS)
 						{
 							std::cout << "ERROR: addParticle() failed" << std::endl;
@@ -229,12 +231,6 @@ namespace cupcfd
 				// Destroy particle source object
 				delete(particleSource);
 			}		
-			
-			// if(this->particleSourceConfig != nullptr) {
-			// 	std::cout << "This rank has " << (*system)->getNEmitters() << " particle emitters and one source" << std::endl;
-			// } else {
-			// 	std::cout << "This rank has " << (*system)->getNEmitters() << " particle emitters" << std::endl;
-			// }
 			
 			// Done
 			return cupcfd::error::E_SUCCESS;

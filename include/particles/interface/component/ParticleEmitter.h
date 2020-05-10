@@ -26,9 +26,6 @@ namespace cupcfd
 {
 	namespace particles
 	{
-		// template <class P, class I, class T>
-		// class Particle<P,I,T>;
-
 		/**
 		 * Defines interface methods for basic particle emitter operations
 		 * such as particle generation etc.
@@ -39,8 +36,6 @@ namespace cupcfd
 		class ParticleEmitter
 		{
 			public:
-				// static int numEmitters;
-
 				// === Members ===
 
 				/**
@@ -58,6 +53,9 @@ namespace cupcfd
 				 */
 				I localCellID;
 
+				/**
+				 * Unique identifier for this emitter
+				 */
 				I emitterID;
 
 				/**
@@ -65,7 +63,10 @@ namespace cupcfd
 				 */
 				I rank;
 
-				long numParticlesEmitted;
+				/**
+				 * ID to be given to next particle emitted
+				 */
+				I nextParticleID;
 
 				// === Constructors/Deconstructors ===
 
@@ -131,16 +132,6 @@ namespace cupcfd
 
 				// === Pure Virtual Methods ===
 		};
-
-		// class ParticleEmitterStatic
-		// {
-		// 	public:
-		// 		static long numEmitters;
-		// };
-
-		// long numEmitters;
-		// static long numEmitters = 1;
-		// long ParticleEmitterStatic::numEmitters = 0;
 	}
 }
 

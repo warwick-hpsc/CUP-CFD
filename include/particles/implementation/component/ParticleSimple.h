@@ -37,9 +37,6 @@ namespace cupcfd
 {
 	namespace particles
 	{
-		// template<class I, class T>
-		// class ParticleEmitterSimple;
-
 		/**
 		 * This defines a basic particle that has minimal interaction with the
 		 * mesh/finite-volume system as a whole. It does not account for mass, fluid flow
@@ -52,9 +49,6 @@ namespace cupcfd
 		template <class I, class T>
 		class ParticleSimple : public Particle<ParticleSimple<I,T>, I, T>
 		{
-			// template <class A, class B>
-			// friend class ParticleEmitterSimple;
-
 			public:
 				// === Members ===
 
@@ -130,6 +124,7 @@ namespace cupcfd
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& velocity,
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& acceleration,
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& jerk,
+						 I id, 
 						 I cellGlobalID, I rank,
 						 T decayLevel, T decayRate,
 						 T travelDt);

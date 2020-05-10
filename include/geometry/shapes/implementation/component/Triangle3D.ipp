@@ -127,10 +127,8 @@ namespace cupcfd
 			}
 
 			template <class T>
-			// bool Triangle3D<T>::intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect) const
 			bool Triangle3D<T>::calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
 														euc::EuclideanPoint<T,3>& intersection, 
-														// euc::EuclideanVector<T,3>& intersectDistance,
 														T& timeToIntersect, 
 														bool onEdge, 
 														bool verbose) const
@@ -169,13 +167,11 @@ namespace cupcfd
 				}
 
 				if (verbose) {
-				// if (verbose || (t == T(0))) {
 					std::cout << "          > u=" << u << ", v=" << v << ", t=" <<t << std::endl;
 				}
 				timeToIntersect = t;
 
-				// if (u == T(0.0) || u == T(1.0) || v == T(0.0) || v == T(1.0)) {
-				if (u == T(0.0) || u == T(1.0) || (u+v) == T(0.0) || (u+v) == T(1.0)) {
+				if (u == T(0.0) || u == T(1.0) || v == T(0.0) || v == T(1.0)) {
 					onEdge = true;
 				} else {
 					onEdge = false;

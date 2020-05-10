@@ -25,8 +25,6 @@
 
 #include <fstream>
 
-#include <typeinfo>
-
 namespace cupcfd
 {
 	namespace particles

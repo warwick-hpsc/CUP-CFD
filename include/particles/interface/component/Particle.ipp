@@ -25,6 +25,7 @@ namespace cupcfd
 		template <class P, class I, class T>
 		Particle<P, I, T>::Particle()
 		:CustomMPIType(),
+		 particleID(-1),
 		 cellGlobalID(-1),
 		 cellEntryFaceLocalID(-1),
 		 lastCellGlobalID(-1),
@@ -38,11 +39,13 @@ namespace cupcfd
 		template <class P, class I, class T>
 		Particle<P, I, T>::Particle(cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity,
 						 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos,
+						 			I id, 
 						 			I cellGlobalID, I rank, T travelDt)
 		:CustomMPIType(),
 		 velocity(velocity),
 		 pos(pos),
 		 inflightPos(pos),
+		 particleID(id),
 		 cellGlobalID(cellGlobalID),
 		 cellEntryFaceLocalID(-1),
 		 lastCellGlobalID(-1),
@@ -63,6 +66,11 @@ namespace cupcfd
 		inline void Particle<P, I, T>::operator=(Particle& source)
 		{
 			static_cast<P*>(this)->operator=(source);
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getRank() {
+			return this->rank;
 		}
 
 		template <class P, class I, class T>
@@ -102,15 +110,9 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		// inline void Particle<P, I, T>::setCellGlobalID(I cellGlobalID)
-		inline cupcfd::error::eCodes Particle<P, I, T>::setCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID)
+		inline cupcfd::error::eCodes Particle<P, I, T>::safelySetCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID)
 		{
-			// std::cout << "Request received to move particle ID " << this->particleID << " from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << std::endl;
-			// std::cout << "Request received to move particle ID " << this->particleID << " from cell " << this->cellGlobalID << " --> cell " << cellGlobalID << " through face " << cellEntryFaceLocalID << std::endl;
-			// usleep(100*1000);
-
 			if (this->cellGlobalID == cellGlobalID) {
-				// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << " to " << cellGlobalID << " but it is already in that cell" << std::endl;
 				std::cout << "ERROR: Attempting to update a particle " << this->particleID << " to be in cell " << cellGlobalID << " but it is already in that cell" << std::endl;
 				throw std::exception();
 				// return cupcfd::error::E_ERROR;
@@ -127,7 +129,7 @@ namespace cupcfd
 			this->cellGlobalID = cellGlobalID;
 
 			if (cellEntryFaceLocalID == I(-1)) {
-				std::cout << "ERROR: Particle::setCellGlobalID() called with invalid value of 'cellEntryFaceLocalID'" << std::endl;
+				std::cout << "ERROR: Particle::safelySetCellGlobalID() called with invalid value of 'cellEntryFaceLocalID'" << std::endl;
 				throw std::exception();
 				// return cupcfd::error::E_ERROR;
 			}
@@ -137,15 +139,15 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setCellEntryFaceLocalID(I cellEntryFaceLocalID)
-		{
-			this->cellEntryFaceLocalID = cellEntryFaceLocalID;
-		}
-
-		template <class P, class I, class T>
 		inline I Particle<P, I, T>::getCellGlobalID() const
 		{
 			return this->cellGlobalID;
+		}
+
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getLastCellGlobalID() const
+		{
+			return this->lastCellGlobalID;
 		}
 
 		template <class P, class I, class T>
@@ -154,17 +156,11 @@ namespace cupcfd
 			return this->cellEntryFaceLocalID;
 		}
 
-		// template <class P, class I, class T>
-		// inline I Particle<P, I, T>::getRank() const
-		// {
-		// 	return this->rank;
-		// }
-
-		// template <class P, class I, class T>
-		// inline I Particle<P, I, T>::getParticleID() const
-		// {
-		// 	return this->particleID;
-		// }
+		template <class P, class I, class T>
+		inline I Particle<P, I, T>::getParticleID() const
+		{
+			return this->particleID;
+		}
 
 		template <class P, class I, class T>
 		inline void Particle<P, I, T>::setTravelTime(T dt)
@@ -178,18 +174,23 @@ namespace cupcfd
 			return this->travelDt;
 		}
 		
-		// template <class P, class I, class T>
-		// inline void Particle<P, I, T>::setInactive()
-		// {
-		// 	static_cast<P*>(this)->setInactive(inactive);
-		// }
-		
 		template <class P, class I, class T>
 		inline bool Particle<P, I, T>::getInactive() const
 		{
 			return static_cast<P*>(this)->getInactive();
 		}
 
+		template <class P, class I, class T>
+		inline bool Particle<P, I, T>::stateValid() const
+		{
+			if ((this->lastCellGlobalID != I(-1)) && (this->cellEntryFaceLocalID == I(-1))) {
+				std::cout << "ERROR: particle " << this->particleID << " has history of cell movement but cellEntryFaceLocalID is -1" << std::endl;
+				// throw std::exception();
+				return false;
+			}
+
+			return true;
+		}
 
 		template <class P, class I, class T>
 		inline void Particle<P, I, T>::print() const
@@ -215,8 +216,6 @@ namespace cupcfd
 		template <class M, class L>
 		cupcfd::error::eCodes Particle<P, I, T>::calculateFaceIntersection(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																			I faceID, 
-																			cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
-																			cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
 																			bool verbose,
 																			bool& doesIntersect, 
 																			cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
@@ -227,6 +226,9 @@ namespace cupcfd
 			doesIntersect = false;
 			intersectionOnEdge = false;
 			timeToIntersect = T(-1);
+
+			cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0 = this->inflightPos;
+			cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity = this->velocity;
 
 			// Break the faces up into triangles and compute the intersection with the plane of each triangle and determine the time to reach
 			// Get the vertices/spatial coordinates for each face
@@ -261,12 +263,10 @@ namespace cupcfd
 
 				bool doesIntersectTriangle;
 				bool doesIntersectTriangleOnEdge;
-				// bool verbose = false;
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triIntersection;
 				T timeToIntersectTriangle;
 				doesIntersectTriangle = shape.calculateIntersection(v0, velocity, triIntersection, timeToIntersectTriangle, doesIntersectTriangleOnEdge, verbose);
 				
-				// if (doesIntersectTriangle && (timeToIntersectTriangle >= T(0))) {
 				if (doesIntersectTriangle) {
 					if (doesIntersect) {
 						std::cout << "ERROR: calculateFaceIntersection() has detected multiple face intersections for particle " << this->particleID << std::endl;
@@ -303,11 +303,9 @@ namespace cupcfd
 		{
 			cupcfd::error::eCodes status;
 
-			// bool verbose = this->particleID == 1;
 			bool verbose = false;
 			
 			if (verbose) {
-				// std::cout << "redetectEntryFaceID() called on particle " << this->particleID << std::endl;
 				std::cout << "> Redetecting entry face ID of particle " << this->particleID << " between cells " << this->lastCellGlobalID << " -> " << this->getCellGlobalID() << std::endl;
 				this->print();
 			}
@@ -366,8 +364,6 @@ namespace cupcfd
 						T timeToIntersect = T(-1);
 						status = calculateFaceIntersection(	mesh, 
 															f1, 
-															this->inflightPos, 
-															this->velocity,
 															verbose, 
 															doesIntersect, 
 															intersection, 
@@ -410,8 +406,6 @@ namespace cupcfd
 		template <class M, class L>
 		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID, bool verbose)
 		{
-			// ToDo: Warning: I'm not certain how this code currently handles intersection points directly through vertices well (assigns first face it finds?)
-		
 			cupcfd::error::eCodes status;
 
 			// useconds_t verbose_sleep_period = 500*1000;
@@ -508,221 +502,12 @@ namespace cupcfd
 				// Retrieve the faces of the cell
 				I localFaceID = mesh.getCellFaceID(localCellID, i);
 
-				// if (localFaceID == this->cellEntryFaceLocalID) {
-				// 	if (verbose) {
-				// 		std::cout << "    > skipping face ID " << localFaceID << " as particle " << this->particleID << " entered cell through it" << std::endl;
-				// 	}
-				// 	continue;
-				// }
-				
-				/*
-
-				// Break the faces up into triangles and compute the intersection with the plane of each triangle and determine the time to reach
-				// Get the vertices/spatial coordinates for each face
-				I nFaceVertices = mesh.getFaceNVertices(localFaceID);
-				
-				if (verbose) {
-					std::cout << "    > checking face ID=" << localFaceID << ", #vertices=" << nFaceVertices << " (" << i+1 << " / " << nFaces << ")" << std::endl;
-
-					I cell1LocalID = mesh.getFaceCell1ID(localFaceID);
-					I cell2LocalID = mesh.getFaceCell2ID(localFaceID);
-					I node1, node2;
-					mesh.cellConnGraph->connGraph.getLocalIndexNode(cell1LocalID, &node1);
-					mesh.cellConnGraph->connGraph.getLocalIndexNode(cell2LocalID, &node2);
-					I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
-					I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
-					std::cout << "      > neighbour cells are ";
-					std::cout << cell1GlobalID << " (local = " << cell1LocalID << ") and ";
-					std::cout << cell2GlobalID << " (local = " << cell2LocalID << ")" << std::endl;
-
-					usleep(verbose_sleep_period);
-				}
-
-				// Get the first vertex
-				I faceVertex0ID = mesh.getFaceVertex(localFaceID, 0);
-
-				for(I j = 1; j < (nFaceVertices-1); j++)
-				{
-					I faceVertex1ID = mesh.getFaceVertex(localFaceID, j);
-					I faceVertex2ID = mesh.getFaceVertex(localFaceID, j+1);
-
-					// if (verbose) {
-					// 	// std::cout << "      > vertex " << j+1 << " / " << (nFaceVertices-2)+1 << std::endl;
-					// 	std::cout << "      > vertex " << j+1 << " / " << nFaceVertices << std::endl;
-					// 	usleep(verbose_sleep_period);
-					// }
-
-					if (verbose) {
-						std::cout << "      > checking tri formed by vertices: " << faceVertex0ID << ", " << faceVertex1ID << ", " << faceVertex2ID << ", " << std::endl;
-						usleep(verbose_sleep_period);
-					}
-				
-					// // Test for intersection on the triangle formed by the plane with the travel vector
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex0 = mesh.getVertexPos(faceVertex0ID);
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex1 = mesh.getVertexPos(faceVertex1ID);
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> faceVertex2 = mesh.getVertexPos(faceVertex2ID);
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(faceVertex0,faceVertex1, faceVertex2);
-					
-					if (plane.isVectorParallel(this->velocity)) {
-						status = cupcfd::error::E_EUC_VEC_PARALLEL;
-					} else {
-						status = cupcfd::error::E_SUCCESS;
-					}
-					// Verify that the travel vector (velocity) is not parallel to or fully in the face.
-					if(status == cupcfd::error::E_EUC_VEC_PARALLEL)
-					{
-						// Either will never intersect, or is intersecting at all times and not exiting into the
-						// neighbouring cell via this face.
-						
-						// Skip any actions for this face - will not intersect
-
-						if (verbose) {
-							std::cout << "        > travel is parallel to tri" << std::endl;
-							usleep(verbose_sleep_period);
-						}
-					}
-					else
-					{
-						// Verify that the intersection point occurs within the triangle of the face, rather than just the plane
-						// Could also use static method directly rather than create an object
-						cupcfd::geometry::shapes::Triangle3D<T> shape(mesh.getVertexPos(faceVertex0ID), 
-																	  mesh.getVertexPos(faceVertex1ID), 
-																	  mesh.getVertexPos(faceVertex2ID));
-
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
-						T timeToIntersect = T(-1);
-						bool intersectionOnEdge;
-						if (!shape.calculateIntersection(this->inflightPos, this->velocity, intersection, timeToIntersect, intersectionOnEdge, verbose)) {
-							// if (verbose) {
-							// 	std::cout << "        > intersection is outside tri shape" << std::endl;
-							// 	usleep(verbose_sleep_period);
-							// }
-
-							// Progress onto next triangle instead
-							continue;
-						}
-						if (verbose) {
-							std::cout << "        > intersection point (new-method) is "; intersection.print() ; std::cout << std::endl;
-							std::cout << "        > vertices coordinates: " << std::endl;
-							std::cout << "          > " ; faceVertex0.print(); std::cout << std::endl;
-							std::cout << "          > " ; faceVertex1.print(); std::cout << std::endl;
-							std::cout << "          > " ; faceVertex2.print(); std::cout << std::endl;
-							usleep(verbose_sleep_period);
-						}
-							
-						intersectionCount = intersectionCount + 1;
-															
-						// Intersection point is inside a triangular face on this shape - Find the time it takes to intersect
-						// Inflight pos -> intersection is a scalar multiple of the velocity vector from Inflightpos
-						// Could use time = distance/speed, but we lose direction (don't want to travel in direction
-						// of negative time)
-						// We know from inflight pos goes through intersection along vector, so just compute scalar for time
-						// ToDo: Probably just a more elegant way of doing this (really we just want negative distance or speed)
-						
-						// Speed
-						T speed;
-						status = this->velocity.length(&speed);
-						if (status != cupcfd::error::E_SUCCESS) {
-							std::cout << "ERROR: length() failed" << std::endl;
-							return status;
-						}
-
-						// Distance
-						T distance = timeToIntersect * speed;
-
-						// // Time
-						// T timeToIntersect = distance / speed;
-						// if (this->inflightPos + (this->velocity * timeToIntersect) != intersection)
-						// {
-						// 	// Travelling in wrong direction to velocity, set time to negative
-						// 	timeToIntersect = T(-1) * timeToIntersect;
-						// 	if (verbose) {
-						// 		std::cout << "        > particle travelling away from tri, making time negative" << std::endl;
-						// 	}
-						// }
-						
-						// Theoretically, if the time/distance is not zero (i.e. we aren't checking the face of the cell we
-						// just left) and the cell is not concave (the cell type for which we don't
-						// currently support since it needs to be greater than a hexahedron), then if it is inside the triangle
-						// this is the only face we can exit by?
-						
-						// ToDo: Think there might be a danger of 'bouncing' back and forth if exactly on a vertex - check 
-						
-						// if ( (!arth::isEqual(timeToIntersect, 0.0)) && timeToIntersect > 0.0)
-						// if (timeToIntersect >= CUPCFD_ZERO_COMP_TOL_D)
-						if (timeToIntersect >= T(0))
-						// T tolerance;
-						// cupcfd::geometry::euclidean::EuclideanVector<T,3> faceEdge = mesh.getVertexPos(faceVertex2ID) - mesh.getVertexPos(faceVertex1ID);
-						// faceEdge.length(&tolerance);
-						// tolerance = fabs(tolerance);
-						// // tolerance *= 0.001;
-						// tolerance *= 1e-10;
-						// if (timeToIntersect > tolerance)
-						{
-							if (verbose) {
-								std::cout << "        > will intersect this tri after non-zero travel time " << timeToIntersect << " seconds" << std::endl;
-								// std::cout << "          > intersection point is "; intersection.print() ; std::cout << std::endl;
-								usleep(verbose_sleep_period);
-							}
-
-							if (timeToIntersect == T(0.0)) {
-								if (intersectionOnEdge) {
-									num_faces_contacting_particle_on_edge++;
-								} else {
-									num_faces_contacting_particle_within_tri++;
-								}
-							}
-
-							if (!face_was_found || (timeToIntersect < exitTravelTime)) {
-								if (verbose) {
-									if (timeToIntersect < exitTravelTime) {
-										std::cout << "        > this face is nearer than previously-found face" << std::endl;
-									} else {
-										std::cout << "        > selecting this face" << std::endl;
-									}
-								}
-
-								if (face_was_found && timeToIntersect==T(0) && exitTravelTime==T(0) && num_faces_contacting_particle_within_tri==2) {
-									// There are two face triangles which this particle is apparently directly resting on, away from their edges.
-									// This can only happen if two faces are directly overlapping in the same plane!
-									std::cout << "ERROR: Particle " << this->particleID << " is classified as making direct contact with at least 2 face triangles, when just 1 is expected" << std::endl;
-									throw std::exception();
-									// return cupcfd::error::E_ERROR;
-								}
-
-								if (localFaceID == this->cellEntryFaceLocalID) {
-									if (verbose) {
-										std::cout << "    > skipping face ID " << localFaceID << " as particle " << this->particleID << " entered cell through it" << std::endl;
-									}
-									continue;
-								}
-
-								exitFaceID = localFaceID;
-								exitIntersection = intersection;
-								exitTravelTime = timeToIntersect;
-								exitDistance = distance;
-								face_was_found = true;
-							}
-						}
-					}
-				}
-				*/
-
-				// if (localFaceID == this->cellEntryFaceLocalID) {
-				// 	if (verbose) {
-				// 		std::cout << "    > skipping face ID " << localFaceID << " as particle " << this->particleID << " entered cell through it" << std::endl;
-				// 	}
-				// 	continue;
-				// }
-
 				bool doesIntersect;
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
 				bool intersectionOnEdge;
 				T timeToIntersect = T(-1);
 				status = calculateFaceIntersection(	mesh, 
 													localFaceID, 
-													this->inflightPos, 
-													this->velocity, 
 													false, 
 													doesIntersect, 
 													intersection, 
@@ -801,7 +586,7 @@ namespace cupcfd
 			{			
 				// Error - No Face was found for exiting (assuming there would be travel time to reach it)
 				// This would suggest the particle is in the wrong cell for its position
-				std::cout << "ERROR: No intersections found" << std::endl;
+				std::cout << "ERROR: No exit face found for particle " << this->particleID << std::endl;
 				// return cupcfd::error::E_ERROR;
 				throw std::exception();
 			}

@@ -56,7 +56,7 @@ namespace cupcfd
 			this->decayRate = decayRate->clone();
 			this->decayThreshold = decayThreshold->clone();
 
-			this->numParticlesEmitted = 0;
+			this->nextParticleID = I(0);
 		}
 
 		template <class I, class T>
@@ -77,7 +77,7 @@ namespace cupcfd
 			this->decayRate = source.decayRate->clone();
 			this->decayThreshold = source.decayThreshold->clone();
 
-			this->numParticlesEmitted = 0;
+			this->nextParticleID = I(0);
 		}
 
 		template <class I, class T>
@@ -100,9 +100,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt)
 		{
-			// std::cout << "ParticleEmitterSimple<I,T>::generateParticles() called" << std::endl;
-			// usleep(500*1000);
-
 			cupcfd::error::eCodes status;
 
 			// tCurrent is the current time in the dt period, relative to 0
@@ -202,41 +199,24 @@ namespace cupcfd
 				velocity.length(&length);
 				velocity = (speed[i]/length) * velocity;
 
-				// (*particles)[i].setPos(this->position);
-				// (*particles)[i].setInFlightPos(this->position);
-				// (*particles)[i].setVelocity(velocity);
-				// (*particles)[i].setAcceleration(acceleration);
-				// (*particles)[i].setJerk(jerk);
-				// (*particles)[i].setCellGlobalID(this->globalCellID);
-
-				// // Remaining travel time depends on when it was generated in this dt period.
-				// // E.g. if dt is 10, and it was generated at 1.2, then it only has 8.8 remaining
-				// // in this time period.
-				// (*particles)[i].setTravelTime(dt-times[i]);
-				// (*particles)[i].setDecayLevel(decayThreshold[i]);
-				// (*particles)[i].setDecayRate(decayRate[i]);
-				// (*particles)[i].rank = this->rank;				// ToDo: Should be setRank method
-
 				(*particles)[i] = ParticleSimple<I,T>(
 					this->position,
 					velocity,
 					acceleration,
 					jerk,
+					this->emitterID + 100*this->nextParticleID, 
 					this->globalCellID,
 					this->rank,
 					decayThreshold[i],
 					decayRate[i],
 					dt-times[i]);
 
-				// (*particles)[i].particleID = this->numParticlesEmitted;
-				(*particles)[i].particleID = this->emitterID + 100*this->numParticlesEmitted;
-
-				// if ((*particles)[i].particleID == 8601) {
-				// 	std::cout << "particle " << (*particles)[i].particleID << " emitted at POS: ";
-				// 	(*particles)[i].getPos().print(); std::cout << std::endl;
-				// }
-
-				this->numParticlesEmitted++;
+				this->nextParticleID++;
+				if (this->nextParticleID == std::numeric_limits<I>::max()) {
+					// Assume that by this point in simulation, that the first particles 
+					// to be emitted have left the system.
+					this->nextParticleID = I(0);
+				}
 			}
 
 			free(accelerationX);

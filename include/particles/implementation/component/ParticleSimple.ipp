@@ -47,12 +47,7 @@ namespace cupcfd
 			this->travelDt = source.travelDt;
 			this->decayLevel = source.decayLevel;
 			this->decayRate = source.decayRate;
-
-			if (this->cellEntryFaceLocalID == I(-1) && (this->lastCellGlobalID != I(-1))) {
-				std::cout << "ERROR: source particle has history of cell movement but cellEntryFaceLocalID is -1" << std::endl;
-				throw std::exception();
-			}
-
+			
 			// Padding doesn't matter for setting initial values, 
 			// they're expected to be garbage
 			
@@ -122,43 +117,6 @@ namespace cupcfd
 			
 			return true;
 		}
-				
-
-		// template <class I, class T>
-		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocity(T dt)
-		// {
-		// 	// Change in velocity = acceleration * change in time
-		// 	cupcfd::geometry::euclidean::EuclideanVector<T,3> dV = this->acceleration * dt;
-
-		// 	// Velocity = Start Velocity + Change in Velocity
-		// 	this->velocity = this->velocity + dV;
-
-		// 	return cupcfd::error::E_SUCCESS;
-		// }
-		
-		// template <class I, class T>
-		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateAcceleration(T dt)
-		// {
-		// 	// Change in acceleration = jerk * change in time
-		// 	cupcfd::geometry::euclidean::EuclideanVector<T,3> dA = this->jerk * dt;
-
-		// 	// Velocity = Start Velocity + Change in Velocity
-		// 	this->acceleration = this->acceleration + dA;
-
-		// 	return cupcfd::error::E_SUCCESS;
-		// }
-		
-		// template <class I, class T>
-		// inline cupcfd::error::eCodes ParticleSimple<I,T>::updateDecayLevel(T dt)
-		// {
-		// 	// Change in decay = rate of decay * change in time
-		// 	T dR = this->decayRate * dt;
-			
-		// 	// ToDo: Should probably put a abs on decay here, but need to match appropriate one for template type....
-		// 	this->decayLevel = this->decayLevel - dR;
-			
-		// 	return cupcfd::error::E_SUCCESS;
-		// }	
 
 		template <class I, class T>
 		template <class M, class L>
@@ -210,9 +168,6 @@ namespace cupcfd
 			I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
 
-			// std::cout << "Request received to move particle ID " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << std::endl;
-			// usleep(100*1000);
-
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
 				return cupcfd::error::E_ERROR;
@@ -258,23 +213,9 @@ namespace cupcfd
 			}
 
 
-			// if (this->cellGlobalID == toCellGlobalID) {
-			// 	// std::cout << "ERROR: Attempting to update a cell of particle " << this->particleID << " to " << cellGlobalID << " but it is already in that cell" << std::endl;
-			// 	std::cout << "ERROR: Attempting to update a particle " << this->particleID << " to be in cell " << toCellGlobalID << " but it is already in that cell" << std::endl;
-			// 	throw std::exception();
-			// }
-			// if ( (toCellGlobalID == this->lastLastCellGlobalID) || (toCellGlobalID == this->lastCellGlobalID) ) {
-			// 	std::cout << "ERROR: Attempting to move particle " << this->particleID << " to cell " << toCellGlobalID << " but it was there recently (recent history is " << this->lastLastCellGlobalID << " -> " << this->lastCellGlobalID << ")" << std::endl;
-			// 	this->print();
-			// 	throw std::exception();
-			// }
-			// this->lastLastCellGlobalID = this->lastCellGlobalID;
-			// this->lastCellGlobalID = this->cellGlobalID;
-			// this->cellGlobalID = toCellGlobalID;
-
-			status = this->setCellGlobalID(toCellGlobalID, faceLocalID);
+			status = this->safelySetCellGlobalID(toCellGlobalID, faceLocalID);
 			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "Call to setCellGlobalID() failed" << std::endl;
+				std::cout << "Call to safelySetCellGlobalID() failed" << std::endl;
                 throw std::exception();
 				// return status;
 			}
@@ -283,26 +224,6 @@ namespace cupcfd
 				// std::cout << "ERROR: cell face update failed" << std::endl;
 				throw std::runtime_error("cell face update failed");
 			}
-
-			// if ((this->particleID == 8601) && (fromCellGlobalID==453)) {
-			// 	std::cout << "Request received to move particle ID " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << std::endl;
-			// 	// usleep(100*1000);
-
-			// 	std::cout << "ERROR: Check my STDOUT messages. Particle 8601 should be in cell 1062 after the previous face update, but it is in cell 453." << std::endl;
-			// 	// the 'cellGlobalId' is a protected variable, and I am monitoring its setter and this method, the only two ways to modify it. How is 1062 being lost?
-			// 	throw std::exception();
-			// }
-
-			// I cellGlobalID = this->getCellGlobalID();
-			// if(cellGlobalID == cell1GlobalID)
-			// {
-			// 	this->setCellGlobalID(cell2GlobalID);
-			// }
-			// else
-			// {
-			// 	this->setCellGlobalID(cell1GlobalID);
-			// }
-			// cellGlobalID = this->getCellGlobalID();
 
 			// Update the Target Rank if we are crossing into a ghost cell
 			
@@ -503,13 +424,6 @@ namespace cupcfd
 			structTypes[idx] = componentType;
 			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
 			idx++;
-
-			// // Cell entry face local Id
-			// status = cupcfd::comm::mpi::getMPIType(this->cellEntryFaceLocalID, &componentType);
-			// if (status != cupcfd::error::E_SUCCESS) return status;
-			// structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellEntryFaceLocalID);
-			// idx++;
 
 			// Last cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);

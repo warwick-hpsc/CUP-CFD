@@ -29,7 +29,7 @@ namespace cupcfd
 		  globalCellID(globalCellID),
 		  emitterID(numEmitters),
 		  rank(rank),
-		  numParticlesEmitted(0)
+		  nextParticleID(0)
 		{
 			numEmitters++;
 		}
