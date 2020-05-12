@@ -78,6 +78,8 @@ int main (int argc, char ** argv)
 
 	TreeTimerInit();
 
+	{ // Wrap work in a block to enable precise invocation of object destructors
+
 	// Use all processes
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
@@ -349,9 +351,12 @@ int main (int argc, char ** argv)
 	PetscFinalize();
 
 	TreeTimerFinalize();
-	//MPI_Finalize();
-
+	
 	if(comm.rank == 0) {
 		std::cout << "cup-cfd has completed" << std::endl;
 	}
+	}   // Close block, invoking local object destructors, notably 'comm' which 
+	    // must destruct before MPI_Finalize()
+
+	MPI_Finalize();
 }
