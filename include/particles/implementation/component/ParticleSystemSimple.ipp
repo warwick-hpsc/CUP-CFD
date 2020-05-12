@@ -342,7 +342,6 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: setActiveParticlesTravelTime() failed" << std::endl;
 				return status;
-				// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 			}
 			
 			// (1b) Set all particles inflight positions to be equal to their current positions
@@ -358,7 +357,6 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: generateEmitterParticles() failed" << std::endl;
 				return status;
-				// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 			}
 
 			// Keep looping as long as there exists a particle anywhere in the system that is still going (since we could
@@ -369,7 +367,6 @@ namespace cupcfd
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: allReduceAdd() failed" << std::endl;
 				return status;
-				// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 			}
 
 			int nGlobalParticles = nGlobalTravelParticles;
@@ -398,7 +395,6 @@ namespace cupcfd
 							if (particles[i].getParticleID() == particle_id_to_track) {
 								if (found_particle_to_track) {
 									std::cout << "ERROR: Multiple particles have ID " << particle_id_to_track << std::endl;
-									// throw std::exception();
 									return cupcfd::error::E_ERROR;
 								}
 								found_particle_to_track = true;
@@ -417,7 +413,6 @@ namespace cupcfd
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: updateSystemAtomic() failed" << std::endl;
 					return status;
-					// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 				}
 								
 				// No further changes should need to be made to the data stored inside a particle, and they should have ranks
@@ -434,7 +429,6 @@ namespace cupcfd
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: removeInactiveParticles() failed" << std::endl;
 					return status;
-					// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 				}
 				
 				// We can now perform an exchange to identify how many (if any)
@@ -443,7 +437,6 @@ namespace cupcfd
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: exchangeParticles() failed" << std::endl;
 					return status;
-					// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 				}
 				
 				// Cleanup any sent particles that should now be marked as inactive after being sent to another rank
@@ -451,7 +444,6 @@ namespace cupcfd
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: removeInactiveParticles() failed" << std::endl;
 					return status;
-					// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 				}
 				
 				// Count how many are actively moving overall (to keep the loop going if needed)
@@ -460,7 +452,6 @@ namespace cupcfd
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: allReduceAdd() failed" << std::endl;
 					return status;
-					// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 				}
 
 				// Verify that 'tmp' reflects reality:
@@ -473,7 +464,6 @@ namespace cupcfd
 				if (trueNumTravellingParticles != tmp) {
 					std::cout << "ERROR: Bug detected in stack-based tracking of #travelling particles. Stack claims " << tmp << " but actual is " << trueNumTravellingParticles << std::endl;
 					return cupcfd::error::E_ERROR;
-					// throw std::exception();
 				}
 
 				if (found_particle_to_track) {
@@ -484,7 +474,6 @@ namespace cupcfd
 							if (bg.getInFlightPos() == tracked_particle_copy.getInFlightPos()) {
 								std::cout << "ERROR: particle " << bg.getParticleID() << " has not moved in first pass of update" << std::endl;
 								return cupcfd::error::E_ERROR;
-								// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 							}
 						}
 
@@ -496,7 +485,6 @@ namespace cupcfd
 							{
 								std::cout << "ERROR: particle " << bg.getParticleID() << " has not changed but it is only particle with travel time" << std::endl;
 								return cupcfd::error::E_ERROR;
-								// MPI_Abort(MPI_COMM_WORLD, MPI_ERR_OTHER);
 							}
 						}
 					}
@@ -516,7 +504,6 @@ namespace cupcfd
 					}
 
 					return cupcfd::error::E_ERROR;
-					// throw std::exception();
 				}
 
 				first_pass = false;
@@ -683,14 +670,12 @@ namespace cupcfd
 
 						if (this->nTravelParticles < 0) {
 							std::cout << "ERROR: nTravelParticles has dropped below 0" << std::endl;
-							throw std::exception();
-							// return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 					}
 				}
 				else {
 					std::cout << "ERROR: Attempting to update an inactive particle" << std::endl;
-					// throw std::exception();
 					return cupcfd::error::E_ERROR;
 				}
 			}
@@ -781,11 +766,14 @@ namespace cupcfd
 						if (this->particles[k].getParticleID() == newParticles[j].getParticleID()) {
 							std::cout << "ERROR: Particle with ID " << newParticles[j].getParticleID() << " already in system" << std::endl;
 							return cupcfd::error::E_ERROR;
-							// throw std::exception();
 						}
 					}
 
-					this->addParticle(newParticles[j]);
+					status = this->addParticle(newParticles[j]);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: addParticle() failed" << std::endl;
+						return status;
+					}
 				}
 				
 				free(newParticles);

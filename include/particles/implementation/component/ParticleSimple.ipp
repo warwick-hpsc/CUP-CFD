@@ -171,7 +171,6 @@ namespace cupcfd
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
 				return cupcfd::error::E_ERROR;
-				// throw std::exception();
 			}
 
 
@@ -190,7 +189,6 @@ namespace cupcfd
 			} else {
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
 				return cupcfd::error::E_ERROR;
-				// throw std::exception();
 			}
 			bool localFaceAccessible = false;
 			I nFaces = 0;
@@ -208,21 +206,19 @@ namespace cupcfd
 			}
 			if (!localFaceAccessible) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " through inaccessible face" << std::endl;
-				// return cupcfd::error::E_ERROR;
-				throw std::exception();
+				return cupcfd::error::E_ERROR;
 			}
 
 
 			status = this->safelySetCellGlobalID(toCellGlobalID, faceLocalID);
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "Call to safelySetCellGlobalID() failed" << std::endl;
-                throw std::exception();
-				// return status;
+				return status;
 			}
 
 			if (this->cellGlobalID != toCellGlobalID) {
-				// std::cout << "ERROR: cell face update failed" << std::endl;
-				throw std::runtime_error("cell face update failed");
+				std::cout << "ERROR: cell face update failed" << std::endl;
+				return cupcfd::error::E_ERROR;
 			}
 
 			// Update the Target Rank if we are crossing into a ghost cell
@@ -323,6 +319,11 @@ namespace cupcfd
 		template <class I, class T>
 		inline cupcfd::error::eCodes ParticleSimple<I,T>::getMPIType(MPI_Datatype * dType)
 		{
+			// if (this->particleID > I(100)) {
+			// 	std::cout << "getMPIType() returning error" << std::endl;
+			// 	return cupcfd::error::E_ERROR;
+			// }
+
 			if(!(this->isRegistered()))
 			{
 				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
@@ -474,8 +475,7 @@ namespace cupcfd
 			// Block 5: Booleans (Padding)
 			if (idx == nb) {
 				std::cout << "ERROR: Attempting to add too many items to ParticleSimple MPI_type" << std::endl;
-				throw std::exception();
-				// return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 			status = cupcfd::comm::mpi::getMPIType(this->padding, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;

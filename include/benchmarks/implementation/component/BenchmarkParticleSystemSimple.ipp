@@ -75,7 +75,7 @@ namespace cupcfd
 					status = particleSystemPtr->updateSystem(timestep);
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: updateSystem() failed" << std::endl;
-						return;
+						MPI_Abort(MPI_COMM_WORLD, status);
 					}
 					this->stopBenchmarkBlock("UpdateParticleTimestep");
 				}
