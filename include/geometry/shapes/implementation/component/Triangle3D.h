@@ -19,8 +19,6 @@
 #include "EuclideanVector.h"
 #include "Polygon3D.h"
 
-namespace euc = cupcfd::geometry::euclidean;
-
 namespace cupcfd
 {
 	namespace geometry
@@ -38,7 +36,7 @@ namespace cupcfd
 					// === Members ===
 
 					/** Vertices that make up the 3D Triangle **/
-					euc::EuclideanPoint<T,3> vertices[3];
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> vertices[3];
 
 					// === Constructor/Deconstructors ===
 
@@ -50,9 +48,9 @@ namespace cupcfd
 					 *
 					 * @tparam T The data type of the coordinate system
 					 */
-					Triangle3D(const euc::EuclideanPoint<T,3>& a,
-							   const euc::EuclideanPoint<T,3>& b,
-							   const euc::EuclideanPoint<T,3>& c);
+					Triangle3D(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
 
 					/**
 					 * Copy Constructor
@@ -82,9 +80,9 @@ namespace cupcfd
 					 *
 					 * @return The point at the center of the three points
 					 */
-					static inline euc::EuclideanPoint<T,3> computeCentroid(const euc::EuclideanPoint<T,3>& a,
-																								 	    const euc::EuclideanPoint<T,3>& b,
-																										const euc::EuclideanPoint<T,3>& c);
+					static inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+																								 	    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+																										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
 
 					/**
 					 * Test whether a point is inside by tracing a vector from the point to the centroid.
@@ -103,10 +101,10 @@ namespace cupcfd
 					 * @retval true The point is inside or on an edge/vertex
 					 * @retval false The point is not inside the polygon
 					 */
-					static inline bool isPointInsideCentroid(const euc::EuclideanPoint<T,3>& a,
-														     const euc::EuclideanPoint<T,3>& b,
-															 const euc::EuclideanPoint<T,3>& c,
-															 const euc::EuclideanPoint<T,3>& p);
+					static inline bool isPointInsideCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+														     const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
 					// === Concrete Methods ===
 
@@ -125,13 +123,12 @@ namespace cupcfd
 					 * @retval true The point lies inside the triangle (or on one of the edges/vertices)
 					 * @retval false The point does not lie inside the triangle
 					 */
-					bool isPointInside(const euc::EuclideanPoint<T,3>& p);
+					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
 
-					// bool intersection(const euc::EuclideanPoint<T,3> ray0, const euc::EuclideanVector<T,3> ray, euc::EuclideanPoint<T,3>& intersect) const;
-					bool calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
-												euc::EuclideanPoint<T,3>& intersection, 
-												// euc::EuclideanVector<T,3>& intersectDistance,
+					bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
+                                                const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
 												T& timeToIntersect, 
 												bool onEdge,
 												bool verbose) const;
@@ -157,14 +154,14 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the triangle.
 					 */
-					inline euc::EuclideanVector<T,3> computeNormal();
+					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 
 					/**
 					 * Compute the center of three points that make up this triangle
 					 *
 					 * @return The point at the center of the three points
 					 */
-					inline euc::EuclideanPoint<T,3> computeCentroid();
+					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

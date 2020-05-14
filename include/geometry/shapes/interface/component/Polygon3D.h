@@ -17,8 +17,6 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 
-namespace euc = cupcfd::geometry::euclidean;
-
 namespace cupcfd
 {
 	namespace geometry
@@ -99,12 +97,10 @@ namespace cupcfd
 					 * @retval true The point is inside the polygon
 					 * @retval false The point is outside the polygon
 					 */
-					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
+					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
-
-					inline bool calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
-														euc::EuclideanPoint<T,3>& intersect, 
-														// euc::EuclideanVector<T,3>& intersectDistance,
+					inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+														cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersect, 
 														T& timeToIntersect, 
 														bool verbose);
 
@@ -121,7 +117,7 @@ namespace cupcfd
 					 * @retval true The point is inside the polygon
 					 * @retval false The point is outside the polygon
 					 */
-					//inline bool isPointInsideRayCasting(euc::EuclideanPoint<T,N>& point);
+					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
 					/**
 					 * Compute the area of the polygon
@@ -141,7 +137,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the polygon.
 					 */
-					inline euc::EuclideanVector<T,3> computeNormal();
+					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 			};
 
 			// === Non-Class, but Generic Methods ===
@@ -160,7 +156,7 @@ namespace cupcfd
 			 * @return The area.
 			 */
 			template <class T>
-			inline T computeArea(euc::EuclideanPoint<T,3> * points, int nPoints);
+			inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
 
 
 			/**
@@ -182,7 +178,7 @@ namespace cupcfd
 			 * @retval false The ordering is anti-clockwise
 			 */
 			template <class T>
-			inline bool isVertexOrderClockwise(const euc::EuclideanPoint<T,3>& observation, euc::EuclideanPoint<T,3> * points, int nPoints);
+			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}
 }

@@ -149,10 +149,11 @@ namespace cupcfd
 
 			// If we are sitting at the non-boundary face, all that remains is to set the correct new cell ID and/or identify if we are going off rank
 
-			// Get local IDs of the two cells either side of face:
+			// Retrieve Cell1 and Cell2 ID of the Face, we need to know which we are not currently in (i.e.
+			// the direction we're crossing the face in)
 			I cell1LocalID = mesh.getFaceCell1ID(faceLocalID);
 			I cell2LocalID = mesh.getFaceCell2ID(faceLocalID);
-	
+					
 			// Get the Global IDs
 			I node1, node2;
 			status = mesh.cellConnGraph->connGraph.getLocalIndexNode(cell1LocalID, &node1);
@@ -165,15 +166,14 @@ namespace cupcfd
 				std::cout << "ERROR: getLocalIndexNode() failed" << std::endl;
 				return status;
 			}
+					
 			I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
-
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
 				return cupcfd::error::E_ERROR;
 			}
-
-
+			
 			I fromCellGlobalID = this->cellGlobalID;
 			I fromCellLocalID;
 			I toCellGlobalID;
@@ -190,6 +190,8 @@ namespace cupcfd
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
 				return cupcfd::error::E_ERROR;
 			}
+
+            // Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
 			bool localFaceAccessible = false;
 			I nFaces = 0;
 			status = mesh.getCellNFaces(fromCellLocalID, &nFaces);
@@ -209,16 +211,10 @@ namespace cupcfd
 				return cupcfd::error::E_ERROR;
 			}
 
-
 			status = this->safelySetCellGlobalID(toCellGlobalID, faceLocalID);
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "Call to safelySetCellGlobalID() failed" << std::endl;
 				return status;
-			}
-
-			if (this->cellGlobalID != toCellGlobalID) {
-				std::cout << "ERROR: cell face update failed" << std::endl;
-				return cupcfd::error::E_ERROR;
 			}
 
 			// Update the Target Rank if we are crossing into a ghost cell
@@ -256,11 +252,11 @@ namespace cupcfd
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = mesh.getFaceNorm(faceLocalID);
 			
 			// Check which direction it is facing
-			I cell1LocalID = mesh.getFaceCell1ID(faceLocalID);
+			I cell1ID = mesh.getFaceCell1ID(faceLocalID);
 			
-			// If cell1LocalID does not match the cell we traversed, then we are in cell 2 and the normal is facing into the cell
+			// If cell1ID does not match the cell we traversed, then we are in cell 2 and the normal is facing into the cell
 			// Make sure it faces inwards
-			if(cell1LocalID == cellLocalID)
+			if(cell1ID == cellLocalID)
 			{
 				normal = T(-1) * normal;
 			}
@@ -278,7 +274,7 @@ namespace cupcfd
 			// (3) Mirror other properties that might be specific to this particle specialisation
 			this->acceleration = this->acceleration - (2 * (this->acceleration.dotProduct(normal)) * normal);
 			this->jerk = this->jerk - (2 * (this->jerk.dotProduct(normal)) * normal);
-
+			
 			// Since we reflect, we do not change cell or rank		
 
 			// Treat the boundary face as cell entry:
@@ -315,15 +311,10 @@ namespace cupcfd
 			return this->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID); 
 		}	
 		
-
+		
 		template <class I, class T>
 		inline cupcfd::error::eCodes ParticleSimple<I,T>::getMPIType(MPI_Datatype * dType)
 		{
-			// if (this->particleID > I(100)) {
-			// 	std::cout << "getMPIType() returning error" << std::endl;
-			// 	return cupcfd::error::E_ERROR;
-			// }
-
 			if(!(this->isRegistered()))
 			{
 				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;

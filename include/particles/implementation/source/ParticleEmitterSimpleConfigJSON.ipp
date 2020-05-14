@@ -203,7 +203,7 @@ namespace cupcfd
 					status = test1.buildDistributionConfig(distConfig);
 					return status;
 				}
-
+				
 				if(this->configData[fieldName].isMember("NormalDistribution"))
 				{
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["NormalDistribution"]);

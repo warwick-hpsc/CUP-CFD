@@ -16,14 +16,6 @@
 
 #include <cmath>
 
-// #ifndef CUPCFD_ZERO_COMP_TOL_F
-// #define CUPCFD_ZERO_COMP_TOL_F 1.0E-8f
-// #endif
-
-// #ifndef CUPCFD_ZERO_COMP_TOL_D
-// #define CUPCFD_ZERO_COMP_TOL_D 1.0E-8f
-// #endif
-
 namespace cupcfd
 {
 	namespace utility
@@ -32,12 +24,6 @@ namespace cupcfd
 		{
 			namespace kernels
 			{
-				// /** Tolerance range +/- from 0 for floats **/
-				// const static float tol_f = CUPCFD_ZERO_COMP_TOL_F;
-
-				// /** Tolerance range +/- from 0 for doubles **/
-				// const static double tol_d = CUPCFD_ZERO_COMP_TOL_D;
-
 				inline bool isEqual(int val, int target)
 				{
 					if(val == target)
@@ -48,42 +34,23 @@ namespace cupcfd
 					return false;
 				}
 
+				inline bool isEqual(float val, float target)
+				{
+					return val == target;
+				}
+
 				inline bool isEqual(float val, float target, float tolerance)
 				{
-					// // C++ also uses abs as function name for floats, doubles
-					// if(fabsf(val - target) < tolerance)
-					// {
-					// 	return true;
-					// }
-					// return false;
-
-					// Update: remove tolerance.
 					return val == target;
 				}
 
 				inline bool isEqual(double val, double target)
 				{
-					// // C++ also uses abs as function name for floats, doubles
-					// if(fabs(val - target) < CUPCFD_ZERO_COMP_TOL_D)
-					// {
-					// 	return true;
-					// }
-					// return false;
-
-					// Update: remove tolerance.
 					return val == target;
 				}
 
 				inline bool isEqual(double val, double target, double tolerance)
 				{
-					// // C++ also uses abs as function name for floats, doubles
-					// if(fabs(val - target) < tolerance)
-					// {
-					// 	return true;
-					// }
-					// return false;
-
-					// Update: remove tolerance.
 					return val == target;
 				}
 

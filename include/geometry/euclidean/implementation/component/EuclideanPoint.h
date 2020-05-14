@@ -66,7 +66,14 @@ namespace cupcfd
 					 */
 					EuclideanPoint();
 
-
+					/**
+					 * Constructor - Duplicate another EuclideanPoint
+					 *
+					 * @tparam T The data type of the coordinate system
+					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
+					 * @param point The point to duplicate
+					 *
+					 */
 					EuclideanPoint(const EuclideanPoint &point);
 
 					/**
@@ -538,6 +545,11 @@ namespace cupcfd
 						return result;
 					}
 
+					/**
+					 * Print point data to stdout, useful for debugging
+					 */
+					void print() const;
+
 					// === Inherited Overloads ===
 
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
@@ -549,8 +561,6 @@ namespace cupcfd
 					cupcfd::error::eCodes deregisterMPIType();
 
 					inline bool isRegistered();
-
-					void print() const;
 			};
 		} // namespace euclidean
 	} // namespace geometry

@@ -206,10 +206,9 @@ namespace cupcfd
 
 			for(I i = 0; i < nParticles; i++)
 			{
-				I r = this->particles[i].getRank();
-				if(r != this->mesh->cellConnGraph->comm->rank)
+				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
 				{
-					I index = neighbourIDMapping[r];
+					I index = neighbourIDMapping[this->particles[i].getRank()];
 					neighbourCount[index] = neighbourCount[index] + 1;
 				}
 			}
@@ -278,8 +277,8 @@ namespace cupcfd
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
 			MPI_Waitall(nRequests, requests, statuses);
-			free(statuses);
-
+			free(statuses);				   
+							   
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
@@ -562,19 +561,6 @@ namespace cupcfd
 						return status;
 					}
 
-					if (particleVerbose && (localFaceID != I(-1)) && (stepDt==T(0)) ) {
-						// Print particle state and face vertices coordinates:
-						std::cout << "  > Post-move state:" << std::endl;
-						this->particles[i].print();	
-						I nFaceVertices = this->mesh->getFaceNVertices(localFaceID);
-						for(I j = 0; j < nFaceVertices; j++) {
-							I vertexID = this->mesh->getFaceVertex(localFaceID, j);
-							std::cout << "   > face " << localFaceID << " vertex " << j << " - ";
-							this->mesh->getVertexPos(vertexID).print();
-							std::cout << std::endl;
-						}
-					}
-
 					// Perform an atomic velocity update for every particle in the system, reflecting the time they have advanced by
 					status = this->particles[i].updateVelocityAtomic(*(this->mesh), localCellID, stepDt);
 					if (status != cupcfd::error::E_SUCCESS) {
@@ -597,7 +583,7 @@ namespace cupcfd
 						// or non-boundary). This step updates their cell ID (if they are leaving a cell), their rank (if they are
 						// going into a position owned by a different process in the mesh), and/or any other quantities that might be
 						// applicable depending upon the face (e.g. changing velocity direction in the event of a reflective boundary)
-
+						
 						// Is the face a boundary
 						if(!this->mesh->getFaceIsBoundary(localFaceID))
 						{
@@ -683,11 +669,11 @@ namespace cupcfd
 			return cupcfd::error::E_SUCCESS;
 		}
 		
-		template <class M, class I, class T, class L>
-		I ParticleSystemSimple<M,I,T,L>::getNEmitters()
-		{
-			return this->emitters.size();
-		}
+		// template <class M, class I, class T, class L>
+		// I ParticleSystemSimple<M,I,T,L>::getNEmitters()
+		// {
+		// 	return this->emitters.size();
+		// }
 		
 		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNParticles()

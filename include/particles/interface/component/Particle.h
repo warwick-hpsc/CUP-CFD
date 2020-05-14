@@ -116,14 +116,6 @@ namespace cupcfd
 				 * @return Returns nothing
 				 */
 				inline void operator=(Particle& source);
-
-				/**
-				 * Get the owner rank of the particle
-				 *
-				 * @return The owner rank of the particle
-				 */
-				inline I getRank();
-
 				/**
 				 * Set the position of the particle
 				 *
@@ -171,6 +163,13 @@ namespace cupcfd
 				 * @return The particle velocity
 				 */
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getVelocity();
+
+				/**
+				 * Get the owner rank of the particle
+				 *
+				 * @return The owner rank of the particle
+				 */
+				inline I getRank();
 
 				/**
 				 * Get the cell ID of the particle
@@ -246,7 +245,6 @@ namespace cupcfd
 				 */
 				inline bool stateValid() const;
 
-
 				/**
 				 * Print variable values of this particle, for debugging
 				 */
@@ -285,7 +283,7 @@ namespace cupcfd
 				template <class M, class L>
 				cupcfd::error::eCodes updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T * dt,
-																I * exitFaceLocalID, bool print_info);
+																I * exitFaceLocalID, bool verbose);
 				
 				/**
 				 * Calculate intersection of this particle with specified face. 
@@ -441,6 +439,8 @@ namespace cupcfd
 				template <class M, class L>
 				cupcfd::error::eCodes updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 						  	  	  	  	  	  	  	  	  	  	  	I cellLocalID, I faceLocalID);
+
+
 
 				// === Inherited Overloaded Methods ===
 

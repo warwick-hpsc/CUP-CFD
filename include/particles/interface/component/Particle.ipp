@@ -34,6 +34,7 @@ namespace cupcfd
 		 lastRank(-1),
 		 travelDt(T(0))
 		{
+		
 		}
 	
 		template <class P, class I, class T>
@@ -54,6 +55,7 @@ namespace cupcfd
 		 lastRank(-1),
 		 travelDt(travelDt)
 		{
+		
 		}
 
 		template <class P, class I, class T>
@@ -295,113 +297,10 @@ namespace cupcfd
 
 		template <class P, class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh)
-		{
-			cupcfd::error::eCodes status;
-
-			bool verbose = false;
-			
-			if (verbose) {
-				std::cout << "> Redetecting entry face ID of particle " << this->particleID << " between cells " << this->lastCellGlobalID << " -> " << this->getCellGlobalID() << std::endl;
-				this->print();
-			}
-
-			I cellGlobalID = this->getCellGlobalID();
-			I cellNode = mesh.cellConnGraph->globalToNode[cellGlobalID];
-			I cellLocalID;
-			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
-				return status;
-			}
-			I cellNumFaces;
-			status = mesh.getCellNFaces(cellLocalID, &cellNumFaces);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
-				return status;
-			}
-
-			I lastCellGlobalID = this->lastCellGlobalID;
-			I lastCellNode = mesh.cellConnGraph->globalToNode[lastCellGlobalID];
-			I lastCellLocalID;
-			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
-				return status;
-			}
-			I lastCellNumFaces;
-			status = mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
-				return status;
-			}
-
-			I entryFaceLocalID;
-			bool entryFaceFound = false;
-			T entryFaceDistance = T(0);
-			T speed;
-			this->velocity.length(&speed);
-			for (I fi1=0; fi1<cellNumFaces; fi1++) {
-				I f1 = mesh.getCellFaceID(cellLocalID, fi1);
-				for (I fi2=0; fi2<lastCellNumFaces; fi2++) {
-					I f2 = mesh.getCellFaceID(lastCellLocalID, fi2);
-
-					if (f1 == f2) {
-						if (verbose) {
-							std::cout << "  > Analysing face " << f1 << std::endl;
-						}
-						bool doesIntersect;
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
-						bool intersectionOnEdge;
-						T timeToIntersect = T(-1);
-						status = calculateFaceIntersection(	mesh, 
-															f1, 
-															verbose, 
-															doesIntersect, 
-															intersection, 
-															intersectionOnEdge,
-															timeToIntersect);
-						if (status != cupcfd::error::E_SUCCESS) {
-							std::cout << "ERROR: calculateFaceIntersection() failed" << std::endl;
-							return status;
-						}
-						if (doesIntersect) {
-							if (!entryFaceFound) {
-								entryFaceFound = true;
-								entryFaceLocalID = f1;
-								entryFaceDistance = speed * timeToIntersect;
-							}
-
-							else {
-								// Select nearest face:
-								T thisFaceDistance = speed * timeToIntersect;
-								if (thisFaceDistance < entryFaceDistance) {
-									entryFaceLocalID = f1;
-									entryFaceDistance = speed * timeToIntersect;
-								}
-							}
-						}
-					}
-				}
-			}
-			if (!entryFaceFound) {
-				std::cout << "ERROR: Redetection of cell entry face of particle " << this->particleID << " failed" << std::endl;
-				return cupcfd::error::E_ERROR;
-			}
-			this->cellEntryFaceLocalID = entryFaceLocalID;
-
-			return cupcfd::error::E_SUCCESS;
-		}
-			
-		template <class P, class I, class T>
-		template <class M, class L>
 		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID, bool verbose)
 		{
 			cupcfd::error::eCodes status;
-
-			// useconds_t verbose_sleep_period = 500*1000;
-			useconds_t verbose_sleep_period = 100;
-
+		
 			// Note: We are treating velocity as if it cannot change within one atomic traversal of a cell.
 			// Velocity can be updated via the updateVelocityAtomic function, but more fine-grained applications of acceleration
 			// would need a fined-grained mesh.
@@ -416,7 +315,6 @@ namespace cupcfd
 				*dt = T(0);
 				if (verbose) {
 					std::cout << "  > > > no travel time left" << std::endl;
-					usleep(verbose_sleep_period);
 				}
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -599,11 +497,9 @@ namespace cupcfd
 			{
 				if (verbose) {
 					std::cout << "    > exits cell in this timestep through local-face-ID " << exitFaceID << " after " << exitTravelTime << " seconds" << std::endl;
-					usleep(verbose_sleep_period);
 				}
 
 				// Stops either exactly on or exits via face.
-
 				// In either scenario, we move the particle to the face (where it can be assigned to the next cell when its state is updated)
 				*exitFaceLocalID = exitFaceID;
 				*dt = exitTravelTime;
@@ -613,7 +509,7 @@ namespace cupcfd
 					
 				// Can reuse last computed distance/speed/travel time since the prior loop exited on the valid value
 				this->travelDt = this->travelDt - exitTravelTime;
-
+				
 				// Boundary conditions will be handed by other functions
 				
 				return cupcfd::error::E_SUCCESS;
@@ -648,6 +544,106 @@ namespace cupcfd
 			return static_cast<P*>(this)->updateBoundaryFaceOutlet(mesh, cellLocalID, faceLocalID);
 		}	
 
+		template <class P, class I, class T>
+		template <class M, class L>
+		cupcfd::error::eCodes Particle<P, I, T>::redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh)
+		{
+			cupcfd::error::eCodes status;
+
+			bool verbose = false;
+			
+			if (verbose) {
+				std::cout << "> Redetecting entry face ID of particle " << this->particleID << " between cells " << this->lastCellGlobalID << " -> " << this->getCellGlobalID() << std::endl;
+				this->print();
+			}
+
+			I cellGlobalID = this->getCellGlobalID();
+			I cellNode = mesh.cellConnGraph->globalToNode[cellGlobalID];
+			I cellLocalID;
+			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+				return status;
+			}
+			I cellNumFaces;
+			status = mesh.getCellNFaces(cellLocalID, &cellNumFaces);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+				return status;
+			}
+
+			I lastCellGlobalID = this->lastCellGlobalID;
+			I lastCellNode = mesh.cellConnGraph->globalToNode[lastCellGlobalID];
+			I lastCellLocalID;
+			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+				return status;
+			}
+			I lastCellNumFaces;
+			status = mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
+				return status;
+			}
+
+			I entryFaceLocalID;
+			bool entryFaceFound = false;
+			T entryFaceDistance = T(0);
+			T speed;
+			this->velocity.length(&speed);
+			for (I fi1=0; fi1<cellNumFaces; fi1++) {
+				I f1 = mesh.getCellFaceID(cellLocalID, fi1);
+				for (I fi2=0; fi2<lastCellNumFaces; fi2++) {
+					I f2 = mesh.getCellFaceID(lastCellLocalID, fi2);
+
+					if (f1 == f2) {
+						if (verbose) {
+							std::cout << "  > Analysing face " << f1 << std::endl;
+						}
+						bool doesIntersect;
+						cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersection;
+						bool intersectionOnEdge;
+						T timeToIntersect = T(-1);
+						status = calculateFaceIntersection(	mesh, 
+															f1, 
+															verbose, 
+															doesIntersect, 
+															intersection, 
+															intersectionOnEdge,
+															timeToIntersect);
+						if (status != cupcfd::error::E_SUCCESS) {
+							std::cout << "ERROR: calculateFaceIntersection() failed" << std::endl;
+							return status;
+						}
+						if (doesIntersect) {
+							if (!entryFaceFound) {
+								entryFaceFound = true;
+								entryFaceLocalID = f1;
+								entryFaceDistance = speed * timeToIntersect;
+							}
+
+							else {
+								// Select nearest face:
+								T thisFaceDistance = speed * timeToIntersect;
+								if (thisFaceDistance < entryFaceDistance) {
+									entryFaceLocalID = f1;
+									entryFaceDistance = speed * timeToIntersect;
+								}
+							}
+						}
+					}
+				}
+			}
+			if (!entryFaceFound) {
+				std::cout << "ERROR: Redetection of cell entry face of particle " << this->particleID << " failed" << std::endl;
+				return cupcfd::error::E_ERROR;
+			}
+			this->cellEntryFaceLocalID = entryFaceLocalID;
+
+			return cupcfd::error::E_SUCCESS;
+		}
+			
 		template <class P, class I, class T>
 		inline cupcfd::error::eCodes Particle<P, I, T>::getMPIType(MPI_Datatype * dType)
 		{

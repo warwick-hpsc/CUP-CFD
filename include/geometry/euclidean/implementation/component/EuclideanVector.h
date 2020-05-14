@@ -492,6 +492,12 @@ namespace cupcfd
 					 */
 					inline bool isParallel(EuclideanVector<T,N>& b);
 
+					/**
+					 * Print point data to stdout, useful for debugging
+					 */
+					void print() const;
+
+
 					// === Inherited Overloads ===
 
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
@@ -503,8 +509,6 @@ namespace cupcfd
 					cupcfd::error::eCodes deregisterMPIType();
 
 					inline bool isRegistered();
-
-					void print() const;
 			};
 
 			// ToDo: Would prefer to have this as a member of the vector class, but this function makes no sense

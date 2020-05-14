@@ -58,6 +58,19 @@ namespace cupcfd
 					this->cmp[i] = scalar;
 				}
 			}
+			
+			template <class T, unsigned int N>
+			inline void EuclideanPoint<T,N>::print() const
+			{
+				if (N > 0) {
+					std::cout << "[ " << this->cmp[0];
+					for(int i = 1; i < N; i++)
+					{
+						std::cout << ", " << this->cmp[i];
+					}
+					std::cout << " ]";
+				}
+			}
 						
 			template <class T, unsigned int N>
 			inline cupcfd::error::eCodes EuclideanPoint<T,N>::getMPIType(MPI_Datatype * dType)
@@ -180,19 +193,6 @@ namespace cupcfd
 				EuclideanPoint<T,N>::mpiDataTypeReg = false;
 				return cupcfd::error::E_SUCCESS;
 			}		
-			
-			template <class T, unsigned int N>
-			inline void EuclideanPoint<T,N>::print() const
-			{
-				if (N > 0) {
-					std::cout << "[ " << this->cmp[0];
-					for(int i = 1; i < N; i++)
-					{
-						std::cout << ", " << this->cmp[i];
-					}
-					std::cout << " ]";
-				}
-			}
 		} // namespace euclidean
 	} // namespace geometry
 } // namespace cupcfd

@@ -139,7 +139,7 @@ namespace cupcfd
 				}
 				
 			}
-
+			
 			// Once Particle Sources are done, repeat the same process for adding particles when we add a particle source to this method
 			// ToDo: Since we have to check whether every particle is in any of this ranks cells, this could get very expensive (m * n where both
 			// m and n could be large). Storing rank data doesn't work if the decomposition could change between loads - consider alternatives?

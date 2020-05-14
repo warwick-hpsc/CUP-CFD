@@ -81,8 +81,6 @@ namespace cupcfd
 
 				// === Interface Methods ===
 
-				I getNEmitters();
-
 				/**
 				 * Get the number of total number of particles stored in the system, both active and inactive.
 				 */
