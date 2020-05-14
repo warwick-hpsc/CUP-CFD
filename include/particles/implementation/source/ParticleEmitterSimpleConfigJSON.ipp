@@ -223,6 +223,7 @@ namespace cupcfd
 			}
 			
 			// No viable JSON found for a distribution
+			std::cout << "ERROR: Field '" << fieldName << "' not found in ParticleEmitterSimple's json" << std::endl;
 			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 

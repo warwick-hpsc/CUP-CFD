@@ -588,7 +588,7 @@ namespace cupcfd
 				{
 					T denom1 = ((a.cmp[0] * b.cmp[1]) - (b.cmp[0] * a.cmp[1]));
 					
-					if(!(arth::isEqual(denom1, 0.0)))
+					if(!(arth::isEqual(denom1, T(0.0))))
 					{
 						s = ((x3.cmp[0] * a.cmp[1]) - (x1.cmp[0] * a.cmp[1]) + (x1.cmp[1] * a.cmp[0]) - (x3.cmp[1] * a.cmp[0])) / denom1;
 						sSolve = true;
@@ -599,7 +599,7 @@ namespace cupcfd
 				{
 					T denom2 = ((a.cmp[0] * b.cmp[2]) - (b.cmp[0] * a.cmp[2]));
 				
-					if(!(arth::isEqual(denom2, 0.0)))
+					if(!(arth::isEqual(denom2, T(0.0))))
 					{
 						s = ((x3.cmp[0] * a.cmp[2]) - (x1.cmp[0] * a.cmp[2]) + (x1.cmp[2] * a.cmp[0]) - (x3.cmp[2] * a.cmp[0])) / denom2;
 						sSolve = true;
@@ -610,7 +610,7 @@ namespace cupcfd
 				{
 					T denom3 = ((a.cmp[1] * b.cmp[2]) - (b.cmp[1] * a.cmp[2]));
 					
-					if(!(arth::isEqual(denom3, 0.0)))
+					if(!(arth::isEqual(denom3, T(0.0))))
 					{
 						s = ((x3.cmp[1] * a.cmp[2]) - (x1.cmp[1] * a.cmp[2]) + (x1.cmp[2] * a.cmp[1]) - (x3.cmp[2] * a.cmp[1])) / denom3;
 						sSolve = true;
@@ -621,7 +621,7 @@ namespace cupcfd
 				{
 					T denom4 = ((b.cmp[0] * a.cmp[1]) - (a.cmp[0] * b.cmp[1]));
 					
-					if(!(arth::isEqual(denom4, 0.0)))
+					if(!(arth::isEqual(denom4, T(0.0))))
 					{
 						r = ((x1.cmp[0] * b.cmp[1]) - (x3.cmp[0] * b.cmp[1]) + (x3.cmp[1] * b.cmp[0]) - (x1.cmp[1] * b.cmp[0])) / denom4;
 						rSolve = true;
@@ -632,7 +632,7 @@ namespace cupcfd
 				{
 					T denom5 = ((b.cmp[0] * a.cmp[2]) - (a.cmp[0] * b.cmp[2]));
 					
-					if(!(arth::isEqual(denom5, 0.0)))
+					if(!(arth::isEqual(denom5, T(0.0))))
 					{
 						r = ((x1.cmp[0] * b.cmp[2]) - (x3.cmp[0] * b.cmp[2]) + (x3.cmp[2] * b.cmp[0]) - (x1.cmp[2] * b.cmp[0])) / denom5;
 						rSolve = true;
@@ -643,7 +643,7 @@ namespace cupcfd
 				{
 					T denom6 = ((b.cmp[1] * a.cmp[2]) - (a.cmp[1] * b.cmp[2]));
 					
-					if(!(arth::isEqual(denom6, 0.0)))
+					if(!(arth::isEqual(denom6, T(0.0))))
 					{
 						r = ((x1.cmp[1] * b.cmp[2]) - (x3.cmp[1] * b.cmp[2]) + (x3.cmp[2] * b.cmp[1]) - (x1.cmp[2] * b.cmp[1])) / denom6;
 						rSolve = true;
@@ -652,17 +652,17 @@ namespace cupcfd
 				
 				if(sSolve)
 				{
-					if(!(arth::isEqual(a.cmp[0], 0.0)))
+					if(!(arth::isEqual(a.cmp[0], T(0.0))))
 					{
 						//r = (x3_x + s.b_x - x1_x) / a_x
 						r = (x3.cmp[0] + (s * b.cmp[0]) - x1.cmp[0]) / a.cmp[0];
 					}
-					else if(!(arth::isEqual(a.cmp[1], 0.0)))
+					else if(!(arth::isEqual(a.cmp[1], T(0.0))))
 					{
 						//r = (x3_y + s.b_y - x1_y) / a_y
 						r = (x3.cmp[1] + (s * b.cmp[1]) - x1.cmp[1]) / a.cmp[1];
 					}
-					else if(!(arth::isEqual(a.cmp[2], 0.0)))
+					else if(!(arth::isEqual(a.cmp[2], T(0.0))))
 					{
 						//r = (x3_z + s.b_z - x1_z) / a_z
 						r = (x3.cmp[2] + (s * b.cmp[2]) - x1.cmp[2]) / a.cmp[2];
@@ -670,17 +670,17 @@ namespace cupcfd
 				}
 				else if(rSolve)
 				{
-					if(!(arth::isEqual(b.cmp[0], 0.0)))
+					if(!(arth::isEqual(b.cmp[0], T(0.0))))
 					{
 						//s = (x1_x + r.a_x - x3_x) / b_x
 						s = (x1.cmp[0] + (r * a.cmp[0]) - x3.cmp[0]) / b.cmp[0];
 					}
-					else if(!(arth::isEqual(b.cmp[1], 0.0)))
+					else if(!(arth::isEqual(b.cmp[1], T(0.0))))
 					{
 						//s = (x1_y + r.a_y - x3_y) / b_y
 						s = (x1.cmp[1] + (r * a.cmp[1]) - x3.cmp[1]) / b.cmp[1];
 					}
-					else if(!(arth::isEqual(b.cmp[2], 0.0)))
+					else if(!(arth::isEqual(b.cmp[2], T(0.0))))
 					{
 						//s = (x1_z + r.a_z - x3_z) / b_z
 						s = (x1.cmp[2] + (r * a.cmp[2]) - x3.cmp[2]) / b.cmp[2];
@@ -817,6 +817,19 @@ namespace cupcfd
 				
 				// All checks passed
 				return true;
+			}
+
+			template <class T, unsigned int N>
+			inline void EuclideanVector<T,N>::print() const
+			{
+				if (N > 0) {
+					std::cout << "[ " << this->cmp[0];
+				    for(int i = 1; i < N; i++)
+				    {
+					    std::cout << ", " << this->cmp[i];
+				    }
+				    std::cout << " ]";
+				}
 			}
 			
 			

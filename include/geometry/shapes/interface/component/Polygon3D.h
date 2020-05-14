@@ -99,6 +99,11 @@ namespace cupcfd
 					 */
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
+					inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+														cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersect, 
+														T& timeToIntersect, 
+														bool verbose);
+
 					/**
 					 * Determine whether the provided point is inside the polygon.
 					 * Edges/Vertices are treated as inside the polygon for this purposes.

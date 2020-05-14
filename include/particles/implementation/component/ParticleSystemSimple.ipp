@@ -20,6 +20,8 @@
 #include "ExchangeMPI.h"
 #include "Reduce.h"
 
+#include <unistd.h>
+
 namespace arth = cupcfd::utility::arithmetic::kernels;
 
 namespace cupcfd
@@ -43,7 +45,9 @@ namespace cupcfd
 		
 		template <class M, class I, class T, class L>
 		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::addParticle(const ParticleSimple<I,T>& particle)
-		{			
+		{
+			cupcfd::error::eCodes status;
+
 			// If the particle is not already marked as inactive (would be a bit weird to add an inactive particle),
 			// increment the active counter
 			bool isInactive = particle.getInactive();
@@ -68,6 +72,8 @@ namespace cupcfd
 					this->nTravelParticles = this->nTravelParticles + 1;
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
@@ -76,17 +82,22 @@ namespace cupcfd
 			// ToDo: Check Local, Global and Rank in emitter are correct
 		
 			this->emitters.push_back(emitter);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
 		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setParticleInactive(I particleID)
 		{
+			cupcfd::error::eCodes status;
+			
 			// particleID for this scheme is the index in the vector
 			
 			// Check particle is not already inactive
 			if(!(this->particles[particleID].getInactive()))
 			{
 				this->particles[particleID].setInactive();
+
 				this->nActiveParticles = this->nActiveParticles - 1;
 				
 				// If it had a travel time, it would also have been counted as a travelling particle,
@@ -96,6 +107,8 @@ namespace cupcfd
 					this->nTravelParticles = this->nTravelParticles - 1;
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
@@ -110,24 +123,21 @@ namespace cupcfd
 			// Go through the system and mark any inactive particles
 			I loopCount = this->particles.size();
 			
-			for(I i = 0; i < loopCount; i++)
-			{
-				if(this->particles[i].getInactive())
-				{
+			for (I i=loopCount-1; i>=0; i--) {
+				if (this->particles[i].getInactive())
 					this->particles.erase(this->particles.begin() + i);
-					
-					// Correct indexes and loop count to account for removed particle
-					i = i - 1;
-					loopCount = loopCount - 1;
-				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::exchangeParticles()
+		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::exchangeParticles(bool verbose)
 		{
+			cupcfd::error::eCodes status;
+
 			// We could build an Exchange Pattern based on the positions of the Particles we wish to exchange.
 			// However, particles are not like a halo, since the amounts can vary even if the neighbours do not,
 			// so it would have to be rebuilt. Since the current builder uses an All-To-All (since it is completly
@@ -146,12 +156,21 @@ namespace cupcfd
 
 			for(I i = 0; i < this->particles.size(); i++)
 			{
-				rankIDs[i] = this->particles[i].rank;
+				rankIDs[i] = this->particles[i].getRank();
 			}
 			
 			// Proxy behaviour - sorts and copies
-			cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes, nParticles);
-			cupcfd::utility::drivers::sourceIndexReorder(&(this->particles[0]), nParticles, rankIDIndexes, nParticles);
+			status = cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes, nParticles);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: merge_sort_index() failed" << std::endl;
+				return status;
+			}
+
+			status = cupcfd::utility::drivers::sourceIndexReorder(&(this->particles[0]), nParticles, rankIDIndexes, nParticles);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: sourceIndexReorder() failed" << std::endl;
+				return status;
+			}
 			
 			// (2) Pass-through the particles and their destination ranks to an exchange function
 			// No point in creating an exchange pattern object, since there is an overhead to doing so and it will not be reused
@@ -170,7 +189,11 @@ namespace cupcfd
 			{
 				neighbourRanks[i] = this->mesh->cellConnGraph->neighbourRanks[i];
 			}
-			cupcfd::utility::drivers::merge_sort(neighbourRanks, nNeighbours);
+			status = cupcfd::utility::drivers::merge_sort(neighbourRanks, nNeighbours);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: merge_sort() failed" << std::endl;
+				return status;
+			}
 			
 			std::map<I,I> neighbourIDMapping;
 			
@@ -183,9 +206,9 @@ namespace cupcfd
 
 			for(I i = 0; i < nParticles; i++)
 			{
-				if(this->particles[i].rank != this->mesh->cellConnGraph->comm->rank)
+				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
 				{
-					I index = neighbourIDMapping[this->particles[i].rank];
+					I index = neighbourIDMapping[this->particles[i].getRank()];
 					neighbourCount[index] = neighbourCount[index] + 1;
 				}
 			}
@@ -195,10 +218,14 @@ namespace cupcfd
 			MPI_Request * requests;
 			I nRequests;
 			
-			cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours,recvBuffer, nNeighbours, 
+			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours,recvBuffer, nNeighbours, 
 								  neighbourRanks, nNeighbours,
 								  1, this->mesh->cellConnGraph->comm->comm,
 								  &requests, &nRequests);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: ExchangeMPIIsendIrecv() failed" << std::endl;
+				return status;
+			}
 			
 			// ToDo: Getting multiple definitions error when using WaitallMPI.h header.
 			// Presumably a missing header guard somewhere, but I can't seem to find it for now....
@@ -230,20 +257,23 @@ namespace cupcfd
 			I ptr = 0;
 			for(I i = 0; i < nParticles; i++)
 			{
-				if(this->particles[i].rank != this->mesh->cellConnGraph->comm->rank)
+				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank)
 				{
 					particleSendBuffer[ptr] = this->particles[i];
 					ptr = ptr + 1; 
 				}
 			}
 			
-			cupcfd::error::eCodes status;
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
 								   particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   this->mesh->cellConnGraph->comm->comm,
 								   &requests, &nRequests);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: ExchangeVMPIIsendIrecv() failed" << std::endl;
+				return status;
+			}
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
 			MPI_Waitall(nRequests, requests, statuses);
@@ -252,7 +282,17 @@ namespace cupcfd
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
-				this->addParticle(particleRecvBuffer[i]);
+				status = particleRecvBuffer[i].redetectEntryFaceID(*(this->mesh));
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: redetectEntryFaceID() failed" << std::endl;
+					return status;
+				}
+
+				status = this->addParticle(particleRecvBuffer[i]);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: addParticle() failed" << std::endl;
+					return status;
+				}
 			}
 			
 			// Tidyup Stage
@@ -271,11 +311,17 @@ namespace cupcfd
 			for(I i = 0; i < this->particles.size(); i++)
 			{
 				// Gone off-rank and was previously marked as active
-				if((this->particles[i].rank != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
+				if((this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
 				{
-					this->setParticleInactive(i);
+					status = this->setParticleInactive(i);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: setParticleInactive() failed" << std::endl;
+						return status;
+					}
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
@@ -288,8 +334,14 @@ namespace cupcfd
 			// well as the number of allreduces. 
 			// Would this affect synchronised behaviours for certain particle types though?
 		
+			cupcfd::error::eCodes status;
+
 			// (1a) Ensure that the travelTime for all existing active particles is set to the time period dt
-			this->setActiveParticlesTravelTime(dt);
+			status = this->setActiveParticlesTravelTime(dt);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: setActiveParticlesTravelTime() failed" << std::endl;
+				return status;
+			}
 			
 			// (1b) Set all particles inflight positions to be equal to their current positions
 			// ToDo: Move this to a function
@@ -297,21 +349,70 @@ namespace cupcfd
 			{
 				particles[i].inflightPos = particles[i].pos;
 			}
-			
+
 			// (2) Generate any new particles from the emitter, and add them to the system (with the
 			// appropriate time remaining in this period depending on when they were generated)
-			this->generateEmitterParticles(dt);
+			status = this->generateEmitterParticles(dt);
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: generateEmitterParticles() failed" << std::endl;
+				return status;
+			}
 
 			// Keep looping as long as there exists a particle anywhere in the system that is still going (since we could
 			// receive one on any iteration, even if we don't on this one)
 			I nGlobalTravelParticles = 0;
 			I tmp = this->getNTravelParticles();
-			cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
-			
+			status = cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "ERROR: allReduceAdd() failed" << std::endl;
+				return status;
+			}
+
+			int nGlobalParticles = nGlobalTravelParticles;
+
+			// Variables that control verbose reporting of particle movement, for debugging:
+			bool do_track_bugged_particle = false;
+			// bool do_track_bugged_particle = true;
+			I particle_id_to_track = 1;
+
+			int num_passes = 0;
+			bool first_pass = true;
+			bool verbose = false;
 			while(nGlobalTravelParticles > 0)
-			{									
+			{
+				if (first_pass) {
+					std::cout << "Num travelling particles: global = " << nGlobalTravelParticles << ", local = " << this->getNTravelParticles() << std::endl;
+				}
+
+				bool found_particle_to_track = false;
+				I particle_idx_to_track = 0;
+				ParticleSimple<I,T> tracked_particle_copy;
+				if (do_track_bugged_particle) {
+					found_particle_to_track = false;
+					if (particles.size() > 0) {
+						for (I i=0; i<particles.size(); i++) {
+							if (particles[i].getParticleID() == particle_id_to_track) {
+								if (found_particle_to_track) {
+									std::cout << "ERROR: Multiple particles have ID " << particle_id_to_track << std::endl;
+									return cupcfd::error::E_ERROR;
+								}
+								found_particle_to_track = true;
+								particle_idx_to_track = i;
+								tracked_particle_copy = ParticleSimple<I,T>(particles[i]);
+							}
+						}
+					}
+					if (found_particle_to_track) {
+						verbose = true;
+					}
+				}
+
 				// Advance particles by at most one cell
-				this->updateSystemAtomic();
+				status = this->updateSystemAtomic(verbose);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: updateSystemAtomic() failed" << std::endl;
+					return status;
+				}
 								
 				// No further changes should need to be made to the data stored inside a particle, and they should have ranks
 				// representing the process they should be located on. 
@@ -323,29 +424,112 @@ namespace cupcfd
 				// time should be skipped)
 				
 				// Remove Dead Particles (They have no further effect on the system and we don't want to exchange dead particles)
-				this->removeInactiveParticles();
+				status = this->removeInactiveParticles();
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: removeInactiveParticles() failed" << std::endl;
+					return status;
+				}
 				
 				// We can now perform an exchange to identify how many (if any)
 				// particles will go off-rank in this atomic update, and transfer them ready for another round of atomic updates.
-				this->exchangeParticles();
+				status = this->exchangeParticles(verbose);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: exchangeParticles() failed" << std::endl;
+					return status;
+				}
 				
 				// Cleanup any sent particles that should now be marked as inactive after being sent to another rank
-				this->removeInactiveParticles();
+				status = this->removeInactiveParticles();
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: removeInactiveParticles() failed" << std::endl;
+					return status;
+				}
 				
 				// Count how many are actively moving overall (to keep the loop going if needed)
 				tmp = this->getNTravelParticles();
-				cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
+				status = cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: allReduceAdd() failed" << std::endl;
+					return status;
+				}
+
+				// Verify that 'tmp' reflects reality:
+				I trueNumTravellingParticles = 0;
+				for (I i=0; i<this->particles.size(); i++) {
+					if (this->particles[i].getTravelTime() > T(0)) {
+						trueNumTravellingParticles++;
+					}
+				}
+				if (trueNumTravellingParticles != tmp) {
+					std::cout << "ERROR: Bug detected in stack-based tracking of #travelling particles. Stack claims " << tmp << " but actual is " << trueNumTravellingParticles << std::endl;
+					return cupcfd::error::E_ERROR;
+				}
+
+				if (found_particle_to_track) {
+					auto bg = this->particles[particle_idx_to_track];
+					if (bg.getTravelTime() > T(0)) {
+
+						if (first_pass) {
+							if (bg.getInFlightPos() == tracked_particle_copy.getInFlightPos()) {
+								std::cout << "ERROR: particle " << bg.getParticleID() << " has not moved in first pass of update" << std::endl;
+								return cupcfd::error::E_ERROR;
+							}
+						}
+
+						if (nGlobalTravelParticles == 1) {
+							if ( (bg.getInFlightPos()  == tracked_particle_copy.getInFlightPos()) && 
+							     (bg.getPos()          == tracked_particle_copy.getPos()) && 
+							     (bg.getVelocity()     == tracked_particle_copy.getVelocity()) && 
+								 (bg.getCellGlobalID() == tracked_particle_copy.getCellGlobalID()) )
+							{
+								std::cout << "ERROR: particle " << bg.getParticleID() << " has not changed but it is only particle with travel time" << std::endl;
+								return cupcfd::error::E_ERROR;
+							}
+						}
+					}
+				}
+
+				num_passes++;
+				int max_passes = nGlobalParticles * 50;
+				if (num_passes > max_passes) {
+					std::cout << "ERROR: more than " << max_passes << " passes in update of system with just " << nGlobalParticles << " particles, that indicates an infinite loop bug" << std::endl;
+
+					std::cout << "       " << nGlobalTravelParticles << " global particles still travelling:" << std::endl;
+					for (I i = 0; i < particles.size(); i++) {
+						if (this->particles[i].getTravelTime() > T(0)) {
+							std::cout << "       > P " << particles[i].getParticleID() << " is still travelling" << std::endl;
+							particles[i].print();
+						}
+					}
+
+					return cupcfd::error::E_ERROR;
+				}
+
+				first_pass = false;
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystemAtomic()
+		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystemAtomic(bool verbose)
 		{
+			cupcfd::error::eCodes status;
+
 			// Loop over all particles in vector
 			// ToDo: This approach also loops over particles that are inactive or active but have no further travel time.
 			// Would be faster if inactive particles are removed
 			for(I i = 0; i < this->particles.size(); i++)
 			{
+				bool particleVerbose = verbose;
+				particleVerbose = particleVerbose && (particles[i].getParticleID() == 1);
+				particleVerbose = particleVerbose && (particles[i].getCellGlobalID() == 478);
+
+				if (!this->particles[i].stateValid()) {
+					std::cout << "ERROR: particle " << this->particles[i].getParticleID() << " in invalid state" << std::endl;
+					return cupcfd::error::E_ERROR;
+				}
+
 				// Can't guarantee there are no inactive particles so have this check guard here.
 				// If we can guarantee it we can remove it however (don't really want a branch inside a loop)
 				if(!(this->particles[i].getInactive()))
@@ -355,27 +539,45 @@ namespace cupcfd
 					I localCellID;		// The local (not global) mesh cell ID that the particle is currently in
 					I cellNode;			// The node value in the connectivity graph of the cell that the particle is currently in
 										// (Needed to map between local ID and global ID since this label is arbitrary when building)
+
+					I cellGlobalID = this->particles[i].getCellGlobalID();
 				
 					// Get the Local Cell ID since ParticleSimple only stores the Mesh Global Cell ID
-					cellNode = this->mesh->cellConnGraph->globalToNode[this->particles[i].cellGlobalID];
-					this->mesh->cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &localCellID);
-					
+					cellNode = this->mesh->cellConnGraph->globalToNode[cellGlobalID];
+					status = this->mesh->cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &localCellID);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
+						return status;
+					}
+
 					// Note: For particles with no further travel time, the following steps must not change the state
 					// of the particle and system.
 					
 					// Perform an atomic positional update for every particle in the system, advancing them by at most one cell
 					// This will also update the travel time
-					this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID);
-	
+					status = this->particles[i].updatePositionAtomic(*(this->mesh), &stepDt, &localFaceID, particleVerbose);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: updatePositionAtomic() failed" << std::endl;
+						return status;
+					}
+
 					// Perform an atomic velocity update for every particle in the system, reflecting the time they have advanced by
-					this->particles[i].updateVelocityAtomic(*(this->mesh), localCellID, stepDt);
+					status = this->particles[i].updateVelocityAtomic(*(this->mesh), localCellID, stepDt);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: updateVelocityAtomic() failed" << std::endl;
+						return status;
+					}
 					
 					// Perform a state update, updating both particle state (e.g. change in properties specific to a particle,
 					// such as mass) and updating cell source values resulting from changes in the particle.
-					this->particles[i].updateStateAtomic(*(this->mesh), localCellID, stepDt);
-					
+					status = this->particles[i].updateStateAtomic(*(this->mesh), localCellID, stepDt);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: updateStateAtomic() failed" << std::endl;
+						return status;
+					}
+
 					// Check that it reached a face after moving
-					if(!(localFaceID == -1) && stepDt > T(0))
+					if(!(localFaceID == I(-1)))
 					{
 						// Perform a face update - any cells that are trying to exit a cell are currently positioned at a face (boundary
 						// or non-boundary). This step updates their cell ID (if they are leaving a cell), their rank (if they are
@@ -385,35 +587,60 @@ namespace cupcfd
 						// Is the face a boundary
 						if(!this->mesh->getFaceIsBoundary(localFaceID))
 						{
-							this->particles[i].updateNonBoundaryFace(*(this->mesh), localFaceID);
+							I globalCellIdBefore = this->particles[i].getCellGlobalID();
+							status = this->particles[i].updateNonBoundaryFace(*(this->mesh), localFaceID);
+							I globalCellIdAfter = this->particles[i].getCellGlobalID();
+							if (particleVerbose) {
+								std::cout << "  > > moved from cell " << globalCellIdBefore << " --> " << globalCellIdAfter << " through local-face-ID " << localFaceID << std::endl;
+							}
+							if (status != cupcfd::error::E_SUCCESS) {
+								std::cout << "ERROR: updateNonBoundaryFace() failed" << std::endl;
+								return status;
+							}
 						}
 						else
 						{
+							I globalCellIdBefore = this->particles[i].getCellGlobalID();
 							I boundaryID = this->mesh->getFaceBoundaryID(localFaceID);
 							I regionID = this->mesh->getBoundaryRegionID(boundaryID);
 							cupcfd::geometry::mesh::RType boundaryType = this->mesh->getRegionType(regionID);
 							
 							switch(boundaryType)
 							{
-								case(cupcfd::geometry::mesh::RTYPE_WALL):		this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
-																					break;
+								case(cupcfd::geometry::mesh::RTYPE_WALL):
+									status = this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
+									break;
 								
-								case(cupcfd::geometry::mesh::RTYPE_INLET):		this->particles[i].updateBoundaryFaceInlet(*(this->mesh), localCellID, localFaceID);
-																					break;
+								case(cupcfd::geometry::mesh::RTYPE_INLET):
+									status = this->particles[i].updateBoundaryFaceInlet(*(this->mesh), localCellID, localFaceID);
+									break;
 																					
-								case(cupcfd::geometry::mesh::RTYPE_OUTLET):	this->particles[i].updateBoundaryFaceOutlet(*(this->mesh), localCellID, localFaceID);
-																					break;
+								case(cupcfd::geometry::mesh::RTYPE_OUTLET):
+									status = this->particles[i].updateBoundaryFaceOutlet(*(this->mesh), localCellID, localFaceID);
+									break;
 														
-								case(cupcfd::geometry::mesh::RTYPE_SYMP):		this->particles[i].updateBoundaryFaceSymp(*(this->mesh), localCellID, localFaceID);
-																					break;
+								case(cupcfd::geometry::mesh::RTYPE_SYMP):
+									status = this->particles[i].updateBoundaryFaceSymp(*(this->mesh), localCellID, localFaceID);
+									break;
 																					
 								// Unexpected case - treat like a wall?
-								case(cupcfd::geometry::mesh::RTYPE_DEFAULT):	this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
-																					break;
+								case(cupcfd::geometry::mesh::RTYPE_DEFAULT):
+									status = this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
+									break;
 																					
 								// Unexpected case - treat like a wall?
-								default:											this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
-																					break;										
+								default:
+									status = this->particles[i].updateBoundaryFaceWall(*(this->mesh), localCellID, localFaceID);
+									break;										
+							}
+							I globalCellIdAfter = this->particles[i].getCellGlobalID();
+							if (particleVerbose) {
+								std::cout << "  > reflecting in bnd cell " << globalCellIdAfter << std::endl;
+							}
+
+							if (status != cupcfd::error::E_SUCCESS) {
+								std::cout << "ERROR: updateBoundaryFace*() failed" << std::endl;
+								return status;
 							}
 						}
 					}
@@ -422,13 +649,31 @@ namespace cupcfd
 					// of travelling particles
 					if(!(this->particles[i].getTravelTime() > T(0)) && stepDt > T(0))
 					{
+						if (particleVerbose) {
+							std::cout << "  > P " << particles[i].getParticleID() << " has no travel time left" << std::endl;
+						}
 						this->nTravelParticles = this->nTravelParticles - 1;
+
+						if (this->nTravelParticles < 0) {
+							std::cout << "ERROR: nTravelParticles has dropped below 0" << std::endl;
+							return cupcfd::error::E_ERROR;
+						}
 					}
+				}
+				else {
+					std::cout << "ERROR: Attempting to update an inactive particle" << std::endl;
+					return cupcfd::error::E_ERROR;
 				}
 			}
 				
 			return cupcfd::error::E_SUCCESS;
 		}
+		
+		// template <class M, class I, class T, class L>
+		// I ParticleSystemSimple<M,I,T,L>::getNEmitters()
+		// {
+		// 	return this->emitters.size();
+		// }
 		
 		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNParticles()
@@ -451,6 +696,8 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setActiveParticlesTravelTime(T travelTime)
 		{
+			cupcfd::error::eCodes status;
+
 			if(!(travelTime > T(0)))
 			{
 				// Negative or zero travel time - set all particles travel time to zero and non-travelling
@@ -478,25 +725,47 @@ namespace cupcfd
 					}
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::generateEmitterParticles(T dt)
 		{
+			cupcfd::error::eCodes status;
+
 			for(I i = 0; i < this->emitters.size(); i++)
 			{
 				ParticleSimple<I,T> * newParticles;
 				I nNewParticles = 0;
 				
-				this->emitters[i].generateParticles(&newParticles, &nNewParticles, dt);
+				status = this->emitters[i].generateParticles(&newParticles, &nNewParticles, dt);
+				if (status != cupcfd::error::E_SUCCESS) {
+					std::cout << "ERROR: generateParticles() failed" << std::endl;
+					return status;
+				}
 				
 				for(I j = 0; j < nNewParticles; j++)
 				{
-					this->addParticle(newParticles[j]);
+					// Check that new particle does not already exist:
+					for (I k=0; k<this->particles.size(); k++) {
+						if (this->particles[k].getParticleID() == newParticles[j].getParticleID()) {
+							std::cout << "ERROR: Particle with ID " << newParticles[j].getParticleID() << " already in system" << std::endl;
+							return cupcfd::error::E_ERROR;
+						}
+					}
+
+					status = this->addParticle(newParticles[j]);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: addParticle() failed" << std::endl;
+						return status;
+					}
 				}
 				
 				free(newParticles);
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

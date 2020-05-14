@@ -125,6 +125,14 @@ namespace cupcfd
 					 */
 					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
+
+					bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
+                                                const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
+												T& timeToIntersect, 
+												bool onEdge,
+												bool verbose) const;
+
 					/**
 					 * Compute the area of the Triangle
 					 *

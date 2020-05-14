@@ -82,24 +82,6 @@ namespace cupcfd
 				 **/
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> inflightPos;
 
-				/**
-				 * Global ID of the cell in a mesh this particle is currently located in.
-				 * If a particle desires an exchange, this should be the destination
-				 * global cell ID.
-				 *
-				 * We use Global Over Local here since we can translate it to the local ID via a mesh,
-				 * and local IDs do not translate between processes when communicating.
-				 **/
-				I cellGlobalID;
-
-				/**
-				 * Stores the particles rank. If equal to current rank, it is not exchanged.
-				 * If it does not equal the current rank, it is destined for another rank and
-				 * must be exchanged at the next exchange stage (else we will not know what to
-				 * do with it during the next update position stage).
-				 */
-				I rank;
-
 				/** Stores the remaining time to travel for 'in-flight' particles **/
 				T travelDt;
 
@@ -115,6 +97,7 @@ namespace cupcfd
 				 */
 				Particle(cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity,
 						 cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos,
+						 I id, 
 						 I cellGlobalID, I rank, T travelDt);
 
 				/**
@@ -182,20 +165,39 @@ namespace cupcfd
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getVelocity();
 
 				/**
-				 * Set the cell ID of the particle
+				 * Get the owner rank of the particle
 				 *
-				 * @param cellID The cellID to set the particle cellID to
-				 *
-				 * @return Nothing
+				 * @return The owner rank of the particle
 				 */
-				inline void setCellGlobalID(I cellGlobalID);
+				inline I getRank();
 
 				/**
 				 * Get the cell ID of the particle
 				 *
 				 * @return The cell ID of the particle
 				 */
-				inline I getCellGlobalID();
+				inline I getCellGlobalID() const;
+
+				/**
+				 * Get the ID of cell that particle was in previous to current cell
+				 *
+				 * @return Cell ID
+				 */
+				inline I getLastCellGlobalID() const;
+
+				/**
+				 * Get the ID of face through which particle entered current cell
+				 *
+				 * @return Face ID
+				 */
+				inline I getCellEntryFaceLocalID() const;
+
+				/**
+				 * Get unique identifier of this particle
+				 *
+				 * @return Particle ID
+				 **/
+				inline I getParticleID() const;
 
 				/**
 				 * Set the remaining travel time of the particle within the current time period.
@@ -235,6 +237,20 @@ namespace cupcfd
 				inline bool getInactive() const;
 
 				/**
+				 * Check that particle attributes do not contradict
+				 *
+				 * @return Whether the particle is in an invalid state
+				 * @retval true No contradictions
+				 * @retval false Contradiction detected
+				 */
+				inline bool stateValid() const;
+
+				/**
+				 * Print variable values of this particle, for debugging
+				 */
+				inline void print() const;
+
+				/**
 				 * Using the currently set velocity, move the particle until it either reaches the
 				 * face of a cell, or runs out of travel time before exiting the cell.
 				 *
@@ -267,7 +283,43 @@ namespace cupcfd
 				template <class M, class L>
 				cupcfd::error::eCodes updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T * dt,
-																I * exitFaceLocalID);
+																I * exitFaceLocalID, bool verbose);
+				
+				/**
+				 * Calculate intersection of this particle with specified face. 
+				 *
+				 * @param mesh The object containing the mesh data
+				 * @param faceID The ID of the face to analyse
+				 * 
+				 * 
+				 * @return An error status indicating the success or failure of the operation
+				 * @retval cupcfd::error::E_SUCCESS The method completed successfully and the particle
+				 * has no further travel time.
+				 */
+				template <class M, class L>
+				cupcfd::error::eCodes calculateFaceIntersection(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																I faceID, 
+																bool verbose, 
+																bool& doesIntersect, 
+																cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
+																bool& intersectionOnEdge,
+																T& timeToIntersect);
+
+				/**
+				 * Detect entry face ID of current cell.
+				 *
+				 * Particle must maintain a record of which face it entered current cell through. But face ID is local to rank. 
+				 * Thus, when transferred between MPI ranks, ID must be redetected. Implementing this was deemed easier than 
+				 * (a) adding concept of global face IDs and (b) mapping of local to glocal face IDs.
+				 *
+				 * @param mesh The object containing the mesh data
+				 *
+				 * @return An error status indicating the success or failure of the operation
+				 * @retval cupcfd::error::E_SUCCESS The method completed successfully and the particle
+				 * has no further travel time.
+				**/
+				template <class M, class L>
+				cupcfd::error::eCodes redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 				/**
 				 * Update the velocity of the particle after travelling through the identified cell for a period of dT.
@@ -400,6 +452,64 @@ namespace cupcfd
 				virtual cupcfd::error::eCodes registerMPIType();
 				virtual cupcfd::error::eCodes deregisterMPIType();
 				virtual inline bool isRegistered();
+
+			protected:
+				/**
+				 * Unique particle identifier, to assist debugging
+				 **/
+				I particleID;
+
+				/**
+				 * Stores the particles rank. If equal to current rank, it is not exchanged.
+				 * If it does not equal the current rank, it is destined for another rank and
+				 * must be exchanged at the next exchange stage (else we will not know what to
+				 * do with it during the next update position stage).
+				 */
+				I rank;
+
+				/**
+				 * Previous rank that owned this particle, to assist debugging
+				 **/
+				I lastRank;
+
+				/**
+				 * Set the cell ID of the particle, with safety checks to prevent infinite 
+				 * back-and-forth
+				 *
+				 * @param cellGlobalID The cellID to set the particle cellID to
+				 * @param cellEntryFaceLocalID ID of the face through which particle is entering cell
+				 *
+				 * @return Nothing
+				 */
+				inline cupcfd::error::eCodes safelySetCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID);
+
+				/**
+				 * Global ID of the cell in a mesh this particle is currently located in.
+				 * If a particle desires an exchange, this should be the destination
+				 * global cell ID.
+				 *
+				 * We use Global Over Local here since we can translate it to the local ID via a mesh,
+				 * and local IDs do not translate between processes when communicating.
+				 **/
+				I cellGlobalID;
+
+				/**
+				 * Global ID of cell that particle was in before current
+				 **/
+				I lastCellGlobalID;
+
+				/**
+				 * Global ID of cell that particle was in before last
+				 **/
+				I lastLastCellGlobalID;
+
+				/**
+				 * Local ID of face used to enter cell
+				 **/
+				I cellEntryFaceLocalID;
+
+			private:
+
 		};
 	}
 }

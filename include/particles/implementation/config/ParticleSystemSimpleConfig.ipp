@@ -67,7 +67,11 @@ namespace cupcfd
 				this->emitterConfigs.push_back(source.emitterConfigs[i]->clone());
 			}
 			
-			this->particleSourceConfig = source.particleSourceConfig->clone();
+			if (source.particleSourceConfig != nullptr) {
+				this->particleSourceConfig = source.particleSourceConfig->clone();
+			} else {
+				this->particleSourceConfig = nullptr;
+			}
 		}
 
 		template <class M, class I, class T, class L>
@@ -110,7 +114,11 @@ namespace cupcfd
 				if(onRank)
 				{
 					ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> * emitter;
-					this->emitterConfigs[i]->buildParticleEmitter(&emitter);
+					status = this->emitterConfigs[i]->buildParticleEmitter(&emitter);
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: buildParticleEmitter() failed" << std::endl;
+						return status;
+					}
 
 					emitter->localCellID = localCellID;
 					emitter->globalCellID = globalCellID;
@@ -121,7 +129,11 @@ namespace cupcfd
 					// and since we're not returning directly I think this makes it more difficult to handle them, 
 					// when we really want very concrete types for e.g. adding Particles.
 					// We could do away with the interface as one approach, resolving the issue....
-					(*system)->addParticleEmitter( *(static_cast<ParticleEmitterSimple<I,T> *>(emitter)));
+					status = (*system)->addParticleEmitter( *(static_cast<ParticleEmitterSimple<I,T> *>(emitter)));
+					if (status != cupcfd::error::E_SUCCESS) {
+						std::cout << "ERROR: addParticleEmitter() failed" << std::endl;
+						return status;
+					}
 				
 					delete emitter;
 				}
@@ -140,6 +152,7 @@ namespace cupcfd
 				status = this->particleSourceConfig->buildParticleSource(&particleSource);
 				if(status != cupcfd::error::E_SUCCESS)
 				{
+					std::cout << "ERROR: buildParticleSource() failed" << std::endl;
 					return status;
 				}
 				
@@ -150,6 +163,7 @@ namespace cupcfd
 				status = particleSource->getNParticles(&nIndexes);
 				if(status != cupcfd::error::E_SUCCESS)
 				{
+					std::cout << "ERROR: getNParticles() failed" << std::endl;
 					return status;
 				}
 				
@@ -161,30 +175,49 @@ namespace cupcfd
 				}
 				
 				Particle<ParticleSimple<I,T>,I,T> ** particles;
-				particleSource->getParticles(&particles, &nParticles, indexes, nIndexes, 0);
-				
+				status = particleSource->getParticles(&particles, &nParticles, indexes, nIndexes, 0);
+				if(status != cupcfd::error::E_SUCCESS)
+				{
+					std::cout << "ERROR: getParticles() failed" << std::endl;
+					return status;
+				}
+
 				// Add particles to the system, but only if they exist on this ranks mesh partition
 				for(I i = 0; i < nParticles; i++)
 				{
+					ParticleSimple<I,T> p = *(static_cast<ParticleSimple<I,T> *>(particles[i]));
+
 					// Find the cell this particle exists in on this rank, if it exists
 					I localCellID;
 					I globalCellID;
 					
 					
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos = particles[i]->getPos();
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos = p.getPos();
 					
 					status = meshPtr->findCellID(pos, &localCellID, &globalCellID);
 					
 					if(status == cupcfd::error::E_SUCCESS)
 					{
-						particles[i]->setCellGlobalID(globalCellID);
-						
-						// Set the inflight pos to current position for their starting point
-						particles[i]->inflightPos = particles[i]->pos;
-						
-						// ToDo: No set rank function?
-						particles[i]->rank = meshPtr->cellConnGraph->comm->rank;
-						(*system)->addParticle( *(static_cast<ParticleSimple<I,T> *>(particles[i])));
+						ParticleSimple<I,T> allocatedParticle = 
+							ParticleSimple<I,T>(
+								p.pos,
+								p.velocity,
+								p.acceleration,
+								p.jerk,
+								p.getParticleID(),
+								globalCellID,
+								meshPtr->cellConnGraph->comm->rank,
+								p.decayLevel,
+								p.decayRate,
+								p.travelDt);
+						allocatedParticle.inflightPos = p.pos;
+						status = (*system)->addParticle(allocatedParticle);
+
+						if(status != cupcfd::error::E_SUCCESS)
+						{
+							std::cout << "ERROR: addParticle() failed" << std::endl;
+							return status;
+						}
 					}
 				}
 				

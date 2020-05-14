@@ -47,20 +47,22 @@ set (cupcfd_VERSION_MINOR 0)
 # This is to measure the impact of the class size in an AoS setting.
 # CUPCFD_AOS_MESH_VERTEX_PADDING
 
-# Set the delta threshold for whether two single-precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-# CUPCFD_ZERO_COMP_TOL_F
-
-# Set the delta threshold for whether two double precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-# CUPCFD_ZERO_COMP_TOL_D
-
 # ======================================
 # ======== Set Compile Flags ===========
 # ======================================
 
-if(COMPILER STREQUAL "intel")
-  set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+if(RTYPE STREQUAL "Debug")
+  if(COMPILER STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -mkl")
+  else()
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -w -Wfatal-errors")
+  endif()
 else()
-  set(CMAKE_CXX_FLAGS "-O2 -g")
+  if(COMPILER STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+  else()
+    set(CMAKE_CXX_FLAGS "-O2 -g -w -Wfatal-errors")
+  endif()
 endif()
 
 # ====================================================================================================================================

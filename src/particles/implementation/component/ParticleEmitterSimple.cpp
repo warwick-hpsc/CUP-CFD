@@ -55,6 +55,8 @@ namespace cupcfd
 			this->jerkZ = jerkZ->clone();
 			this->decayRate = decayRate->clone();
 			this->decayThreshold = decayThreshold->clone();
+
+			this->nextParticleID = I(0);
 		}
 
 		template <class I, class T>
@@ -74,6 +76,8 @@ namespace cupcfd
 			this->jerkZ = source.jerkZ->clone();
 			this->decayRate = source.decayRate->clone();
 			this->decayThreshold = source.decayThreshold->clone();
+
+			this->nextParticleID = I(0);
 		}
 
 		template <class I, class T>
@@ -96,6 +100,8 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt)
 		{
+			cupcfd::error::eCodes status;
+
 			// tCurrent is the current time in the dt period, relative to 0
 			// tInc is the amount of time that must pass before the next particle is generated.
 			T tCurrent, tInc;
@@ -193,20 +199,24 @@ namespace cupcfd
 				velocity.length(&length);
 				velocity = (speed[i]/length) * velocity;
 
-				(*particles)[i].setPos(this->position);
-				(*particles)[i].setInFlightPos(this->position);
-				(*particles)[i].setVelocity(velocity);
-				(*particles)[i].setAcceleration(acceleration);
-				(*particles)[i].setJerk(jerk);
-				(*particles)[i].setCellGlobalID(this->globalCellID);
+				(*particles)[i] = ParticleSimple<I,T>(
+					this->position,
+					velocity,
+					acceleration,
+					jerk,
+					this->emitterID + 100*this->nextParticleID, 
+					this->globalCellID,
+					this->rank,
+					decayThreshold[i],
+					decayRate[i],
+					dt-times[i]);
 
-				// Remaining travel time depends on when it was generated in this dt period.
-				// E.g. if dt is 10, and it was generated at 1.2, then it only has 8.8 remaining
-				// in this time period.
-				(*particles)[i].setTravelTime(dt-times[i]);
-				(*particles)[i].setDecayLevel(decayThreshold[i]);
-				(*particles)[i].setDecayRate(decayRate[i]);
-				(*particles)[i].rank = this->rank;				// ToDo: Should be setRank method
+				this->nextParticleID++;
+				if (this->nextParticleID == std::numeric_limits<I>::max()) {
+					// Assume that by this point in simulation, that the first particles 
+					// to be emitted have left the system.
+					this->nextParticleID = I(0);
+				}
 			}
 
 			free(accelerationX);
@@ -220,6 +230,8 @@ namespace cupcfd
 			free(angleRotation);
 			free(decayRate);
 			free(decayThreshold);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

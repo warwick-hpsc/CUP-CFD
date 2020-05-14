@@ -198,13 +198,14 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> acceleration(accelX[i], accelY[i], accelZ[i]);
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> jerk(jerkX[i], jerkY[i], jerkZ[i]);
 
+				I particleId = i;
 				I cellGlobalID = -1;
 				I rank = -1;
 
 				// ToDo: Not a big fan of passing array of pointers since it's not contiguous, but these should only be used for builders and
 				// then discarded anyway.
 				// Ideally though we can tidy up the templates/inheritance types a bit so that an array of pointers might not be necessary.
-				(*particleData)[i] = new ParticleSimple<I,T>(pos, velocity, acceleration, jerk, cellGlobalID, rank, decayLevel[i], decayRate[i], T(0));
+				(*particleData)[i] = new ParticleSimple<I,T>(pos, velocity, acceleration, jerk, particleId, cellGlobalID, rank, decayLevel[i], decayRate[i], T(0));
 
 			}
 

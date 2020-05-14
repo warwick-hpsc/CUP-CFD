@@ -115,7 +115,7 @@ namespace cupcfd
 				// Vector path is parallel to plane if the dot product of the vector and the plane normal is 0
 				T dotP = this->getNormal().dotProduct(vec);
 
-				return arth::isEqual(dotP, 0.0);
+				return arth::isEqual(dotP, T(0.0));
 			}
 
 			template <class T>
@@ -152,7 +152,7 @@ namespace cupcfd
 				T dotP = normal.dotProduct(l);
 
 				// Could use isVectorParallel, but don't want to compute dot product twice.
-				if(arth::isEqual(dotP, 0.0))
+				if(arth::isEqual(dotP, T(0.0)))
 				{
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)
@@ -234,7 +234,7 @@ namespace cupcfd
 				// https://en.wikipedia.org/wiki/Line-plane_intersection
 				T dotP = normal.dotProduct(l);
 
-				if(arth::isEqual(dotP, 0.0))
+				if(arth::isEqual(dotP, T(0.0)))
 				{
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)

@@ -54,9 +54,19 @@ namespace cupcfd
 				I localCellID;
 
 				/**
+				 * Unique identifier for this emitter
+				 */
+				I emitterID;
+
+				/**
 				 * Associate this emitter with a certain rank
 				 */
 				I rank;
+
+				/**
+				 * ID to be given to next particle emitted
+				 */
+				I nextParticleID;
 
 				// === Constructors/Deconstructors ===
 

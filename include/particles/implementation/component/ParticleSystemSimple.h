@@ -74,9 +74,9 @@ namespace cupcfd
 				inline cupcfd::error::eCodes setParticleInactive(I particleID);
 				cupcfd::error::eCodes removeInactiveParticles();
 
-				cupcfd::error::eCodes exchangeParticles();
+				cupcfd::error::eCodes exchangeParticles(bool verbose);
 				cupcfd::error::eCodes updateSystem(T dt);
-				cupcfd::error::eCodes updateSystemAtomic();
+				cupcfd::error::eCodes updateSystemAtomic(bool verbose);
 
 
 				cupcfd::error::eCodes setActiveParticlesTravelTime(T travelTime);

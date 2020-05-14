@@ -76,12 +76,6 @@ The following values are defined in header files, but it may be desired for expe
 - Pad/Increase the size of the CupCfdAoSMeshVertex class in an AoS Mesh beyond that of the required values. This is to measure the impact of the class size in an AoS setting.
   - CUPCFD_AOS_MESH_VERTEX_PADDING
 
-- Set the delta threshold for whether two single-precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-  - CUPCFD_ZERO_COMP_TOL_F
-
-- Set the delta threshold for whether two double precision floating point numbers are considered equivalent. Used in ArithmeticKernels.ipp
-  - CUPCFD_ZERO_COMP_TOL_D
-
 ## Unit Tests
 
 A number of units are provided for testing the code using Boost. The majority of the critical components should currently be covered (although there remains some further development to be done). However building these unit tests can significantly inflate the build time, and building them requires a dependancy on the boost unit tests library. As such they can be disabled via the use of the *USE_UNIT_TESTS* flag under the cmake system.

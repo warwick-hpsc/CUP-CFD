@@ -492,6 +492,12 @@ namespace cupcfd
 					 */
 					inline bool isParallel(EuclideanVector<T,N>& b);
 
+					/**
+					 * Print point data to stdout, useful for debugging
+					 */
+					void print() const;
+
+
 					// === Inherited Overloads ===
 
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);

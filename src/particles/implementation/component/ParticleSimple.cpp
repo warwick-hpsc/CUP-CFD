@@ -32,7 +32,7 @@ namespace cupcfd
         ParticleSimple<I,T>::ParticleSimple()
         : Particle<ParticleSimple,I,T>(cupcfd::geometry::euclidean::EuclideanVector<T,3>(T(0),T(0),T(0)),
         							   cupcfd::geometry::euclidean::EuclideanPoint<T,3>(T(0),T(0),T(0)),
-									   -1, -1, T(0)),
+									   -1, -1, -1, T(0)),
           decayLevel(0.0),
           decayRate(0.0)
         {
@@ -44,10 +44,11 @@ namespace cupcfd
 							    cupcfd::geometry::euclidean::EuclideanVector<T,3>& velocity,
 								cupcfd::geometry::euclidean::EuclideanVector<T,3>& acceleration,
 								cupcfd::geometry::euclidean::EuclideanVector<T,3>& jerk,
+								I id, 
 								I cellGlobalID, I rank,
 								T decayLevel, T decayRate,
 								T travelDt)
-		: Particle<ParticleSimple<I,T>,I,T>(velocity, pos, cellGlobalID, rank, travelDt),
+		: Particle<ParticleSimple<I,T>,I,T>(velocity, pos, id, cellGlobalID, rank, travelDt),
 		  acceleration(acceleration),
 		  jerk(jerk),
 		  decayLevel(decayLevel),

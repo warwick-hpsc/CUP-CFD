@@ -124,6 +124,7 @@ namespace cupcfd
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& velocity,
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& acceleration,
 						 cupcfd::geometry::euclidean::EuclideanVector<T,3>& jerk,
+						 I id, 
 						 I cellGlobalID, I rank,
 						 T decayLevel, T decayRate,
 						 T travelDt);
