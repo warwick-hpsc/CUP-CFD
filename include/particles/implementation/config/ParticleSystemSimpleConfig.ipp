@@ -37,6 +37,8 @@ namespace cupcfd
 			{	
 				this->particleSourceConfig = particleSourceConfig->clone();
 			}
+
+			numParticleSourcesOrEmitters = 0;
 		}
 
 		template <class M, class I, class T, class L>
@@ -115,6 +117,8 @@ namespace cupcfd
 				{
 					ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> * emitter;
 					status = this->emitterConfigs[i]->buildParticleEmitter(&emitter);
+					// status = this->emitterConfigs[i]->buildParticleEmitter(&emitter, this->numParticleSourcesOrEmitters+1);
+					// this->numParticleSourcesOrEmitters++;
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: buildParticleEmitter() failed" << std::endl;
 						return status;
@@ -149,7 +153,9 @@ namespace cupcfd
 				// Configuration exists - Build Particle Source Object
 				ParticleSource<ParticleSimple<I,T>,I,T> * particleSource;
 
-				status = this->particleSourceConfig->buildParticleSource(&particleSource);
+				// status = this->particleSourceConfig->buildParticleSource(&particleSource);
+				status = this->particleSourceConfig->buildParticleSource(&particleSource, this->numParticleSourcesOrEmitters+1);
+				this->numParticleSourcesOrEmitters++;
 				if(status != cupcfd::error::E_SUCCESS)
 				{
 					std::cout << "ERROR: buildParticleSource() failed" << std::endl;

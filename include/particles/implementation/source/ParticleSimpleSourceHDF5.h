@@ -51,7 +51,8 @@ namespace cupcfd
 				 *
 				 * @param fileName Location
 				 */
-				ParticleSimpleSourceHDF5(std::string fileName);
+				// ParticleSimpleSourceHDF5(std::string fileName);
+				ParticleSimpleSourceHDF5(std::string fileName, int sourceId);
 
 				/**
 				 * Deconstructor.
@@ -67,6 +68,9 @@ namespace cupcfd
 				cupcfd::error::eCodes getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase);
 
 				// === Pure Virtual Methods ===
+			
+			private:
+				int id;
 		};
 	}
 }

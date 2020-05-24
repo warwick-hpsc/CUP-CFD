@@ -55,7 +55,8 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		cupcfd::error::eCodes ParticleSourceConfig<P,I,T>::buildParticleSource(ParticleSource<P,I,T> ** particleSource)
+		// cupcfd::error::eCodes ParticleSourceConfig<P,I,T>::buildParticleSource(ParticleSource<P,I,T> ** particleSource)
+		cupcfd::error::eCodes ParticleSourceConfig<P,I,T>::buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId)
 		{
 			return cupcfd::error::E_SUCCESS;
 		}

@@ -79,7 +79,8 @@ namespace cupcfd
 				 *
 				 * @param A pointer to the location where the pointer of the newly created object will be stored.
 				 */
-				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource) = 0;
+				// virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource) = 0;
+				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId) = 0;
 		};
 	}
 }

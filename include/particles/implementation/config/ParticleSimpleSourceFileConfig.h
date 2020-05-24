@@ -94,7 +94,8 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				cupcfd::error::eCodes buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource);
+				// cupcfd::error::eCodes buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource);
+				 cupcfd::error::eCodes buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource, int sourceId);
 		};
 	}
 }
