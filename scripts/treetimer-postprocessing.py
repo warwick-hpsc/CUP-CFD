@@ -28,6 +28,8 @@
 import sys
 import sqlite3
 
+import pandas as pd
+
 def main():
 
 	# Open Database
@@ -51,8 +53,8 @@ def main():
 	## Functions 3 & 4:
 	## These functions below print out the same data table, but they differ in how the rows 
 	## are ordered - whether to order descending by inclusive time or exclusive time.
-	printHotspotsAggregateExclusiveTime(1, 1, db)
-	# printHotspotsAggregateInclusiveTime(1, 1, db)
+	# printHotspotsAggregateExclusiveTime(1, 1, db)
+	printHotspotsAggregateInclusiveTime(1, 1, db)
 
 	# Close Database
 	db.close()
@@ -69,25 +71,51 @@ def printHotspotsAggregateExclusiveTime(runID, processID, db):
 	# Sort by Aggregate Exclusive Time
 	sortedRecords = reversed(sorted(records, key=lambda k: k['AggTotalTimeE']))
 
-	print "Name, TypeName, CallCount, InclusiveAggregateTime(s), ExclusiveAggregateTime(s), ExclusiveAggregateTime(% of Run)"
+	# print "Name, TypeName, CallCount, InclusiveAggregateTime(s), ExclusiveAggregateTime(s), ExclusiveAggregateTime(% of Run)"
+	col_names = ["Name", "TypeName", "CallCount", "InclusiveAggregateTime(s)", "ExclusiveAggregateTime(s)", "ExclusiveAggregateTime(% of Run)"]
+	df = None
 
 	sum = 0.0
 	nonfunctionsum = 0.0
 	for record in sortedRecords:
-		print str(record['Name']) + \
-			"," + str(record['TypeName']) + \
-			"," + str(record['CallCount']) + \
-			"," + str(record['AggTotalTimeI']) + \
-			"," + str(record['AggTotalTimeE']) + \
-			"," + str((record['AggTotalTimeE']/rootRecord['AggTotalTimeI'])*100)
+		# print str(record['Name']) + \
+		# 	"," + str(record['TypeName']) + \
+		# 	"," + str(record['CallCount']) + \
+		# 	"," + str(record['AggTotalTimeI']) + \
+		# 	"," + str(record['AggTotalTimeE']) + \
+		# 	"," + str((record['AggTotalTimeE']/rootRecord['AggTotalTimeI'])*100)
+		# datum = [record['Name'], record['TypeName'], record['CallCount'], 
+		# 		record['AggTotalTimeI'], record['AggTotalTimeE'], 
+		# 		(record['AggTotalTimeE']/rootRecord['AggTotalTimeI']*100) ]
+		datum = {"Name": record['Name'], 
+				"TypeName": record['TypeName'], 
+				"CallCount": record['CallCount'], 
+				"InclusiveAggregateTime(s)": record['AggTotalTimeI'], 
+				"ExclusiveAggregateTime(s)": record['AggTotalTimeE'], 
+				"ExclusiveAggregateTime(% of Run)": (record['AggTotalTimeE']/rootRecord['AggTotalTimeI']*100) }
+		if df is None:
+			df_init = {k:[v] for k,v in datum.items()}
+			df = pd.DataFrame(data=df_init, columns=col_names)
+		else:
+			datum = [record['Name'], record['TypeName'], record['CallCount'], 
+					record['AggTotalTimeI'], record['AggTotalTimeE'], 
+					(record['AggTotalTimeE']/rootRecord['AggTotalTimeI']*100) ]
+			datum = pd.Series(datum, index=col_names)
+			df = df.append(datum, ignore_index=True)
 
 		sum = sum + record['AggTotalTimeE']
 
 		if(record['TypeName'] != 'Method'):
 			nonfunctionsum = nonfunctionsum + record['AggTotalTimeE']
 
+	# print(df)
 	print "Validation: NonMethod Exclusive Time = " + str(nonfunctionsum) + ", Root = " + str(rootRecord['AggTotalTimeI'])
 	print "Validation: Sum = " + str(sum) + ", Root = " + str(rootRecord['AggTotalTimeI'])
+
+	# df_filename = "hotspotsAggregateExclusiveTime.csv"
+	df_filename = sys.argv[1] + ".hotspotsAggregateExclusiveTime.csv"
+	df.to_csv(df_filename, index=False)
+	print("Data written to '{0}'".format(df_filename))
 
 # Same as printHotspotsAggregateExclusiveTime, but sorts by inclusive times (if interested in top-down times)
 # Note - RunID is the SQL Key for the RunID, and processID is the SQL Key ProcessID in the db, not the process rank! (They may not be the same)
@@ -102,17 +130,34 @@ def printHotspotsAggregateInclusiveTime(runID, processID, db):
 	# Sort by Aggregate Exclusive Time
 	sortedRecords = reversed(sorted(records, key=lambda k: k['AggTotalTimeI']))
 
-	print "Name, TypeName, CallCount, InclusiveAggregateTime(s), ExclusiveAggregateTime(s), ExclusiveAggregateTime(% of Run)"
+	# print "Name, TypeName, CallCount, InclusiveAggregateTime(s), ExclusiveAggregateTime(s), ExclusiveAggregateTime(% of Run)"
+	col_names = ["Name", "TypeName", "CallCount", "InclusiveAggregateTime(s)", "ExclusiveAggregateTime(s)", "ExclusiveAggregateTime(% of Run)"]
+	df = None
 
 	sum = 0.0
 	nonfunctionsum = 0.0
 	for record in sortedRecords:
-		print str(record['Name']) + \
-			"," + str(record['TypeName']) + \
-			"," + str(record['CallCount']) + \
-			"," + str(record['AggTotalTimeI']) + \
-			"," + str(record['AggTotalTimeE']) + \
-			"," + str((record['AggTotalTimeE']/rootRecord['AggTotalTimeI'])*100)
+		# print str(record['Name']) + \
+		# 	"," + str(record['TypeName']) + \
+		# 	"," + str(record['CallCount']) + \
+		# 	"," + str(record['AggTotalTimeI']) + \
+		# 	"," + str(record['AggTotalTimeE']) + \
+		# 	"," + str((record['AggTotalTimeE']/rootRecord['AggTotalTimeI'])*100)
+		datum = {"Name": record['Name'], 
+				"TypeName": record['TypeName'], 
+				"CallCount": record['CallCount'], 
+				"InclusiveAggregateTime(s)": record['AggTotalTimeI'], 
+				"ExclusiveAggregateTime(s)": record['AggTotalTimeE'], 
+				"ExclusiveAggregateTime(% of Run)": (record['AggTotalTimeE']/rootRecord['AggTotalTimeI']*100) }
+		if df is None:
+			df_init = {k:[v] for k,v in datum.items()}
+			df = pd.DataFrame(data=df_init, columns=col_names)
+		else:
+			datum = [record['Name'], record['TypeName'], record['CallCount'], 
+					record['AggTotalTimeI'], record['AggTotalTimeE'], 
+					(record['AggTotalTimeE']/rootRecord['AggTotalTimeI']*100) ]
+			datum = pd.Series(datum, index=col_names)
+			df = df.append(datum, ignore_index=True)
 
 		sum = sum + record['AggTotalTimeE']
 
@@ -121,6 +166,11 @@ def printHotspotsAggregateInclusiveTime(runID, processID, db):
 
 	print "Validation: NonMethod Exclusive Time = " + str(nonfunctionsum) + ", Root = " + str(rootRecord['AggTotalTimeI'])
 	print "Validation: Sum = " + str(sum) + ", Root = " + str(rootRecord['AggTotalTimeI'])
+
+	# df_filename = "hotspotsAggregateInclusiveTime.csv"
+	df_filename = sys.argv[1] + ".hotspotsAggregateInclusiveTime.csv"
+	df.to_csv(df_filename, index=False)
+	print("Data written to '{0}'".format(df_filename))
 
 # Note - RunID is the SQL Key for the RunID, and processID is the SQL Key ProcessID in the db, not the process rank! (They may not be the same)
 def getAllProfileNodesAggregateTimeExclusive(runID, processID, db):
