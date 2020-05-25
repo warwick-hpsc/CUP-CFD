@@ -109,7 +109,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter);
+				virtual cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter, int emitterId);
 		};
 	}
 }

@@ -50,6 +50,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleSimpleSourceFileConfigJSON<I,T>::buildParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>,I,T> ** config)
+		// cupcfd::error::eCodes ParticleSimpleSourceFileConfigJSON<I,T>::buildParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>,I,T> ** config, int sourceId)
 		{
 			cupcfd::error::eCodes status;
 			std::string filePath;
@@ -71,6 +72,7 @@ namespace cupcfd
 
 			// Build the object
 			*config = new ParticleSimpleSourceFileConfig<I,T>(filePath, fileFormat);
+			// *config = new ParticleSimpleSourceFileConfig<I,T>(filePath, fileFormat, id);
 
 			return cupcfd::error::E_SUCCESS;
 

@@ -50,8 +50,8 @@ namespace cupcfd
 				 * Setup class for reading data from the file at the provided location
 				 *
 				 * @param fileName Location
+				 * @param sourceId ID for this source, unique across all emitters and sources in system; used to create unique particle IDs
 				 */
-				// ParticleSimpleSourceHDF5(std::string fileName);
 				ParticleSimpleSourceHDF5(std::string fileName, int sourceId);
 
 				/**

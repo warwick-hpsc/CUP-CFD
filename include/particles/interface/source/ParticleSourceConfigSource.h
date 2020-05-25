@@ -86,7 +86,6 @@ namespace cupcfd
 				 *
 				 */
 				virtual cupcfd::error::eCodes buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config) = 0;
-				// virtual cupcfd::error::eCodes buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config, int sourceId) = 0;
 		};
 	}
 }

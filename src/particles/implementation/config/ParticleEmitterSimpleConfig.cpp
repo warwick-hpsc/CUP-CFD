@@ -110,7 +110,8 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfig<I,T>::buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter)
+		// cupcfd::error::eCodes ParticleEmitterSimpleConfig<I,T>::buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter)
+		cupcfd::error::eCodes ParticleEmitterSimpleConfig<I,T>::buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter, int emitterId)
 		{
 			// Position is initially unknown until we have a mesh to search though
 			I localCellID = -1;
@@ -144,7 +145,9 @@ namespace cupcfd
 			this->decayThreshold->buildDistribution(&decayThreshold);
 
 			// Create the Particle Emitter
-			*emitter = new ParticleEmitterSimple<I,T>(localCellID, globalCellID, rank, this->position,
+			*emitter = new ParticleEmitterSimple<I,T>(localCellID, globalCellID, rank, 
+												   emitterId, 
+												   this->position,
 												   rate, angleXY, angleRotation, speed,
 												   accelerationX, accelerationY, accelerationZ,
 												   jerkX, jerkY, jerkZ, decayRate, decayThreshold);

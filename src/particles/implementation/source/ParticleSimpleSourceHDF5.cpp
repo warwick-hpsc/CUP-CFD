@@ -49,7 +49,6 @@ namespace cupcfd
 		// "/particles"	 | "decayRate" | The particles decay rate
 
 		template <class I, class T>
-		// ParticleSimpleSourceHDF5<I,T>::ParticleSimpleSourceHDF5(std::string fileName)
 		ParticleSimpleSourceHDF5<I,T>::ParticleSimpleSourceHDF5(std::string fileName, int sourceId)
 		: ParticleSource<ParticleSimple<I,T>,I,T>(),
 		  fileName(fileName),
@@ -201,7 +200,7 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> jerk(jerkX[i], jerkY[i], jerkZ[i]);
 
 				// I particleId = i;
-				I particleId = (I)this->id + i*100;
+				I particleId = (i << 8) + this->id;
 				I cellGlobalID = -1;
 				I rank = -1;
 
