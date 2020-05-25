@@ -26,7 +26,8 @@ namespace cupcfd
 	namespace particles
 	{
 		template <class I, class T>
-		ParticleEmitterSimple<I,T>::ParticleEmitterSimple(I localCellID, I globalCellID, I rank,
+		ParticleEmitterSimple<I,T>::ParticleEmitterSimple(I localCellID, I globalCellID, I rank, 
+														  int emitterId, 
 														  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& position,
 														  cupcfd::distributions::Distribution<I,T> * rate,
 														  cupcfd::distributions::Distribution<I,T> * angleXY,
@@ -57,6 +58,7 @@ namespace cupcfd
 			this->decayThreshold = decayThreshold->clone();
 
 			this->nextParticleID = I(0);
+			this->id = emitterId;
 		}
 
 		template <class I, class T>
@@ -204,7 +206,7 @@ namespace cupcfd
 					velocity,
 					acceleration,
 					jerk,
-					this->emitterID + 100*this->nextParticleID, 
+					(this->nextParticleID << 8) + this->id,
 					this->globalCellID,
 					this->rank,
 					decayThreshold[i],

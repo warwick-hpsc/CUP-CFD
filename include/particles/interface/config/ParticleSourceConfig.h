@@ -77,9 +77,10 @@ namespace cupcfd
 				/**
 				 * Build a Particle Source based on the settings specified in this configuration type.
 				 *
-				 * @param A pointer to the location where the pointer of the newly created object will be stored.
+				 * @param particleSource A pointer to the location where the pointer of the newly created object will be stored.
+				 * @param sourceId ID for this source, unique across all emitters and sources in system; used to create unique particle IDs
 				 */
-				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource) = 0;
+				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId) = 0;
 		};
 	}
 }

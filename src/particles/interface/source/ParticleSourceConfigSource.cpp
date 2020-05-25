@@ -49,6 +49,7 @@ namespace cupcfd
 
 		template <class P, class I, class T>
 		cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config)
+		// cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config, int sourceId)
 		{
 			// Pure Virtual Method
 			// Nothing to do here currently

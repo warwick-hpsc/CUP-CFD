@@ -53,11 +53,15 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleSimpleSourceFileConfig<I,T>::buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource)
+		// cupcfd::error::eCodes ParticleSimpleSourceFileConfig<I,T>::buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource)
+		cupcfd::error::eCodes ParticleSimpleSourceFileConfig<I,T>::buildParticleSource(
+			ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource, 
+			int sourceId)
 		{
 			if(this->format == PARTICLE_SIMPLE_FILE_FORMAT_HDF5)
 			{
-				*particleSource = new ParticleSimpleSourceHDF5<I,T>(this->filePath);
+				// *particleSource = new ParticleSimpleSourceHDF5<I,T>(this->filePath);
+				*particleSource = new ParticleSimpleSourceHDF5<I,T>(this->filePath, sourceId);
 				return cupcfd::error::E_SUCCESS;
 			}
 

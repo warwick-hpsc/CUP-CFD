@@ -94,7 +94,7 @@ namespace cupcfd
 				 *
 				 * These should be set post operation for correct functionality when working with a mesh.
 				 */
-				virtual cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter) = 0;
+				virtual cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter, int emitterId) = 0;
 		};
 	}
 }

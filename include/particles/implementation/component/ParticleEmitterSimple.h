@@ -119,6 +119,7 @@ namespace cupcfd
 				 * @param globalCellID The global ID of the cell the emitter is in
 				 * @param rank The process rank that holds the globalCellID for the intended mesh (Particles will be generated
 				 * with this rank ID)
+				 * @param emitterId ID for this emitter, unique across all emitters and sources in system; used to create unique particle IDs
 				 * @param position The spatial position of the emitter
 				 * @param rate The distribution to use for the rate of particle emission (dt between particles)
 				 * @param angleXY The distribution to use for the initial angle of the emitted particles velocity in the XY plane (should be in radians)
@@ -132,7 +133,9 @@ namespace cupcfd
 				 * @param jerkZ The distribution to use for the initial jerk of the emitted particle
 				 * @param decay The distribution to use for the decay of the emitted particle
 				 */
-				ParticleEmitterSimple(I localCellID, I globalCellID, I rank, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& position,
+				ParticleEmitterSimple(I localCellID, I globalCellID, I rank, 
+									  int emitterId, 
+									  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& position,
 									  cupcfd::distributions::Distribution<I,T> * rate,
 									  cupcfd::distributions::Distribution<I,T> * angleXY,
 									  cupcfd::distributions::Distribution<I,T> * angleRotation,
@@ -182,6 +185,9 @@ namespace cupcfd
 				cupcfd::error::eCodes generateParticles(ParticleSimple<I, T> ** particles, I * nParticles, T dt);
 
 				// Concrete Methods
+			
+			private:
+				int id;
 		};
 	}
 }
