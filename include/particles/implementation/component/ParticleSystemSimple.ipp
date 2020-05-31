@@ -20,6 +20,8 @@
 #include "ExchangeMPI.h"
 #include "Reduce.h"
 
+#include "tt_interface_c.h"
+
 #include <unistd.h>
 
 namespace arth = cupcfd::utility::arithmetic::kernels;
@@ -218,10 +220,12 @@ namespace cupcfd
 			MPI_Request * requests;
 			I nRequests;
 			
+			TreeTimerEnterBlockMPICommCall("exchangeParticles.syncCounts.comm");
 			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours,recvBuffer, nNeighbours, 
 								  neighbourRanks, nNeighbours,
 								  1, this->mesh->cellConnGraph->comm->comm,
 								  &requests, &nRequests);
+			TreeTimerExitBlock("exchangeParticles.syncCounts.comm");
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: ExchangeMPIIsendIrecv() failed" << std::endl;
 				return status;
@@ -231,7 +235,9 @@ namespace cupcfd
 			// Presumably a missing header guard somewhere, but I can't seem to find it for now....
 			// Do it directly instead
 			MPI_Status * statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
+			TreeTimerEnterBlockMPISyncCall("exchangeParticles.syncCounts.sync");
 			MPI_Waitall(nRequests, requests, statuses);
+			TreeTimerExitBlock("exchangeParticles.syncCounts.sync");
 			free(statuses);
 			free(requests);
 			
@@ -264,29 +270,36 @@ namespace cupcfd
 				}
 			}
 			
+			TreeTimerEnterBlockMPICommCall("exchangeParticles.sendParticles.comm");
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
 								   particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   this->mesh->cellConnGraph->comm->comm,
 								   &requests, &nRequests);
+			TreeTimerExitBlock("exchangeParticles.sendParticles.comm");
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: ExchangeVMPIIsendIrecv() failed" << std::endl;
 				return status;
 			}
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
+			TreeTimerEnterBlockMPISyncCall("exchangeParticles.sendParticles.sync");
 			MPI_Waitall(nRequests, requests, statuses);
+			TreeTimerExitBlock("exchangeParticles.sendParticles.sync");
 			free(statuses);				   
 							   
 			// Add any particles we received to the system
 			for(I i = 0; i < totalRecvCount; i++)
 			{
+				TreeTimerEnterBlockLoop("exchangeParticles.redetectFaceEntries");
 				status = particleRecvBuffer[i].redetectEntryFaceID(*(this->mesh));
 				if (status != cupcfd::error::E_SUCCESS) {
+					TreeTimerExitBlock("exchangeParticles.redetectFaceEntries");
 					std::cout << "ERROR: redetectEntryFaceID() failed" << std::endl;
 					return status;
 				}
+				TreeTimerExitBlock("exchangeParticles.redetectFaceEntries");
 
 				status = this->addParticle(particleRecvBuffer[i]);
 				if (status != cupcfd::error::E_SUCCESS) {
@@ -408,11 +421,13 @@ namespace cupcfd
 				}
 
 				// Advance particles by at most one cell
+				TreeTimerEnterBlockComputeLoop("updateSystemAtomic");
 				status = this->updateSystemAtomic(verbose);
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: updateSystemAtomic() failed" << std::endl;
 					return status;
 				}
+				TreeTimerExitBlock("updateSystemAtomic");
 								
 				// No further changes should need to be made to the data stored inside a particle, and they should have ranks
 				// representing the process they should be located on. 
@@ -432,11 +447,13 @@ namespace cupcfd
 				
 				// We can now perform an exchange to identify how many (if any)
 				// particles will go off-rank in this atomic update, and transfer them ready for another round of atomic updates.
+				TreeTimerEnterBlockMethod("exchangeParticles");
 				status = this->exchangeParticles(verbose);
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: exchangeParticles() failed" << std::endl;
 					return status;
 				}
+				TreeTimerExitBlock("exchangeParticles");
 				
 				// Cleanup any sent particles that should now be marked as inactive after being sent to another rank
 				status = this->removeInactiveParticles();
