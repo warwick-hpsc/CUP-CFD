@@ -8,8 +8,8 @@
 # Functionality Needed
 
 # (1) Display Full CallTree (Functions only) alongside exclusive time spent in each function
-#     (Some functions may not be timed individually due to overhead, and thus will show
-#      as time under another function)
+#	 (Some functions may not be timed individually due to overhead, and thus will show
+#	  as time under another function)
 
 # (2) Display Hotspots by Function Exclusive Time (Ordered Version of (1))
 
@@ -26,9 +26,14 @@
 # (8) Generate Wgs for Compute Blocks (time/suitable parameters)
 
 import sys, os, re
+from pprint import pprint
+
 import sqlite3
 
 import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
 
 import argparse
 parser = argparse.ArgumentParser()
@@ -46,16 +51,16 @@ def main():
 			m = re.match("^results\.([0-9]+)\.db$", f)
 			if m:
 				rank = m.groups()[0]
-				rank_ids.add(rank)
-				df = load_db(os.path.join(tt_folder_dirpath, f))
-				df["rank"] = rank
-				if df_all is None:
-					df_all = df
-				else:
-					df_all = df_all.append(df)
+				# rank_ids.add(rank)
+				# df = load_db(os.path.join(tt_folder_dirpath, f))
+				# df["rank"] = rank
+				# if df_all is None:
+				# 	df_all = df
+				# else:
+				# 	df_all = df_all.append(df)
 
 
-				# db = sqlite3.connect(os.path.join(tt_folder_dirpath, f))
+				db = sqlite3.connect(os.path.join(tt_folder_dirpath, f))
 				## Function 1
 				## Display Hotspots by Grouped Node Type Exclusive Time
 				## This will group all of the nodes of specific types - e.g. MPI call, compute etc.
@@ -68,6 +73,18 @@ def main():
 				## tracked in trace mode), but all blocks will be correctly nested under blocks from which they were
 				## called. An indention indicates a nested block inside another block.
 				# printAggregateDetailsCallPathTree(1, 1, db)
+				t = buildCallPathTree(1, 1, db)
+				# pprint(t)
+				# quit()
+
+				fig_dims = (4,4)
+				fig = plt.figure(figsize=fig_dims)
+				# sunburst(t)
+				sunburst_root(t)
+				plt.savefig("chart.png")
+				plt.close(fig)
+
+				quit()
 
 	df_all["num_ranks"] = len(rank_ids)
 
@@ -219,7 +236,7 @@ def printAggregateDetailsCallPathTree(runID, processID, db):
 	printAggregateDetailsCallPathNodeTraversal(runID, rootID, processID, db, 0)
 
 def printAggregateDetailsCallPathNodeTraversal(runID, callPathID, processID, db, indentLevel):
-    # Recursive method to do depth first traversal when printing nodes
+	# Recursive method to do depth first traversal when printing nodes
 
 	for i in xrange(0, indentLevel):
 		sys.stdout.write('  ')
@@ -229,27 +246,175 @@ def printAggregateDetailsCallPathNodeTraversal(runID, callPathID, processID, db,
 	printAggregateCallPathNodeDetails(callPathID, runID, processID, db)
 	childNodes = getCallPathChildNodeIDs(callPathID, db)
 
-    # Loop over child nodes
+	# Loop over child nodes
 	for childID in childNodes:
 		# Keep following a path till we reach a node with no children
 		printAggregateDetailsCallPathNodeTraversal(runID, childID, processID, db, indentLevel + 1)
 
 
+def buildCallPathTree(runID, processID, db):
+	rootID = getRootCallPathID(db)
+	tree = None
+	x = buildCallPathNodeTraversal(runID, processID, db, tree, rootID, 0)
+	return x
+
+def buildCallPathNodeTraversal(runID, processID, db, treeNode, nodeID, indentLevel):
+	# Recursive depth-first traversal through call stack
+	record = getAggregateCallPathNodeDetails(nodeID, runID, processID, db)
+
+	# leaf = [record["Name"], record["TypeName"], record["AggTotalTimeI"], [] ]
+	# leaf = [ ( record["Name"], record["TypeName"], record["AggTotalTimeI"], [] ) ]
+	leaf = ( record["Name"], record["TypeName"], record["AggTotalTimeI"], [] )
+	am_root = False
+	if treeNode is None:
+		am_root = True
+		# treeNode = leaf
+		treeNode = [ leaf ]
+	else:
+		# pprint(treeNode)
+		treeNode[-1].append(leaf)
+		# treeNode[0][-1].append(leaf)
+		# treeNode[0][-1].append([leaf])
+		# treeNode[-1].append([leaf])
+
+	childNodes = getCallPathChildNodeIDs(nodeID, db)
+	for childID in childNodes:
+		buildCallPathNodeTraversal(runID, processID, db, leaf, childID, indentLevel + 1)
+
+	if am_root:
+		return treeNode
+
+
 def getCallPathChildNodeIDs(callPathID, db):
-    db.row_factory = sqlite3.Row
-    cur = db.cursor()
+	db.row_factory = sqlite3.Row
+	cur = db.cursor()
 
-    cmd = "SELECT CallPathID FROM CallPathData " + \
-          "WHERE ParentNodeID = " + str(callPathID)
-    cur.execute(cmd)
+	cmd = "SELECT CallPathID FROM CallPathData " + \
+		  "WHERE ParentNodeID = " + str(callPathID)
+	cur.execute(cmd)
 
-    result = cur.fetchall()
+	result = cur.fetchall()
 
-    list = []
-    for i in result:
-        list.append(i['CallPathID'])
+	list = []
+	for i in result:
+		list.append(i['CallPathID'])
 
-    return list
+	return list
+
+# do_plt_polar = True
+do_plt_polar = False
+
+do_bar_plot_vertical = True
+# do_bar_plot_vertical = False
+
+methodTypeToColour = {}
+methodTypeToColour["Program"] = "silver"
+methodTypeToColour["Method"] = "silver"
+methodTypeToColour["Loop"] = "silver"
+methodTypeToColour["ComputeLoop"] = "purple"
+methodTypeToColour["MPICommCall"] = "blue"
+methodTypeToColour["MPISyncCall"] = "orange"
+
+def sunburst_root(nodes):
+	if do_plt_polar:
+		root_total = np.pi * 2
+	else:
+		label, methodType, value, subnodes = nodes[0]
+		root_total = value
+		print("root_total = {0}".format(root_total))
+
+	if do_plt_polar:
+		ax = plt.subplot(111, projection='polar')
+	else:
+		ax = plt.subplot(111)
+
+	sunburst(nodes, root_total, root_total, 0, 0, ax)
+
+# def sunburst(nodes, total=root_total, offset=0, level=0, ax=None):
+def sunburst(nodes, root_total, node_total, offset, level, ax):
+	if level == 0 and len(nodes) > 1:
+		pprint(nodes)
+		raise Exception("There must only be one root node, not {0}".format(len(nodes)))
+
+	if level == 0 and len(nodes) == 1:
+		label, methodType, value, subnodes = nodes[0]
+
+		if do_plt_polar:
+			ax.bar(x=[0], height=[0.5], width=[node_total], color=[methodTypeToColour[methodType]])
+			ax.text(0, 0, label, ha='center', va='center')
+		else:
+			if do_bar_plot_vertical:
+				ax.bar(x=[node_total/2], height=[1.0], width=[node_total], color=[methodTypeToColour[methodType]])
+				ax.text(root_total/2, 0.5, label, ha='center', va='center')
+			else:
+				ax.bar(x=[0.5], height=[node_total], width=[1.0], color=[methodTypeToColour[methodType]])
+				ax.text(0.5, root_total/2, label, ha='center', va='center')
+
+		sunburst(subnodes, root_total, value, 0, level+1, ax)
+	elif nodes:
+		if do_plt_polar:
+			d = root_total / node_total
+		else:
+			d = root_total / node_total
+		sizes = []
+		labels = []
+		colours = []
+		subnode_offset = offset
+		# for label, value, subnodes in nodes:
+		for label, methodType, value, subnodes in nodes:
+			if (value / node_total) < 0.03:
+				## Prune out small nodes
+				continue
+			labels.append(label)
+			sizes.append(value * d)
+			colours.append(methodTypeToColour[methodType])
+			sunburst(subnodes, root_total, node_total, subnode_offset, level+1, ax)
+			subnode_offset += value
+		if do_plt_polar:
+			widths = sizes
+			heights = [1] * len(nodes)
+			lefts = np.cumsum([offset * d] + widths[:-1])
+			bottoms = np.zeros(len(nodes)) + level - 0.5
+		else:
+			if do_bar_plot_vertical:
+				heights = [1] * len(sizes)
+				widths = sizes
+				bottoms = np.zeros(len(sizes)) + level
+				lefts = np.cumsum([offset * d] + widths[:-1])
+			else:
+				widths = [1] * len(sizes)
+				heights = sizes
+				lefts = np.zeros(len(sizes)) + level
+				bottoms = np.cumsum([offset * d] + heights[:-1])
+		rects = ax.bar(x=lefts, height=heights, width=widths, bottom=bottoms, linewidth=1,
+					   color=colours, edgecolor='white', align='edge')
+		for rect, label in zip(rects, labels):
+			x = rect.get_x() + rect.get_width() / 2
+			y = rect.get_y() + rect.get_height() / 2
+			if do_plt_polar:
+				rotation = (90 + (360 - np.degrees(x) % 180)) % 360
+				ax.text(x, y, label, rotation=rotation, ha='center', va='center')
+			else:
+				ax.text(x, y, label, ha='center', va='center')
+
+	if level == 0:
+		if do_plt_polar:
+			ax.set_theta_direction(-1)
+			ax.set_theta_zero_location('N')
+			ax.set_axis_off()
+		else:
+			if do_bar_plot_vertical:
+				ax.get_yaxis().set_visible(False)
+			else:
+				ax.get_xaxis().set_visible(False)
+
+		## Build custom colour legend:
+		legend_dict = { "MPI sync" : methodTypeToColour["MPISyncCall"],  "compute" : methodTypeToColour["ComputeLoop"] }
+		patchList = []
+		for k in legend_dict:
+			patchList.append(mpatches.Patch(color=legend_dict[k], label=k))
+		ax.legend(handles=patchList)
+
 
 def printAggregateCallPathNodeDetails(callPathID, runID, processID, db):
 
@@ -265,21 +430,21 @@ def printAggregateCallPathNodeDetails(callPathID, runID, processID, db):
 		  str(record['AggTotalTimeE']))
 
 def getAggregateCallPathNodeDetails(callPathID, runID, processID, db):
-    # This method retrieves the following aggregate details about a node and returns them as a dictionary
-    # (1) Node Name: Key 'Name'
-    # (2) Node Type Name: Key 'TypeName'
-    # (3) Min Time: Key 'AggMinTime'
-    # (4) Avg Time: Key 'AggAvgTime'
-    # (5) Max Time: Key 'AggMaxTime'
-    # (6) Count: Key 'CallCount'
-    # (7) Total Time Inclusive (including child node times): Key 'AggTotalTimeI'
-    # (8) Total Time Exclusive (time in this node only, excluding child node times): Key 'AggTotalTimeE'
-    # (9)
+	# This method retrieves the following aggregate details about a node and returns them as a dictionary
+	# (1) Node Name: Key 'Name'
+	# (2) Node Type Name: Key 'TypeName'
+	# (3) Min Time: Key 'AggMinTime'
+	# (4) Avg Time: Key 'AggAvgTime'
+	# (5) Max Time: Key 'AggMaxTime'
+	# (6) Count: Key 'CallCount'
+	# (7) Total Time Inclusive (including child node times): Key 'AggTotalTimeI'
+	# (8) Total Time Exclusive (time in this node only, excluding child node times): Key 'AggTotalTimeE'
+	# (9)
 
-    # ToDo: If looping over nodes, this will lead to the same data being loaded from the database multiple
-    # times, which is likely expensive.
-    # Options: Load full data from database into tree in memory (might be v. large)
-    #          Ensure only depth-first traversal that can reuse data from prior loads
+	# ToDo: If looping over nodes, this will lead to the same data being loaded from the database multiple
+	# times, which is likely expensive.
+	# Options: Load full data from database into tree in memory (might be v. large)
+	#		  Ensure only depth-first traversal that can reuse data from prior loads
 
 	db.row_factory = sqlite3.Row
 	cur = db.cursor()
@@ -345,12 +510,12 @@ def getAggregateCallPathNodeDetails(callPathID, runID, processID, db):
 def printSummaryExclusiveTimeByType(runID, processID, db):
 	rDict = getSummaryExclusiveTimeByType(runID, processID, db)
 
-	print "=============================================="
-	print "Summary: Exclusive Time in code blocks by type"
-	print "=============================================="
-	print ""
+	print("==============================================")
+	print("Summary: Exclusive Time in code blocks by type")
+	print("==============================================")
+	print("")
 
-	print "Root Walltime: " + str(rDict['Root'])
+	print("Root Walltime: " + str(rDict['Root']))
 
 	percentSum = 0.0
 
@@ -358,7 +523,7 @@ def printSummaryExclusiveTimeByType(runID, processID, db):
 		percent = (rDict[key]/rDict['Root'])*100
 		percentSum = percentSum + percent
 #		sys.stdout.write(str(rDict[key]))
-		print str(key) + "," + str(rDict[key]) + "," + str(round(percent,2))
+		print(str(key) + "," + str(rDict[key]) + "," + str(round(percent,2)))
 
 def getSummaryExclusiveTimeByType(runID, processID, db):
 
@@ -409,4 +574,4 @@ def getSummaryExclusiveTimeByType(runID, processID, db):
 	return rDict
 
 if __name__ == "__main__":
-    main()
+	main()
