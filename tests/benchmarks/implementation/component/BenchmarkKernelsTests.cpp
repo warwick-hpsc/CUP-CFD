@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE(setup)
     int argc = boost::unit_test::framework::master_test_suite().argc;
     char ** argv = boost::unit_test::framework::master_test_suite().argv;
     MPI_Init(&argc, &argv);
-	TreeTimerInit();
+	TT_Init();
 }
 
 // === Constructor ===
@@ -80,6 +80,6 @@ BOOST_AUTO_TEST_CASE(runBenchmark_test1)
 BOOST_AUTO_TEST_CASE(cleanup)
 {
     // Cleanup MPI Environment
-	TreeTimerFinalize();
+	TT_Finalize();
     MPI_Finalize();
 }

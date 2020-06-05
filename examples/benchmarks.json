@@ -27,20 +27,20 @@
 		{
 			"BenchmarkKernels" : {
 				"BenchmarkName" : "KernelTest",
-				"Repetitions"	: 1000
+				"Repetitions"	: 2000
 			}
 		},
 		{
 			"BenchmarkExchange" : {
 				"BenchmarkName" : "ExchangeTest",
-				"Repetitions"	: 10,
+				"Repetitions"	: 100000,
 				"ExchangePattern" : { "Method" : "NBTwoSided"}
 			}
 		},
 		{
 			"BenchmarkLinearSolver" : {
-				"BenchmarkName" : "LinearSolverTest",
-				"Repetitions"	: 10,
+				"BenchmarkName" : "BenchmarkPETSc",
+				"Repetitions"	: 40000,
 				"LinearSolver"  : {
 					"LinearSolverPETSc" : {
 						"Algorithm" : "CGAMG",
@@ -73,7 +73,7 @@
 			"BenchmarkParticleSystem" : {
 				"BenchmarkName" : "ParticleSystemSimpleTest",
 				"Repetitions"	: 1,	
-				"NTimesteps"	: 10,
+				"NTimesteps"	: 200,
 				"DtDistribution" : {"FixedDistribution" : {"value" : 0.13171}},
 				"ParticleSystemSimple" : {
 					"ParticleSourceSimple" : {

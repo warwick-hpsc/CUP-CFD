@@ -68,47 +68,47 @@ namespace cupcfd
 
 			// Start tracking parameters/time for this block
 			this->startBenchmarkBlock(this->benchmarkName);
-			TreeTimerLogParameterInt("Repetitions", this->repetitions);
+			TT_LogParameterInt("Repetitions", this->repetitions);
 
 			this->recordParameters();
 
 			for(I i = 0; i < this->repetitions; i++)
 			{
 				// Clear Matrix A
-				this->startBenchmarkBlock("ClearMatrixA");
+				TT_EnterLibraryCall("ClearMatrixA");
 				this->solverSystemPtr->clearMatrixA();
-				this->stopBenchmarkBlock("ClearMatrixA");
+				TT_Exit("ClearMatrixA");
 
 				// Clear Vector X
-				this->startBenchmarkBlock("ClearVectorX");
+				TT_EnterLibraryCall("ClearVectorX");
 				this->solverSystemPtr->clearVectorX();
-				this->stopBenchmarkBlock("ClearVectorX");
+				TT_Exit("ClearVectorX");
 
 				// Clear Vector B
-				this->startBenchmarkBlock("ClearVectorB");
+				TT_EnterLibraryCall("ClearVectorB");
 				this->solverSystemPtr->clearVectorB();
-				this->stopBenchmarkBlock("ClearVectorB");
+				TT_Exit("ClearVectorB");
 
 				// Set Vector B Values
-				this->startBenchmarkBlock("SetValuesVectorB");
+				TT_EnterLibraryCall("SetValuesVectorB");
 				this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				this->stopBenchmarkBlock("SetValuesVectorB");
+				TT_Exit("SetValuesVectorB");
 
 				// Set Vector X Values
-				this->startBenchmarkBlock("SetValuesVectorX");
+				TT_EnterLibraryCall("SetValuesVectorX");
 				this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				this->stopBenchmarkBlock("SetValuesVectorX");
+				TT_Exit("SetValuesVectorX");
 
 				// Set Matrix A Values/Build Matrix A (Structures already set inside setup)
 				// Matrix must have same structures as one used during setup
-				this->startBenchmarkBlock("SetValuesMatrixA");
+				TT_EnterLibraryCall("SetValuesMatrixA");
 				this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
-				this->stopBenchmarkBlock("SetValuesMatrixA");
+				TT_Exit("SetValuesMatrixA");
 
 				// Run Linear Solver
-				this->startBenchmarkBlock("Solve");
+				TT_EnterLibraryCall("Solve");
 				this->solverSystemPtr->solve();
-				this->stopBenchmarkBlock("Solve");
+				TT_Exit("Solve");
 			}
 
 			// Stop tracking parameters/time for this block

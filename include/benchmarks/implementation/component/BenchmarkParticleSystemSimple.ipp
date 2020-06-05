@@ -59,7 +59,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			this->startBenchmarkBlock(this->benchmarkName);
-			TreeTimerLogParameterInt("Repetitions", this->repetitions);
+			TT_LogParameterInt("Repetitions", this->repetitions);
 			this->recordParameters();
 
 			for(I i = 0; i < this->repetitions; i++)

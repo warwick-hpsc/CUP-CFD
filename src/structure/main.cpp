@@ -76,7 +76,7 @@ int main (int argc, char ** argv)
 	// Add ifdef for petsc?
 	PetscInitialize(&argc, &argv, NULL, NULL);
 
-	TreeTimerInit();
+	TT_Init();
 
 	{ // Wrap work in a block to enable precise invocation of object destructors
 
@@ -90,7 +90,7 @@ int main (int argc, char ** argv)
 	status = point.registerMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanPoint' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -100,7 +100,7 @@ int main (int argc, char ** argv)
 	status = vector.registerMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanVector' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -110,7 +110,7 @@ int main (int argc, char ** argv)
 	status = particle.registerMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'ParticleSimple' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -193,7 +193,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -212,7 +212,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -245,7 +245,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -264,7 +264,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -297,7 +297,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -316,7 +316,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -349,7 +349,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -368,7 +368,7 @@ int main (int argc, char ** argv)
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
-			TreeTimerFinalize();
+			TT_Finalize();
 			PetscFinalize();
 			MPI_Abort(MPI_COMM_WORLD, ierr);
 			return -1;
@@ -391,7 +391,7 @@ int main (int argc, char ** argv)
 	status = particle.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'ParticleSimple' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -399,7 +399,7 @@ int main (int argc, char ** argv)
 	status = point.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanPoint' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -407,7 +407,7 @@ int main (int argc, char ** argv)
 	status = vector.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanVector' class failed" << std::endl;
-		TreeTimerFinalize();
+		TT_Finalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
 		return -1;
@@ -416,7 +416,7 @@ int main (int argc, char ** argv)
 	// Add ifdef for petsc?
 	PetscFinalize();
 
-	TreeTimerFinalize();
+	TT_Finalize();
 	
 	if(comm.rank == 0) {
 		std::cout << "cup-cfd has completed" << std::endl;

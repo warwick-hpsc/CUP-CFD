@@ -275,7 +275,7 @@ The TreeTimer Library is a custom library intended to capture data about instrum
 
 ## Postprocessing
 
-The library itself must be initialised with TreeTimerInit() prior to any blocks, and finalized with TreeTimerFinalize() to write out its results. The results are currently written out to an SQLite Database for postprocessing, such as by the example python script provided at scripts/treetimer-postprocessing.
+The library itself must be initialised with TT_Init() prior to any blocks, and finalized with TT_Finalize() to write out its results. The results are currently written out to an SQLite Database for postprocessing, such as by the example python script provided at scripts/treetimer-postprocessing.
 
 The script can be used by running it with the path to a SQlite database file output by the instrumentation library as an argument. A small selection of post-processing methods can be selected by uncommenting the appropriate method.
 
@@ -301,17 +301,17 @@ determines what type of behaviour is associated with the timer block in the outp
 
 Local Parameters can be tracked using the following methods:
 
-TreeTimerLogParameterInt(<"name">, value) : Stores an integer value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
-TreeTimerLogParameterDouble(<"name">, value) : Stores an double value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
-TreeTimerLogParameterBool(<"name">, value) : Stores an bool value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
-TreeTimerLogParameterString(<"name">, value) : Stores an string associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
+TT_LogParameterInt(<"name">, value) : Stores an integer value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
+TT_LogParameterDouble(<"name">, value) : Stores an double value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
+TT_LogParameterBool(<"name">, value) : Stores an bool value associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
+TT_LogParameterString(<"name">, value) : Stores an string associated with the parameter "name" and the block the library is currently in (i.e. the last entered but not exited)
 
 Global equivalents can be stored in a similar fashion, but they are not associated with any particular block.
 
-TreeTimerLogGlobalParameterInt
-TreeTimerLogGlobalParameterDouble
-TreeTimerLogGlobalParameterBool
-TreeTimerLogGlobalParameterString
+TT_LogGlobalParameterInt
+TT_LogGlobalParameterDouble
+TT_LogGlobalParameterBool
+TT_LogGlobalParameterString
 
 To use these operations the file tt_interface_c.h should be included.
 Please see the src code in the benchmarks folder for examples of its usage.
