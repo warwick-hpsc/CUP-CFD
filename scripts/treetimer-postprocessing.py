@@ -39,8 +39,7 @@ import matplotlib.patches as mpatches
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--tt-results-dirpath', required=True, help="Dirpath to 'tt_results' folder")
-# parser.add_argument('-c', '--charts', help="Chart call stack runtime breakdown for each rank")
-parser.add_argument('-c', '--charts', choices=["polar", "horizontal", "vertical"])
+parser.add_argument('-c', '--charts', choices=["polar", "horizontal", "vertical"], help="Chart call stack runtime breakdown for each rank")
 args = parser.parse_args()
 
 
@@ -64,12 +63,12 @@ methodTypeToColour["MPISyncCall"] = "orange"
 methodTypeToColour["LibraryCall"] = "yellowgreen"
 
 def main():
-
 	tt_folder_dirpath = args.tt_results_dirpath
 	if not os.path.isdir(tt_folder_dirpath):
 		raise Exception("Folder does not exist: {0}".format(tt_folder_dirpath))
 
-	df_all = None
+	df_all_raw = None
+	df_all_aggregated = None
 
 	rank_ids = set()
 
@@ -82,22 +81,20 @@ def main():
 			if m:
 				rank = int(m.groups()[0])
 				rank_ids.add(rank)
-				df = load_db(os.path.join(tt_folder_dirpath, f))
+				df = read_db_timings(os.path.join(tt_folder_dirpath, f))
 				df["rank"] = rank
-				if df_all is None:
-					df_all = df
+				if df_all_raw is None:
+					df_all_raw = df
 				else:
-					df_all = df_all.append(df)
-
+					df_all_raw = df_all_raw.append(df)
 
 				db = sqlite3.connect(os.path.join(tt_folder_dirpath, f))
-				## Function 1
-				## Display Hotspots by Grouped Node Type Exclusive Time
-				## This will group all of the nodes of specific types - e.g. MPI call, compute etc.
-				# printSummaryExclusiveTimeByType(1, 1, db)
-				# rDict = getSummaryExclusiveTimeByType(1, 1, db)
-				# print(rDict)
-				# quit()
+				df_agg = aggregateTimesByType(1, 1, db)
+				df_agg["rank"] = rank
+				if df_all_aggregated is None:
+					df_all_aggregated = df_agg
+				else:
+					df_all_aggregated = df_all_aggregated.append(df_agg)
 
 				if not args.charts is None:
 					t = buildCallPathTree(1, 1, db)
@@ -115,69 +112,73 @@ def main():
 						if not found_group:
 							groupedCallTrees.append({rank:t})
 
-					# # Plot this call tree
-					# if args.charts == "polar":
-					# 	plotType = PlotType.Polar
-					# elif args.charts == "vertical":
-					# 	plotType = PlotType.Vertical
-					# else:
-					# 	plotType = PlotType.Horizontal
+					# Plot this call tree
+					if args.charts == "polar":
+						plotType = PlotType.Polar
+					elif args.charts == "vertical":
+						plotType = PlotType.Vertical
+					else:
+						plotType = PlotType.Horizontal
 
-					# fig_dims = (16,16)
-					# fig = plt.figure(figsize=fig_dims)
-					# plotCallPath_root(t, plotType)
+					fig_dims = (16,16)
+					fig = plt.figure(figsize=fig_dims)
+					plotCallPath_root(t, plotType)
 
-					# fig.suptitle("Call stack times of rank " + str(rank))
-					# chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
-					# if not os.path.isdir(chart_dirpath):
-					# 	os.makedirs(chart_dirpath)
-					# chart_filepath = os.path.join(chart_dirpath, "rank-{0}.png".format(rank))
-					# plt.savefig(chart_filepath)
-					# plt.close(fig)
+					fig.suptitle("Call stack times of rank " + str(rank))
+					chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
+					if not os.path.isdir(chart_dirpath):
+						os.makedirs(chart_dirpath)
+					chart_filepath = os.path.join(chart_dirpath, "rank-{0}.png".format(rank))
+					plt.savefig(chart_filepath)
+					plt.close(fig)
 
-	## Aggregate together call trees within each group, and create plots:
-	aggregatedCallTrees = []
-	for g in groupedCallTrees:
-		agg = None
-		for rank,t in g.items():
-			if agg is None:
-				agg = CallTreeNodeAggregated(t, rank)
+	if not args.charts is None:
+		## Aggregate together call trees within each group, and create plots:
+		aggregatedCallTrees = []
+		for g in groupedCallTrees:
+			agg = None
+			for rank,t in g.items():
+				if agg is None:
+					agg = CallTreeNodeAggregated(t, rank)
+				else:
+					agg.appendNodeElementwise(t, rank)
+			aggSum = agg.sumElementwise()
+
+			if args.charts == "polar":
+				plotType = PlotType.Polar
+			elif args.charts == "vertical":
+				plotType = PlotType.Vertical
 			else:
-				agg.appendNodeElementwise(t, rank)
-		aggSum = agg.sumElementwise()
+				plotType = PlotType.Horizontal
 
-		if args.charts == "polar":
-			plotType = PlotType.Polar
-		elif args.charts == "vertical":
-			plotType = PlotType.Vertical
-		else:
-			plotType = PlotType.Horizontal
+			fig_dims = (16,16)
+			fig = plt.figure(figsize=fig_dims)
+			plotCallPath_root(aggSum, plotType)
 
-		fig_dims = (16,16)
-		fig = plt.figure(figsize=fig_dims)
-		plotCallPath_root(aggSum, plotType)
-
-		fig.suptitle("Call stack times summed across ranks " + sorted(agg.ranks).__str__())
-		chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
-		if not os.path.isdir(chart_dirpath):
-			os.makedirs(chart_dirpath)
-		chart_filepath = os.path.join(chart_dirpath, "ranksSum.png".format(rank))
-		plt.savefig(chart_filepath)
-		plt.close(fig)
+			fig.suptitle("Call stack times summed across ranks " + sorted(agg.ranks).__str__())
+			chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
+			if not os.path.isdir(chart_dirpath):
+				os.makedirs(chart_dirpath)
+			chart_filepath = os.path.join(chart_dirpath, "ranksSum.png".format(rank))
+			plt.savefig(chart_filepath)
+			plt.close(fig)
 
 
+	df_all_raw["num_ranks"] = len(rank_ids)
+	df_all_raw.sort_values(["Name", "rank"], inplace=True)
+	df_filename = os.path.join(tt_folder_dirpath, "timings_raw.csv")
+	df_all_raw.to_csv(df_filename, index=False)
+	print("Collated raw data written to '{0}'".format(df_filename))
 
-	df_all["num_ranks"] = len(rank_ids)
 
-	# df_all.sort_values("ExclusiveAggregateTime(s)", inplace=True, ascending=False)
-	df_all.sort_values(["Name", "rank"], inplace=True)
+	df_all_aggregated.sort_values(["Method type", "rank"], inplace=True)
+	df_filename = os.path.join(tt_folder_dirpath, "timings_aggregated.csv")
+	df_all_aggregated.to_csv(df_filename, index=False)
+	print("Collated aggregated data written to '{0}'".format(df_filename))
 
-	# df_filename = "hotspotsAggregateExclusiveTime.csv"
-	df_filename = os.path.join(tt_folder_dirpath, "timings.csv")
-	df_all.to_csv(df_filename, index=False)
-	print("Data written to '{0}'".format(df_filename))
 
-def load_db(db_filepath):
+
+def read_db_timings(db_filepath):
 
 	# Open Database
 	db = sqlite3.connect(db_filepath)
@@ -660,12 +661,7 @@ def getAggregateCallPathNodeDetails(callPathID, runID, processID, db):
 		# No child nodes means exclusive time = inclusive time
 		rDict['AggTotalTimeE'] = rDict['AggTotalTimeI']
 	else:
-		childIDStr = str(childIDs[0])
-
-		# Build Comma separated list of ids
-		if(len(childIDs) > 1):
-			for id in childIDs:
-				childIDStr = childIDStr + "," + str(id)
+		childIDStr = ','.join([str(x) for x in childIDs])
 
 		# Get sum of inclusive times taken by child nodes
 		cmd = "SELECT SUM(AvgWallTime * Count) AS ChildTimeSum FROM AggregateTime " + \
@@ -679,78 +675,44 @@ def getAggregateCallPathNodeDetails(callPathID, runID, processID, db):
 		rDict['AggTotalTimeE'] = rDict['AggTotalTimeI'] - result['ChildTimeSum']
 		# Due to overhead, potentially possible for this to be slightly negative, so will correct here
 		if(rDict['AggTotalTimeE'] < 0.0):
+			print("Note: negative 'AggTotalTimeE' detected, zeroing")
 			rDict['AggTotalTimeE'] = 0.0
 
 	return rDict
 
-def printSummaryExclusiveTimeByType(runID, processID, db):
-	rDict = getSummaryExclusiveTimeByType(runID, processID, db)
-
-	print(rDict)
-	quit()
-
-	print("==============================================")
-	print("Summary: Exclusive Time in code blocks by type")
-	print("==============================================")
-	print("")
-
-	print("Root Walltime: " + str(rDict['Root']))
-
-	percentSum = 0.0
-
-	for key in rDict:
-		percent = (rDict[key]/rDict['Root'])*100
-		percentSum = percentSum + percent
-#		sys.stdout.write(str(rDict[key]))
-		print(str(key) + "," + str(rDict[key]) + "," + str(round(percent,2)))
-
-def getSummaryExclusiveTimeByType(runID, processID, db):
-
+def aggregateTimesByType(runID, processID, db):
 	# Get all callpath node IDs
 	db.row_factory = sqlite3.Row
 	cur = db.cursor()
-
 	cmd = "SELECT DISTINCT CallPathID FROM AggregateTime NATURAL JOIN CallPathData WHERE RunID = " + str(runID) + ";"
-
 	cur.execute(cmd)
 	result = cur.fetchall()
 
 	# For each callpath node, get the aggregate details
-	nodeProp = []
-	for row in result:
-		nodeProp.append(getAggregateCallPathNodeDetails(row['CallPathID'], runID, processID, db))
-
-	# Sort the list by the type name of each record
-	sortedRecords = sorted(nodeProp, key=lambda k: k['TypeName'])
+	records = [getAggregateCallPathNodeDetails(row['CallPathID'], runID, processID, db) for row in result]
 
 	# Get the time for the root node
 	rootID = getRootCallPathID(db)
 	rootProp = getAggregateCallPathNodeDetails(rootID, runID, processID, db)
+	walltime = rootProp['AggTotalTimeI']
 
-	rDict = {}
-	rDict['Root'] = rootProp['AggTotalTimeI']
-
-	# Sum the exclusive times of nodes grouped by type
-	group = sortedRecords[0]['TypeName']
-	groupTime = 0.0
-	percentsum = 0.0
-
-	for record in sortedRecords:
-		if(record['TypeName'] == group):
-			groupTime = groupTime + record['AggTotalTimeE']
+	# Sum times across method types
+	typeExclusiveTimes = {}
+	for r in records:
+		t = r['TypeName']
+		if not t in typeExclusiveTimes.keys():
+			typeExclusiveTimes[t] = r['AggTotalTimeE']
 		else:
-			percent = (groupTime/rootProp['AggTotalTimeI'])*100
-			percentsum = percentsum + percent
-			rDict[group] = groupTime
-			group = record['TypeName']
-			groupTime = record['AggTotalTimeE']
+			typeExclusiveTimes[t] += r['AggTotalTimeE']
 
-	# Last Group
-	percent = (groupTime/rootProp['AggTotalTimeI'])*100
-	percentsum = percentsum + percent
-	rDict[group] = groupTime
-
-	return rDict
+	# Pack into a Pandas dataframe
+	methodTypes = list(typeExclusiveTimes.keys())
+	df_init = {'Method type':methodTypes, 
+			   'Exclusive time':[typeExclusiveTimes[t] for t in methodTypes],
+			   'Exclusive time %':[typeExclusiveTimes[t]/walltime for t in methodTypes]}
+	df = pd.DataFrame(data=df_init)
+	df.sort_values("Exclusive time", ascending=False, inplace=True)
+	return(df)
 
 if __name__ == "__main__":
 	main()
