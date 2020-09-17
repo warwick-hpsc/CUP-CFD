@@ -68,47 +68,47 @@ namespace cupcfd
 
 			// Start tracking parameters/time for this block
 			this->startBenchmarkBlock(this->benchmarkName);
-			TT_LogParameterInt("Repetitions", this->repetitions);
+			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 
 			this->recordParameters();
 
 			for(I i = 0; i < this->repetitions; i++)
 			{
 				// Clear Matrix A
-				TT_EnterLibraryCall("ClearMatrixA");
+				TreeTimerEnterLibraryCall("ClearMatrixA");
 				this->solverSystemPtr->clearMatrixA();
-				TT_Exit("ClearMatrixA");
+				TreeTimerExit("ClearMatrixA");
 
 				// Clear Vector X
-				TT_EnterLibraryCall("ClearVectorX");
+				TreeTimerEnterLibraryCall("ClearVectorX");
 				this->solverSystemPtr->clearVectorX();
-				TT_Exit("ClearVectorX");
+				TreeTimerExit("ClearVectorX");
 
 				// Clear Vector B
-				TT_EnterLibraryCall("ClearVectorB");
+				TreeTimerEnterLibraryCall("ClearVectorB");
 				this->solverSystemPtr->clearVectorB();
-				TT_Exit("ClearVectorB");
+				TreeTimerExit("ClearVectorB");
 
 				// Set Vector B Values
-				TT_EnterLibraryCall("SetValuesVectorB");
+				TreeTimerEnterLibraryCall("SetValuesVectorB");
 				this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				TT_Exit("SetValuesVectorB");
+				TreeTimerExit("SetValuesVectorB");
 
 				// Set Vector X Values
-				TT_EnterLibraryCall("SetValuesVectorX");
+				TreeTimerEnterLibraryCall("SetValuesVectorX");
 				this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				TT_Exit("SetValuesVectorX");
+				TreeTimerExit("SetValuesVectorX");
 
 				// Set Matrix A Values/Build Matrix A (Structures already set inside setup)
 				// Matrix must have same structures as one used during setup
-				TT_EnterLibraryCall("SetValuesMatrixA");
+				TreeTimerEnterLibraryCall("SetValuesMatrixA");
 				this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
-				TT_Exit("SetValuesMatrixA");
+				TreeTimerExit("SetValuesMatrixA");
 
 				// Run Linear Solver
-				TT_EnterLibraryCall("Solve");
+				TreeTimerEnterLibraryCall("Solve");
 				this->solverSystemPtr->solve();
-				TT_Exit("Solve");
+				TreeTimerExit("Solve");
 			}
 
 			// Stop tracking parameters/time for this block

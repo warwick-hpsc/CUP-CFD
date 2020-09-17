@@ -61,7 +61,7 @@ namespace cupcfd
 			this->startBenchmarkBlock(this->benchmarkName);
 
 			// Track Number of Repetitions
-			TT_LogParameterInt("Repetitions", this->repetitions);
+			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 
 			for(int i = 0; i < this->repetitions; i++)
 			{
@@ -116,7 +116,7 @@ namespace cupcfd
 			// Data needed for the kernel
 			I nGradient = 1;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			// Create Random Phi Data for Cells
 			T * phiCell = (T *) malloc(sizeof(T) * nCells);
@@ -136,18 +136,18 @@ namespace cupcfd
 					(cupcfd::geometry::euclidean::EuclideanVector<T,3> *)
 					malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<T,3>) * nCells);
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("GradPhiGaussDolfyn");
+			TreeTimerEnterLoop("GradPhiGaussDolfyn");
 
 			// Track some parameters
 
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -158,7 +158,7 @@ namespace cupcfd
 													 dPhidxoCell, nCells);
 
 			// Stop Timer
-			TT_Exit("GradPhiGaussDolfyn");
+			TreeTimerExit("GradPhiGaussDolfyn");
 
 			free(phiCell);
 			free(phiBoundaries);
@@ -178,7 +178,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx =
 					(cupcfd::geometry::euclidean::EuclideanVector<T,3> *) malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<T,3>) * nCells);
@@ -240,17 +240,17 @@ namespace cupcfd
 			T * tCell = (T *) malloc(sizeof(T) * nCells);
 			T * tBoundary = (T *) malloc(sizeof(T) * nBnds);
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfyn");
+			TreeTimerEnterLoop("FluxMassDolfyn");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -281,7 +281,7 @@ namespace cupcfd
 					tBoundary, nBnds);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfyn");
+			TreeTimerExit("FluxMassDolfyn");
 
 			free(dudx);
 			free(dvdx);
@@ -317,21 +317,21 @@ namespace cupcfd
 			 T flowin;
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynBoundary1");
+			TreeTimerEnterLoop("FluxMassDolfynBoundary1");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxMassDolfynBoundaryLoop1(*(this->meshPtr), massFlux, nFaces, &flowin);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynBoundary1");
+			TreeTimerExit("FluxMassDolfynBoundary1");
 
 			free(massFlux);
 
@@ -357,21 +357,21 @@ namespace cupcfd
 			T flowout;
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynBoundary2");
+			TreeTimerEnterLoop("FluxMassDolfynBoundary2");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxMassDolfynBoundaryLoop2(*meshPtr, massFlux, nFaces, flowRegion, nRegions, &flowout);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynBoundary2");
+			TreeTimerExit("FluxMassDolfynBoundary2");
 
 			free(massFlux);
 			free(flowRegion);
@@ -393,21 +393,21 @@ namespace cupcfd
 			T ratearea;
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynBoundary3");
+			TreeTimerEnterLoop("FluxMassDolfynBoundary3");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxMassDolfynBoundaryLoop3(*meshPtr, flowin, &ratearea);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynBoundary3");
+			TreeTimerExit("FluxMassDolfynBoundary3");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -422,7 +422,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * massFlux = (T *) malloc(sizeof(T) * nFaces);
 			cupcfd::utility::kernels::randomUniform(massFlux, nFaces, (T) 1E-6 , (T) 1E-2);
@@ -442,17 +442,17 @@ namespace cupcfd
 			T ratearea = 1.0;
 			T flowout;
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynBoundary4");
+			TreeTimerEnterLoop("FluxMassDolfynBoundary4");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -465,7 +465,7 @@ namespace cupcfd
 																			 &flowout);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynBoundary4");
+			TreeTimerExit("FluxMassDolfynBoundary4");
 
 			free(massFlux);
 			free(uBoundary);
@@ -486,7 +486,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * massFlux = (T *) malloc(sizeof(T) * nFaces);
 			cupcfd::utility::kernels::randomUniform(massFlux, nFaces, (T) 1E-6 , (T) 1E-2);
@@ -511,17 +511,17 @@ namespace cupcfd
 			T * flowFact = (T *) malloc(sizeof(T) * nRegions);
 			T flowout2;
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynBoundary5");
+			TreeTimerEnterLoop("FluxMassDolfynBoundary5");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -537,7 +537,7 @@ namespace cupcfd
 																			 &flowout2);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynBoundary5");
+			TreeTimerExit("FluxMassDolfynBoundary5");
 
 			free(massFlux);
 			free(su);
@@ -558,7 +558,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * flowFact = (T *) malloc(sizeof(T) * nRegions);
 			cupcfd::utility::kernels::randomUniform(flowFact, nRegions, (T) 1E-6 , (T) 1E-2);
@@ -568,17 +568,17 @@ namespace cupcfd
 
 			T flowIn = 0.0;
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxMassDolfynRegion");
+			TreeTimerEnterLoop("FluxMassDolfynRegion");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -588,7 +588,7 @@ namespace cupcfd
 														  flowIn);
 
 			// Stop Timer
-			TT_Exit("FluxMassDolfynRegion");
+			TreeTimerExit("FluxMassDolfynRegion");
 
 			free(flowFact);
 			free(flowRegion);
@@ -606,7 +606,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * PhiCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(PhiCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -664,17 +664,17 @@ namespace cupcfd
 			T Large = 1E+18;
 			T TMCmu = 1.8;
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxScalarDolfyn");
+			TreeTimerEnterLoop("FluxScalarDolfyn");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -698,7 +698,7 @@ namespace cupcfd
 																	Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
 
 			// Stop Timer
-			TT_Exit("FluxScalarDolfyn");
+			TreeTimerExit("FluxScalarDolfyn");
 
 			free(PhiCell);
 			free(VisEff);
@@ -729,7 +729,7 @@ namespace cupcfd
 			T small = 1E-18;
 			T large = 1E+18;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * uCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(uCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -788,17 +788,17 @@ namespace cupcfd
 			// [nfaces][2]
 			T * rFace = (T *) malloc(sizeof(T) * nFaces * 2);
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("FluxUVWDolfynFace1");
+			TreeTimerEnterLoop("FluxUVWDolfynFace1");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -824,7 +824,7 @@ namespace cupcfd
 															aw, nCells);
 
 			// Stop Timer
-			TT_Exit("FluxUVWDolfynFace1");
+			TreeTimerExit("FluxUVWDolfynFace1");
 
 			free(uCell);
 			free(vCell);
@@ -860,21 +860,21 @@ namespace cupcfd
 			I nRegions = meshPtr->properties.lRegions;
 
 			// Start Timer
-			TT_EnterLoop("FluxUVWDolfynRegion1");
+			TreeTimerEnterLoop("FluxUVWDolfynRegion1");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxUVWDolfynRegionLoop1(*(meshPtr));
 
 			// Stop Timer
-			TT_Exit("FluxUVWDolfynRegion1");
+			TreeTimerExit("FluxUVWDolfynRegion1");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -890,21 +890,21 @@ namespace cupcfd
 			I nRegions = meshPtr->properties.lRegions;
 
 			// Start Timer
-			TT_EnterLoop("FluxUVWDolfynBnds1");
+			TreeTimerEnterLoop("FluxUVWDolfynBnds1");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxUVWDolfynBndsLoop1(*(meshPtr));
 
 			// Stop Timer
-			TT_Exit("FluxUVWDolfynBnds1");
+			TreeTimerExit("FluxUVWDolfynBnds1");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -925,7 +925,7 @@ namespace cupcfd
 			T visURF = 0.232;
 			T visLam = 0.00547;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * TE = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(TE, nCells, (T) 1E-6 , (T) 1E-2);
@@ -939,17 +939,17 @@ namespace cupcfd
 			T * visEff = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(visEff, nCells, (T) 1E-6 , (T) 1E-2);
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("calcViscDolfynCell1");
+			TreeTimerEnterLoop("calcViscDolfynCell1");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -960,7 +960,7 @@ namespace cupcfd
 																						visEff, nCells);
 
 			// Stop Timer
-			TT_Exit("calcViscDolfynCell1");
+			TreeTimerExit("calcViscDolfynCell1");
 
 			free(TE);
 			free(ED);
@@ -983,21 +983,21 @@ namespace cupcfd
 			T kappa = 1.1;
 
 			// Start Timer
-			TT_EnterLoop("calViscDolfynRegion");
+			TreeTimerEnterLoop("calViscDolfynRegion");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::calculateViscosityDolfynRegionLoop(kappa, *(this->meshPtr));
 
 			// Stop Timer
-			TT_Exit("calViscDolfynRegion");
+			TreeTimerExit("calViscDolfynRegion");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -1024,14 +1024,14 @@ namespace cupcfd
 			T * visEffBoundary = (T *) malloc(sizeof(T) * nBnds);
 
 			// Start Timer
-			TT_EnterLoop("calcViscDolfynBoundary");
+			TreeTimerEnterLoop("calcViscDolfynBoundary");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -1043,7 +1043,7 @@ namespace cupcfd
 						visEffBoundary, nBnds);
 
 			// Stop Timer
-			TT_Exit("calcViscDolfynBoundary");
+			TreeTimerExit("calcViscDolfynBoundary");
 
 			free(TE);
 			free(den);
@@ -1063,7 +1063,7 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TT_EnterLoop("BenchmarkSetup");
+			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T visLam = 1.1;
 			T * visEffCell = (T *) malloc(sizeof(T) * nCells);
@@ -1072,17 +1072,17 @@ namespace cupcfd
 			T * visEffBoundary = (T *) malloc(sizeof(T) * nBnds);
 			cupcfd::utility::kernels::randomUniform(visEffBoundary, nBnds, (T) 1E-6 , (T) 1E-2);
 
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TT_EnterLoop("calViscDolfynCell2");
+			TreeTimerEnterLoop("calViscDolfynCell2");
 
 			// Track some parameters
-			TT_LogParameterInt("LocalCells", nCells);
-			TT_LogParameterInt("LocalOwnedCells", nOwnedCells);
-			TT_LogParameterInt("LocalGhostCells", nGhostCells);
-			TT_LogParameterInt("LocalBounds", nBnds);
-			TT_LogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalCells", nCells);
+			TreeTimerLogParameterInt("LocalOwnedCells", nOwnedCells);
+			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
+			TreeTimerLogParameterInt("LocalBounds", nBnds);
+			TreeTimerLogParameterInt("LocalFaces", nFaces);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -1092,7 +1092,7 @@ namespace cupcfd
 
 
 			// Stop Timer
-			TT_Exit("calViscDolfynCell2");
+			TreeTimerExit("calViscDolfynCell2");
 
 			free(visEffCell);
 			free(visEffBoundary);

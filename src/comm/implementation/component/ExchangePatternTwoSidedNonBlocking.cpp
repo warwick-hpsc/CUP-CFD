@@ -138,7 +138,7 @@ namespace cupcfd
 			// The data is already grouped by process and in rank order in the pattern CSR data.
 			// We can just translate the exchange IDs to elements from the data array
 
-			TT_EnterCompute("packSendBuffer");
+			TreeTimerEnterCompute("packSendBuffer");
 			for(int i = 0; i < this->nSAdjncy; i++)
 			{
 				int exchangeID = this->sAdjncy[i];
@@ -146,7 +146,7 @@ namespace cupcfd
 
 				this->sendBuffer[i] = data[localID];
 			}
-			TT_Exit("packSendBuffer");
+			TreeTimerExit("packSendBuffer");
 		}
 
 		template <class T>
@@ -156,7 +156,7 @@ namespace cupcfd
 			// It should already be ordered in the recv buffer as per the CSR for the pattern,
 			// so we can transfer across by converting the indexes
 
-			TT_EnterCompute("unpackRecvBuffer");
+			TreeTimerEnterCompute("unpackRecvBuffer");
 			for(int i = 0; i < this->nRecvBuffer; i++)
 			{
 				int exchangeID = this->rAdjncy[i];
@@ -164,7 +164,7 @@ namespace cupcfd
 
 				data[localID] = this->recvBuffer[i];
 			}
-			TT_Exit("unpackRecvBuffer");
+			TreeTimerExit("unpackRecvBuffer");
 		}
 
 		template <class T>
@@ -174,7 +174,7 @@ namespace cupcfd
 			this->packSendBuffer(sourceData, nData);
 
 			// Start the exchange
-			TT_EnterMPICommCall("ExchangeVMPIIsendIrecv");
+			TreeTimerEnterMPICommCall("ExchangeVMPIIsendIrecv");
 			cupcfd::comm::mpi::ExchangeVMPIIsendIrecv(this->sendBuffer, this->nSendBuffer,
 														   this->sendCounts, this->nSendCounts,
 														   this->recvBuffer, this->nRecvBuffer,
@@ -183,16 +183,16 @@ namespace cupcfd
 														   this->rProc, this->nRProc,
 														   this->comm.comm,
 														   this->requests, this->nRequests);
-			TT_Exit("ExchangeVMPIIsendIrecv");
+			TreeTimerExit("ExchangeVMPIIsendIrecv");
 		}
 
 		template <class T>
 		void ExchangePatternTwoSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData)
 		{
-			TT_EnterMPISyncCall("WaitallMPI");
+			TreeTimerEnterMPISyncCall("WaitallMPI");
 			// Complete any remaining data exchange
 			cupcfd::comm::mpi::WaitallMPI(this->requests, this->nRequests);
-			TT_Exit("WaitallMPI");
+			TreeTimerExit("WaitallMPI");
 
 			// Unpack the buffer
 			this->unpackRecvBuffer(sinkData, nData);

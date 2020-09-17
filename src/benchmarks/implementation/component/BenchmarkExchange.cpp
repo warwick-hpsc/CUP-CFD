@@ -55,9 +55,9 @@ namespace cupcfd
 		void BenchmarkExchange<I,T>::runBenchmark()
 		{
 			this->startBenchmarkBlock(this->benchmarkName);
-			TT_LogParameterInt("Repetitions", this->repetitions);
+			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 
-			TT_EnterBlock("BenchmarkSetup");
+			TreeTimerEnterBlock("BenchmarkSetup");
 
 			// Expected size of data array is determined at init time (this is array of data both local and to be sent)
 			I dataSize = patternPtr->localToExchange.size();
@@ -71,7 +71,7 @@ namespace cupcfd
 				// The actual contents of the data array do not matter.
 				data[i] = T(i)/T(23);
 			}
-			TT_Exit("BenchmarkSetup");
+			TreeTimerExit("BenchmarkSetup");
 
 			for(I i = 0; i < this->repetitions; i++)
 			{

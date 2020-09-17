@@ -220,12 +220,12 @@ namespace cupcfd
 			MPI_Request * requests;
 			I nRequests;
 			
-			TT_EnterMPICommCall("ExchangeMPIIsendIrecv");
+			TreeTimerEnterMPICommCall("ExchangeMPIIsendIrecv");
 			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours,recvBuffer, nNeighbours, 
 								  neighbourRanks, nNeighbours,
 								  1, this->mesh->cellConnGraph->comm->comm,
 								  &requests, &nRequests);
-			TT_Exit("ExchangeMPIIsendIrecv");
+			TreeTimerExit("ExchangeMPIIsendIrecv");
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: ExchangeMPIIsendIrecv() failed" << std::endl;
 				return status;
@@ -235,9 +235,9 @@ namespace cupcfd
 			// Presumably a missing header guard somewhere, but I can't seem to find it for now....
 			// Do it directly instead
 			MPI_Status * statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
-			TT_EnterMPISyncCall("MPI_Waitall");
+			TreeTimerEnterMPISyncCall("MPI_Waitall");
 			MPI_Waitall(nRequests, requests, statuses);
-			TT_Exit("MPI_Waitall");
+			TreeTimerExit("MPI_Waitall");
 			free(statuses);
 			free(requests);
 			
@@ -270,27 +270,27 @@ namespace cupcfd
 				}
 			}
 			
-			TT_EnterMPICommCall("ExchangeVMPIIsendIrecv");
+			TreeTimerEnterMPICommCall("ExchangeVMPIIsendIrecv");
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
 								   particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   neighbourRanks, nNeighbours,
 								   this->mesh->cellConnGraph->comm->comm,
 								   &requests, &nRequests);
-			TT_Exit("ExchangeVMPIIsendIrecv");
+			TreeTimerExit("ExchangeVMPIIsendIrecv");
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: ExchangeVMPIIsendIrecv() failed" << std::endl;
 				return status;
 			}
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
-			TT_EnterMPISyncCall("MPI_Waitall");
+			TreeTimerEnterMPISyncCall("MPI_Waitall");
 			MPI_Waitall(nRequests, requests, statuses);
-			TT_Exit("MPI_Waitall");
+			TreeTimerExit("MPI_Waitall");
 			free(statuses);				   
 							   
 			// Add any particles we received to the system
-			TT_EnterLoop("redetectEntryFaceID");
+			TreeTimerEnterLoop("redetectEntryFaceID");
 			for(I i = 0; i < totalRecvCount; i++)
 			{
 				status = particleRecvBuffer[i].redetectEntryFaceID(*(this->mesh));
@@ -305,7 +305,7 @@ namespace cupcfd
 					return status;
 				}
 			}
-			TT_Exit("redetectEntryFaceID");
+			TreeTimerExit("redetectEntryFaceID");
 			
 			// Tidyup Stage
 			// Free temporary buffers
@@ -348,6 +348,8 @@ namespace cupcfd
 		
 			cupcfd::error::eCodes status;
 
+			TreeTimerEnterCompute("initUpdate");
+
 			// (1a) Ensure that the travelTime for all existing active particles is set to the time period dt
 			status = this->setActiveParticlesTravelTime(dt);
 			if (status != cupcfd::error::E_SUCCESS) {
@@ -370,11 +372,15 @@ namespace cupcfd
 				return status;
 			}
 
+			TreeTimerExit("initUpdate");
+
 			// Keep looping as long as there exists a particle anywhere in the system that is still going (since we could
 			// receive one on any iteration, even if we don't on this one)
 			I nGlobalTravelParticles = 0;
 			I tmp = this->getNTravelParticles();
+			TreeTimerEnterMPICollectiveCall("allReduceAdd");
 			status = cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
+			TreeTimerExit("allReduceAdd");
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: allReduceAdd() failed" << std::endl;
 				return status;
@@ -416,13 +422,13 @@ namespace cupcfd
 				}
 
 				// Advance particles by at most one cell
-				TT_EnterLoop("updateSystemAtomic");
+				TreeTimerEnterLoop("updateSystemAtomic");
 				status = this->updateSystemAtomic(verbose);
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: updateSystemAtomic() failed" << std::endl;
 					return status;
 				}
-				TT_Exit("updateSystemAtomic");
+				TreeTimerExit("updateSystemAtomic");
 								
 				// No further changes should need to be made to the data stored inside a particle, and they should have ranks
 				// representing the process they should be located on. 
@@ -442,13 +448,13 @@ namespace cupcfd
 				
 				// We can now perform an exchange to identify how many (if any)
 				// particles will go off-rank in this atomic update, and transfer them ready for another round of atomic updates.
-				TT_EnterMethod("exchangeParticles");
+				TreeTimerEnterMethod("exchangeParticles");
 				status = this->exchangeParticles(verbose);
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: exchangeParticles() failed" << std::endl;
 					return status;
 				}
-				TT_Exit("exchangeParticles");
+				TreeTimerExit("exchangeParticles");
 				
 				// Cleanup any sent particles that should now be marked as inactive after being sent to another rank
 				status = this->removeInactiveParticles();
