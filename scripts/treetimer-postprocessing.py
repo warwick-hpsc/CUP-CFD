@@ -50,6 +50,8 @@ class PlotType(enum.Enum):
 	Vertical = 3
 plotTypeToString = {PlotType.Polar:"Polar", PlotType.Horizontal:"Horizontal", PlotType.Vertical:"Vertical"}
 
+# fig_dims = (16,16)
+fig_dims = (8,8)
 
 
 methodTypeToColour = {}
@@ -60,6 +62,7 @@ methodTypeToColour["Loop"] = "fuchsia"
 methodTypeToColour["Compute"] = "fuchsia"
 methodTypeToColour["MPICommCall"] = "aqua"
 methodTypeToColour["MPISyncCall"] = "orange"
+methodTypeToColour["MPICollectiveCall"] = "red"
 methodTypeToColour["LibraryCall"] = "yellowgreen"
 
 def main():
@@ -120,7 +123,6 @@ def main():
 					else:
 						plotType = PlotType.Horizontal
 
-					fig_dims = (16,16)
 					fig = plt.figure(figsize=fig_dims)
 					plotCallPath_root(t, plotType)
 
@@ -151,7 +153,6 @@ def main():
 			else:
 				plotType = PlotType.Horizontal
 
-			fig_dims = (16,16)
 			fig = plt.figure(figsize=fig_dims)
 			plotCallPath_root(aggSum, plotType)
 
@@ -480,8 +481,6 @@ def plotCallPath_root(tree, plotType):
 	if plotType == PlotType.Polar:
 		root_total = np.pi * 2
 	else:
-		# label, methodType, value, subnodes = nodes[0]
-		# root_total = value
 		root_total = tree.time
 
 	if plotType == PlotType.Polar:
@@ -492,12 +491,6 @@ def plotCallPath_root(tree, plotType):
 	plotCallPath(tree, root_total, root_total, 0, 0, ax, plotType)
 
 def plotCallPath(tree, root_total, node_total, offset, level, ax, plotType):
-	# if level == 0 and len(nodes) > 1:
-	# 	pprint(nodes)
-	# 	raise Exception("There must only be one root node, not {0}".format(len(nodes)))
-
-	# if level == 0 and len(nodes) == 1:
-	# 	label, methodType, value, subnodes = nodes[0]
 	if level == 0:
 		if not isinstance(tree, CallTreeNode):
 			raise Exception("'tree' parameter at root must be a CallTreeNode")
@@ -525,7 +518,6 @@ def plotCallPath(tree, root_total, node_total, offset, level, ax, plotType):
 			if not isinstance(n, CallTreeNode):
 				raise Exception("non-root 'tree' must be a list of CallTreeNode")
 
-		# if do_plt_polar:
 		if plotType == PlotType.Polar:
 			d = root_total / node_total
 		else:
@@ -534,7 +526,6 @@ def plotCallPath(tree, root_total, node_total, offset, level, ax, plotType):
 		labels = []
 		colours = []
 		subnode_offset = offset
-		# for label, methodType, value, subnodes in nodes:
 		for t in tree:
 			label = t.name
 			methodType = t.typeName
