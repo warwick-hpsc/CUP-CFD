@@ -372,95 +372,109 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->pos, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->pos) - (char*)this );
 			idx++;
 
 			// In-flight position
 			status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->inflightPos) - (char*)this );
 			idx++;
 			
 			// Velocity
 			status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->velocity) - (char*)this );
 			idx++;
 
 			// Acceleration
 			status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->acceleration) - (char*)this );
 			idx++;
 
 			// Jerk
 			status = cupcfd::comm::mpi::getMPIType(this->jerk, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);	
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->jerk) - (char*)this );
 			idx++;
 			
 			// Particle ID
 			status = cupcfd::comm::mpi::getMPIType(this->particleID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, particleID);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, particleID);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->particleID) - (char*)this );
 			idx++;
 
 			// Cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->cellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->cellGlobalID) - (char*)this );
 			idx++;
 
 			// Last cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellGlobalID);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellGlobalID);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->lastCellGlobalID) - (char*)this );
 			idx++;
 			status = cupcfd::comm::mpi::getMPIType(this->lastLastCellGlobalID, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastLastCellGlobalID);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastLastCellGlobalID);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->lastLastCellGlobalID) - (char*)this );
 			idx++;
 
 			// Rank
 			status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->rank) - (char*)this );
 			idx++;
 
 			status = cupcfd::comm::mpi::getMPIType(this->lastRank, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastRank);
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastRank);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->lastRank) - (char*)this );
 			idx++;
 			
 			// Travel dt
 			status = cupcfd::comm::mpi::getMPIType(this->travelDt, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);	
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->travelDt) - (char*)this );
 			idx++;
 
 			// Decay level
 			status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel);	
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel;
+			displ[idx] = (MPI_Aint) ( (char*)&(this->decayLevel) - (char*)this );
 			idx++;
 
 			// Decay rate
 			status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
-			displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);	
+			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);
+			displ[idx] = (MPI_Aint) ( (char*)&(this->decayRate) - (char*)this );
 			idx++;
 			
 			// Block 5: Booleans (Padding)

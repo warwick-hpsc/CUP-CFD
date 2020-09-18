@@ -42,17 +42,17 @@ namespace cupcfd
 
 		}
 
-		template <class E, class P, class I, class T>
-		ParticleEmitterConfigSource<E,P,I,T> * ParticleEmitterConfigSource<E,P,I,T>::clone()
-		{
+		// template <class E, class P, class I, class T>
+		// ParticleEmitterConfigSource<E,P,I,T> * ParticleEmitterConfigSource<E,P,I,T>::clone()
+		// {
 
-		}
+		// }
 
-		template <class E, class P, class I, class T>
-		cupcfd::error::eCodes ParticleEmitterConfigSource<E,P,I,T>::buildParticleEmitterConfig(ParticleEmitterConfig<E,P,I,T> ** config)
-		{
+		// template <class E, class P, class I, class T>
+		// cupcfd::error::eCodes ParticleEmitterConfigSource<E,P,I,T>::buildParticleEmitterConfig(ParticleEmitterConfig<E,P,I,T> ** config)
+		// {
 
-		}
+		// }
 	}
 }
 

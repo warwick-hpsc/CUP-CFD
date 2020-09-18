@@ -189,7 +189,8 @@ namespace cupcfd
 				cupcfd::comm::mpi::getMPIType(this->cmp[0], &componentType);
 				structTypes[0] = componentType;
 
-				displ[0] = (MPI_Aint) offsetof(class EuclideanVector, cmp);
+				// displ[0] = (MPI_Aint) offsetof(class EuclideanVector, cmp);
+				displ[0] = (MPI_Aint) ( (char*)&(this->cmp) - (char*)this );
 
 				MPI_Datatype vecType;
 				MPI_Datatype vecTypeResized;

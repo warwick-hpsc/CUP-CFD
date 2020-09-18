@@ -76,7 +76,7 @@ namespace cupcfd
 
 			// Use MPI communicator library
 			// ToDo: Displacements are computed in the MPI wrapper function, should it be moved up a level to here?
-			cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, recvBuffer, recvCounts, mpComm.comm);
+			return cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, recvBuffer, recvCounts, mpComm.comm);
 		}
 
 		template <class T>

@@ -151,6 +151,10 @@ namespace cupcfd
 				{
 					return sourceConfig;
 				}
+
+				// If here, not good.
+				MPI_Abort(MPI_COMM_WORLD, status);
+				throw std::runtime_error("MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig() hit edge case");
 			}
 
 			template <class I, class T, class L>

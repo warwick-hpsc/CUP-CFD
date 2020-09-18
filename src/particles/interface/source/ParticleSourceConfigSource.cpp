@@ -41,19 +41,19 @@ namespace cupcfd
 			// Nothing to do here currently
 		}
 
-		template <class P, class I, class T>
-		ParticleSourceConfigSource<P,I,T> * ParticleSourceConfigSource<P,I,T>::clone()
-		{
-			// Pure Virtual Method
-		}
+		// template <class P, class I, class T>
+		// ParticleSourceConfigSource<P,I,T> * ParticleSourceConfigSource<P,I,T>::clone()
+		// {
+		// 	// Pure Virtual Method
+		// }
 
-		template <class P, class I, class T>
-		cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config)
-		// cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config, int sourceId)
-		{
-			// Pure Virtual Method
-			// Nothing to do here currently
-		}
+		// template <class P, class I, class T>
+		// cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config)
+		// // cupcfd::error::eCodes ParticleSourceConfigSource<P,I,T>::buildParticleSourceConfig(ParticleSourceConfig<P,I,T> ** config, int sourceId)
+		// {
+		// 	// Pure Virtual Method
+		// 	// Nothing to do here currently
+		// }
 	}
 }
 

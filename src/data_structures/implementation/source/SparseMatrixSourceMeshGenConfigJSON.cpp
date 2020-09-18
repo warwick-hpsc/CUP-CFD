@@ -66,6 +66,7 @@ namespace cupcfd
 		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
 		{
 			// ToDo
+			return cupcfd::error::E_ERROR;
 		}
 	}
 }

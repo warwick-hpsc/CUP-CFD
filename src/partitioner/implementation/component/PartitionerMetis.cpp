@@ -335,8 +335,13 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerMetis<I,T>::reset()
 		{
+			cupcfd::error::eCodes status;
+
 			// Base class reset
-			this->PartitionerInterface<I,T>::reset();
+			status = this->PartitionerInterface<I,T>::reset();
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// Reset Members
 			this->nCon = 0;
@@ -345,7 +350,7 @@ namespace cupcfd
 			this->numflag = 0;
 
 			// Reset Work Arrays
-			this->resetWorkArrays();
+			return this->resetWorkArrays();
 		}
 
 	}

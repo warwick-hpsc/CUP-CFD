@@ -41,18 +41,18 @@ namespace cupcfd
 
 		}
 
-		template <class S, class E, class P, class M, class I, class T, class L>
-		ParticleSystemConfig<S,E,P,M,I,T,L> * ParticleSystemConfig<S,E,P,M,I,T,L>::clone()
-		{
+		// template <class S, class E, class P, class M, class I, class T, class L>
+		// ParticleSystemConfig<S,E,P,M,I,T,L> * ParticleSystemConfig<S,E,P,M,I,T,L>::clone()
+		// {
 
-		}
+		// }
 
-		template <class S, class E, class P, class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemConfig<S,E,P,M,I,T,L>::buildParticleSystem(ParticleSystem<S,E,P,M,I,T,L> ** system,
-																							std::shared_ptr<M> meshPtr)
-		{
+		// template <class S, class E, class P, class M, class I, class T, class L>
+		// cupcfd::error::eCodes ParticleSystemConfig<S,E,P,M,I,T,L>::buildParticleSystem(ParticleSystem<S,E,P,M,I,T,L> ** system,
+		// 																					std::shared_ptr<M> meshPtr)
+		// {
 
-		}
+		// }
 	}
 }
 

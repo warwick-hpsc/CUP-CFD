@@ -540,7 +540,7 @@ namespace cupcfd
 				MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
 
 				// Set the number of non-zero values per row for preallocation purposes
-				MatSeqAIJSetPreallocation(this->a, NULL, nnz);
+				MatSeqAIJSetPreallocation(this->a, -1, nnz);
 
 				// Set the column indices of the non-zero location to improve preallocation
 				MatSeqAIJSetColumnIndices(this->a, indices);

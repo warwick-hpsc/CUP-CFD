@@ -507,7 +507,7 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> xnac(T(0), T(0), T(0));
 
 				// Passthrough to more detailed function
-				this->addFace(faceLabel, cell1Label, cell2OrBoundaryLabel, isBoundary,
+				return this->addFace(faceLabel, cell1Label, cell2OrBoundaryLabel, isBoundary,
 							  lambda, norm, vertexLabels, nVertexLabels, center, xpac, xnac, rlencos, area);
 			}
 
@@ -575,6 +575,8 @@ namespace cupcfd
 
 				// Reset to unfinalised
 				this->finalized = false;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
@@ -926,8 +928,13 @@ namespace cupcfd
 				cupcfd::comm::ExchangePatternConfig exchangePatternConfig(cupcfd::comm::EXCHANGE_NONBLOCKING_ONE_SIDED);
 				cupcfd::comm::ExchangePattern<I> * exchangePattern;
 
+				cupcfd::error::eCodes status;
+
 				// Build the exchange pattern for cells
-				exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				if (status != cupcfd::error::E_SUCCESS) {
+					return status;
+				}
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage
@@ -955,6 +962,8 @@ namespace cupcfd
 				free(nVertices);
 
 				delete exchangePattern;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
@@ -967,8 +976,13 @@ namespace cupcfd
 				cupcfd::comm::ExchangePatternConfig exchangePatternConfig(cupcfd::comm::EXCHANGE_NONBLOCKING_ONE_SIDED);
 				cupcfd::comm::ExchangePattern<I> * exchangePattern;
 
+				cupcfd::error::eCodes status;
+
 				// Build the exchange pattern for cells
-				exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				if (status != cupcfd::error::E_SUCCESS) {
+					return status;
+				}
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage
@@ -995,6 +1009,8 @@ namespace cupcfd
 
 				free(nFaces);
 				delete exchangePattern;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 		}

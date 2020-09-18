@@ -40,17 +40,17 @@ namespace cupcfd
 
 		}
 
-		template <class I, class T>
-		VectorSourceConfigSource<I,T> * VectorSourceConfigSource<I,T>::clone()
-		{
+		// template <class I, class T>
+		// VectorSourceConfigSource<I,T> * VectorSourceConfigSource<I,T>::clone()
+		// {
 
-		}
+		// }
 
-		template <class I, class T>
-		cupcfd::error::eCodes VectorSourceConfigSource<I,T>::buildVectorSourceConfig(VectorSourceConfig<I,T> ** vectorSourceConfig)
-		{
+		// template <class I, class T>
+		// cupcfd::error::eCodes VectorSourceConfigSource<I,T>::buildVectorSourceConfig(VectorSourceConfig<I,T> ** vectorSourceConfig)
+		// {
 
-		}
+		// }
 	}
 }
 

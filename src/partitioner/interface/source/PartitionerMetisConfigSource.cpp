@@ -32,12 +32,12 @@ namespace cupcfd
 
 		// === Concrete Methods ===
 
-		// === Pure Virtual Methods ===
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetisConfigSource<I,T>::buildPartitionerConfig(PartitionerConfig<I,T> ** config)
-		{
+		// // === Pure Virtual Methods ===
+		// template <class I, class T>
+		// cupcfd::error::eCodes PartitionerMetisConfigSource<I,T>::buildPartitionerConfig(PartitionerConfig<I,T> ** config)
+		// {
 
-		}
+		// }
 	}
 }
 

@@ -36,7 +36,7 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes BenchmarkExchange<I,T>::ExchangeBenchmark()
 		{
-
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>

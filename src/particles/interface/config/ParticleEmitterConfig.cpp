@@ -43,18 +43,18 @@ namespace cupcfd
 			this->position = source.position;
 		}
 
-		template <class E, class P, class I, class T>
-		ParticleEmitterConfig<E,P,I,T> * ParticleEmitterConfig<E,P,I,T>::clone()
-		{
-			// Pure Virtual, nothing to do here
-		}
+		// template <class E, class P, class I, class T>
+		// ParticleEmitterConfig<E,P,I,T> * ParticleEmitterConfig<E,P,I,T>::clone()
+		// {
+		// 	// Pure Virtual, nothing to do here
+		// }
 
-		template <class E, class P, class I, class T>
-		// cupcfd::error::eCodes ParticleEmitterConfig<E,P,I,T>::buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter)
-		cupcfd::error::eCodes ParticleEmitterConfig<E,P,I,T>::buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter, int emitterId)
-		{
-			// Pure Virtual, nothing to do here
-		}
+		// template <class E, class P, class I, class T>
+		// // cupcfd::error::eCodes ParticleEmitterConfig<E,P,I,T>::buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter)
+		// cupcfd::error::eCodes ParticleEmitterConfig<E,P,I,T>::buildParticleEmitter(ParticleEmitter<E,P,I,T> ** emitter, int emitterId)
+		// {
+		// 	// Pure Virtual, nothing to do here
+		// }
 	}
 }
 

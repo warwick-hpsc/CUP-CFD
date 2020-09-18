@@ -73,6 +73,8 @@ namespace cupcfd
 			// Reset Maps to Empty Objects
 			this->nodeToIDX = std::map<T,I>();
 			this->IDXToNode = std::map<I,T>();
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>

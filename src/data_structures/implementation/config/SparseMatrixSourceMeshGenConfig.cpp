@@ -51,7 +51,8 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfig<I,T>::buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource)
 		{
-
+			// Not implemented.
+			return cupcfd::error::E_ERROR;
 		}
 	}
 }

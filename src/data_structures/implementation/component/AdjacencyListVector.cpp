@@ -70,6 +70,8 @@ namespace cupcfd
 			// Reset the vector object
 			this->adjacencies.clear();
 			this->adjacencies.resize(0);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>

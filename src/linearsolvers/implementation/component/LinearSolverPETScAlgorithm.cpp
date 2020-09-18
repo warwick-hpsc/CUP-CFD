@@ -45,44 +45,74 @@ namespace cupcfd
 
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::solve(Mat * a, Vec * b, Vec * x)
 		{
-			// Final Assembly and Final KSP Setup
-			MatAssemblyBegin(*a, MAT_FINAL_ASSEMBLY);
-			MatAssemblyEnd(*a, MAT_FINAL_ASSEMBLY);
+			PetscErrorCode status;
 
-			KSPSetOperators(this->petscSolver, *a, *a);
+			// Final Assembly and Final KSP Setup
+			if (MatAssemblyBegin(*a, MAT_FINAL_ASSEMBLY)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+
+			if (MatAssemblyEnd(*a, MAT_FINAL_ASSEMBLY)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+
+			if (KSPSetOperators(this->petscSolver, *a, *a)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			// Setup Internal Data Structures
-			KSPSetUp(this->petscSolver);
+			if (KSPSetUp(this->petscSolver)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			// Solve
-			KSPSolve(this->petscSolver, *b, *x);
-			KSPGetConvergedReason(this->petscSolver, &(this->petscReason));
+			if (KSPSolve(this->petscSolver, *b, *x)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+			if (KSPGetConvergedReason(this->petscSolver, &(this->petscReason))) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::setupPETScCommandLine()
 		{
-			KSPSetFromOptions(this->petscSolver);
+			if (KSPSetFromOptions(this->petscSolver)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::setupPETScCGAMG()
 		{
-			KSPSetType(this->petscSolver, KSPCG);
-			KSPGetPC(this->petscSolver, &this->petscPrecon);
-			PCSetType(this->petscPrecon, PCGAMG);
+			if (KSPSetType(this->petscSolver, KSPCG)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+			if (KSPGetPC(this->petscSolver, &this->petscPrecon)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+			if (PCSetType(this->petscPrecon, PCGAMG)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			// Starting out with default values from
 			// https://lists.mcs.anl.gov/pipermail/petsc-users/2015-June/025844.html
 
 			// -pc_gamg_nsmooths
 			PetscInt aggNSmooths = 1;
-			PCGAMGSetNSmooths(this->petscPrecon, 1);
+			if (PCGAMGSetNSmooths(this->petscPrecon, 1)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			// -pc_gamg_threshold
 			PetscReal threshold = 0.02;
-			PCGAMGSetThreshold(this->petscPrecon, &threshold, 1);
+			if (PCGAMGSetThreshold(this->petscPrecon, &threshold, 1)) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
+			
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

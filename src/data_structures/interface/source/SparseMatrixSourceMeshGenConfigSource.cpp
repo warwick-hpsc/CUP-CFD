@@ -41,17 +41,17 @@ namespace cupcfd
 
 		}
 
-		template <class I, class T>
-		SparseMatrixSourceMeshGenConfigSource<I,T> * SparseMatrixSourceMeshGenConfigSource<I,T>::clone()
-		{
+		// template <class I, class T>
+		// SparseMatrixSourceMeshGenConfigSource<I,T> * SparseMatrixSourceMeshGenConfigSource<I,T>::clone()
+		// {
 
-		}
+		// }
 
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigSource<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
-		{
+		// template <class I, class T>
+		// cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigSource<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
+		// {
 
-		}
+		// }
 	}
 }
 

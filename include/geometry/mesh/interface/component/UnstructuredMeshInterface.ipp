@@ -1966,8 +1966,7 @@ namespace cupcfd
 				// Reuse the same communicator as the distributed graph, since all members of the comm associated with this
 				// mesh must participate
 				status = data.buildDistributedAdjacencyList(&partGraph, *(this->cellConnGraph->comm), assignedCellLabels, nAssignedCellLabels);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				if (status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
@@ -1989,6 +1988,9 @@ namespace cupcfd
 					I nCellFacesSum;
 					I * nCellFaces = (I *) malloc(sizeof(I) * lCells);
 					status = data.getCellNFaces(nCellFaces, lCells, cellLabels, lCells);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// (dii) Summed number of faces per cell - needed for CSR sizes
 					cupcfd::utility::drivers::sum(nCellFaces, lCells, &nCellFacesSum);
@@ -1997,6 +1999,9 @@ namespace cupcfd
 					I * cellFaceLabelInd = (I *) malloc(sizeof(I) * (lCells+1));
 					I * cellFaceLabelData = (I *) malloc(sizeof(I) * nCellFacesSum);
 					status = data.getCellFaceLabels(cellFaceLabelInd, lCells+1, cellFaceLabelData, nCellFacesSum, cellLabels, lCells);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// (div) Remove duplicate face labels from where cells share faces
 					// This leaves a single label per each face that is attached to a local cell
@@ -2008,6 +2013,9 @@ namespace cupcfd
 					// (ei) Reduce down to only faces that are boundaries
 					bool * faceLabelIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(faceLabelIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					int nFaceBoundaries = 0;
 					for(int i = 0; i < nFaceLabelsDistinct; i++)
@@ -2043,6 +2051,9 @@ namespace cupcfd
 					I nBoundaryLabels = nFaceBoundaries;
 					I * boundaryLabels = (I *) malloc(sizeof(I) * nBoundaryLabels);
 					status = data.getFaceBoundaryLabels(boundaryLabels, nBoundaryLabels, faceWithBoundary, nFaceBoundaries);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// (eiii) Boundary faces should be unique, but as a precaution remove repeats
 					I * boundaryLabelsDistinct;
@@ -2055,6 +2066,9 @@ namespace cupcfd
 					I * faceVerticesCount = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 
 					status = data.getFaceNVertices(faceVerticesCount, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					I faceVerticesCountTotal;
 					cupcfd::utility::drivers::sum(faceVerticesCount, nFaceLabelsDistinct, &faceVerticesCountTotal);
@@ -2063,6 +2077,9 @@ namespace cupcfd
 					I * boundaryVerticesCount = (I *) malloc(sizeof(I) * nBoundaryLabelsDistinct);
 
 					status = data.getFaceNVertices(boundaryVerticesCount, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					I boundaryVerticesCountTotal;
 					cupcfd::utility::drivers::sum(boundaryVerticesCount, nBoundaryLabelsDistinct, &boundaryVerticesCountTotal);
@@ -2077,12 +2094,18 @@ namespace cupcfd
 					status = data.getFaceVerticesLabelsCSR(faceVertLabelCSRInd, nFaceLabelsDistinct+1,
 															  vertLabelData, faceVerticesCountTotal,
 															  faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					I * bndVertLabelCSRInd = (I *) malloc(sizeof(I) * (nBoundaryLabelsDistinct+1));
 
 					status = data.getFaceVerticesLabelsCSR(bndVertLabelCSRInd, nBoundaryLabelsDistinct+1,
 															  vertLabelData + faceVerticesCountTotal, boundaryVerticesCountTotal,
 															  boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// (fiv) Get distinct vertex labels
 					I * vertexLabelsDistinct;
@@ -2095,6 +2118,9 @@ namespace cupcfd
 					// their numbers are typically far far fewer
 					I nRegions;
 					status = data.getRegionCount(&nRegions);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 					I * regionIndices = (I *) malloc(sizeof(I) * nRegions);
 					I * regionLabels = (I *) malloc(sizeof(I) * nRegions);
 
@@ -2104,6 +2130,9 @@ namespace cupcfd
 					}
 
 					status = data.getRegionLabels(regionLabels, nRegions, regionIndices,nRegions);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 					free(regionIndices);
 					
 					// ====================================
@@ -2121,6 +2150,9 @@ namespace cupcfd
 					//Final Vertices Labels are stored in vertexLabelsDistinct
 					euc::EuclideanPoint<T,3> * pointTmpStore = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nVertexLabelsDistinct);
 					status = data.getVertexCoords(pointTmpStore, nVertexLabelsDistinct, vertexLabelsDistinct, nVertexLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Add Vertices to Mesh
 					for(I i = 0; i < nVertexLabelsDistinct; i++)
@@ -2148,6 +2180,9 @@ namespace cupcfd
 					I nBoundaryRegionLabels = nBoundaryLabelsDistinct;
 					I * boundaryRegionLabels = (I *) malloc(sizeof(I) * nBoundaryRegionLabels);
 					status = data.getBoundaryRegionLabels(boundaryRegionLabels, nBoundaryRegionLabels, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Vertices Labels
 					// Can reuse previous read starting at vertLabelData[faceVerticesCountTotal]
@@ -2155,6 +2190,9 @@ namespace cupcfd
 					// Boundary Distance
 					T * bDistance = (T *) malloc(sizeof(T) * nBoundaryLabelsDistinct);
 					status = data.getBoundaryDistance(bDistance, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Add Boundaries to Mesh
 					for(I i = 0; i < nBoundaryLabelsDistinct; i++)
@@ -2178,9 +2216,15 @@ namespace cupcfd
 
 					// Read Cell Center
 					status = data.getCellCenter(pointTmpStore, nCells, cellLabels, nCells);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Read Cell Volume
 					status = data.getCellVolume(cellVol, nCells, cellLabels, nCells);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Add Cells to Mesh
 					// Local Cells
@@ -2205,11 +2249,17 @@ namespace cupcfd
 					// For boundary and non-boundary faces
 					I * fCell1Labels = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 					status = data.getFaceCell1Labels(fCell1Labels, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Cell 2 Labels
 					// For non-boundary faces only
 					I * fCell2Labels = (I *) malloc(sizeof(I) * nFaceWithoutBoundary);
 					status = data.getFaceCell2Labels(fCell2Labels, nFaceWithoutBoundary, faceWithoutBoundary, nFaceWithoutBoundary);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Vertex Labels
 					// Reuse previously read values
@@ -2218,26 +2268,44 @@ namespace cupcfd
 					// Boundary faces only
 					I * fBndLabels = (I *) malloc(sizeof(I) * nFaceBoundaries);
 					status = data.getFaceBoundaryLabels(fBndLabels, nFaceBoundaries, faceWithBoundary, nFaceBoundaries);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Is Boundary
 					bool * fIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(fIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Face Lambda
 					T * fLambda = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceLambda(fLambda, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Face Area
 					T * fArea = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceArea(fArea, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Face Center
 					euc::EuclideanPoint<T,3> * fCenter = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceCenter(fCenter, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Face Normal
 					euc::EuclideanVector<T,3> * fNorm = (euc::EuclideanVector<T,3> *) malloc(sizeof(euc::EuclideanVector<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceNormal(fNorm, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 
 					// Add Face Data
 					ptr = 0;
@@ -2281,6 +2349,9 @@ namespace cupcfd
 
 						status = this->addFace(faceLabelsDistinct[i], fCell1Labels[i], fCell2OrBoundLabel, fIsBoundary[i], fLambda[i], fNorm[i],
 												  vertLabelData + vertDataPtr, rangeSize, fCenter[i], xpac, xnac, rlencos, fArea[i]);
+						if (status != cupcfd::error::E_SUCCESS) {
+							return status;
+						}
 					}
 
 					// =================================
@@ -2327,10 +2398,15 @@ namespace cupcfd
 				// areas etc, we will need to compute it here to ensure the mesh properties are correct, and then also ensure that
 				// data is also propagated to any ghost cells that are unable to compute it locally (e.g. due to insufficient face data)
 
-				this->finalize();
+				status = this->finalize();
+				if (status != cupcfd::error::E_SUCCESS) {
+					return status;
+				}
 
 				// Cleanup any temporary structures/space outside of the mesh
 				delete partGraph;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 			
 			template <class M, class I, class T, class L>

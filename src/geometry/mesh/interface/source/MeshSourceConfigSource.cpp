@@ -42,17 +42,17 @@ namespace cupcfd
 
 			}
 
-			template <class I, class T, class L>
-			MeshSourceConfigSource<I,T,L> * MeshSourceConfigSource<I,T,L>::clone()
-			{
+			// template <class I, class T, class L>
+			// MeshSourceConfigSource<I,T,L> * MeshSourceConfigSource<I,T,L>::clone()
+			// {
 
-			}
+			// }
 
-			template <class I, class T, class L>
-			cupcfd::error::eCodes buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig)
-			{
+			// template <class I, class T, class L>
+			// cupcfd::error::eCodes buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig)
+			// {
 
-			}
+			// }
 		}
 	}
 }

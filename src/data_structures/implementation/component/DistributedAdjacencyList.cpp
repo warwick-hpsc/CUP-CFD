@@ -32,15 +32,27 @@ namespace cupcfd
 		template <class I, class T>
 		DistributedAdjacencyList<I, T>::DistributedAdjacencyList(cupcfd::comm::Communicator& comm)
 		{
+			// std::cout << "DistributedAdjacencyList CONSTRUCTOR CALLED" << std::endl;
+
 			this->comm = comm.clone();
 
 			this->processNodeCounts = nullptr;
-			this->reset();
+			cupcfd::error::eCodes status = this->reset();
+			if (status != cupcfd::error::E_SUCCESS)
+			{
+				// std::cout << "DistributedAdjacencyList<I, T>::reset() FAILED" << std::endl;
+				int ierr = -1;
+				MPI_Abort(MPI_COMM_WORLD, ierr);
+			} else {
+				// std::cout << "DistributedAdjacencyList<I, T>::reset() SUCCESS" << std::endl;
+			}
 
 			// ToDo: Should put a barrier in here to ensure that every participating process has created the graph.
 
 			// ToDo: Should distribute a unique random graph identifier to establish whether the same graph
 			// object is in use across processes.
+
+			// std::cout << "DistributedAdjacencyList CONSTRUCTOR COMPLETE" << std::endl;
 		}
 
 		template <class I, class T>
@@ -61,6 +73,8 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::reset()
 		{
+			// std::cout << "DistributedAdjacencyList<I, T>::reset() CALLED" << std::endl;
+
 			// Clear Data - Note we do not reset the MPI Communicator.
 			// A new object should be created if using a new communicator.
 
@@ -88,6 +102,10 @@ namespace cupcfd
 			this->nodeOwner = std::map<T, I>();
 
 			// ToDo: Should some form of blocking barrier here be placed here to enforce consistency across processes?
+
+			// std::cout << "DistributedAdjacencyList<I, T>::reset() COMPLETE" << std::endl;
+
+			return cupcfd::error::eCodes::E_SUCCESS;
 		}
 
 		template <class I, class T>
@@ -356,6 +374,8 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::finalize()
 		{
+			std::cout << "DistributedAdjacencyList::finalize() CALLED" << std::endl;
+
 			cupcfd::error::eCodes err;
 
 			// =========================================================================================================
@@ -645,6 +665,8 @@ namespace cupcfd
 			// =========================================================================================================
 			// Use Deep Copy Operator
 			this->connGraph = this->buildGraph;
+			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
+			return cupcfd::error::E_ERROR;
 
 			// =========================================================================================================
 			// ToDo: Should now be able to reset the buildGraph to free some space.
@@ -660,10 +682,15 @@ namespace cupcfd
 			// === Loop over the neighbours, and store the globalIDs of cells to be received, sorted by global id ===
 			// Get the ghost GIDs
 
+			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
+			return cupcfd::error::E_ERROR;
 			T * ghosts = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostsGIDs = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostrank = (T *) malloc(sizeof(T) * this->nLGhNodes);
+			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
+			return cupcfd::error::E_ERROR;
 			this->getGhostNodes(ghosts, this->nLGhNodes);
+
 
 			for(I i = 0; i < this->nLGhNodes; i++)
 			{
@@ -727,6 +754,8 @@ namespace cupcfd
 
 			// Sort the nodes so local nodes have lower local indexes than ghost nodes
 			this->sortNodesByLocal();
+
+			std::cout << "DistributedAdjacencyList::finalize() COMPLETE" << std::endl;
 
 			return cupcfd::error::E_SUCCESS;
 		}

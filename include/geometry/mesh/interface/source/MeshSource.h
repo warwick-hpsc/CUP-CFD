@@ -630,14 +630,24 @@ namespace cupcfd
 						// In this case, the number of cells we are interested in is the portion stated by nCellLabels
 						I cellCount = nCellLabels;
 
+						std::cout << "CREATING graph object" << std::endl;
+
 						*graph = new cupcfd::data_structures::DistributedAdjacencyList<I,I>(comm);
+
+						std::cout << "CREATING graph object COMPLETE" << std::endl;
 
 						// Only add cells if the number is greater than 0
 						if(cellCount > 0)
 						{
+							return cupcfd::error::E_ERROR;
+
+							std::cout << "nCellLabels = " << nCellLabels << std::endl;
+
 							// Let us ensure that the cells are added in a sorted order
 							I * sortedCellLabels = (I *) malloc(sizeof(I) * nCellLabels);
 							cupcfd::utility::drivers::merge_sort(cellLabels, sortedCellLabels, nCellLabels);
+
+							return cupcfd::error::E_ERROR;
 
 							// (2) To get the face indexes, we need to know the number of adjacent faces
 							//     This is found from the sum of the adjacent face count for each cell listed (nFaces)
