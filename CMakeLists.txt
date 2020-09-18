@@ -51,18 +51,20 @@ set (cupcfd_VERSION_MINOR 0)
 # ======== Set Compile Flags ===========
 # ======================================
 
-if(RTYPE STREQUAL "Debug")
+if ( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
   if(COMPILER STREQUAL "intel")
     set(CMAKE_CXX_FLAGS "-O0 -g -pg -mkl")
   else()
-    set(CMAKE_CXX_FLAGS "-O0 -g -pg -w -Wfatal-errors")
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -Werror -Wno-narrowing -Wfatal-errors")
   endif()
-else()
+elseif ( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
   if(COMPILER STREQUAL "intel")
     set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
   else()
-    set(CMAKE_CXX_FLAGS "-O2 -g -w -Wfatal-errors")
+    set(CMAKE_CXX_FLAGS "-O2 -g -Wfatal-errors")
   endif()
+else()
+  message(FATAL_ERROR "Unrecognised value for CMAKE_BUILD_TYPE - '${CMAKE_BUILD_TYPE}'" )
 endif()
 
 # ====================================================================================================================================
