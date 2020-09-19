@@ -273,26 +273,24 @@ namespace cupcfd
 
                 return result;
 			}
+
+			// Explicit Instantiation
+			// ToDo: This is kind of brittle for template usage
+			// We could probably move everything to the header and avoid explicit instantiation entirely....
+			template class EuclideanVector<float, 2>;
+			template EuclideanVector<float, 2>::EuclideanVector(float x, float y);
+
+			template class EuclideanVector<float, 3>;
+			template EuclideanVector<float, 3>::EuclideanVector(float x, float y, float z);
+
+			template class EuclideanVector<double, 2>;
+			template EuclideanVector<double, 2>::EuclideanVector(double x, double y);
+
+			template class EuclideanVector<double, 3>;
+			template EuclideanVector<double, 3>::EuclideanVector(double x, double y, double z);
+
+			template EuclideanVector<float,3> cupcfd::geometry::euclidean::crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
+			template EuclideanVector<double,3> cupcfd::geometry::euclidean::crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);
 		}
 	}
 }
-
-// Explicit Instantiation
-// ToDo: This is kind of brittle for template usage
-// We could probably move everything to the header and avoid explicit instantiation entirely....
-using namespace cupcfd::geometry::euclidean;
-
-template class EuclideanVector<float, 2>;
-template EuclideanVector<float, 2>::EuclideanVector(float x, float y);
-
-template class EuclideanVector<float, 3>;
-template EuclideanVector<float, 3>::EuclideanVector(float x, float y, float z);
-
-template class EuclideanVector<double, 2>;
-template EuclideanVector<double, 2>::EuclideanVector(double x, double y);
-
-template class EuclideanVector<double, 3>;
-template EuclideanVector<double, 3>::EuclideanVector(double x, double y, double z);
-
-template EuclideanVector<float,3> cupcfd::geometry::euclidean::crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
-template EuclideanVector<double,3> cupcfd::geometry::euclidean::crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);

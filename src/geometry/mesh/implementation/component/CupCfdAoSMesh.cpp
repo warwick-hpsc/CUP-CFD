@@ -1017,13 +1017,9 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
+			// Explicit Instantiation
+			template class CupCfdAoSMesh<int, float, int>;
+			template class CupCfdAoSMesh<int, double, int>;
 		}
 	}
 }
-
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMesh<int, float, int>;
-template class CupCfdAoSMesh<int, double, int>;

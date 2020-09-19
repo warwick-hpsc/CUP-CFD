@@ -252,12 +252,10 @@ namespace cupcfd
 				result = (d * l) + l0;
 				return cupcfd::error::E_SUCCESS;
 			}
+
+			// Explicit Instantiation
+			template class EuclideanPlane3D<float>;
+			template class EuclideanPlane3D<double>;
 		}
 	}
 }
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::euclidean;
-
-template class EuclideanPlane3D<float>;
-template class EuclideanPlane3D<double>;

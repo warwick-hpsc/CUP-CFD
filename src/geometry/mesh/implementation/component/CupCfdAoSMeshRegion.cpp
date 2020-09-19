@@ -44,12 +44,10 @@ namespace cupcfd
 			{
 
 			}
+
+			// Explicit Instantiation
+			template class CupCfdAoSMeshRegion<int, float>;
+			template class CupCfdAoSMeshRegion<int, double>;
 		}
 	}
 }
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMeshRegion<int, float>;
-template class CupCfdAoSMeshRegion<int, double>;

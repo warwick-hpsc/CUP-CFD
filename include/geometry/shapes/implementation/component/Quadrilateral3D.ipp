@@ -30,23 +30,6 @@ namespace cupcfd
 			// === Constructors/Deconstructors ===
 
 			template <class T>
-			Quadrilateral3D<T>::Quadrilateral3D()
-			{
-				this->nVertices = 4;
-				this->nEdges = 4;
-				
-				this->vertices[0] = T(0.0);
-				this->vertices[1] = T(0.0);
-				this->vertices[2] = T(0.0);
-				this->vertices[3] = T(0.0);
-				
-				this->vertices[2].cmp[0] = 1.0;
-				this->vertices[3].cmp[0] = 1.0;
-				this->vertices[3].cmp[1] = 1.0;
-				this->vertices[4].cmp[1] = 1.0;
-			}
-
-			template <class T>
 			Quadrilateral3D<T>::Quadrilateral3D(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
 											    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
 											    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
@@ -136,6 +119,9 @@ namespace cupcfd
 				// Compute the intersection of the bimedians on opposite sides - this is the centroid
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersectPoint;
 				cupcfd::error::eCodes status = computeVectorRangeIntersection(abBiMedian, cdBiMedian, bcBiMedian, daBiMedian, intersectPoint);
+				if (status != cupcfd::error::E_SUCCESS) {
+					throw(std::runtime_error("Quadrilateral3D: computeCentroidBiMedianIntersection: computeVectorRangeIntersection() failed"));
+				}
 				return intersectPoint;
 			}
 							
