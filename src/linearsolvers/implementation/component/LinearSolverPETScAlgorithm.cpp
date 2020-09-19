@@ -27,14 +27,14 @@ namespace cupcfd
 
 			switch(this->alg)
 			{
-				PETSC_KSP_CMDLINE:	setupPETScCommandLine();
-									break;
+				case PETSC_KSP_CMDLINE:	setupPETScCommandLine();
+										break;
 
-				PETSC_KSP_CGAMG:	setupPETScCGAMG();
-									break;
+				case PETSC_KSP_CGAMG:	setupPETScCGAMG();
+										break;
 
-				default:			setupPETScCommandLine();
-									break;
+				default:				setupPETScCommandLine();
+										break;
 			}
 		}
 
@@ -45,8 +45,6 @@ namespace cupcfd
 
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::solve(Mat * a, Vec * b, Vec * x)
 		{
-			PetscErrorCode status;
-
 			// Final Assembly and Final KSP Setup
 			if (MatAssemblyBegin(*a, MAT_FINAL_ASSEMBLY)) {
 				return cupcfd::error::E_PETSC_ERROR;
@@ -101,7 +99,6 @@ namespace cupcfd
 			// https://lists.mcs.anl.gov/pipermail/petsc-users/2015-June/025844.html
 
 			// -pc_gamg_nsmooths
-			PetscInt aggNSmooths = 1;
 			if (PCGAMGSetNSmooths(this->petscPrecon, 1)) {
 				return cupcfd::error::E_PETSC_ERROR;
 			}

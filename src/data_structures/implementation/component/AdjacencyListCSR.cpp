@@ -142,9 +142,12 @@ namespace cupcfd
 		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsEdge(T srcNode, T dstNode, bool * exists)
 		{
 			bool nodeExists;
-			int status;
+			cupcfd::error::eCodes status;
 
 			status = this->existsNode(srcNode, &nodeExists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			if(!nodeExists)
 			{
@@ -153,6 +156,9 @@ namespace cupcfd
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			if(!nodeExists)
 			{
@@ -163,10 +169,16 @@ namespace cupcfd
 			// Get Node Count Adjacent to srcNode
 			I count;
 			status = this->getAdjacentNodeCount(srcNode, &count);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// Get Nodes Adjacent to srcNode
 			T * adjNodes = (T *) malloc(sizeof(T) * count);
 			status = this->getAdjacentNodes(srcNode, adjNodes, count);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// Search adjacent node list for the node
 			// Alternate: could seach for localIDX of node in adjncy array
@@ -182,7 +194,7 @@ namespace cupcfd
 		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addEdge(T node, T adjNode)
 		{
 			cupcfd::error::eCodes status;
-			I nodeLocalIDX, adjNodeLocalIDX, ptr;
+			I nodeLocalIDX, adjNodeLocalIDX;
 			bool nodeExists, edgeExists;
 
 			// (1) Check the source node exists

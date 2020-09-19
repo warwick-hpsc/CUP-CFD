@@ -319,7 +319,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 			bool srcExists;
 			bool dstExists;
-			bool edgeExists;
+			// bool edgeExists;
 
 			// Behaviour for this function is to add a node as a ghost node if it is missing, rather
 			// than to return an error code
@@ -383,6 +383,9 @@ namespace cupcfd
 			//     called this finalize step.
 			// =========================================================================================================
 			err = cupcfd::comm::Barrier(*(this->comm));
+			if (err != cupcfd::error::E_SUCCESS) {
+				return err;
+			}
 
 			// =========================================================================================================
 			// (2) Distribute the graph unique identifier to ensure everyone is modifying the same graph
@@ -435,7 +438,13 @@ namespace cupcfd
 			// this will only be freed on reset/deconstructor
 			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
 			err = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
+			if (err != cupcfd::error::E_SUCCESS) {
+				return err;
+			}
 			err = cupcfd::comm::Broadcast(this->processNodeCounts, this->comm->size, 0, *(this->comm));
+			if (err != cupcfd::error::E_SUCCESS) {
+				return err;
+			}
 
 			// Assign global ids to this processes' nodes. Done on a sequential basis across processes
 			// Assumes ranks will always start at 0 and be sequential in number

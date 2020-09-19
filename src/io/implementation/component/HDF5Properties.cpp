@@ -21,26 +21,26 @@ namespace cupcfd
 		{
 			HDF5Properties::HDF5Properties(HDF5Access& access)
 			{
-				hid_t hdf5_type;
-				H5T_class_t hdf5_type_class;
-				size_t hdf5_type_size;
+				// hid_t hdf5_type;
+				// H5T_class_t hdf5_type_class;
+				// size_t hdf5_type_size;
 				int ndims;
 
 				// Get Type Object
-				if(access.record.attr == true)
-				{
-					hdf5_type = H5Aget_type(access.attrID);
-				}
-				else
-				{
-					hdf5_type = H5Dget_type(access.datasetID);
-				}
+				// if(access.record.attr == true)
+				// {
+				// 	hdf5_type = H5Aget_type(access.attrID);
+				// }
+				// else
+				// {
+				// 	hdf5_type = H5Dget_type(access.datasetID);
+				// }
 
 				// Retrieve DataType as stored in the HDF5 File.
-				hdf5_type_class = H5Tget_class(hdf5_type);
+				// hdf5_type_class = H5Tget_class(hdf5_type);
 
 				// Get DataType Size as stored in the HDF5 File.
-				hdf5_type_size = H5Tget_size(hdf5_type);
+				// hdf5_type_size = H5Tget_size(hdf5_type);
 
 				// Retrieve Number of Dimensions of the record in the current file
 				ndims = H5Sget_simple_extent_ndims(access.dataspaceID);

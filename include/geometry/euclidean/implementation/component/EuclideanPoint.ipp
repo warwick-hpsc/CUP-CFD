@@ -109,7 +109,6 @@ namespace cupcfd
 				int mpiErr;
 
 				// Only need one block since all of same type
-				int count = 1;
 
 				// One block on contigious memory for the component array, N elements for an N length vector
 				int blocklengths[1] = {N};

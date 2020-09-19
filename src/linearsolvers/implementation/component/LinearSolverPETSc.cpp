@@ -55,8 +55,17 @@ namespace cupcfd
 			this->aRanges = nullptr;
 
 			status = this->setupVectorX();
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorX() failed"));
+			}
 			status = this->setupVectorB();
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorB() failed"));
+			}
 			status = this->setupMatrixA(matrix);
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupMatrixA() failed"));
+			}
 
 			this->algSolver = new LinearSolverPETScAlgorithm(comm, algorithm, rTol, eTol);
 		}
@@ -401,12 +410,18 @@ namespace cupcfd
 				// === Comm Size is set to 1 - Serial Linear Solver ===
 
 				// Setup a PETSc Sequential Vector
-				VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->x));
+				err = VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->x));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 			}
 			else if(this->comm.size > 1)
 			{
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->x));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 			}
 			else
 			{
@@ -417,7 +432,10 @@ namespace cupcfd
 			// Get the Local Ownership range of the Vector X
 			// For serial, this will be of size 2
 			// For parallel, number of ranks + 1
-			VecGetOwnershipRanges(this->x, &(this->xRanges));
+			err = VecGetOwnershipRanges(this->x, &(this->xRanges));
+			if (err != 0) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -432,12 +450,18 @@ namespace cupcfd
 				// === Comm Size is set to 1 - Serial Linear Solver ===
 
 				// Setup a PETSc Sequential Vector
-				VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->b));
+				err = VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->b));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 			}
 			else if(this->comm.size > 1)
 			{
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->b));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 			}
 			else
 			{
@@ -447,7 +471,10 @@ namespace cupcfd
 
 			// Get the Local Ownership range of the Vector B
 			// For serial, this will be of size 1 + 1
-			VecGetOwnershipRanges(this->b, &(this->bRanges));
+			err = VecGetOwnershipRanges(this->b, &(this->bRanges));
+			if (err != 0) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			// Should be the same as the X Vector (else we will have issues....)
 			// Overwrite existing value in case it hasn't been done for X yet.
@@ -472,7 +499,10 @@ namespace cupcfd
 				// First, get the indexes of rows with non-zero values
 				int * nnzRows;
 				int nNNZRows;
-				matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
+				err = matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// To do this, create an array to store the number of non-zeroes per row and initially set them all to zero
 				// Since this is serial, create an entry for all rows
@@ -492,7 +522,10 @@ namespace cupcfd
 					// For each row, get the number of columns (what we're actually interested in)
 					int * nnzCols;
 					int nNNZCols;
-					matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
+					err = matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
+					if (err != 0) {
+						return cupcfd::error::E_PETSC_ERROR;
+					}
 
 					// Store the number of columns for the matching matrix rowIndex in nnzRows[i]
 					// Since PETSc will be accessing this using base zero, offset the row index such
@@ -513,7 +546,10 @@ namespace cupcfd
 					// For each row, get the column indexes
 					int * nnzCols;
 					int nNNZCols;
-					matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
+					err = matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
+					if (err != 0) {
+						return cupcfd::error::E_PETSC_ERROR;
+					}
 
 					for(int j = 0; j < nNNZCols; j++)
 					{
@@ -530,20 +566,35 @@ namespace cupcfd
 				// nz is set to PETSC_DEFAULT, but it should ignore it if nnz is set
 				//MatCreateSeqAIJ(PETSC_COMM_SELF, this->mLocal, this->nLocal, PETSC_DEFAULT, nnz, &(this->a));
 				// Create the Matrix Object
-				MatCreate(PETSC_COMM_SELF, &(this->a));
+				err = MatCreate(PETSC_COMM_SELF, &(this->a));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the Matrix Type to a Sequential Matrix
-				MatSetType(this->a, MATSEQAIJ);
+				err = MatSetType(this->a, MATSEQAIJ);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the global size of the matrix, leave the local size to PETSc
 				// Since this is a sequential matrix, they should end up being one and the same anyway
-				MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
+				err = MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the number of non-zero values per row for preallocation purposes
-				MatSeqAIJSetPreallocation(this->a, -1, nnz);
+				err = MatSeqAIJSetPreallocation(this->a, -1, nnz);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the column indices of the non-zero location to improve preallocation
-				MatSeqAIJSetColumnIndices(this->a, indices);
+				err = MatSeqAIJSetColumnIndices(this->a, indices);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Since introducing new non-zero location is expensive, disable their inclusion
 				// by ignoring the values and introducing a PETSc error
@@ -551,8 +602,14 @@ namespace cupcfd
 				// structures should create a different matrix to use.
 				// ToDo: Do we want to have a PETSc error - if we can catch the error we can introduce
 				// an error code....
-				MatSetOption(this->a, MAT_NEW_NONZERO_LOCATIONS, PETSC_FALSE);
-				MatSetOption(this->a, MAT_NEW_NONZERO_LOCATION_ERR, PETSC_TRUE);
+				err = MatSetOption(this->a, MAT_NEW_NONZERO_LOCATIONS, PETSC_FALSE);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
+				err = MatSetOption(this->a, MAT_NEW_NONZERO_LOCATION_ERR, PETSC_TRUE);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Cleanup temporary storage
 				free(nnz);
@@ -568,11 +625,14 @@ namespace cupcfd
 				// Get the indexes of rows with non-zero values
 				int * nnzRows;
 				int nNNZRows;
-				int nnzCount = 0;
-				matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
+				// int nnzCount = 0;
+				err = matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Get the matrix local data sizes...
-				I mLocal = 0;
+				// I mLocal = 0;
 
 				// Diagonal Count
 				int * d_nnz = (PetscInt *) malloc(sizeof(PetscInt) * this->mLocal);
@@ -642,15 +702,24 @@ namespace cupcfd
 
 				// Create the Matrix Object
 				// Use the communicator assigned during setup
-				MatCreate(this->comm.comm, &(this->a));
+				err = MatCreate(this->comm.comm, &(this->a));
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the Matrix Type to a Parallel MPI Matrix
-				MatSetType(this->a, MATMPIAIJ);
+				err = MatSetType(this->a, MATMPIAIJ);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Set the global size of the matrix, leave the local size to PETSc
 				// Set the local rows to the rows of the matrix we have
 				// Set the local columns to be equivalent to the rows we have (since this affects the x vector)
-				MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
+				err = MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// IMPORTANT TODO: Fix the preallocation, setting of local sizes
 
@@ -659,7 +728,10 @@ namespace cupcfd
 
 				//MatMPIAIJSetPreallocation(this->a, NULL, d_nnz, NULL, o_nnz);
 				// Ideally want to use Preallocation, but just do basic setup for now
-				MatSetUp(this->a);
+				err = MatSetUp(this->a);
+				if (err != 0) {
+					return cupcfd::error::E_PETSC_ERROR;
+				}
 
 				// Since introducing new non-zero location is expensive, disable their inclusion
 				// by ignoring the values and introducing a PETSc error
@@ -685,7 +757,10 @@ namespace cupcfd
 			}
 
 			// Get Ownership Range for the Matrix
-			MatGetOwnershipRanges(this->a, &(this->aRanges));
+			err = MatGetOwnershipRanges(this->a, &(this->aRanges));
+			if (err != 0) {
+				return cupcfd::error::E_PETSC_ERROR;
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}

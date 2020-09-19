@@ -69,8 +69,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeX(I * cellX)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["CellX"];
 
 				if(dataSourceType == Json::Value::null)
@@ -94,8 +92,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeY(I * cellY)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["CellY"];
 
 				if(dataSourceType == Json::Value::null)
@@ -119,8 +115,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeZ(I * cellZ)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["CellZ"];
 
 				if(dataSourceType == Json::Value::null)
@@ -144,8 +138,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMin(T * sMinX)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialXMin"];
 
 				if(dataSourceType == Json::Value::null)
@@ -170,8 +162,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMin(T * sMinY)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialYMin"];
 
 				if(dataSourceType == Json::Value::null)
@@ -196,8 +186,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMin(T * sMinZ)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialZMin"];
 
 				if(dataSourceType == Json::Value::null)
@@ -222,8 +210,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMax(T * sMaxX)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialXMax"];
 
 				if(dataSourceType == Json::Value::null)
@@ -248,8 +234,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMax(T * sMaxY)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialYMax"];
 
 				if(dataSourceType == Json::Value::null)
@@ -274,8 +258,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMax(T * sMaxZ)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["SpatialZMax"];
 
 				if(dataSourceType == Json::Value::null)

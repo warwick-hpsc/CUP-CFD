@@ -66,7 +66,6 @@ namespace cupcfd
 												   MPI_Comm comm)
 			{
 				int err;
-				T dummy;
 				int commSize;
 				cupcfd::error::eCodes status;
 

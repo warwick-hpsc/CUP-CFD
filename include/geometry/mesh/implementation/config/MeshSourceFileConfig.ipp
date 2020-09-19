@@ -66,7 +66,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceFileConfig<I,T>::buildMeshSource(MeshSource<I,T,I> ** source)
 			{
-				cupcfd::error::eCodes status;
 				std::string filePath;
 				cupcfd::geometry::mesh::MeshFileFormat fileFormat;
 

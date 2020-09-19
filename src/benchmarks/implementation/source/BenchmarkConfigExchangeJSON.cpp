@@ -39,8 +39,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkName(std::string& benchmarkName)
 		{
-			cupcfd::error::eCodes status;
-
 			const Json::Value dataSourceType = this->configData["BenchmarkName"];
 
 			if(dataSourceType == Json::Value::null)
@@ -60,8 +58,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkRepetitions(I * repetitions)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("Repetitions"))
 			{
 				const Json::Value dataSourceType = this->configData["Repetitions"];

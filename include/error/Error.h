@@ -133,6 +133,8 @@ namespace cupcfd
 			E_PARTITIONER_INVALID_WORK_ARRAY,
 			E_PETSC_ERROR
 		};
+
+		extern const char* eStrings[];
 	}
 }
 

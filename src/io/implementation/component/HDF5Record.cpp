@@ -58,7 +58,7 @@ namespace cupcfd
 
 				if(groupID < 0)
 				{
-					throw( std::invalid_argument("HDF5Interface: openGroup: Unable to Open Group " + this->groupName));
+					throw( std::invalid_argument("HDF5Record: openGroup: Unable to Open Group " + this->groupName));
 				}
 
 				access.groupID = groupID;
@@ -72,7 +72,7 @@ namespace cupcfd
 
 				if(access.groupID < 0)
 				{
-					throw( std::invalid_argument("HDF5Interface: closeGroup: Invalid groupID - must be greater than zero."));
+					throw( std::invalid_argument("HDF5Record: closeGroup: Invalid groupID - must be greater than zero."));
 				}
 
 				// HDF5 C Interface - Close Group
@@ -84,7 +84,7 @@ namespace cupcfd
 				if(err < 0)
 				{
 					// Error
-					throw( std::invalid_argument("HDF5Interface: closeGroup: HDF5 unable to close group with ID " + std::to_string(access.groupID)));
+					throw( std::invalid_argument("HDF5Record: closeGroup: HDF5 unable to close group with ID " + std::to_string(access.groupID)));
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -114,15 +114,14 @@ namespace cupcfd
 					}
 					else
 					{
-						// Error
-						int a = 1;
+						throw(std::invalid_argument("HDF5Record: openDataSet: Do not have file or group ID"));
 					}
 
 					datasetID = H5Dopen(pathID, this->dataName.c_str(), H5P_DEFAULT);
 
 					if(datasetID < 0)
 					{
-						throw(std::invalid_argument("HDF5Interface: openDataSet: Unable to Open Data Set " + this->dataName));
+						throw(std::invalid_argument("HDF5Record: openDataSet: Unable to Open Data Set " + this->dataName));
 					}
 					else
 					{
@@ -141,11 +140,9 @@ namespace cupcfd
 				{
 					err = H5Dclose(access.datasetID);
 				}
-
-				if(err < 0)
+				if (err < 0)
 				{
-					// Error
-					int a = 1;
+					throw(std::invalid_argument("HDF5Record: closeDataSet: H5Dclose() failed"));
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -161,6 +158,10 @@ namespace cupcfd
 					if(access.datasetID > 0)
 					{
 						dataspaceID = H5Dget_space(access.datasetID);
+						if (dataspaceID < 0)
+						{
+							throw(std::invalid_argument("HDF5Record: openDataSpace: H5Dget_space() failed"));
+						}
 					}
 				}
 				else
@@ -168,18 +169,14 @@ namespace cupcfd
 					if(access.attrID > 0)
 					{
 						dataspaceID = H5Aget_space(access.attrID);
+						if (dataspaceID < 0)
+						{
+							throw(std::invalid_argument("HDF5Record: openDataSpace: H5Aget_space() failed"));
+						}
 					}
 				}
 
-				if(dataspaceID < 0)
-				{
-					// Error
-					int a = 1;
-				}
-				else
-				{
-					access.dataspaceID = dataspaceID;
-				}
+				access.dataspaceID = dataspaceID;
 
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -195,8 +192,7 @@ namespace cupcfd
 
 				if(err < 0)
 				{
-					// Error
-					int a = 1;
+					throw(std::invalid_argument("HDF5Record: closeDataSpace: H5Sclose() failed"));
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -219,21 +215,16 @@ namespace cupcfd
 					}
 					else
 					{
-						// Error
-						int a = 1;
+						throw(std::invalid_argument("HDF5Record: openAttribute: Do not have file or group ID"));
 					}
 
 					attrID = H5Aopen(pathID, this->dataName.c_str(), H5P_DEFAULT);
 
 					if(attrID < 0)
 					{
-						// Error
-						int a = 1;
+						throw(std::invalid_argument("HDF5Record: openAttribute: H5Aopen() failed"));
 					}
-					else
-					{
-						access.attrID = attrID;
-					}
+					access.attrID = attrID;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -250,8 +241,7 @@ namespace cupcfd
 
 				if(err < 0)
 				{
-					// Error
-					int a = 1;
+					throw(std::invalid_argument("HDF5Record: closeAttribute: H5Aclose() failed"));
 				}
 
 				return cupcfd::error::E_SUCCESS;

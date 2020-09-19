@@ -192,30 +192,25 @@ namespace cupcfd
 		{
 			// Iterate through JSON formats for different potential distribution types
 			// Test each to see if a distribution can be built - if it can a viable format has been found.
-			cupcfd::distributions::DistributionConfig<I,T> * testDist;
-			cupcfd::error::eCodes status;
 				
 			if(this->configData.isMember(fieldName))
 			{
 				if(this->configData[fieldName].isMember("FixedDistribution"))
 				{
 					cupcfd::distributions::DistributionConfigSourceFixedJSON<I,T> test1(this->configData[fieldName]["FixedDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 				
 				if(this->configData[fieldName].isMember("NormalDistribution"))
 				{
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["NormalDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 				
 				if(this->configData[fieldName].isMember("UniformDistribution"))
 				{
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["UniformDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 
 				// No matching field names were found

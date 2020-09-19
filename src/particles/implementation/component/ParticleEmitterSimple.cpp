@@ -102,8 +102,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt)
 		{
-			cupcfd::error::eCodes status;
-
 			// tCurrent is the current time in the dt period, relative to 0
 			// tInc is the amount of time that must pass before the next particle is generated.
 			T tCurrent, tInc;

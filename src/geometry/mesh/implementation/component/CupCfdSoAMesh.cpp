@@ -418,6 +418,9 @@ namespace cupcfd
 					// Add the edge to the cell connectivity graph since not a boundary face
 					// Use the Build Global IDs for the connectivity graph nodes.
 					status = this->cellConnGraph->addUndirectedEdge(cell1Label, cell2OrBoundaryLabel);
+					if (status != cupcfd::error::E_SUCCESS) {
+						return status;
+					}
 				}
 
 				// Copy the face lambda

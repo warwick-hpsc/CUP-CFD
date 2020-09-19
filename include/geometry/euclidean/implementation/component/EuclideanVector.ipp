@@ -180,7 +180,6 @@ namespace cupcfd
 			inline void rotateXAxisRadian(T radian, EuclideanVector<T,3>& vec)
 			{
 				// Make a copy of the values since we're storing results in place
-				T x = vec.cmp[0];
 				T y = vec.cmp[1];
 				T z = vec.cmp[2];
 				
@@ -199,7 +198,6 @@ namespace cupcfd
 			{
 				// Make a copy of the values since we're storing results in place
 				T x = vec.cmp[0];
-				T y = vec.cmp[1];
 				T z = vec.cmp[2];
 				
 				// Rotation Matrix
@@ -218,7 +216,6 @@ namespace cupcfd
 				// Make a copy of the values since we're storing results in place
 				T x = vec.cmp[0];
 				T y = vec.cmp[1];
-				T z = vec.cmp[2];
 				
 				// Rotation Matrix
 				// X
@@ -712,7 +709,7 @@ namespace cupcfd
 				T eqn3Lhs = x1.cmp[2] + (r * a.cmp[2]);
 				T eqn3Rhs = x3.cmp[2] + (s * b.cmp[2]);								
 				
-				if(arth::isEqual(eqn1Lhs, eqn1Rhs) && arth::isEqual(eqn1Lhs, eqn1Rhs) && arth::isEqual(eqn1Lhs, eqn1Rhs))
+				if(arth::isEqual(eqn1Lhs, eqn1Rhs) && arth::isEqual(eqn2Lhs, eqn2Rhs) && arth::isEqual(eqn3Lhs, eqn3Rhs))
 				{
 					intersectPoint = x1 + r * a;
 					return cupcfd::error::E_SUCCESS;

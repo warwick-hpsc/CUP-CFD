@@ -29,7 +29,6 @@ namespace cupcfd
 			// aware of internal data structures.
 			
 			// However, this generic version will serve for the interface version.
-			cupcfd::error::eCodes status;
 						
 			// Call the reset function 
 			this->reset();

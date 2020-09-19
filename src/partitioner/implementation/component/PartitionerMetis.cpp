@@ -84,6 +84,9 @@ namespace cupcfd
 
 			// Convert the distributed graph to a serial graph on the root process
 			status = sourceGraph.buildSerialAdjacencyList(rootGraph, this->workComm.root_rank);
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::runtime_error("PartitionerMetis: CONSTRUCTOR: buildSerialAdjacencyList() failed"));
+			}
 
 			// Setup the internal data structures on the root process
 			// This includes:
@@ -208,20 +211,19 @@ namespace cupcfd
 		{
 			// === Notify all processes in the comm if no results are available ===
 
-			bool hasResults = true;
-			if(this->workComm.root)
-			{
-				if(this->result == nullptr)
-				{
-					// Error - Results array is not allocated
-					hasResults = false;
-				}
-			}
-
-			//if(noResults)
-			//{
-				//return cupcfd::error::E_PARTITIONER_NO_RESULTS;
-			//}
+			// bool hasResults = true;
+			// if(this->workComm.root)
+			// {
+			// 	if(this->result == nullptr)
+			// 	{
+			// 		// Error - Results array is not allocated
+			// 		hasResults = false;
+			// 	}
+			// }
+			// if(noResults)
+			// {
+			// 	return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+			// }
 
 
 			// === Distribute the results ===
@@ -305,6 +307,9 @@ namespace cupcfd
 											  NULL,
 											  &(this->objval),
 											  this->result);
+				if (ret != METIS_OK) {
+					return cupcfd::error::E_METIS_ERROR;
+				}
 			}
 
 			return cupcfd::error::E_SUCCESS;

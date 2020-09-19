@@ -32,7 +32,7 @@ namespace cupcfd
 				public:
 					int ndim;								// Number of dimensions
 					std::vector<unsigned long long> dim;	// Dimension Sizes of total dataset/attribute
-					int type;	// Type Checking of what is stored in the file (enum?)
+					// int type;	// Type Checking of what is stored in the file (enum?)
 
 					unsigned long long nidx;
 					// Store indexes in serialised form

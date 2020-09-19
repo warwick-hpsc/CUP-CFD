@@ -45,11 +45,14 @@ namespace cupcfd
 		template <class C, class I, class T>
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getNodeLocalIndex(T node, I * idx)
 		{
-			int status;
+			cupcfd::error::eCodes status;
 			bool exists;
 
 			// Error Check - Does the node exist
 			status = this->existsNode(node, &exists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			if(exists == false)
 			{
@@ -66,8 +69,6 @@ namespace cupcfd
 		template <class C, class I, class T>
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getLocalIndexNode(I idx, T * node)
 		{
-			int status;
-
 			// Error Checking - Check Index is valid by ensuring it is within
 			// the node count
 			if(idx < 0 || idx >= nNodes)

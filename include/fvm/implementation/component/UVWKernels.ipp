@@ -60,9 +60,9 @@
 									T * av, I nAv,
 									T * aw, I nAw)
 		{
-			T pe0 = 9999.0;
-			T pe1 = -9999.0;
-			T totalForce = 0.0;
+			// T pe0 = 9999.0;
+			// T pe1 = -9999.0;
+			// T totalForce = 0.0;
 
 			I ip, in, ib, ir;
 			cupcfd::geometry::mesh::RType it;
@@ -70,7 +70,7 @@
 
 			T facn;
 			T facp;
-			T uac, vac, wac;
+			// T uac, vac, wac;
 			T visac;
 			T visFace;
 			T uFace, vFace, wFace;
@@ -83,7 +83,7 @@
 			T fudi, fvdi, fwdi;
 			T blendU, blendV, blendW;
 			T f;
-			T rlencos;
+			// T rlencos;
 
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dudxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dvdxac;
@@ -114,9 +114,9 @@
 					facp = 1.0 - facn;
 
 					xac = (mesh.getCellCenter(in) * facn) + (mesh.getCellCenter(ip) * facp);
-					uac = uCell[in] * facn + uCell[ip] * facp;
-					vac = vCell[in] * facn + vCell[ip] * facp;
-					wac = wCell[in] * facn + wCell[ip] * facp;
+					// uac = uCell[in] * facn + uCell[ip] * facp;
+					// vac = vCell[in] * facn + vCell[ip] * facp;
+					// wac = wCell[in] * facn + wCell[ip] * facp;
 
 					dudxac = dudx[in] * facn + dudx[ip] * facp;
 					dvdxac = dvdx[in] * facn + dvdx[ip] * facp;
@@ -183,11 +183,11 @@
 					sw[ip] = sw[ip] - blendW + fwde - fwdi;
 					sw[in] = sw[in] + blendW - fwde + fwdi;
 
-					T peclet;
 					double xpn_length;
 					xpn.length(&xpn_length);
-					peclet = massFlux[i]/mesh.getFaceArea(i) * xpn_length/(visac+small);
 					// Leave these off for now, may reenable at later point
+					// T peclet;
+					// peclet = massFlux[i]/mesh.getFaceArea(i) * xpn_length/(visac+small);
 					//pe0 = min(pe0, peclet);
 					//pe1 = max(pe1, peclet);
 				}
@@ -353,7 +353,7 @@
 						dwdxac = dwdx[ip];
 						visac = visEffCell[ip];
 
-						T rDotProduct;
+						// T rDotProduct;
 						T du, dv, dw, dp, dn;
 
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> xn;

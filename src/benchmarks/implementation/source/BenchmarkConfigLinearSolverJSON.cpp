@@ -45,8 +45,6 @@ namespace cupcfd
 		template <class C, class I, class T>
 		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkName(std::string& benchmarkName)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("BenchmarkName"))
 			{
 				const Json::Value dataSourceType = this->configData["BenchmarkName"];
@@ -72,8 +70,6 @@ namespace cupcfd
 		template <class C, class I, class T>
 		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkRepetitions(I * repetitions)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("Repetitions"))
 			{
 				const Json::Value dataSourceType = this->configData["Repetitions"];

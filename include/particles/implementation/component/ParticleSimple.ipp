@@ -174,17 +174,13 @@ namespace cupcfd
 				return cupcfd::error::E_ERROR;
 			}
 			
-			I fromCellGlobalID = this->cellGlobalID;
 			I fromCellLocalID;
 			I toCellGlobalID;
-			I toCellLocalID;
 			if(this->cellGlobalID == cell1GlobalID) {
 				fromCellLocalID = cell1LocalID;
-				toCellLocalID = cell2LocalID;
 				toCellGlobalID = cell2GlobalID;
 			} else if (this->cellGlobalID == cell2GlobalID) {
 				fromCellLocalID = cell2LocalID;
-				toCellLocalID = cell1LocalID;
 				toCellGlobalID = cell1GlobalID;
 			} else {
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
@@ -353,7 +349,7 @@ namespace cupcfd
 			const int nb = 15;
 
 			// Only need one block since all of same type
-			int count = 1;
+
 			// Keep as blocks of size 1 incase of compiler rearranging members
 			int blocklengths[nb];
 			for (int i=0; i<nb; i++) {

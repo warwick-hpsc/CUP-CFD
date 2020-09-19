@@ -44,7 +44,7 @@ namespace cupcfd
 		{
 
 			T facn, facp, fact;
-			T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
+			// T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
 			T phiFace, delta, vol;
 			I ip, ib, in;
 
@@ -53,7 +53,7 @@ namespace cupcfd
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> corrTmp;
 
 			I nFac = mesh.properties.lFaces;
-			I nCel = mesh.properties.lOCells;
+			// I nCel = mesh.properties.lOCells;
 
 			// Zero Cell Values
 			for (I i = 0; i < nDPhidxoCell; i++)
@@ -75,7 +75,7 @@ namespace cupcfd
 				}
 
 				// Face Loop
-				for(I i = 0; i < mesh.properties.lFaces; i++)
+				for(I i = 0; i < nFac; i++)
 				{			
 					// Get Cell 1 Index
 					ip = mesh.getFaceCell1ID(i);

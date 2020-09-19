@@ -183,6 +183,9 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = this->existsNode(srcNode, &nodeExists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			if(!nodeExists)
 			{
@@ -191,6 +194,9 @@ namespace cupcfd
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			if(!nodeExists)
 			{
@@ -201,10 +207,12 @@ namespace cupcfd
 			// Retrieve internal indexes for the nodes
 			I nodeLocalIDX = this->nodeToIDX[srcNode];
 			I adjNodeLocalIDX = this->nodeToIDX[dstNode];
-			I index;
 
 			// Search edge list for destination node and return existance (or lack thereof)
-			cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
+			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// Error check on status
 

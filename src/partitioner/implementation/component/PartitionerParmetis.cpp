@@ -88,15 +88,27 @@ namespace cupcfd
 
 			// === Set NCon Size ===
 			status = this->setNCon(1);
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setNCon() failed")));
+			}
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setVertexImbalanceWeightArrays() failed")));
+			}
 
 			// setSubdomainWeightArrays cannot be set till nCon and nParts set so do so here.
 			status = this->setSubdomainWeightArrays();
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setSubdomainWeightArrays() failed")));
+			}
 
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(sourceGraph);
+			if (status != cupcfd::error::E_SUCCESS) {
+				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setWorkArrays() failed ('") + cupcfd::error::eStrings[status] + "')"));
+			}
 
 			// Done
 		}
@@ -327,7 +339,7 @@ namespace cupcfd
 
 			// Set to 0 to indicate neither vertex or edges are weighted
 			// ToDo: Reviewing later - I declared this as local - not used??
-			idx_t wgtflag = 0;
+			// idx_t wgtflag = 0;
 
 			return cupcfd::error::E_SUCCESS;
 		}

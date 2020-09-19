@@ -341,9 +341,6 @@ namespace cupcfd
 			// Store the local ID of the face we are exiting by
 			I exitFaceID = -1;
 			
-			// Store the travel time to the exiting face
-			T travelTime;
-			
 			// Store the intersection point of that face
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> exitIntersection;
 			T exitTravelTime = T(-1);

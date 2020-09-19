@@ -62,8 +62,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZ(I * nnz)
 		{
-			cupcfd::error::eCodes status;
-
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nnz",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -75,8 +73,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNRows(I * nRows)
 		{
-			cupcfd::error::eCodes status;
-
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nrows",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -88,8 +84,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNCols(I * nCols)
 		{
-			cupcfd::error::eCodes status;
-
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "ncols",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -101,8 +95,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getMatrixIndicesBase(I * indicesBase)
 		{
-			cupcfd::error::eCodes status;
-
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "base",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -172,6 +164,9 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// Labels are zero-based, HDF5 Indexes are base-0
 			properties.addIndex(rowIndex - base);
@@ -239,6 +234,9 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			// HDF5 Indexes are base-0
 			properties.addIndex(rowIndex - base);

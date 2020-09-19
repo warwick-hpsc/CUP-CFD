@@ -32,19 +32,15 @@ namespace cupcfd
 
 		// === Pure Virtual ===
 
-		template <class P, class I, class T>
-		cupcfd::error::eCodes ParticleSource<P,I,T>::getNParticles(I * nParticles)
-		{
-			cupcfd::error::eCodes status;
-			return cupcfd::error::E_SUCCESS;
-		}
+		// template <class P, class I, class T>
+		// cupcfd::error::eCodes ParticleSource<P,I,T>::getNParticles(I * nParticles)
+		// {
+		// }
 
-		template <class P, class I, class T>
-		cupcfd::error::eCodes ParticleSource<P,I,T>::getParticles(Particle<P,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase)
-		{
-			cupcfd::error::eCodes status;
-			return cupcfd::error::E_SUCCESS;
-		}
+		// template <class P, class I, class T>
+		// cupcfd::error::eCodes ParticleSource<P,I,T>::getParticles(Particle<P,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase)
+		// {
+		// }
 	}
 }
 

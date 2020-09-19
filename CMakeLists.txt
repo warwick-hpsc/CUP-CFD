@@ -55,7 +55,8 @@ if ( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
   if(COMPILER STREQUAL "intel")
     set(CMAKE_CXX_FLAGS "-O0 -g -pg -mkl")
   else()
-    set(CMAKE_CXX_FLAGS "-O0 -g -pg -Werror -Wno-narrowing -Wfatal-errors")
+    #set(CMAKE_CXX_FLAGS "-O0 -g -pg -Werror -Wno-narrowing -Wfatal-errors")
+    set(CMAKE_CXX_FLAGS "-O0 -g -pg -Werror -Wno-narrowing -Wfatal-errors -Wunused")
   endif()
 elseif ( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
   if(COMPILER STREQUAL "intel")
@@ -610,6 +611,12 @@ set(structure_source_files
 	src/structure/implementation/component/CupCfd.cpp
 )
 
+# ===================================================
+# ================== Error Checking =================
+# ===================================================
+set(error_source_files
+	src/error/Error.cpp
+)
 
 # ===================================================
 # ================= Set Libraries ===================
@@ -627,6 +634,7 @@ add_library(cupcfd_lib ${bench_source_files}
 					   ${particle_source_files}
 					   ${partitioner_source_files}
 					   ${structure_source_files}
+					   ${error_source_files}
 					   ${utility_source_files}
 			)
 

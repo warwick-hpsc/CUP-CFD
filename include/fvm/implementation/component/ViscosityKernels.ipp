@@ -108,7 +108,7 @@ namespace cupcfd
 		{
 			T cmu = tmcmu;
 			T cmu25 = pow(cmu, 0.25);
-			T visURF = 1.0;
+			// T visURF = 1.0;
 
 			T uplus;
 			T yplus;
@@ -129,7 +129,7 @@ namespace cupcfd
 				I ir = mesh.getBoundaryRegionID(ib);
 				cupcfd::geometry::mesh::RType it = mesh.getRegionType(ir);
 				I ip = mesh.getFaceCell1ID(i);
-				I in = mesh.getFaceCell2ID(i);
+				// I in = mesh.getFaceCell2ID(i);
 
 				if(it == cupcfd::geometry::mesh::RTYPE_INLET)
 				{

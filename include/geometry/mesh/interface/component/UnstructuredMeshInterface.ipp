@@ -1084,10 +1084,10 @@ namespace cupcfd
 				for(I i = 0; i  < 5; i++)
 				{
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
-					if(faceNVertices[i] == 3)
+					if (faceNVertices[i] == 3)
 					{
-						triFaceLabels[ptr] == cellLocalFaceID[i];
-						ptr = ptr + 1;
+						triFaceLabels[ptr] = cellLocalFaceID[i];
+						ptr++;
 					}
 				}
 
@@ -1100,7 +1100,7 @@ namespace cupcfd
 				I nVertDup = 18; // (3+3+4+4+4)
 				
 				// Get the vertex IDs for each face
-				I faceVertexIDs[18];
+				I faceVertexIDs[nVertDup];
 				
 				ptr = 0;
 				for(I i = 0; i  < 5; i++)
@@ -1112,7 +1112,7 @@ namespace cupcfd
 					}
 				}
 
-				if(ptr != 18)
+				if(ptr != nVertDup)
 				{
 					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
 				}
@@ -1175,7 +1175,7 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != 9)
+				if(edge1.size() != (nVertDup/2))
 				{
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
@@ -1230,7 +1230,7 @@ namespace cupcfd
 				// Now we have defined the labels of our 'top' face, find the adjoining vertices on the bottom face
 				// and we have our polyhedron labels
 				// There is probably a cheaper way of doing this but should be small enough to just do a search
-				for(I i = 0; i < 9; i++)
+				for(I i = 0; i < (nVertDup/2); i++)
 				{
 					if(edge1[i] == tf)
 					{
@@ -1349,7 +1349,7 @@ namespace cupcfd
 				I nVertDup = 16; // (3 + 3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
-				I faceVertexIDs[16];
+				I faceVertexIDs[nVertDup];
 				
 				ptr = 0;
 				for(I i = 0; i  < 5; i++)
@@ -1361,7 +1361,7 @@ namespace cupcfd
 					}
 				}
 
-				if(ptr != 16)
+				if(ptr != nVertDup)
 				{
 					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
 				}
@@ -1424,7 +1424,7 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != 8)
+				if(edge1.size() != (nVertDup/2))
 				{
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
@@ -1445,7 +1445,7 @@ namespace cupcfd
 				basePos[3] = this->getVertexPos(baseFaceD);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < 16; i++)
+				for(I i = 0; i < nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD)
 					{
@@ -1525,7 +1525,7 @@ namespace cupcfd
 				I nVertDup = 13; // (3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
-				I faceVertexIDs[13];
+				I faceVertexIDs[nVertDup];
 				
 				ptr = 0;
 				for(I i = 0; i  < 4; i++)
@@ -1537,7 +1537,7 @@ namespace cupcfd
 					}
 				}
 
-				if(ptr != 13)
+				if(ptr != nVertDup)
 				{
 					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
 				}
@@ -1600,7 +1600,7 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != 6)
+				if(edge1.size() != (nVertDup/2))
 				{
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
@@ -1619,7 +1619,7 @@ namespace cupcfd
 				basePos[2] = this->getVertexPos(baseFaceC);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < 13; i++)
+				for(I i = 0; i < nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC)
 					{
@@ -1706,7 +1706,7 @@ namespace cupcfd
 				I nVertDup = 24; // (6*4)
 				
 				// Get the vertex IDs for each face
-				I faceVertexIDs[24];
+				I faceVertexIDs[nVertDup];
 				
 				ptr = 0;
 				for(I i = 0; i  < 6; i++)
@@ -1718,7 +1718,7 @@ namespace cupcfd
 					}
 				}
 
-				if(ptr != 24)
+				if(ptr != nVertDup)
 				{
 					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
 				}
@@ -1781,7 +1781,7 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != 12)
+				if(edge1.size() != (nVertDup/2))
 				{
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
@@ -1804,7 +1804,7 @@ namespace cupcfd
 				// Find a vertex on the opposite face
 				I oppVertexID;
 				
-				for(I i = 0; i < 24; i++)
+				for(I i = 0; i < nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD)
 					{

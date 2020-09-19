@@ -52,8 +52,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getSize(I * vecSize)
 		{
-			cupcfd::error::eCodes status;
-
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "size",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -65,8 +63,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getData(T * data, I nData, I * indexes, I nIndexes, I indexBase)
 		{
-			cupcfd::error::eCodes status;
-
 			if(nData != nIndexes)
 			{
 				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;

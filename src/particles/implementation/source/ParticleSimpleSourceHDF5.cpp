@@ -71,7 +71,10 @@ namespace cupcfd
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nparticles",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(nParticles);
+			status = access.readData(nParticles);
+			if (status != cupcfd::error::E_SUCCESS) {
+				return status;
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -79,8 +82,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase)
 		{
-			cupcfd::error::eCodes status;
-
 			// ToDo: Don't really like that this is a m*n function where m and n could both get large.
 			// We could store the rank, but if the decomposition changes (e.g. different number of processes) between runs, it invalidates
 			// the ranks and possibly the global cell IDs if the decomposition changes from the partitioner.

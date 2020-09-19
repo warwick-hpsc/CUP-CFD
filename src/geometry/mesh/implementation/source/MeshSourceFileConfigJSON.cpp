@@ -68,8 +68,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFileFormat(MeshFileFormat * fileFormat)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["FileFormat"];
 
 				if(dataSourceType == Json::Value::null)
@@ -89,8 +87,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFilePath(std::string& sourceFilePath)
 			{
-				cupcfd::error::eCodes status;
-
 				const Json::Value dataSourceType = this->configData["FilePath"];
 
 				if(dataSourceType == Json::Value::null)

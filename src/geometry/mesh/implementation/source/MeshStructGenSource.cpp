@@ -1141,8 +1141,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, I * boundaryLabels, I nBoundaryLabels)
 			{
-				cupcfd::error::eCodes status;
-
 				// Essentially an inversion of face->boundary
 
 				// Number of faces in these planes.

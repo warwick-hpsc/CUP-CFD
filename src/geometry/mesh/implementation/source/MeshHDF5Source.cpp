@@ -392,8 +392,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceNVertices(I * nVertices, I nNVertices, I * faceLabels, I nFaceLabels)
 			{
-				cupcfd::error::eCodes status;
-
 				// Error Check: Size Check
 
 				// Setup Access
@@ -677,8 +675,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels)
 			{
-				cupcfd::error::eCodes status;
-
 				// ToDo: Error Check: Check arrays are correct size
 
 				// ToDo: This can be faster: Using these function as they are currently written will reload the same data more than once.
@@ -833,8 +829,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryNVertices(I * nVertices, I nNVertices, I * boundaryLabels, I nBoundaryLabels)
 			{
-				cupcfd::error::eCodes status;
-
 				// ToDo: We could just read vert4 and ignore the rest....
 
 				// Data not stored directly in file, need to read in 4 vertices and count
@@ -904,8 +898,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * boundaryLabels, I nBoundaryLabels)
 			{
-				cupcfd::error::eCodes status;
-
 				// ToDo: Error Check: Check arrays are correct size
 
 				// ToDo: This can be faster: Using these function as they are currently written will reload the same data more than once.

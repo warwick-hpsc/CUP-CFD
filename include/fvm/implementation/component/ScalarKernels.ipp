@@ -57,12 +57,13 @@ namespace cupcfd
 			I i, ip, in, ib, ir;
 			T facn, facp;
 
-			T Phiac;
+			// T Phiac;
 			T Visac;
 			T VisLam;
 			T PhiFlux;
 			T VisFace;
-			T fce, fci, fdi, fde1, fde2, d1, fde, f;
+			// T fce, fci, fdi, fde1, fde2, d1, fde, f;
+			T fce, fci, fdi, fde1, d1, fde, f;
 			T s2, dn;
 			T Tdif;
 
@@ -112,7 +113,7 @@ namespace cupcfd
 
 					Xac = mesh.getCellCenter(in) * facn + mesh.getCellCenter(ip) * facp;
 
-					Phiac = PhiCell[in] * facn + PhiCell[ip] * facp;
+					// Phiac = PhiCell[in] * facn + PhiCell[ip] * facp;
 					Visac = VisEff[in] * facn + VisEff[ip] * facp;
 
 
@@ -156,7 +157,7 @@ namespace cupcfd
 				   tmpPoint = mesh.getFaceCenter(i);
 				   tmpVec = tmpPoint - Xac;
 
-				   T delta = dPhidxac.dotProduct(tmpVec);
+				   // T delta = dPhidxac.dotProduct(tmpVec);
 
 				   Xpn = mesh.getCellCenter(in) - mesh.getCellCenter(ip);
 				   VisFace  = Visac * mesh.getFaceRLencos(i);
@@ -176,7 +177,7 @@ namespace cupcfd
 				   d2  = Xpn * s2/d1;
 				   d3  = norm - d2;
 
-				   fde2 = Visac * d3.dotProduct(dPhidxac);
+				   // fde2 = Visac * d3.dotProduct(dPhidxac);
 
 				   fci = fmin(MassFlux[i], 0.0) * PhiCell[in] + fmax(MassFlux[i], 0.0) * PhiCell[ip];
 

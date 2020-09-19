@@ -46,8 +46,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::addParticle(const ParticleSimple<I,T>& particle)
 		{
-			cupcfd::error::eCodes status;
-
 			// If the particle is not already marked as inactive (would be a bit weird to add an inactive particle),
 			// increment the active counter
 			bool isInactive = particle.getInactive();
@@ -89,8 +87,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setParticleInactive(I particleID)
 		{
-			cupcfd::error::eCodes status;
-			
 			// particleID for this scheme is the index in the vector
 			
 			// Check particle is not already inactive
@@ -600,7 +596,6 @@ namespace cupcfd
 						}
 						else
 						{
-							I globalCellIdBefore = this->particles[i].getCellGlobalID();
 							I boundaryID = this->mesh->getFaceBoundaryID(localFaceID);
 							I regionID = this->mesh->getBoundaryRegionID(boundaryID);
 							cupcfd::geometry::mesh::RType boundaryType = this->mesh->getRegionType(regionID);
@@ -696,8 +691,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setActiveParticlesTravelTime(T travelTime)
 		{
-			cupcfd::error::eCodes status;
-
 			if(!(travelTime > T(0)))
 			{
 				// Negative or zero travel time - set all particles travel time to zero and non-travelling

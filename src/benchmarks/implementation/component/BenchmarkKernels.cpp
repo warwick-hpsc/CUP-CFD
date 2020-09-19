@@ -243,6 +243,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -317,6 +318,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -357,6 +359,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -393,6 +396,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -441,6 +445,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -506,6 +511,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -560,6 +566,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -652,6 +659,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -772,6 +780,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -841,6 +850,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -871,6 +881,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -920,6 +931,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -961,6 +973,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -1002,6 +1015,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
@@ -1049,6 +1063,7 @@ namespace cupcfd
 			TreeTimerLogParameterInt("LocalGhostCells", nGhostCells);
 			TreeTimerLogParameterInt("LocalBounds", nBnds);
 			TreeTimerLogParameterInt("LocalFaces", nFaces);
+			TreeTimerLogParameterInt("LocalRegions", nRegions);
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts

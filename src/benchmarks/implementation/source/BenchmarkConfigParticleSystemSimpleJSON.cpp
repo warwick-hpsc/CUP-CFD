@@ -41,8 +41,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkName(std::string& benchmarkName)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("BenchmarkName"))
 			{
 				const Json::Value dataSourceType = this->configData["BenchmarkName"];
@@ -67,8 +65,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkRepetitions(I * repetitions)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("Repetitions"))
 			{
 				const Json::Value dataSourceType = this->configData["Repetitions"];
@@ -93,8 +89,6 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getNTimesteps(I * nTimesteps)
 		{
-			cupcfd::error::eCodes status;
-
 			if(this->configData.isMember("NTimesteps"))
 			{
 				const Json::Value dataSourceType = this->configData["NTimesteps"];
