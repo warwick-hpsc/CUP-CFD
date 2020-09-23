@@ -36,32 +36,32 @@ namespace cupcfd
 	namespace fvm
 	{
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynCellLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-											  T small,
-											  T cmu,
-											  T visURF,
-											  T visLam,
-											  T * TE, I nTE,
-											  T * ED, I nED,
-											  T * den, I nDen,
-											  T * visEff, I nVisEff);
+		cupcfd::error::eCodes calculateViscosityDolfynCellLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																T small,
+																T cmu,
+																T visURF,
+																T visLam,
+																T * TE, I nTE,
+																T * ED, I nED,
+																T * den, I nDen,
+																T * visEff, I nVisEff);
 
 		template <class M, class I, class T, class L>
 		void calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynBoundaryLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-															T tmcmu, T large, T small, T kappa, T visLam,
-															T * TE, I nTE,
-															T * den, I nDen,
-															T * visEffCell, I nVisEffCell,
-															T * visEffBoundary, I nVisEffBoundary);
+		cupcfd::error::eCodes calculateViscosityDolfynBoundaryLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																	T tmcmu, T large, T small, T kappa, T visLam,
+																	T * TE, I nTE,
+																	T * den, I nDen,
+																	T * visEffCell, I nVisEffCell,
+																	T * visEffBoundary, I nVisEffBoundary);
 
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynCellLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-											   T visLam,
-											   T * visEffCell, I nVisEffCell,
-											   T * visEffBoundary, I nVisBoundary);
+		cupcfd::error::eCodes calculateViscosityDolfynCellLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																T visLam,
+																T * visEffCell, I nVisEffCell,
+																T * visEffBoundary, I nVisEffBoundary);
 	}
 }
 

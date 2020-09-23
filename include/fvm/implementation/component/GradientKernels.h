@@ -47,10 +47,10 @@ namespace cupcfd
 		 */
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes GradientPhiGaussDolfyn(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I nGradient,
-							  T * phiCell, I nPhiCell,
-							  T * phiBoundary, I nPhiBoundary,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell);
+													T * phiCell, I nPhiCell,
+													T * phiBoundary, I nPhiBoundary,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell);
 	}
 }
 

@@ -632,9 +632,9 @@ namespace cupcfd
 
 			bool SolveTurb = true;
 			bool SolveEnthalpy = false;
-			T sigma = 1.0;
-			T sigma2 = 1.2;
-			T vislam = 1.3;
+			// T sigma = 1.0;
+			// T sigma2 = 1.2;
+			// T vislam = 1.3;
 			int ivar = 1;
 			int VarT = 2;
 			T Sigma_T = 1.4;
@@ -664,23 +664,23 @@ namespace cupcfd
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
 			cupcfd::fvm::FluxScalarDolfynFaceLoop(*(this->meshPtr),
-																	PhiCell, nCells,
-																	PhiBoundary, nBnds,
-																	VisEff, nCells,
-																	Au, nCells,
-																	Su, nCells,
-																	Den, nCells,
-																	MassFlux, nFaces,
-																	TE, nCells,
-																	CpBoundary, nBnds,
-																	visEffBoundary, nBnds,
-																	RFace, nFaces * 2,
-																	dPhidx, nCells,
-																	SolveTurb, SolveEnthalpy,
-																	sigma, sigma2, vislam,
-																	ivar, VarT, Sigma_T, Prandtl,
-																	VarTE, Sigma_k, VarED, Sigma_e,
-																	Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
+												PhiCell, nCells,
+												PhiBoundary, nBnds,
+												VisEff, nCells,
+												Au, nCells,
+												Su, nCells,
+												Den, nCells,
+												MassFlux, nFaces,
+												TE, nCells,
+												CpBoundary, nBnds,
+												visEffBoundary, nBnds,
+												RFace, nFaces * 2,
+												dPhidx, nCells,
+												SolveTurb, SolveEnthalpy,
+												// sigma, sigma2, vislam,
+												ivar, VarT, Sigma_T, Prandtl,
+												VarTE, Sigma_k, VarED, Sigma_e,
+												Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
 
 			// Stop Timer
 			TreeTimerExitBlock("FluxScalarDolfynFaceLoopBenchmark");
@@ -712,7 +712,7 @@ namespace cupcfd
 
 			T gammaBlend = 0.9;
 			T small = 1E-18;
-			T large = 1E+18;
+			// T large = 1E+18;
 
 			T * uCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(uCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -784,26 +784,27 @@ namespace cupcfd
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
-			cupcfd::fvm::FluxUVWDolfynFaceLoop1(*(meshPtr), gammaBlend, small, large,
-															uCell, nCells,
-															vCell, nCells,
-															wCell, nCells,
-															uBoundary, nBnds,
-															vBoundary, nBnds,
-															wBoundary, nBnds,
-															visEffCell, nCells,
-															visEffBoundary, nBnds,
-															massFlux, nFaces,
-															dudx, nCells,
-															dvdx, nCells,
-															dwdx, nCells,
-															rFace, nFaces * 2,
-															su, nCells,
-															sv, nCells,
-															sw, nCells,
-															au, nCells,
-															av, nCells,
-															aw, nCells);
+			cupcfd::fvm::FluxUVWDolfynFaceLoop1(*(meshPtr), gammaBlend, small, 
+												// large,
+												uCell, nCells,
+												vCell, nCells,
+												wCell, nCells,
+												uBoundary, nBnds,
+												vBoundary, nBnds,
+												wBoundary, nBnds,
+												visEffCell, nCells,
+												visEffBoundary, nBnds,
+												massFlux, nFaces,
+												dudx, nCells,
+												dvdx, nCells,
+												dwdx, nCells,
+												rFace, nFaces * 2,
+												su, nCells,
+												sv, nCells,
+												sw, nCells,
+												au, nCells,
+												av, nCells,
+												aw, nCells);
 
 			// Stop Timer
 			TreeTimerExitBlock("FluxUVWDolfynFaceLoop1Benchmark");

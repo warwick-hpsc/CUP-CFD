@@ -37,10 +37,10 @@ namespace cupcfd
 	{
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes GradientPhiGaussDolfyn(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I nGradient,
-							  T * phiCell, I nPhiCell,
-							  T * phiBoundary, I nPhiBoundary,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell)
+													T * phiCell, I nPhiCell,
+													T * phiBoundary, I nPhiBoundary,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell)
 		{
 
 			T facn, facp, fact;
@@ -96,9 +96,9 @@ namespace cupcfd
 						dPhidxac = (dPhidxoCell[in] * facn) + (dPhidxoCell[ip] * facp);
 
 						#ifndef NDEBUG
-						if (ip >= nPhiCell || in >= nPhiCell) {
-							return cupcfd::error::E_INVALID_INDEX;
-						}
+							if (ip >= nPhiCell || in >= nPhiCell) {
+								return cupcfd::error::E_INVALID_INDEX;
+							}
 						#endif
 						phiFace = (phiCell[in] * facn) + (phiCell[ip] * facp);
 
@@ -114,9 +114,9 @@ namespace cupcfd
 					{
 						ib = mesh.getFaceBoundaryID(i);
 						#ifndef NDEBUG
-						if (ib >= nPhiBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
-						}
+							if (ib >= nPhiBoundary) {
+								return cupcfd::error::E_INVALID_INDEX;
+							}
 						#endif
 						phiFace = phiBoundary[ib];
 

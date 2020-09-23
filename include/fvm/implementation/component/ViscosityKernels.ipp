@@ -34,15 +34,15 @@ namespace cupcfd
 	namespace fvm
 	{
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynCellLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-											  T small,
-											  T cmu,
-										  	  T visURF,
-											  T visLam,
-											  T * TE, I nTE,
-											  T * ED, I nED,
-											  T * den, I nDen,
-											  T * visEff, I nVisEff)
+		cupcfd::error::eCodes calculateViscosityDolfynCellLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																T small,
+																T cmu,
+																T visURF,
+																T visLam,
+																T * TE, I nTE,
+																T * ED, I nED,
+																T * den, I nDen,
+																T * visEff, I nVisEff)
 		{
 			I ip;
 
@@ -51,6 +51,21 @@ namespace cupcfd
 
 			for(ip = 0; ip < mesh.properties.lTCells; ip++)
 			{
+				#ifndef NDEBUG
+					if (ip >= nTE) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nED) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDen) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nVisEff) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				visOld = visEff[ip];
 
 				if(ED[ip] > small)
@@ -64,6 +79,8 @@ namespace cupcfd
 
 				visEff[ip] = visOld + visURF * (visNew - visOld);
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
@@ -99,12 +116,12 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynBoundaryLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-											T tmcmu, T large, T small, T kappa, T visLam,
-											T * TE, I nTE,
-											T * den, I nDen,
-											T * visEffCell, I nVisEffCell,
-											T * visEffBoundary, I nVisEffBoundary)
+		cupcfd::error::eCodes calculateViscosityDolfynBoundaryLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																	T tmcmu, T large, T small, T kappa, T visLam,
+																	T * TE, I nTE,
+																	T * den, I nDen,
+																	T * visEffCell, I nVisEffCell,
+																	T * visEffBoundary, I nVisEffBoundary)
 		{
 			T cmu = tmcmu;
 			T cmu25 = pow(cmu, 0.25);
@@ -131,6 +148,12 @@ namespace cupcfd
 				I ip = mesh.getFaceCell1ID(i);
 				// I in = mesh.getFaceCell2ID(i);
 
+				#ifndef NDEBUG
+					if (ib >= nVisEffBoundary) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				if(it == cupcfd::geometry::mesh::RTYPE_INLET)
 				{
 					// Skip User Option from Dolfyn for now
@@ -139,14 +162,35 @@ namespace cupcfd
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
 				{
+					#ifndef NDEBUG
+						if (ib >= nVisEffCell) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
+
 					visEffBoundary[ib] = visEffCell[ip];
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_SYMP)
 				{
+					#ifndef NDEBUG
+						if (ib >= nVisEffCell) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
+
 					visEffBoundary[ib] = visEffCell[ip];
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_WALL)
 				{
+					#ifndef NDEBUG
+						if (ib >= nTE) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nDen) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
+
 					dist = mesh.getBoundaryDistance(ib);
 					turb = TE[ip];
 
@@ -202,23 +246,39 @@ namespace cupcfd
 					}
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynCellLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-											   T visLam,
-											   T * visEffCell, I nVisEffCell,
-											   T * visEffBoundary, I nVisBoundary)
+		cupcfd::error::eCodes calculateViscosityDolfynCellLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+																T visLam,
+																T * visEffCell, I nVisEffCell,
+																T * visEffBoundary, I nVisEffBoundary)
 		{
 			for(I ip = 0; ip < mesh.properties.lTCells; ip++)
 			{
+				#ifndef DEBUG
+					if (ip >= nVisEffCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				visEffCell[ip] = std::min(visEffCell[ip], T(1000000.0) * visLam);
 			}
 
 			for(I ip = 0; ip < mesh.properties.lBoundaries; ip++)
 			{
+				#ifndef DEBUG
+					if (ip >= nVisEffBoundary) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				visEffBoundary[ip] = std::min(visEffBoundary[ip], T(1000000.0) * visLam);
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

@@ -46,7 +46,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynFaceLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynFaceLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
 									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
 									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
@@ -87,7 +87,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynBoundaryLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 										 T * massFlux, I nMassFlux,
 										 T * flowin);
 
@@ -99,7 +99,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynBoundaryLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 													 T * massFlux, I nMassFlux,
 													 T * flowRegion, I nFlowRegion,
 													 T * flowout);
@@ -123,7 +123,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynBoundaryLoop4(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop4(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 										 T * massFlux, I nMassFlux,
 										 T * uBoundary, I nUBoundary,
 										 T * vBoundary, I nVboundary,
@@ -140,7 +140,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynBoundaryLoop5(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop5(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 										 T * massFlux, I nMassFlux,
 										 T * su, I nSu,
 										 T * uBoundary, I nUBoundary,
@@ -158,7 +158,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynRegionLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+		cupcfd::error::eCodes FluxMassDolfynRegionLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 									  T * flowFact, I nFlowFact,
 									  T * flowRegion, I nFlowRegion,
 									  T flowIn);

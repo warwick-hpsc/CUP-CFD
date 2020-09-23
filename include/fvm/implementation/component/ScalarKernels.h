@@ -45,24 +45,24 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
-		void FluxScalarDolfynFaceLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-									  T * PhiCell, I nPhiCell,
-									  T * PhiBoundary, I nPhiBoundary,
-									  T * VisEff, I nVisEff,
-									  T * Au, I nAu,
-									  T * Su, I nSu,
-									  T * Den, I nDen,
-									  T * MassFlux, I nMassFlux,
-									  T * TE, I nTE,
-									  T * CpBoundary, I nCpBoundary,
-									  T * visEffBoundary, I nVisEffBoundary,
-									  T * RFace, I nRFace,
-									  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidx, int ndPhidx,
-									  bool SolveTurb, bool SolveEnthalpy,
-									  T sigma, T sigma2, T vislam,
-									  int ivar, int VarT, T Sigma_T, T Prandtl,
-									  int VarTE, T Sigma_k, int VarED, T Sigma_e,
-									  T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu);
+		cupcfd::error::eCodes FluxScalarDolfynFaceLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+														T * PhiCell, I nPhiCell,
+														T * PhiBoundary, I nPhiBoundary,
+														T * VisEff, I nVisEff,
+														T * Au, I nAu,
+														T * Su, I nSu,
+														T * Den, I nDen,
+														T * MassFlux, I nMassFlux,
+														T * TE, I nTE,
+														T * CpBoundary, I nCpBoundary,
+														T * visEffBoundary, I nVisEffBoundary,
+														T * RFace, I nRFace,
+														cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidx, int ndPhidx,
+														bool SolveTurb, bool SolveEnthalpy,
+														// T sigma, T sigma2, T vislam,
+														int ivar, int VarT, T Sigma_T, T Prandtl,
+														int VarTE, T Sigma_k, int VarED, T Sigma_e,
+														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu);
 	}
 }
 
