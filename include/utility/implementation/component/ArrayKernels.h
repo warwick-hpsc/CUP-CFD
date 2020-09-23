@@ -34,8 +34,8 @@ namespace cupcfd
 			*
 			* @return Returns nothing
 			*/
-			template <class I, class T>
-			void add(T * source1, T * source2, T * dest, I nEle);
+			// template <class I, class T>
+			// void add(T * source1, T * source2, T * dest, I nEle);
 
 			/**
 			* Return the number of elements in the array that are unique (i.e. there exist no duplicates)
@@ -145,8 +145,8 @@ namespace cupcfd
 			*
 			* @return Returns nothing
 			*/
-			template <class I, class T>
-			void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
+			// template <class I, class T>
+			// void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
 
 
 			/**
@@ -175,8 +175,6 @@ namespace cupcfd
 			 * @param source2 The second array of elements in the intersection
 			 * @param nSource2 The size of source2 in the number of elements of type T - should be equal to nSource1
 			 * @param result A pointer to the location where the result array will be written
-		 	 * @param nResult The size of the result array in the number of elements of type T. This should be equal to or
-		 	 * greater than nSource1/nSource2
 			 *
 			 * @tparam I The type of the indexing scheme
 			 * @tparam T The type of the stored array data
@@ -184,7 +182,7 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
+			void intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result);
 
 			/**
 			 * Populates an array with random numbers, generated between lower_bound and upper_bound with

@@ -23,7 +23,8 @@ namespace cupcfd
 	namespace comm
 	{
 		template <class T>
-		cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm)
+		// cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm)
+		cupcfd::error::eCodes Gather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm)
 		{
 			cupcfd::error::eCodes status;
 		
@@ -52,7 +53,8 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm)
+		// cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm)
+		cupcfd::error::eCodes AllGather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm)
 		{
 			cupcfd::error::eCodes status;
 					
@@ -83,7 +85,8 @@ namespace cupcfd
 		// ===============================================================================================================
 
 		template <class T>
-		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm)
+		// cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm)
+		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm)
 		{
 			cupcfd::error::eCodes status;
 		
@@ -148,7 +151,8 @@ namespace cupcfd
 			}
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
-			Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			// Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			Gather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			if(mpComm.rank == sinkPID)
@@ -161,7 +165,8 @@ namespace cupcfd
 			}
 
 			// Setup complete, pass final gather work onto next driver
-			status = GatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, sinkPID, mpComm);
+			// status = GatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, sinkPID, mpComm);
+			status = GatherV(bSend, nBSend, *bRecv, *bRecvCounts, sinkPID, mpComm);
 			
 			if(status != cupcfd::error::E_SUCCESS)
 			{
@@ -174,7 +179,8 @@ namespace cupcfd
 		// ===============================================================================================================
 
 		template <class T>
-		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm)
+		// cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm)
+		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, cupcfd::comm::Communicator& mpComm)
 		{
 			cupcfd::error::eCodes status;
 		
@@ -232,7 +238,8 @@ namespace cupcfd
 			*bRecvCounts = (int *) malloc(sizeof(int) * *nBRecvCounts);
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
-			AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			// AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			AllGather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, mpComm);
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			// Get the total element count

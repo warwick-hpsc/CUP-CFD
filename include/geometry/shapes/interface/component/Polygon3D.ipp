@@ -87,7 +87,9 @@ namespace cupcfd
 			template <class T>
 			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints)
 			{
-				// ToDo: Assuming at least 3 points - error check?
+				if (nPoints < 3) {
+					throw(std::runtime_error("Polygon3D::isVertexOrderClockwise() called with < 3 points"));
+				}
 			
 				// ToDo: Error Check - observation must not be coplanar with points
 			

@@ -36,29 +36,29 @@
 	namespace fvm
 	{
 		template <class M, class I, class T, class L>
-		void FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-									T gammaBlend,
-									T small,
-									T large,
-									T * uCell, I nUCell,
-									T * vCell, I nVCell,
-									T * wCell, I nWCell,
-									T * uBoundary, I nUBoundary,
-									T * vBoundary, I nVBoundary,
-									T * wBoundary, I nWBoundary,
-									T * visEffCell, I nVisEffCell,
-									T * visEffBoundary, I nVisEffBoundary,
-									T * massFlux, I nMassFlux,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
-									T * rFace, I nRFace,
-									T * su, I nSu,
-									T * sv, I nSv,
-									T * sw, I nSw,
-									T * au, I nAu,
-									T * av, I nAv,
-									T * aw, I nAw)
+		cupcfd::error::eCodes FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+													T gammaBlend,
+													T small,
+													// T large,
+													T * uCell, I nUCell,
+													T * vCell, I nVCell,
+													T * wCell, I nWCell,
+													T * uBoundary, I nUBoundary,
+													T * vBoundary, I nVBoundary,
+													T * wBoundary, I nWBoundary,
+													T * visEffCell, I nVisEffCell,
+													T * visEffBoundary, I nVisEffBoundary,
+													T * massFlux, I nMassFlux,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
+													T * rFace, I nRFace,
+													T * su, I nSu,
+													T * sv, I nSv,
+													T * sw, I nSw,
+													T * au, I nAu,
+													T * av, I nAv,
+													T * aw, I nAw)
 		{
 			// T pe0 = 9999.0;
 			// T pe1 = -9999.0;
@@ -98,11 +98,50 @@
 
 			for(I i = 0; i < mesh.properties.lFaces; i++)
 			{
+				#ifndef DEBUG
+					if (i >= nMassFlux) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				// Get Cell 1 Index
 				ip = mesh.getFaceCell1ID(i);
 
 				// Get Cell 2 Index
 				in = mesh.getFaceCell2ID(i);
+
+				#ifndef DEBUG
+					if (ip >= nUCell || in >= nUCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nVCell || in >= nVCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nWCell || in >= nWCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nVisEffCell || in >= nVisEffCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDudx || in >= nDudx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDvdx || in >= nDvdx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDwdx || in >= nDwdx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSu || in >= nSu) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSv || in >= nSv) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSw || in >= nSw) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
 
 				bool isBoundary = mesh.getFaceIsBoundary(i);
 
@@ -167,6 +206,11 @@
 					dwdxac.dotProduct(xpn, &rDotProduct);
 					fwdi = visFace * rDotProduct;
 
+					#ifndef NDEBUG
+						if ((i*2)+1 >= nRFace) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					rFace[i*2] = -visFace - std::max(massFlux[i], T(0.0));
 					rFace[(i*2)+1] = -visFace + std::min(massFlux[i], T(0.0));
 
@@ -197,6 +241,30 @@
 					ir = mesh.getBoundaryRegionID(ib);
 					it = mesh.getRegionType(ir);
 					ip = mesh.getFaceCell1ID(i);
+
+					#ifndef DEBUG
+						if (ib >= nUBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nVBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nWBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nVisEffBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAu) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAv) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAw) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 
 					// Boundary Face
 
@@ -476,6 +544,8 @@
 					}
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>

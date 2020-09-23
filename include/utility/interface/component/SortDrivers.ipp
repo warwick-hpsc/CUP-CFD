@@ -45,7 +45,7 @@ namespace cupcfd
 
 			// Merge Sort (Destructive) - Also returns original indexes in sorted fashion
 			template <class I, class T>
-			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes)
+			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes)
 			{
 				// ToDo: Error checks before and after
 
@@ -55,7 +55,7 @@ namespace cupcfd
 					indexes[i] = i;
 				}
 
-				kernels::merge_sort(source, nSource, indexes, nIndexes);
+				kernels::merge_sort(source, nSource, indexes);
 				return cupcfd::error::E_SUCCESS;
 			}
 

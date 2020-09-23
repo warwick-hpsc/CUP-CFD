@@ -94,6 +94,12 @@ namespace cupcfd
 						xac = (mesh.getCellCenter(in) * facn) + (mesh.getCellCenter(ip) * facp);
 
 						dPhidxac = (dPhidxoCell[in] * facn) + (dPhidxoCell[ip] * facp);
+
+						#ifndef NDEBUG
+						if (ip >= nPhiCell || in >= nPhiCell) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						#endif
 						phiFace = (phiCell[in] * facn) + (phiCell[ip] * facp);
 
 						corrTmp = mesh.getFaceCenter(i) - xac;
@@ -107,6 +113,11 @@ namespace cupcfd
 					else
 					{
 						ib = mesh.getFaceBoundaryID(i);
+						#ifndef NDEBUG
+						if (ib >= nPhiBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						#endif
 						phiFace = phiBoundary[ib];
 
 						dPhidxCell[ip] = dPhidxCell[ip] + (phiFace * mesh.getFaceNorm(i));

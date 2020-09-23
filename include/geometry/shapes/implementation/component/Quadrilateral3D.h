@@ -169,10 +169,10 @@ namespace cupcfd
 					 * @retval false The four vertices as per the positional definition for edges do not
 					 * produce a valid quadrilateral that encloses a single area.
 					 */
-					static T validQuadrilateralPoints(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d);
+					// static T validQuadrilateralPoints(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+					// 						    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+					// 						    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+					// 						    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d);
 
 
 					/**

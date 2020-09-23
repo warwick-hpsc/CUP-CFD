@@ -177,20 +177,20 @@ namespace cupcfd
 				return true;
 			}
 															 												 
-			template <class T>
-			T Quadrilateral3D<T>::validQuadrilateralPoints(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-														    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-														    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-														    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d)
-			{			
-				// Check 1: Do any of the vectors ab, bc, cd and da intersect with one another?
-				// If so this is not a valid ordering of points for the quadrilateral definition (e.g, hourglass vs square)
+			// template <class T>
+			// T Quadrilateral3D<T>::validQuadrilateralPoints(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+			// 											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+			// 											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+			// 											    cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d)
+			// {			
+			// 	// Check 1: Do any of the vectors ab, bc, cd and da intersect with one another?
+			// 	// If so this is not a valid ordering of points for the quadrilateral definition (e.g, hourglass vs square)
 				
-				// Check by creating two planes now we know the point orderings are correct, and see if those two
-				// triangles are coplanar
+			// 	// Check by creating two planes now we know the point orderings are correct, and see if those two
+			// 	// triangles are coplanar
 				
-				return false;
-			}
+			// 	return false;
+			// }
 																								 
 			// === Concrete Methods ===
 

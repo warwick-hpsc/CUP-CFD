@@ -47,7 +47,8 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
-		cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm);
+		// cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm);
+		cupcfd::error::eCodes Gather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
 		 * Performs a AllGather operation across ranks to gather a fixed-size block of data from each process,
@@ -76,7 +77,8 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
-		cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm);
+		// cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm);
+		cupcfd::error::eCodes AllGather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
 		 * Performs a Gather operation across ranks to gather a variable sized block of data from each process
@@ -106,7 +108,8 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
-		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm);
+		// cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm);
+		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
 		 * Performs a Gather operation across ranks to gather a variable sized block of data from each process
@@ -173,7 +176,8 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
-		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm);
+		// cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm);
+		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, cupcfd::comm::Communicator& mpComm);
 
 		/**
 		 * Performs a AllGather operation across ranks to gather a variable sized block of data from each process

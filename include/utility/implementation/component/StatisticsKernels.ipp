@@ -36,32 +36,32 @@ namespace cupcfd
 				return result;
 			}
 
-			template <class I, class T>
-			T median(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
+			// template <class I, class T>
+			// T median(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
 
-				return result;
-			}
+			// 	return result;
+			// }
 
-			template <class I, class T>
-			T mode(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
+			// template <class I, class T>
+			// T mode(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
 
-				return result;
-			}
+			// 	return result;
+			// }
 
-			template <class I, class T>
-			double stDev(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
+			// template <class I, class T>
+			// double stDev(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
 
-				return result;
-			}
+			// 	return result;
+			// }
 
 			template <class I, class T>
 			int count(T * source, I nEle, T target)

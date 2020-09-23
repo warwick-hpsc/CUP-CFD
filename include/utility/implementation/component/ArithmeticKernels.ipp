@@ -39,20 +39,20 @@ namespace cupcfd
 					return val == target;
 				}
 
-				inline bool isEqual(float val, float target, float tolerance)
-				{
-					return val == target;
-				}
+				// inline bool isEqual(float val, float target, float tolerance)
+				// {
+				// 	return val == target;
+				// }
 
 				inline bool isEqual(double val, double target)
 				{
 					return val == target;
 				}
 
-				inline bool isEqual(double val, double target, double tolerance)
-				{
-					return val == target;
-				}
+				// inline bool isEqual(double val, double target, double tolerance)
+				// {
+				// 	return val == target;
+				// }
 
 				inline double sqrtWr(double val)
 				{

@@ -50,7 +50,6 @@ namespace cupcfd
 			 * @param source The source data array
 			 * @param nSource The size of source as the number of elements of type T
 			 * @param indexes The index array the result is written to by the function
-			 * @param nIndexes The size of indexes as the number of elements of type T
 			 *
 			 * @tparam I The type of the indexing scheme (integer based)
 			 * @tparam T The type of the stored array data
@@ -58,7 +57,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
+			I merge_sort(T * source,  I nSource, I * indexes);
 
 			/**
 			 * Evaluate whether an array is sorted in ascending order based on the < and == operators of type T.

@@ -95,7 +95,8 @@ namespace cupcfd
 
 
 			template <class I, class T>
-			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle)
+			// cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle)
+			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest)
 			{
 
 				bool isSorted;
@@ -120,25 +121,32 @@ namespace cupcfd
 			}
 
 
-			template <class I, class T>
-			cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele)
-			{
-				// Error Check Needed: Two arrays are same size
+			// template <class I, class T>
+			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele)
+			// {
+			// 	if (nSource1Ele != nSource2Ele) {
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 	}
 
-				kernels::add(source1, source2, source1, nSource1Ele);
+			// 	kernels::add(source1, source2, source1, nSource1Ele);
 
-				return cupcfd::error::E_SUCCESS;
-			}
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 
-			template <class I, class T>
-			cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle)
-			{
-				// Error Check Needed: All three arrays are same size
+			// template <class I, class T>
+			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle)
+			// {
+			// 	if (nSource1Ele != nSource2Ele) {
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 	}
+			// 	if (nSource1Ele != nDestEle) {
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 	}
 
-				kernels::add(source1, source2, dest, nSource1Ele);
+			// 	kernels::add(source1, source2, dest, nSource1Ele);
 
-				return cupcfd::error::E_SUCCESS;
-			}
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 
             template <class I, class T>
             cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count)
@@ -181,8 +189,8 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-            template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst)
+			template <class I, class T>
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst)
 			{
 				bool sorted;
 				T * arrPtr;
@@ -209,7 +217,12 @@ namespace cupcfd
 					arrPtr = source;
 				}
 
-				// Error Check: Ensure dst is correct size?
+				// Error Check: Ensure dst is correct size
+				I nEleDst2;
+				drivers::distinctCount(source, nEleSource, &nEleDst2);
+				if (nEleDst2 != nEleDst) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
 
 				// (3) Call the kernel on a sorted array.
 				kernels::distinctArray(arrPtr, dst, nEleSource);
@@ -239,7 +252,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount)
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount)
 			{
 				bool sorted;
 				T * arrPtr;
@@ -258,7 +271,12 @@ namespace cupcfd
 					arrPtr = source;
 				}
 
-				// Error Check: Ensure dst is correct size?
+				// Error Check: Ensure dst is correct size
+				I nEleDst2;
+				drivers::distinctCount(source, nEleSource, &nEleDst2);
+				if (nEleDst2 != nEleDst) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
 
 				// (3) Call the kernel on a sorted array.
 				kernels::distinctArray(arrPtr, dst, dupCount, nEleSource);
@@ -273,20 +291,19 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount, I * nEleDupCount)
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount)
 			{
 				// Determine number of distinct elements
 				drivers::distinctCount(source, nEleSource, nEleDst);
-				*nEleDupCount = *nEleDst;
 
 				// Allocate the results array
 				*dst = (T *) malloc(sizeof(T) * *nEleDst);
 
 				// Allocate the count array
-				*dupCount = (I *) malloc(sizeof(I) * *nEleDupCount);
+				*dupCount = (I *) malloc(sizeof(I) * *nEleDst);
 
 				// Pass work along to driver that performs the same functionas this, but with the results array set up.
-				cupcfd::error::eCodes err = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount, *nEleDupCount);
+				cupcfd::error::eCodes err = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount);
 
 				// Responsibility for freeing the dst and dupCount arrays is left to the caller, since they contain the results.
 				return err;
@@ -370,67 +387,67 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			template <class I, class T>
-			cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult)
-			{
-				bool sorted1;
-				bool sorted2;
-				T * source1Ptr = nullptr;
-				T * source2Ptr = nullptr;
+			// template <class I, class T>
+			// cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult)
+			// {
+			// 	bool sorted1;
+			// 	bool sorted2;
+			// 	T * source1Ptr = nullptr;
+			// 	T * source2Ptr = nullptr;
 
-				// Error Check: result should be a nullptr (else we risk a memory leak by overwriting an active
-				// pointer memory allocation).
+			// 	// Error Check: result should be a nullptr (else we risk a memory leak by overwriting an active
+			// 	// pointer memory allocation).
 
-				// Kernel requires sorted arrays. Check if source1 is sorted.
-				cupcfd::utility::drivers::is_sorted(source1, nSource1, &sorted1);
+			// 	// Kernel requires sorted arrays. Check if source1 is sorted.
+			// 	cupcfd::utility::drivers::is_sorted(source1, nSource1, &sorted1);
 
-				if(!sorted1)
-				{
-					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
-					cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
-					cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
-				}
-				else
-				{
-					source1Ptr = source1;
-				}
+			// 	if(!sorted1)
+			// 	{
+			// 		source1Ptr = (T *) malloc(sizeof(T) * nSource1);
+			// 		cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
+			// 		cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
+			// 	}
+			// 	else
+			// 	{
+			// 		source1Ptr = source1;
+			// 	}
 
-				// Kernel requires sorted arrays. Check if source2 is sorted.
-				cupcfd::utility::drivers::is_sorted(source2, nSource2, &sorted2);
-				if(!sorted2)
-				{
-					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
-					cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
-					cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
-				}
-				else
-				{
-					source2Ptr = source2;
-				}
+			// 	// Kernel requires sorted arrays. Check if source2 is sorted.
+			// 	cupcfd::utility::drivers::is_sorted(source2, nSource2, &sorted2);
+			// 	if(!sorted2)
+			// 	{
+			// 		source2Ptr = (T *) malloc(sizeof(T) * nSource2);
+			// 		cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
+			// 		cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
+			// 	}
+			// 	else
+			// 	{
+			// 		source2Ptr = source2;
+			// 	}
 
-				// Need to allocate space for the result array, requiring us to know how many elements there
-				// are in the distinct array.
-				minusCount(source1Ptr, nSource1, source2Ptr, nSource2, nResult);
+			// 	// Need to allocate space for the result array, requiring us to know how many elements there
+			// 	// are in the distinct array.
+			// 	minusCount(source1Ptr, nSource1, source2Ptr, nSource2, nResult);
 
-				*result = (T* ) malloc(sizeof(T) * *nResult);
+			// 	*result = (T* ) malloc(sizeof(T) * *nResult);
 
-				// Compute the set minus array.
-				kernels::minusArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
+			// 	// Compute the set minus array.
+			// 	kernels::minusArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
 
-				// Cleanup
-				// Result is not freed here, it is used to pass the results back to the caller
-				if(source1Ptr != source1)
-				{
-					free(source1Ptr);
-				}
+			// 	// Cleanup
+			// 	// Result is not freed here, it is used to pass the results back to the caller
+			// 	if(source1Ptr != source1)
+			// 	{
+			// 		free(source1Ptr);
+			// 	}
 
-				if(source2Ptr != source2)
-				{
-					free(source2Ptr);
-				}
+			// 	if(source2Ptr != source2)
+			// 	{
+			// 		free(source2Ptr);
+			// 	}
 
-				return cupcfd::error::E_SUCCESS;
-			}
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 
 			template <class I, class T>
 			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count)
@@ -510,7 +527,7 @@ namespace cupcfd
 				*result = (T* ) malloc(sizeof(T) * *nResult);
 
 				// Compute the set minus array.
-				kernels::intersectArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
+				kernels::intersectArray(source1Ptr, nSource1, source2Ptr, nSource2, *result);
 
 				// Cleanup
 				// Result is not freed here, it is used to pass the results back to the caller
