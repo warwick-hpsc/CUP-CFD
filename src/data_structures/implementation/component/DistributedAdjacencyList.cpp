@@ -437,7 +437,7 @@ namespace cupcfd
 
 			// this will only be freed on reset/deconstructor
 			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			err = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
+			err = cupcfd::comm::Gather(&(this->nLONodes), this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
 			if (err != cupcfd::error::E_SUCCESS) {
 				return err;
 			}
@@ -541,7 +541,7 @@ namespace cupcfd
 				}
 
 				// Can reuse countOwned, since the values should be the same as identified in the previous gatherV.
-				cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, this->nLGhNodes, countOwned, nCountOwned, i, *(this->comm));
+				cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, countOwned, i, *(this->comm));
 
 				// While we're here, make a note of the globalIDs requested from this process for the sink process i.
 				// We'll need this information later to send data during exchanges
@@ -709,7 +709,7 @@ namespace cupcfd
 
 			// Now group the global IDs by neighbour rank, by sorting the ranks and then reordering the ghostGIDs
 			I * indexes = (I *) malloc(sizeof(I) * this->nLGhNodes);
-			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
+			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes);
 			cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
 
 			// Loop over neighbour ranks, this should already have been sorted

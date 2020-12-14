@@ -176,7 +176,7 @@ namespace cupcfd
 				cupcfd::utility::drivers::copy(processIDs, nProcessIDs, localProcessIDs, nLocalProcessIDs);
 
 				// Group the process ids,keeping a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);
+				cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes);
 
 				// Now we have a sorted order by original index, let us reorder sendBuffer to that order
 				cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
@@ -188,7 +188,7 @@ namespace cupcfd
 			//	   will need this information
 
 			// This driver will allocate memory for the group id/size arrays (but we must free it in this function to avoid leaks)
-			cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize, &nGroupSize);
+			cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize);
 
 			nSendCounts = mpComm.size;
 			nRecvCounts = mpComm.size;

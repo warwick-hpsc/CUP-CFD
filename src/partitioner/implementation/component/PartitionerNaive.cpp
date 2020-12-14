@@ -82,7 +82,7 @@ namespace cupcfd
 
 			// AllGather - Get the number of nodes on each rank
 			I * rankNNodes = (I *) malloc(sizeof(I) * this->workComm.size);
-			cupcfd::comm::AllGather(&this->nNodes, 1, rankNNodes, this->workComm.size, 1, this->workComm);
+			cupcfd::comm::AllGather(&this->nNodes, rankNNodes, this->workComm.size, 1, this->workComm);
 
 			// Since this is naive, doesn't really matter *which* nodes we are assigned - they don't have to be sequential
 			// As such, just compute the assigned partition based on which range it falls into

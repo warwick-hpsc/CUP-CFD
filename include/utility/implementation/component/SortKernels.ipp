@@ -143,7 +143,7 @@ namespace cupcfd
 				leftIndexes = (I *) malloc(sizeof(I) * n_l);
 				memcpy(leftIndexes, indexes, n_l * sizeof(I));
 
-				returnValLeft = merge_sort(left, n_l, leftIndexes, n_l);
+				returnValLeft = merge_sort(left, n_l, leftIndexes);
 
 				// Copy Right
 				right = (T *) malloc(sizeof(T) * n_r);
@@ -153,7 +153,7 @@ namespace cupcfd
 				rightIndexes = (I *) malloc(sizeof(I) * n_r);
 				memcpy(rightIndexes, indexes + n_l, n_r * sizeof(I));
 
-				returnValRight = merge_sort(right, n_r, rightIndexes, n_r);
+				returnValRight = merge_sort(right, n_r, rightIndexes);
 
 				left_idx = 0;
 				right_idx = 0;

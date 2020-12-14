@@ -156,7 +156,7 @@ namespace cupcfd
 			}
 			
 			// Proxy behaviour - sorts and copies
-			status = cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes, nParticles);
+			status = cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes);
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: merge_sort_index() failed" << std::endl;
 				return status;

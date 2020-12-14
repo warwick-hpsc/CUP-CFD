@@ -209,7 +209,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
-			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount);
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount);
 
 			/**
 			 * Build an array of the distinct elements in a source array (i.e. count the first instance of an element, but not duplicates), and
@@ -230,7 +230,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
-			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount, I * nEleDupCount);
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount);
 
 			/**
 			 * Computes the number of elements that appear in source1, but not in source 2, aka a count of a set minus (A - B).

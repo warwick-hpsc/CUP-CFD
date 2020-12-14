@@ -49,8 +49,8 @@ namespace cupcfd
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverInterface<C,I,T>::resetTolerances()
 		{
-			this->rTol = 0.0;
-			this->eTol = 0.0;
+			this->rTol = T(0.0);
+			this->eTol = T(0.0);
 
 			return cupcfd::error::E_SUCCESS;
 		}

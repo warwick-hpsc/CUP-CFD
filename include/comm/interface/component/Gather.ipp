@@ -249,7 +249,7 @@ namespace cupcfd
 			*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
 			
 			// Setup complete, pass final allgather work onto next driver
-			status = AllGatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, mpComm);
+			status = AllGatherV(bSend, nBSend, *bRecv, *bRecvCounts, mpComm);
 			
 			if(status != cupcfd::error::E_SUCCESS)
 			{

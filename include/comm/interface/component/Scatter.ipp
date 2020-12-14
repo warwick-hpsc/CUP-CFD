@@ -90,7 +90,7 @@ namespace cupcfd
 				cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
+				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes);
 
 				// Now we have a sorted order by original index, let us reorder bSendCpy to that order (pSendCpy already sorted by now)
 				cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);
@@ -98,7 +98,7 @@ namespace cupcfd
 				// Now we have a copy of the send buffer and the processes each index is going to, grouped by sorted process id.
 				// Compute the size of each of these groups.
 				// This driver will also allocate the pointer space for us (but we must free it in this function to avoid leaks)
-				cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize, &nGroupSize);
+				cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize);
 
 				// Now we need to build an array of how many elements are to be sent to each process. Not all processes are
 				// guaranteed to be in the pSend list, so we need to diff the arrays to find out which are missing (and set

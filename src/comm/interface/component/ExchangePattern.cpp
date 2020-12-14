@@ -137,32 +137,30 @@ namespace cupcfd
 
 			// === Sort elements of exchangeIDXSend by process ===
 			// Scratch space setup
-			int nSortIndexes = nTRanks;
-			int * sortIndexes = (int *) malloc(sizeof(int) * nSortIndexes);
+			int * sortIndexes = (int *) malloc(sizeof(int) * nTRanks);
 
-			int nCopyTRanks = nTRanks;
-			int * copyTRanks = (int *)  malloc(sizeof(int) * nCopyTRanks);
+			int * copyTRanks = (int *)  malloc(sizeof(int) * nTRanks);
 
 			int nCopyExchangeIDXSend = nExchangeIDXSend;
 			int * copyExchangeIDXSend = (int *)  malloc(sizeof(int) * nExchangeIDXSend);
 
 
 			// Copy the input data arrays of the target ranks and the matching exchange index to be sent
-			cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nCopyTRanks);
+			cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
 			cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
 
 			// Sort the copied ranks array.
 			// SortIndexes is an array of the original index positions in matching sorted order - we will use this to reshuffle
 			// copyExchangeIDXSend so that they still match pairwise.
-			cupcfd::utility::drivers::merge_sort_index(copyTRanks, nCopyTRanks, sortIndexes, nSortIndexes);
+			cupcfd::utility::drivers::merge_sort_index(copyTRanks, nTRanks, sortIndexes);
 
 			// Reorder the data elements of copyExchangeIDXSend to be pairwise matching with copyTRanks so we don't lose
 			// the original association
-			cupcfd::utility::drivers::sourceIndexReorder(copyExchangeIDXSend, nCopyExchangeIDXSend, sortIndexes, nSortIndexes);
+			cupcfd::utility::drivers::sourceIndexReorder(copyExchangeIDXSend, nCopyExchangeIDXSend, sortIndexes, nTRanks);
 
 			// === Get array of distinct processes ===
 			// Number of distinct elements - how many ranks total will we be sending to
-			cupcfd::utility::drivers::distinctCount(copyTRanks, nCopyTRanks, &this->nSProc);
+			cupcfd::utility::drivers::distinctCount(copyTRanks, nTRanks, &this->nSProc);
 
 			// Storage for distinct processes
 			this->sProc = (int *) malloc(sizeof(int) * this->nSProc);
@@ -175,7 +173,7 @@ namespace cupcfd
 			// this->sProc: An array that contains only the process ranks we will send to, each rank will be unique
 			// dupCount: Track a count of how many times a rank in sProc appeared in the original copyTRanks array. This will
 			// let us know how many elements we are sending to that matching rank.
-			cupcfd::utility::drivers::distinctArray(copyTRanks, nCopyTRanks, this->sProc, this->nSProc, dupCount, nDupCount);
+			cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount);
 
 			// === Store in pattern as a CSR ===
 			this->nSXAdj = this->nSProc + 1;
