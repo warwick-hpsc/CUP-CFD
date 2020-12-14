@@ -67,6 +67,8 @@ if ( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
 elseif ( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
   if("${COMPILER}" STREQUAL "intel")
     set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+  elseif ("${COMPILER}" STREQUAL "clang")
+    set(CMAKE_CXX_FLAGS "-O2 -g -Wfatal-errors")
   elseif ("${COMPILER}" STREQUAL "gnu")
     set(CMAKE_CXX_FLAGS "-O2 -g -Wfatal-errors")
   else()
@@ -108,6 +110,8 @@ set(MPIRUN_EXEC srun)
 # ====================================================================================================================================
 # ================================================= External Libraries ===============================================================
 # ====================================================================================================================================
+
+cmake_policy(SET CMP0074 NEW)
 
 # === File Input/Output Options ===
 if(USE_HDF5)
