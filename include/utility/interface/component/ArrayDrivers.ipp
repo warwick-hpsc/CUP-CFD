@@ -42,7 +42,7 @@ namespace cupcfd
 				}
 
 				int byteSize = sizeof(T);
-				memcpy(dst, src, byteSize * nSrc);
+				memcpy((void*)dst, (void*)src, byteSize * nSrc);
 				return cupcfd::error::E_SUCCESS;
 			}
 
