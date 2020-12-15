@@ -346,7 +346,7 @@ namespace cupcfd
 
 			int mpiErr;
 
-			const int nb = 15;
+			const int nb = 14;
 
 			// Only need one block since all of same type
 
@@ -473,15 +473,10 @@ namespace cupcfd
 			displ[idx] = (MPI_Aint) ( (char*)&(this->decayRate) - (char*)this );
 			idx++;
 			
-			// Block 5: Booleans (Padding)
 			if (idx == nb) {
 				std::cout << "ERROR: Attempting to add too many items to ParticleSimple MPI_type" << std::endl;
 				return cupcfd::error::E_ERROR;
 			}
-			status = cupcfd::comm::mpi::getMPIType(this->padding, &componentType);
-			if (status != cupcfd::error::E_SUCCESS) return status;
-			structTypes[idx] = componentType;
-
 
 			MPI_Datatype vecType;
 			MPI_Datatype vecTypeResized;
