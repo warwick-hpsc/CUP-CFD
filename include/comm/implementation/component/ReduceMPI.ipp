@@ -26,6 +26,10 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes reduceMPI(T * bSend, int nBSend, T * bRecv, int nBRecv, MPI_Op op, int sProcess, MPI_Comm comm)
 			{
+				if (nBSend != nBRecv) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				
 				T dummy;
 				MPI_Datatype dType;
 				cupcfd::error::eCodes status;
@@ -80,6 +84,10 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes allReduceMPI(T * bSend, int nBSend, T * bRecv, int nBRecv, MPI_Op op, MPI_Comm comm)
 			{
+				if (nBSend != nBRecv) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+
 				T dummy;
 				MPI_Datatype dType;
 				cupcfd::error::eCodes status;

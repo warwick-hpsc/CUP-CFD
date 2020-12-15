@@ -28,6 +28,13 @@ namespace cupcfd
 															 MPI_Comm comm,
 															 MPI_Request ** requests, int * nRequests)
 			{
+				if (nSendBuffer < (nTRanks*elePerRank)) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				if (nRecvBuffer < (nTRanks*elePerRank)) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
 				int err;
 				T dummy;
 				MPI_Datatype dType;
@@ -51,7 +58,7 @@ namespace cupcfd
 				for(int i = 0; i < nTRanks; i++)
 				{
 					err = MPI_Irecv(recvBuffer + offset, elePerRank, dType, tRanks[i], tag, comm, (*requests) + i);
-					offset = offset + elePerRank;
+					offset += elePerRank;
 					
 					if(err != MPI_SUCCESS)
 					{
@@ -64,7 +71,7 @@ namespace cupcfd
 				for(int i = 0; i < nTRanks; i++)
 				{
 					err = MPI_Isend(sendBuffer + offset, elePerRank, dType, tRanks[i], tag, comm, (*requests) + nTRanks + i);
-					offset = offset + elePerRank;
+					offset += elePerRank;
 					
 					if(err != MPI_SUCCESS)
 					{
@@ -86,6 +93,32 @@ namespace cupcfd
 															 MPI_Comm comm,
 															 MPI_Request ** requests, int * nRequests)
 			{
+				if (nSendCount < nSRanks) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				int sendSize = 0;
+				for(int i = 0; i < nSRanks; i++) {
+					if(sendCount[i] > 0) {
+						sendSize += sendCount[i];
+					}
+				}
+				if (nSendBuffer < sendSize) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
+				if (nRecvCount < nRRanks) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				int recvSize = 0;
+				for(int i = 0; i < nRRanks; i++) {
+					if(recvCount[i] > 0) {
+						recvSize += recvCount[i];
+					}
+				}
+				if (nRecvBuffer < recvSize) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
 				int err;
 				int offset;
 				int reqPtr;
@@ -95,27 +128,22 @@ namespace cupcfd
 
 				// Get the datatype based on the type of the dummy variable
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 				
 				int tag = 79;
 
 				*nRequests = 0;
-				for(int i = 0; i < nRRanks; i++)
-				{
-					if(recvCount[i] > 0)
-					{
-						*nRequests = *nRequests + 1;
+				for(int i = 0; i < nRRanks; i++) {
+					if(recvCount[i] > 0) {
+						(*nRequests)++;
 					}
 				}
 				
-				for(int i = 0; i < nSRanks; i++)
-				{
-					if(sendCount[i] > 0)
-					{
-						*nRequests = *nRequests + 1;
+				for(int i = 0; i < nSRanks; i++) {
+					if(sendCount[i] > 0) {
+						(*nRequests)++;
 					}
 				}
 
@@ -126,16 +154,13 @@ namespace cupcfd
 
 				offset = 0;
 				reqPtr = 0;
-				for(int i = 0; i < nRRanks; i++)
-				{
-					if(recvCount[i] > 0)
-					{
+				for(int i = 0; i < nRRanks; i++) {
+					if(recvCount[i] > 0) {
 						err = MPI_Irecv(recvBuffer + offset, recvCount[i], dType, rRanks[i], tag, comm, (*requests) + reqPtr);
 						offset = offset + recvCount[i];
-						reqPtr = reqPtr + 1;
+						reqPtr++;
 						
-						if(err != MPI_SUCCESS)
-						{
+						if(err != MPI_SUCCESS) {
 							return cupcfd::error::E_MPI_ERR;
 						}
 					}
@@ -143,16 +168,13 @@ namespace cupcfd
 
 				// Initiate the isends
 				offset = 0;
-				for(int i = 0; i < nSRanks; i++)
-				{
-					if(sendCount[i] > 0)
-					{					
+				for(int i = 0; i < nSRanks; i++) {
+					if(sendCount[i] > 0) {					
 						err = MPI_Isend(sendBuffer + offset, sendCount[i], dType, sRanks[i], tag, comm, (*requests) + reqPtr);
-						offset = offset + sendCount[i];
-						reqPtr = reqPtr + 1;
+						offset += sendCount[i];
+						reqPtr++;
 						
-						if(err != MPI_SUCCESS)
-						{
+						if(err != MPI_SUCCESS) {
 							return cupcfd::error::E_MPI_ERR;
 						}
 					}
@@ -173,6 +195,42 @@ namespace cupcfd
 															 MPI_Comm comm,
 															 MPI_Request * requests, int nRequests)
 			{
+				if (nSendCount < nSRanks) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				int sendSize = 0;
+				int sendCountActual = 0;
+				for(int i = 0; i < nSRanks; i++) {
+					if(sendCount[i] > 0) {
+						sendSize += sendCount[i];
+						sendCountActual++;
+					}
+				}
+				if (nSendBuffer < sendSize) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				if (nRequests < sendCountActual) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
+				if (nRecvCount < nRRanks) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				int recvSize = 0;
+				int recvCountActual = 0;
+				for(int i = 0; i < nRRanks; i++) {
+					if(recvCount[i] > 0) {
+						recvSize += recvCount[i];
+						recvCountActual++;
+					}
+				}
+				if (nRecvBuffer < recvSize) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				if (nRequests < recvCountActual) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
 				int err;
 				int offset;
 				int reqPtr;
@@ -183,8 +241,7 @@ namespace cupcfd
 				// Get the datatype based on the type of the dummy variable
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
@@ -198,17 +255,14 @@ namespace cupcfd
 				int rank;
 				MPI_Comm_rank(comm, &rank);
 				
-				for(int i = 0; i < nRRanks; i++)
-				{			
-					if(recvCount[i] > 0)
-					{
+				for(int i = 0; i < nRRanks; i++) {			
+					if(recvCount[i] > 0) {
 						err = MPI_Irecv(recvBuffer + offset, recvCount[i], dType, rRanks[i], tag, comm, requests + reqPtr);
 
-						offset = offset + recvCount[i];
-						reqPtr = reqPtr + 1;
+						offset += recvCount[i];
+						reqPtr++;
 						
-						if(err != MPI_SUCCESS)
-						{
+						if(err != MPI_SUCCESS) {
 							return cupcfd::error::E_MPI_ERR;
 						}
 					}
@@ -216,17 +270,14 @@ namespace cupcfd
 
 				// Initiate the isends
 				offset = 0;
-				for(int i = 0; i < nSRanks; i++)
-				{
-					if(sendCount[i] > 0)
-					{
+				for(int i = 0; i < nSRanks; i++) {
+					if(sendCount[i] > 0) {
 						err = MPI_Isend(sendBuffer + offset, sendCount[i], dType, sRanks[i], tag, comm, requests + reqPtr);
 
-						offset = offset + sendCount[i];
-						reqPtr = reqPtr + 1;
+						offset += sendCount[i];
+						reqPtr++;
 						
-						if(err != MPI_SUCCESS)
-						{
+						if(err != MPI_SUCCESS) {
 							return cupcfd::error::E_MPI_ERR;
 						}
 					}
