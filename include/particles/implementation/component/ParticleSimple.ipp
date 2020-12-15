@@ -120,7 +120,10 @@ namespace cupcfd
 
 		template <class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocityAtomic(
+			cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh __attribute__((unused)), 
+			I cellLocalID __attribute__((unused)), 
+			T dt)
 		{
 			// This particular particle is primarily for testing particle transport
 			// It doesn't really acknowledge the impact of mesh cells/state or other particles.
@@ -136,7 +139,10 @@ namespace cupcfd
 		
 		template <class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, T dt)
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateStateAtomic(
+			cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh __attribute__((unused)), 
+			I cellLocalID __attribute__((unused)), 
+			T dt __attribute__((unused)))
 		{
 			return cupcfd::error::E_SUCCESS;
 		}														    
