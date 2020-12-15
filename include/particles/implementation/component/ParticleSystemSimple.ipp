@@ -130,7 +130,7 @@ namespace cupcfd
 		
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::exchangeParticles(bool verbose)
+		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::exchangeParticles()
 		{
 			cupcfd::error::eCodes status;
 
@@ -428,7 +428,7 @@ namespace cupcfd
 				
 				// We can now perform an exchange to identify how many (if any)
 				// particles will go off-rank in this atomic update, and transfer them ready for another round of atomic updates.
-				status = this->exchangeParticles(verbose);
+				status = this->exchangeParticles();
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: exchangeParticles() failed" << std::endl;
 					return status;

@@ -479,8 +479,8 @@ namespace cupcfd
 			displ[idx] = (MPI_Aint) ( (char*)&(this->decayRate) - (char*)this );
 			idx++;
 			
-			if (idx == nb) {
-				std::cout << "ERROR: Attempting to add too many items to ParticleSimple MPI_type" << std::endl;
+			if (idx > nb) {
+				std::cout << "ERROR: Added too many items to ParticleSimple MPI_type" << std::endl;
 				return cupcfd::error::E_ERROR;
 			}
 
