@@ -232,7 +232,7 @@ namespace cupcfd
 												  const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4)
 			{
 				// Needed to store result, but we discard it
-				EuclideanPoint<T,3> intersectPoint(0.0, 0.0, 0.0);
+				EuclideanPoint<T,3> intersectPoint(T(0.0), T(0.0), T(0.0));
 				cupcfd::error::eCodes status = computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
 				
 				if(status == cupcfd::error::E_SUCCESS)

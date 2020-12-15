@@ -427,20 +427,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					cupcfd::error::eCodes length(float * length);
-
-					/**
-					 * Compute the distance covered by this vector
-					 *
-					 * @param length A pointer to the location updated by the function to contain the distance of the vector.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-					 */
-					cupcfd::error::eCodes length(double * length);
+					cupcfd::error::eCodes length(T * length);
 
 					/**
 					 * Compute the normalised (length 1 in same direction) vector of an input vector.

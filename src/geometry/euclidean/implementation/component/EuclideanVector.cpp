@@ -110,20 +110,7 @@ namespace cupcfd
 			//}
 
 			template <class T, unsigned int N>
-			cupcfd::error::eCodes EuclideanVector<T,N>::length(float * length)
-			{
-				// https://en.wikipedia.org/wiki/Euclidean_vector#length
-
-				// Use square root of dot-product with itself
-				T dotP = this->dotProduct(*this);
-
-				*length = arth::sqrtWr(dotP);
-
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class T, unsigned int N>
-			cupcfd::error::eCodes EuclideanVector<T,N>::length(double * length)
+			cupcfd::error::eCodes EuclideanVector<T,N>::length(T * length)
 			{
 				// https://en.wikipedia.org/wiki/Euclidean_vector#length
 

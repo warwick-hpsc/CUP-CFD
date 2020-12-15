@@ -227,7 +227,7 @@
 					sw[ip] = sw[ip] - blendW + fwde - fwdi;
 					sw[in] = sw[in] + blendW - fwde + fwdi;
 
-					double xpn_length;
+					T xpn_length;
 					xpn.length(&xpn_length);
 					// Leave these off for now, may reenable at later point
 					// T peclet;
@@ -492,7 +492,7 @@
 
 						// ToDo: Do we want to force this to be a double here?
 						// May also wish for it to just be a float - move out to template?
-						double xpn_length;
+						T xpn_length;
 						xpn.length(&xpn_length);
 						coef = visac * mesh.getFaceArea(i) / xpn_length;
 
