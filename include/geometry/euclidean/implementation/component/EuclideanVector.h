@@ -651,4 +651,15 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into this file if the compiler errors are fixed.
 #include "EuclideanVector.ipp"
 
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiDataTypeReg;
+
 #endif

@@ -440,4 +440,10 @@ namespace cupcfd
 // Include Header Level Definitions
 #include "ParticleSimple.ipp"
 
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype cupcfd::particles::ParticleSimple<int, float>::mpiType;
+extern template bool cupcfd::particles::ParticleSimple<int, float>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::particles::ParticleSimple<int, double>::mpiType;
+extern template bool cupcfd::particles::ParticleSimple<int, double>::mpiDataTypeReg;
+
 #endif

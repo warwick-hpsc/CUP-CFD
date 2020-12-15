@@ -570,4 +570,15 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into here as well, although will need to fix compiler errors.
 #include "EuclideanPoint.ipp"
 
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiDataTypeReg;
+
 #endif
