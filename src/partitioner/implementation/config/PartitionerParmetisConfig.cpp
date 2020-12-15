@@ -45,12 +45,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		void PartitionerParmetisConfig<I,T>::operator=(PartitionerParmetisConfig<I,T>& source)
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
 		PartitionerParmetisConfig<I,T> * PartitionerParmetisConfig<I,T>::clone()
 		{
 			return new PartitionerParmetisConfig(*this);

@@ -75,7 +75,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Cleans up the stored partitioner data.
 					 */
-					virtual ~MeshSourceFileConfig();
+					~MeshSourceFileConfig();
 
 					// === Concrete Methods ===
 
@@ -116,9 +116,6 @@ namespace cupcfd
 					inline void operator=(const MeshSourceFileConfig<I,T>& source);
 					MeshSourceFileConfig<I,T> * clone();
 					cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
-
-					// === Pure Virtual Methods ===
-					// None
 			};
 		}
 	}

@@ -50,18 +50,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					~MeshSourceConfig();
-
-					// === Concrete Methods ===
-
-					/**
-					 * Deep copy from source to this configuration
-					 *
-					 * @param source The source configuration to copy from.
-					 *
-					 * @return Nothing.
-					 */
-					virtual void operator=(const MeshSourceConfig<I,T,L>& source);
+					virtual ~MeshSourceConfig();
 
 					// === Pure Virtual Methods ===
 

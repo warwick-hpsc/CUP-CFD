@@ -45,12 +45,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		void PartitionerNaiveConfig<I,T>::operator=(PartitionerNaiveConfig<I,T>& source)
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
 		PartitionerNaiveConfig<I,T> * PartitionerNaiveConfig<I,T>::clone()
 		{
 			return new PartitionerNaiveConfig(*this);

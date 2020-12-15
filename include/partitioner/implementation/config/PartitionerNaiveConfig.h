@@ -60,7 +60,6 @@ namespace cupcfd
 				// === Concrete Methods ===
 
 				// === Overridden Inherited Methods ===
-				void operator=(PartitionerNaiveConfig<I,T>& source);
 				PartitionerNaiveConfig<I,T> * clone();
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part);
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,

@@ -46,11 +46,10 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				~LinearSolverConfig();
+				virtual ~LinearSolverConfig();
 
 				// === Methods ===
 
-				virtual void operator=(const LinearSolverConfig<C,I,T>* source);
 				virtual LinearSolverConfig<C,I,T> * clone() = 0;
 				virtual cupcfd::error::eCodes buildLinearSolver(LinearSolverInterface<C,I,T> ** solverSystem,
 															 cupcfd::data_structures::SparseMatrix<C,I,T>& matrix,

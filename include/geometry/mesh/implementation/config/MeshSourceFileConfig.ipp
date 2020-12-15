@@ -55,9 +55,6 @@ namespace cupcfd
 			template <class I, class T>
 			inline void MeshSourceFileConfig<I,T>::operator=(const MeshSourceFileConfig<I,T>& source)
 			{
-				// Copy Members of Base
-				MeshSourceConfig<I,T,I>::operator=(source);
-
 				// Derived Members Copy
 				this->setFileFormat(source.fileFormat);
 				this->setSourceFilePath(source.sourceFilePath);

@@ -60,18 +60,6 @@ namespace cupcfd
 				// === Virtual Methods ===
 
 				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(PartitionerConfig<I,T>& source);
-
-				/**
 				 * Return a pointer to a clone of this object.
 				 * This allows for making copies while also
 				 * preserving the polymorphic type.

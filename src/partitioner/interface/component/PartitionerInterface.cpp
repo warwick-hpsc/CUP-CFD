@@ -195,21 +195,6 @@ namespace cupcfd
 
 			return cupcfd::error::E_SUCCESS;
 		}
-
-		// ========== Pure Virtual Methods ===============
-		// Implemented as empty to satisfy linker, but expected to be overloaded
-
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::partition()
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
 	}
 }
 

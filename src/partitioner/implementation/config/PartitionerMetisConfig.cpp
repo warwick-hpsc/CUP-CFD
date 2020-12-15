@@ -45,12 +45,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		void PartitionerMetisConfig<I,T>::operator=(PartitionerMetisConfig<I,T>& source)
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
 		PartitionerMetisConfig<I,T> * PartitionerMetisConfig<I,T>::clone()
 		{
 			return new PartitionerMetisConfig(*this);

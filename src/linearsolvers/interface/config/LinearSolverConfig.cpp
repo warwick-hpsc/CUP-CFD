@@ -7,7 +7,7 @@
  *
  * @section DESCRIPTION
  *
- * Contains the definitions for the LinearSolverConfigPETSc class
+ * Contains the definitions for the LinearSolverConfig class
  */
 
 #include "LinearSolverConfig.h"
@@ -34,12 +34,6 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		LinearSolverConfig<C,I,T>::~LinearSolverConfig()
-		{
-
-		}
-
-		template <class C, class I, class T>
-		void LinearSolverConfig<C,I,T>::operator=(const LinearSolverConfig<C,I,T>* source)
 		{
 
 		}

@@ -111,7 +111,7 @@ namespace cupcfd
 				 * Deconstructor for a Partitioner object.
 				 * This will free up any memory being used to store result or node data.
 				 */
-				~PartitionerInterface();
+				virtual ~PartitionerInterface();
 
 				// ========== Concrete Methods ===============
 

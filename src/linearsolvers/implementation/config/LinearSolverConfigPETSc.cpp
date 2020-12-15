@@ -47,8 +47,6 @@ namespace cupcfd
 		template <class C, class I, class T>
 		void LinearSolverConfigPETSc<C,I,T>::operator=(const LinearSolverConfigPETSc<C,I,T>& source)
 		{
-			LinearSolverConfig<C,I,T>::operator=(source);
-
 			this->eTol = source.eTol;
 			this->rTol = source.rTol;
 			this->solverAlg = source.solverAlg;
