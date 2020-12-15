@@ -26,7 +26,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			EuclideanPoint<T,N>::EuclideanPoint()
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = T(0);
 				}
@@ -35,7 +35,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			EuclideanPoint<T,N>::EuclideanPoint(const EuclideanPoint<T,N> &point)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = point.cmp[i];
 				}
@@ -44,7 +44,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline void EuclideanPoint<T,N>::operator=(const EuclideanPoint<T,N>& source)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = source.cmp[i];
 				}
@@ -53,7 +53,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline void EuclideanPoint<T,N>::operator=(const T scalar)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = scalar;
 				}
@@ -64,7 +64,7 @@ namespace cupcfd
 			{
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];
-					for(int i = 1; i < N; i++)
+					for(uint i = 1; i < N; i++)
 					{
 						std::cout << ", " << this->cmp[i];
 					}

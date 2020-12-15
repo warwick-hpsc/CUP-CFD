@@ -50,7 +50,7 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		ParticleSystemSimpleConfig<M,I,T,L>::~ParticleSystemSimpleConfig()
 		{
-			for(I i = 0; i < this->emitterConfigs.size(); i++)
+			for(I i = 0; i < (I)this->emitterConfigs.size(); i++)
 			{
 				delete this->emitterConfigs[i];
 			}
@@ -64,7 +64,7 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		void ParticleSystemSimpleConfig<M,I,T,L>::operator=(ParticleSystemSimpleConfig<M,I,T,L>& source)
 		{
-			for(I i = 0; i < source.emitterConfigs.size(); i++)
+			for(I i = 0; i < (I)source.emitterConfigs.size(); i++)
 			{
 				this->emitterConfigs.push_back(source.emitterConfigs[i]->clone());
 			}
@@ -92,7 +92,7 @@ namespace cupcfd
 			*system = new ParticleSystemSimple<M,I,T,L>(meshPtr);
 			
 			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the system
-			for(I i = 0; i < this->emitterConfigs.size(); i++)
+			for(I i = 0; i < (I)this->emitterConfigs.size(); i++)
 			{
 				// Search through the local cells on this rank for the position specified in the emitter configuration
 				bool onRank = false;

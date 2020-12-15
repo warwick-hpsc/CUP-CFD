@@ -60,7 +60,7 @@ namespace cupcfd
 				
 				// We don't set the inflight position equal to the position here, it sohuld be set prior to an add.
 				// If this is a particle in flight, then pos is the original start position, we don't want to lose our current position.
-				//this->particles[this->particles.size()-1].inflightPos = particle.pos;
+				//this->particles[this->getNParticles()-1].inflightPos = particle.pos;
 				
 				this->nActiveParticles = this->nActiveParticles + 1;
 				
@@ -117,7 +117,7 @@ namespace cupcfd
 			// are already inactive and thus counters should have already been decreased.
 		
 			// Go through the system and mark any inactive particles
-			I loopCount = this->particles.size();
+			I loopCount = this->getNParticles();
 			
 			for (I i=loopCount-1; i>=0; i--) {
 				if (this->particles[i].getInactive())
@@ -146,11 +146,11 @@ namespace cupcfd
 			// (1) Identify the indexes of any particles in the particle list that are intended to leave this rank
 			// Group particles by Rank ID to make this easier
 			
-			I nParticles = this->particles.size();
+			I nParticles = this->getNParticles();
 			I * rankIDs = (I *) malloc(sizeof(I) * nParticles);
 			I * rankIDIndexes = (I *) malloc(sizeof(I) * nParticles);
 
-			for(I i = 0; i < this->particles.size(); i++)
+			for(I i = 0; i < this->getNParticles(); i++)
 			{
 				rankIDs[i] = this->particles[i].getRank();
 			}
@@ -304,7 +304,7 @@ namespace cupcfd
 			free(requests);
 
 			// Mark any particles we have sent to other processes as inactive - they should effectively be ignored/queued up for removal 
-			for(I i = 0; i < this->particles.size(); i++)
+			for(I i = 0; i < this->getNParticles(); i++)
 			{
 				// Gone off-rank and was previously marked as active
 				if((this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank) && (!(this->particles[i].getInactive())))
@@ -341,7 +341,7 @@ namespace cupcfd
 			
 			// (1b) Set all particles inflight positions to be equal to their current positions
 			// ToDo: Move this to a function
-			for(I i = 0; i < particles.size(); i++)
+			for(I i = 0; i < getNParticles(); i++)
 			{
 				particles[i].inflightPos = particles[i].pos;
 			}
@@ -385,8 +385,8 @@ namespace cupcfd
 				ParticleSimple<I,T> tracked_particle_copy;
 				if (do_track_bugged_particle) {
 					found_particle_to_track = false;
-					if (particles.size() > 0) {
-						for (I i=0; i<particles.size(); i++) {
+					if (getNParticles() > 0) {
+						for (I i=0; i<getNParticles(); i++) {
 							if (particles[i].getParticleID() == particle_id_to_track) {
 								if (found_particle_to_track) {
 									std::cout << "ERROR: Multiple particles have ID " << particle_id_to_track << std::endl;
@@ -451,7 +451,7 @@ namespace cupcfd
 
 				// Verify that 'tmp' reflects reality:
 				I trueNumTravellingParticles = 0;
-				for (I i=0; i<this->particles.size(); i++) {
+				for (I i=0; i<this->getNParticles(); i++) {
 					if (this->particles[i].getTravelTime() > T(0)) {
 						trueNumTravellingParticles++;
 					}
@@ -491,7 +491,7 @@ namespace cupcfd
 					std::cout << "ERROR: more than " << max_passes << " passes in update of system with just " << nGlobalParticles << " particles, that indicates an infinite loop bug" << std::endl;
 
 					std::cout << "       " << nGlobalTravelParticles << " global particles still travelling:" << std::endl;
-					for (I i = 0; i < particles.size(); i++) {
+					for (I i = 0; i < getNParticles(); i++) {
 						if (this->particles[i].getTravelTime() > T(0)) {
 							std::cout << "       > P " << particles[i].getParticleID() << " is still travelling" << std::endl;
 							particles[i].print();
@@ -515,7 +515,7 @@ namespace cupcfd
 			// Loop over all particles in vector
 			// ToDo: This approach also loops over particles that are inactive or active but have no further travel time.
 			// Would be faster if inactive particles are removed
-			for(I i = 0; i < this->particles.size(); i++)
+			for(I i = 0; i < this->getNParticles(); i++)
 			{
 				bool particleVerbose = verbose;
 				particleVerbose = particleVerbose && (particles[i].getParticleID() == 1);
@@ -664,16 +664,20 @@ namespace cupcfd
 			return cupcfd::error::E_SUCCESS;
 		}
 		
-		// template <class M, class I, class T, class L>
-		// I ParticleSystemSimple<M,I,T,L>::getNEmitters()
-		// {
-		// 	return this->emitters.size();
-		// }
-		
 		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNParticles()
 		{
-			return this->particles.size();
+			// Need to cast size_t to I. First, check that no data is lost:
+			std::size_t s = this->particles.size();
+			if (s > (std::size_t)std::numeric_limits<I>::max()) {
+				std::string msg("particles size ");
+				msg += s;
+				msg += std::string(" exceeds max value of type ");
+				msg += typeid(I).name();
+				throw(std::runtime_error(msg));
+			}
+
+			return (I)s;
 		}
 		
 		template <class M, class I, class T, class L>
@@ -689,12 +693,28 @@ namespace cupcfd
 		}
 		
 		template <class M, class I, class T, class L>
+		I ParticleSystemSimple<M,I,T,L>::getNEmitters()
+		{
+			// Need to cast size_t to I. First, check that no data is lost:
+			std::size_t s = this->emitters.size();
+			if (s > (std::size_t)std::numeric_limits<I>::max()) {
+				std::string msg("emitters size ");
+				msg += s;
+				msg += std::string(" exceeds max value of type ");
+				msg += typeid(I).name();
+				throw(std::runtime_error(msg));
+			}
+
+			return (I)s;
+		}
+		
+		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setActiveParticlesTravelTime(T travelTime)
 		{
 			if(!(travelTime > T(0)))
 			{
 				// Negative or zero travel time - set all particles travel time to zero and non-travelling
-				for(I i = 0; i < this->particles.size(); i++)
+				for(I i = 0; i < this->getNParticles(); i++)
 				{
 					this->particles[i].setTravelTime(T(0));
 				}
@@ -703,7 +723,7 @@ namespace cupcfd
 			}
 			else
 			{
-				for(I i = 0; i < this->particles.size(); i++)
+				for(I i = 0; i < this->getNParticles(); i++)
 				{
 					if(!this->particles[i].getInactive())
 					{
@@ -727,7 +747,7 @@ namespace cupcfd
 		{
 			cupcfd::error::eCodes status;
 
-			for(I i = 0; i < this->emitters.size(); i++)
+			for(I i = 0; i < this->getNEmitters(); i++)
 			{
 				ParticleSimple<I,T> * newParticles;
 				I nNewParticles = 0;
@@ -741,7 +761,7 @@ namespace cupcfd
 				for(I j = 0; j < nNewParticles; j++)
 				{
 					// Check that new particle does not already exist:
-					for (I k=0; k<this->particles.size(); k++) {
+					for (I k=0; k<this->getNParticles(); k++) {
 						if (this->particles[k].getParticleID() == newParticles[j].getParticleID()) {
 							std::cout << "ERROR: Particle with ID " << newParticles[j].getParticleID() << " already in system" << std::endl;
 							return cupcfd::error::E_ERROR;

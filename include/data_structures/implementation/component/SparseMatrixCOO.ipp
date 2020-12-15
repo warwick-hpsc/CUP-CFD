@@ -115,7 +115,7 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
+			for(i = 0; i < (I)this->val.size(); i++)
 			{
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -147,7 +147,7 @@ namespace cupcfd
 				}
 			}
 
-			if(i == this->val.size())
+			if(i == (I)this->val.size())
 			{
 				// We got to the end of the list without finding a match
 				// Insert at the end (i.e. one greater than the last element)

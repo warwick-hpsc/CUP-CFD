@@ -154,7 +154,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec1.cmp[i] + vec2.cmp[i];
 						}
@@ -177,7 +177,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec.cmp[i] + scalar;
 						}
@@ -200,7 +200,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar + vec.cmp[i];
 						}
@@ -223,7 +223,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec1.cmp[i] - vec2.cmp[i];
 						}
@@ -246,7 +246,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec.cmp[i] - scalar;
 						}
@@ -269,7 +269,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar - vec.cmp[i];
 						}
@@ -292,7 +292,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec.cmp[i] * scalar;
 						}
@@ -315,7 +315,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar * vec.cmp[i];
 						}
@@ -338,7 +338,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vec.cmp[i] / scalar;
 						}
@@ -361,7 +361,7 @@ namespace cupcfd
 					{
 						EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar / vec.cmp[i];
 						}

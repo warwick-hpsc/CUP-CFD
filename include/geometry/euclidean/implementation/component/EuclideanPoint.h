@@ -133,7 +133,7 @@ namespace cupcfd
 					 */
 					friend inline bool operator==(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							if(!(cupcfd::utility::arithmetic::kernels::isEqual(point1.cmp[i], point2.cmp[i])))
 							{
@@ -182,7 +182,7 @@ namespace cupcfd
 					{
 						// ToDo: Tolerance checks?
 
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] < point2.cmp[i])
 							{
@@ -210,7 +210,7 @@ namespace cupcfd
 					friend inline bool operator<=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] < point2.cmp[i])
 							{
@@ -246,7 +246,7 @@ namespace cupcfd
 					{
 						// ToDo: Tolerance checks?
 
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] > point2.cmp[i])
 							{
@@ -275,7 +275,7 @@ namespace cupcfd
 					friend inline bool operator>=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] > point2.cmp[i])
 							{
@@ -307,7 +307,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point1.cmp[i] + point2.cmp[i];
 						}
@@ -330,7 +330,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] + vector.cmp[i];
 						}
@@ -354,7 +354,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vector.cmp[i] + point.cmp[i];
 						}
@@ -377,7 +377,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] + scalar;
 						}
@@ -400,7 +400,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar + point.cmp[i];
 						}
@@ -423,7 +423,7 @@ namespace cupcfd
 					{
 						cupcfd::geometry::euclidean::EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = end.cmp[i] - start.cmp[i];
 						}
@@ -445,7 +445,7 @@ namespace cupcfd
 					{
 						cupcfd::geometry::euclidean::EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = end.cmp[i] - vec.cmp[i];
 						}
@@ -468,7 +468,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] * scalar;
 						}
@@ -491,7 +491,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar * point.cmp[i];
 						}
@@ -514,7 +514,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] / scalar;
 						}
@@ -537,7 +537,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar / point.cmp[i];
 						}

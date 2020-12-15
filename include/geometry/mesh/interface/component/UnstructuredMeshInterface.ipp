@@ -1080,7 +1080,7 @@ namespace cupcfd
 				I faceNVertices[5];
 				I triFaceLabels[2];
 				
-				I ptr = 0;
+				uint ptr = 0;
 				for(I i = 0; i  < 5; i++)
 				{
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
@@ -1097,7 +1097,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				I nVertDup = 18; // (3+3+4+4+4)
+				uint nVertDup = 18; // (3+3+4+4+4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1139,7 +1139,7 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < edge1.size(); k++)
+						for(I k = 0; k < (I)edge1.size(); k++)
 						{
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 							{
@@ -1160,7 +1160,7 @@ namespace cupcfd
 					ptr = ptr + 1;
 					
 					found = false;
-					for(I k = 0; k < edge1.size(); k++)
+					for(I k = 0; k < (I)edge1.size(); k++)
 					{
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 						{
@@ -1230,7 +1230,7 @@ namespace cupcfd
 				// Now we have defined the labels of our 'top' face, find the adjoining vertices on the bottom face
 				// and we have our polyhedron labels
 				// There is probably a cheaper way of doing this but should be small enough to just do a search
-				for(I i = 0; i < (nVertDup/2); i++)
+				for(I i = 0; i < (I)(nVertDup/2); i++)
 				{
 					if(edge1[i] == tf)
 					{
@@ -1346,7 +1346,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				I nVertDup = 16; // (3 + 3 + 3 + 3 + 4)
+				uint nVertDup = 16; // (3 + 3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1361,7 +1361,7 @@ namespace cupcfd
 					}
 				}
 
-				if(ptr != nVertDup)
+				if(ptr != (I)nVertDup)
 				{
 					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
 				}
@@ -1388,7 +1388,7 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < edge1.size(); k++)
+						for(I k = 0; k < (I)edge1.size(); k++)
 						{
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 							{
@@ -1409,7 +1409,7 @@ namespace cupcfd
 					ptr = ptr + 1;
 					
 					found = false;
-					for(I k = 0; k < edge1.size(); k++)
+					for(I k = 0; k < (I)edge1.size(); k++)
 					{
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 						{
@@ -1445,7 +1445,7 @@ namespace cupcfd
 				basePos[3] = this->getVertexPos(baseFaceD);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < nVertDup; i++)
+				for(I i = 0; i < (I)nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD)
 					{
@@ -1512,7 +1512,7 @@ namespace cupcfd
 				I faceNVertices[4];
 				I baseID;
 				
-				I ptr = 0;
+				uint ptr = 0;
 				for(I i = 0; i  < 4; i++)
 				{
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
@@ -1522,7 +1522,7 @@ namespace cupcfd
 				baseID = cellLocalFaceID[0];
 				
 				// Number of vertices including duplicates
-				I nVertDup = 13; // (3 + 3 + 3 + 4)
+				uint nVertDup = 13; // (3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1564,7 +1564,7 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < edge1.size(); k++)
+						for(I k = 0; k < (I)edge1.size(); k++)
 						{
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 							{
@@ -1585,7 +1585,7 @@ namespace cupcfd
 					ptr = ptr + 1;
 					
 					found = false;
-					for(I k = 0; k < edge1.size(); k++)
+					for(I k = 0; k < (I)edge1.size(); k++)
 					{
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 						{
@@ -1619,7 +1619,7 @@ namespace cupcfd
 				basePos[2] = this->getVertexPos(baseFaceC);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < nVertDup; i++)
+				for(I i = 0; i < (I)nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC)
 					{
@@ -1687,7 +1687,7 @@ namespace cupcfd
 				I faceNVertices[6];
 				I baseID;
 				
-				I ptr = 0;
+				uint ptr = 0;
 				for(I i = 0; i  < 6; i++)
 				{
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
@@ -1703,7 +1703,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				I nVertDup = 24; // (6*4)
+				uint nVertDup = 24; // (6*4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1745,7 +1745,7 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < edge1.size(); k++)
+						for(I k = 0; k < (I)edge1.size(); k++)
 						{
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 							{
@@ -1766,7 +1766,7 @@ namespace cupcfd
 					ptr = ptr + 1;
 					
 					found = false;
-					for(I k = 0; k < edge1.size(); k++)
+					for(I k = 0; k < (I)edge1.size(); k++)
 					{
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2))
 						{
@@ -1804,7 +1804,7 @@ namespace cupcfd
 				// Find a vertex on the opposite face
 				I oppVertexID;
 				
-				for(I i = 0; i < nVertDup; i++)
+				for(I i = 0; i < (I)nVertDup; i++)
 				{
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD)
 					{
@@ -1841,7 +1841,7 @@ namespace cupcfd
 				// Since this is a hexahedron, if we just find the non-base face vertex joined to each of the base vertices,
 				// we will know the labels for the opposite face
 				
-				for(I i = 0; i < edge1.size(); i++)
+				for(I i = 0; i < (I)edge1.size(); i++)
 				{
 					// === blf ===
 					if(edge1[i] == blf)

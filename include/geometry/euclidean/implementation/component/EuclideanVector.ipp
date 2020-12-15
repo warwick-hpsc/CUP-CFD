@@ -30,7 +30,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline void EuclideanVector<T,N>::operator=(const EuclideanVector<T,N>& source)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = source.cmp[i];
 				}
@@ -39,7 +39,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline void EuclideanVector<T,N>::operator=(const T scalar)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = scalar;
 				}
@@ -48,7 +48,7 @@ namespace cupcfd
 			template <class T, unsigned int N>
 			inline bool EuclideanVector<T,N>::operator==(const EuclideanVector<T,N>& cmpVec)
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					if(!(arth::isEqual(this->cmp[i], cmpVec.cmp[i])))
 					{
@@ -71,14 +71,14 @@ namespace cupcfd
 				// Set all components to 1 (this will temporarily give the wrong result)
 				T sum = T(0);
 
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					sum = this->cmp[i] + sum;
 				}
 				
 				// Find a non zero component
 				int index;
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					if(!(arth::isEqual(this->cmp[i], (T) 0)))
 					{
@@ -119,7 +119,7 @@ namespace cupcfd
 				T cmpScalar;
 				bool found = false;
 				
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					if(!(arth::isEqual(cmpVec.cmp[i], T(0))))
 					{
@@ -138,7 +138,7 @@ namespace cupcfd
 				}
 
 				// Int's are sufficient for vector dimensions, no need to template it
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					// Four outcomes
 					// (a) Both components are zero - Continue
@@ -783,7 +783,7 @@ namespace cupcfd
 				// Search for first non-zero value to compute the scalar
 				// Since we know it's parallel, they sohuld be non-zero for both
 				T scalar;
-				for(int i = 0; i < 3; i++)
+				for(uint i = 0; i < 3; i++)
 				{
 					if(!(arth::isEqual(x1p.cmp[i], T(0))))
 					{
@@ -821,7 +821,7 @@ namespace cupcfd
 			{
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];
-				    for(int i = 1; i < N; i++)
+				    for(uint i = 1; i < N; i++)
 				    {
 					    std::cout << ", " << this->cmp[i];
 				    }
