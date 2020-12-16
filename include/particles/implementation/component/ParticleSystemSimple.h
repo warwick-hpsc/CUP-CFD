@@ -69,17 +69,27 @@ namespace cupcfd
 				I getNActiveParticles();
 				I getNTravelParticles();
 
+				
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes addParticleEmitter(const ParticleEmitterSimple<I,T>& emitter);
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes addParticle(const ParticleSimple<I,T>& particle);
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes setParticleInactive(I particleID);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes removeInactiveParticles();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes exchangeParticles();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateSystem(T dt);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateSystemAtomic(bool verbose);
 
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setActiveParticlesTravelTime(T travelTime);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes generateEmitterParticles(T dt);
 		};
 	}

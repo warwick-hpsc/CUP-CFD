@@ -182,6 +182,7 @@ namespace cupcfd
 				 * Particles are not advanced in time after generation, i.e. they are all fixed at the emitter position, with
 				 * varying amounts of time remaining. Their movement is left to a ParticleSystem object.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes generateParticles(ParticleSimple<I, T> ** particles, I * nParticles, T dt);
 
 				// Concrete Methods
