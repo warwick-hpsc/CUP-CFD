@@ -58,7 +58,7 @@ namespace cupcfd
 					 * Deconstructor:
 					 * Currently does nothing
 					 */
-					~CustomMPIType();
+					virtual ~CustomMPIType();
 
 					// === Concrete Methods ===
 

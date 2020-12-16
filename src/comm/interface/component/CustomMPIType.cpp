@@ -25,35 +25,35 @@ namespace cupcfd
 
 			}
 
-			CustomMPIType::~CustomMPIType()
-			{
+			// CustomMPIType::~CustomMPIType()
+			// {
 
-			}
+			// }
 
 			// === Pure Virtual Methods ===
 			// Here to satisfy linker
 
-			cupcfd::error::eCodes CustomMPIType::getMPIType(MPI_Datatype * dType)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
+			// cupcfd::error::eCodes CustomMPIType::getMPIType(MPI_Datatype * dType)
+			// {
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 
-			MPI_Datatype CustomMPIType::getMPIType()
-			{
-				MPI_Datatype garbage;
+			// MPI_Datatype CustomMPIType::getMPIType()
+			// {
+			// 	MPI_Datatype garbage;
 
-				return garbage;
-			}
+			// 	return garbage;
+			// }
 
-			cupcfd::error::eCodes CustomMPIType::registerMPIType()
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
+			// cupcfd::error::eCodes CustomMPIType::registerMPIType()
+			// {
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 
-			cupcfd::error::eCodes deregisterMPIType()
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
+			// cupcfd::error::eCodes deregisterMPIType()
+			// {
+			// 	return cupcfd::error::E_SUCCESS;
+			// }
 		}
 	}
 }

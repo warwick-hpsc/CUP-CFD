@@ -397,7 +397,7 @@ set(config_source_files
 # ============== Network Communication ==============
 # ===================================================
 set(comm_source_files
-	src/comm/implementation/component/CustomMPIType.cpp
+	src/comm/interface/component/CustomMPIType.cpp
 	src/comm/implementation/component/MPIUtility.cpp
 	src/comm/interface/component/ExchangePattern.cpp
 	src/comm/implementation/component/ExchangePatternOneSidedNonBlocking.cpp
