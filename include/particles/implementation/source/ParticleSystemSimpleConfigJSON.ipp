@@ -62,7 +62,7 @@ namespace cupcfd
 
 			if(this->configData.isMember("Emitters"))
 			{
-				for(I i = 0; i < this->configData["Emitters"].size(); i++)
+				for(Json::Value::ArrayIndex i = 0; i < this->configData["Emitters"].size(); i++)
 				{
 					// Only accept ParticleEmitterSimple emitters for now
 					if(this->configData["Emitters"][i].isMember("ParticleEmitterSimple"))
@@ -145,7 +145,7 @@ namespace cupcfd
 			// Cleanup the vector of pointers - likely a nicer way to do object passing but templates + inheritance 
 			// causing headaches when using plain vector of objects...
 			
-			for(I i = 0; i < emitterConfigs.size(); i++)
+			for(std::size_t i = 0; i < emitterConfigs.size(); i++)
 			{
 				delete(emitterConfigs[i]);
 			}

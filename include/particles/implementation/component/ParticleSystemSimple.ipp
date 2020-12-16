@@ -667,16 +667,17 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNParticles()
 		{
-			// Need to cast size_t to I. First, check that no data is lost:
 			std::size_t s = this->particles.size();
-			if (s > (std::size_t)std::numeric_limits<I>::max()) {
-				std::string msg("particles size ");
-				msg += s;
-				msg += std::string(" exceeds max value of type ");
-				msg += typeid(I).name();
-				throw(std::runtime_error(msg));
-			}
-
+			#ifdef DEBUG
+				// Need to cast size_t to I. First, check that no data is lost:
+				if (s > (std::size_t)std::numeric_limits<I>::max()) {
+					std::string msg("particles size ");
+					msg += s;
+					msg += std::string(" exceeds max value of type ");
+					msg += typeid(I).name();
+					throw(std::runtime_error(msg));
+				}
+			#endif
 			return (I)s;
 		}
 		
@@ -695,16 +696,17 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		I ParticleSystemSimple<M,I,T,L>::getNEmitters()
 		{
-			// Need to cast size_t to I. First, check that no data is lost:
 			std::size_t s = this->emitters.size();
-			if (s > (std::size_t)std::numeric_limits<I>::max()) {
-				std::string msg("emitters size ");
-				msg += s;
-				msg += std::string(" exceeds max value of type ");
-				msg += typeid(I).name();
-				throw(std::runtime_error(msg));
-			}
-
+			#ifdef DEBUG
+				// Need to cast size_t to I. First, check that no data is lost:
+				if (s > (std::size_t)std::numeric_limits<I>::max()) {
+					std::string msg("emitters size ");
+					msg += s;
+					msg += std::string(" exceeds max value of type ");
+					msg += typeid(I).name();
+					throw(std::runtime_error(msg));
+				}
+			#endif
 			return (I)s;
 		}
 		

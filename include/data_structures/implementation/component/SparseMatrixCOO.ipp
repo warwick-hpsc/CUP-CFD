@@ -49,6 +49,39 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
+		I SparseMatrixCOO<I,T>::getRowSize()
+		{
+			std::size_t s = this->row.size();
+			#ifdef DEBUG
+				// Need to cast size_t to I. First, check that no data is lost:
+				if (s > (std::size_t)std::numeric_limits<I>::max()) {
+					std::string msg("row size ");
+					msg += s;
+					msg += std::string(" exceeds max value of type ");
+					msg += typeid(I).name();
+					throw(std::runtime_error(msg));
+				}
+			#endif
+			return (I)s;
+		}
+		template <class I, class T>
+		I SparseMatrixCOO<I,T>::getValSize()
+		{
+			std::size_t s = this->val.size();
+			#ifdef DEBUG
+				// Need to cast size_t to I. First, check that no data is lost:
+				if (s > (std::size_t)std::numeric_limits<I>::max()) {
+					std::string msg("val size ");
+					msg += s;
+					msg += std::string(" exceeds max value of type ");
+					msg += typeid(I).name();
+					throw(std::runtime_error(msg));
+				}
+			#endif
+			return (I)s;
+		}
+
+		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::resize(I rows, I columns)
 		{
 			// Clear the matrix
@@ -115,7 +148,7 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			for(i = 0; i < (I)this->val.size(); i++)
+			for(i = 0; i < this->getValSize(); i++)
 			{
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -147,12 +180,12 @@ namespace cupcfd
 				}
 			}
 
-			if(i == (I)this->val.size())
+			if(i == (I)this->getValSize())
 			{
 				// We got to the end of the list without finding a match
 				// Insert at the end (i.e. one greater than the last element)
 				exists = false;
-				index = this->val.size();
+				index = this->getValSize();
 			}
 
 			// === Insert/Replace as appropriate
@@ -214,7 +247,7 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
+			for(i = 0; i < this->getValSize(); i++)
 			{
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -246,12 +279,12 @@ namespace cupcfd
 				}
 			}
 
-			if(i == this->val.size())
+			if(i == this->getValSize())
 			{
 				// We got to the end of the list without finding a match
 				// Insert at the end (i.e. one greater than the last element)
 				exists = false;
-				index = this->val.size();
+				index = this->getValSize();
 			}
 
 			// Pass value back via reference
@@ -295,7 +328,7 @@ namespace cupcfd
 			I stopIndex = -1;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
+			for(i = 0; i < this->getValSize(); i++)
 			{
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -343,7 +376,7 @@ namespace cupcfd
 			I stopIndex = -1;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
+			for(i = 0; i < this->getValSize(); i++)
 			{
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly

@@ -71,6 +71,8 @@ namespace cupcfd
 
 				// === Concrete Methods ===
 
+				I getNEmitterConfigs();
+
 				// === Virtual Methods ===
 
 				/**

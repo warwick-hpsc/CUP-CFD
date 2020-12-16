@@ -24,7 +24,7 @@ namespace cupcfd
 																	    ParticleSourceConfig<ParticleSimple<I,T>, I, T> * particleSourceConfig)
 		: ParticleSystemConfig<ParticleSystemSimple<M,I,T,L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M,I,T,L>()
 		{
-			for(I i = 0; i < emitterConfigs.size(); i++)
+			for(I i = 0; i < this->getNEmitterConfigs(); i++)
 			{
 				this->emitterConfigs.push_back(emitterConfigs[i]->clone());
 			}
@@ -50,7 +50,7 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		ParticleSystemSimpleConfig<M,I,T,L>::~ParticleSystemSimpleConfig()
 		{
-			for(I i = 0; i < (I)this->emitterConfigs.size(); i++)
+			for(I i = 0; i < this->getNEmitterConfigs(); i++)
 			{
 				delete this->emitterConfigs[i];
 			}
@@ -62,9 +62,26 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
+		I ParticleSystemSimpleConfig<M,I,T,L>::getNEmitterConfigs()
+		{
+			std::size_t s = this->emitterConfigs.size();
+			#ifdef DEBUG
+				// Need to cast size_t to I. First, check that no data is lost:
+				if (s > (std::size_t)std::numeric_limits<I>::max()) {
+					std::string msg("emitterConfigs size ");
+					msg += s;
+					msg += std::string(" exceeds max value of type ");
+					msg += typeid(I).name();
+					throw(std::runtime_error(msg));
+				}
+			#endif
+			return (I)s;
+		}
+
+		template <class M, class I, class T, class L>
 		void ParticleSystemSimpleConfig<M,I,T,L>::operator=(ParticleSystemSimpleConfig<M,I,T,L>& source)
 		{
-			for(I i = 0; i < (I)source.emitterConfigs.size(); i++)
+			for(I i = 0; i < source.getNEmitterConfigs(); i++)
 			{
 				this->emitterConfigs.push_back(source.emitterConfigs[i]->clone());
 			}
@@ -92,7 +109,7 @@ namespace cupcfd
 			*system = new ParticleSystemSimple<M,I,T,L>(meshPtr);
 			
 			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the system
-			for(I i = 0; i < (I)this->emitterConfigs.size(); i++)
+			for(I i = 0; i < this->getNEmitterConfigs(); i++)
 			{
 				// Search through the local cells on this rank for the position specified in the emitter configuration
 				bool onRank = false;
