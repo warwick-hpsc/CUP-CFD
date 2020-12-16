@@ -331,8 +331,11 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult);
 
+			template <class I>
+			I safeConvertSizeT(std::size_t s);
+
 		} // namespace drivers
-	} // namespace array
+	} // namespace utility
 } // namespace cupcfd
 
 // Definitions for the declarations

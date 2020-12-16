@@ -68,7 +68,6 @@ namespace cupcfd
 				I getNParticles();
 				I getNActiveParticles();
 				I getNTravelParticles();
-				I getNEmitters();
 
 				inline cupcfd::error::eCodes addParticleEmitter(const ParticleEmitterSimple<I,T>& emitter);
 				inline cupcfd::error::eCodes addParticle(const ParticleSimple<I,T>& particle);

@@ -62,23 +62,6 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		I ParticleSystemSimpleConfig<M,I,T,L>::getNEmitterConfigs()
-		{
-			std::size_t s = this->emitterConfigs.size();
-			#ifdef DEBUG
-				// Need to cast size_t to I. First, check that no data is lost:
-				if (s > (std::size_t)std::numeric_limits<I>::max()) {
-					std::string msg("emitterConfigs size ");
-					msg += s;
-					msg += std::string(" exceeds max value of type ");
-					msg += typeid(I).name();
-					throw(std::runtime_error(msg));
-				}
-			#endif
-			return (I)s;
-		}
-
-		template <class M, class I, class T, class L>
 		void ParticleSystemSimpleConfig<M,I,T,L>::operator=(ParticleSystemSimpleConfig<M,I,T,L>& source)
 		{
 			for(I i = 0; i < source.getNEmitterConfigs(); i++)

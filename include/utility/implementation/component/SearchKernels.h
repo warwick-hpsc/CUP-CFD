@@ -37,7 +37,7 @@ namespace cupcfd
 			 * @retval >=0 The index in source where the first discovered instance of target was found.
 			 */
   			template <class I, class T>
- 			I linearSearch(T * source, I nEle, T target);
+			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I* index);
 
  			/**
  			 * Performs a binary search for an element within an array.

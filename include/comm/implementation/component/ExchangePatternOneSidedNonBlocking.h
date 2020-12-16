@@ -87,16 +87,16 @@ namespace cupcfd
 				virtual ~ExchangePatternOneSidedNonBlocking();
 
 				// Other Methods
-				virtual void init(cupcfd::comm::Communicator& comm,
+				virtual cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
 						  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 						  int * exchangeIDXSend, int nExchangeIDXSend,
 						  int * tRanks, int nTRanks);
 
-				virtual void packSendBuffer(T * data, int nData);
-				virtual void unpackRecvBuffer(T * data, int nData);
+				virtual cupcfd::error::eCodes packSendBuffer(T * data, int nData);
+				virtual cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData);
 
-				virtual void exchangeStart(T * sourceData, int nData);
-				virtual void exchangeStop(T * sinkData, int nData);
+				virtual cupcfd::error::eCodes exchangeStart(T * sourceData, int nData);
+				virtual cupcfd::error::eCodes exchangeStop(T * sinkData, int nData);
 		};
 	}
 }

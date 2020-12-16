@@ -62,7 +62,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(VectorSourceConfig<I,T>& source);
+				// virtual void operator=(VectorSourceConfig<I,T>& source);
 
 				// === Pure Virtual Methods ===
 

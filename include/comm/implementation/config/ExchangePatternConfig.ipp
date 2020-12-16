@@ -16,6 +16,8 @@
 #include "ExchangePatternOneSidedNonBlocking.h"
 #include "ExchangePatternTwoSidedNonBlocking.h"
 
+#include "ArrayDrivers.h"
+
 namespace cupcfd
 {
 	namespace comm
@@ -88,7 +90,9 @@ namespace cupcfd
 			I nTRanks = graph.sendGlobalIDsAdjncy.size();
 			I * tRanks = (I *) malloc(sizeof(I) * nTRanks);
 
-			for(I i = 0; i < graph.sendGlobalIDsXAdj.size()-1; i++)
+			I iLimit;
+			iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.sendGlobalIDsXAdj.size());
+			for (I i = 0; i < iLimit; i++)
 			{
 				for(I j = 0; j < graph.sendGlobalIDsXAdj[i+1] - graph.sendGlobalIDsXAdj[i]; j++)
 				{

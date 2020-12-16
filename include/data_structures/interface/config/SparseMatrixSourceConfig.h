@@ -62,7 +62,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(SparseMatrixSourceConfig<I,T>& source);
+				// virtual void operator=(SparseMatrixSourceConfig<I,T>& source);
 
 				// === Pure Virtual Methods ===
 

@@ -595,7 +595,9 @@ namespace cupcfd
 				I faceCountSum = 0;
 
 				// Part (1) Store the index lookups in cellFaceMapCSRAdj
-				for(I i = 0; i < this->cellCenter.size(); i++)
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellCenter.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					this->cellFaceMapCSRXAdj.push_back(ptr);
 					ptr = ptr + this->getCellStoredNFaces(i);
@@ -615,7 +617,8 @@ namespace cupcfd
 
 				// Store Face IDs in the Cell Mapping Vector
 				// Not a guaranteed order within a cell list
-				for(I i = 0; i < this->faceCell1ID.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->faceCell1ID.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I faceID = i;
 
@@ -652,7 +655,8 @@ namespace cupcfd
 				}
 
 				// Tidyup - Not strictly necessary, but we will sort the face IDs within each cell range
-				for(I i = 0; i < this->cellCenter.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellCenter.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I rangeStart = this->cellFaceMapCSRXAdj[i];
 					I rangeSize = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
@@ -664,7 +668,8 @@ namespace cupcfd
 				// faces and vertices associated with a cell
 
 				// Faces - can derive quickly from CSR mappings
-				for(I i = 0; i < this->cellCenter.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellCenter.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					this->cellNFaces[i] = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
 
@@ -674,7 +679,8 @@ namespace cupcfd
 				}
 
 				// Vertices - Build a list of stored vertices for stored associated faces and remove duplicates
-				for(I i = 0; i < this->cellCenter.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellCenter.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					std::vector<I> vertexIDs;
 
@@ -730,7 +736,9 @@ namespace cupcfd
 
 				// (b) A mapping of the current local cell IDs in the map to their key
 				std::map<I,I> localToBuildID;
-				for(I i = 0; i < keys.size(); i++)
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(keys.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I lID = this->cellBuildIDToLocalID[keys[i]];
 					localToBuildID[lID] = keys[i];
@@ -739,7 +747,8 @@ namespace cupcfd
 				// Now we begin correcting all cell related structures and mappings
 
 				// (1) Remap the face->cell mappings to the graph local IDs
-				for(I i = 0; i < faceCell1ID.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(faceCell1ID.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					// Update Cell 1 ID by mapping the current local back to the build ID, then to the local ID in the graph
 					I bID = localToBuildID[this->getFaceCell1ID(i)];
@@ -762,14 +771,16 @@ namespace cupcfd
 				std::vector<cupcfd::geometry::euclidean::EuclideanPoint<T,3>> tmpCellCenters;
 				std::vector<T> tmpCellVolumes;
 
-				for(I i = 0; i < this->cellCenter.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellCenter.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					tmpCellCenters.push_back(this->cellCenter[i]);
 					tmpCellVolumes.push_back(this->cellVolume[i]);
 				}
 
 				// Now we reorder using tmpCells as the source
-				for(I i = 0; i < keys.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(keys.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I currentLocalID = this->cellBuildIDToLocalID[keys[i]];
 					I newLocalID;
@@ -790,13 +801,15 @@ namespace cupcfd
 				// (3) Shuffle the cellNFaces data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNFaces.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNFaces.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					tmpVec.push_back(this->cellNFaces[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNFaces.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNFaces.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I label = localToBuildID[i];
 					I graphLocalID;
@@ -807,13 +820,15 @@ namespace cupcfd
 				// (4) Shuffle the cellNGFaces data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNGFaces.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNGFaces.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					tmpVec.push_back(this->cellNGFaces[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNGFaces.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNGFaces.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I label = localToBuildID[i];
 					I graphLocalID;
@@ -824,13 +839,15 @@ namespace cupcfd
 				// (5) Shuffle the cellNGVertices data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNGVertices.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNGVertices.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					tmpVec.push_back(this->cellNGVertices[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNGVertices.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNGVertices.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I label = localToBuildID[i];
 					I graphLocalID;
@@ -841,12 +858,15 @@ namespace cupcfd
 				// (6) Shuffle the cellNVertices data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNVertices.size(); i++)
+				// for(I i = 0; i < this->cellNVertices.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNVertices.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					tmpVec.push_back(this->cellNVertices[i]);
 				}
 
-				for(I i = 0; i < this->cellNVertices.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNVertices.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I label = localToBuildID[i];
 					I graphLocalID;
@@ -860,7 +880,8 @@ namespace cupcfd
 
 				// (8) Finally, correct the cellBuildIDToLocalID data structure to point at the new
 				// mesh local IDs (i.e. the graph local IDs)
-				for(I i = 0; i < cellBuildIDToLocalID.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellBuildIDToLocalID.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					I label = localToBuildID[i];
 					I graphCellID;
@@ -885,11 +906,13 @@ namespace cupcfd
 
 				if(status != cupcfd::error::E_SUCCESS)
 				{
-					return cupcfd::error::E_ERROR;
+					return status;
 				}
 
 				// Check that every boundary is mapped to a face
-				for(I i = 0; i < this->boundaryFaceID.size(); i++)
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->boundaryFaceID.size());
+				for(I i = 0; i < iLimit; i++)
 				{
 					if(this->boundaryFaceID[i] == -1)
 					{

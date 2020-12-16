@@ -61,7 +61,7 @@ namespace cupcfd
 		}
 
 		template <class T>
-		void ExchangePatternOneSidedNonBlocking<T>::init(cupcfd::comm::Communicator& comm,
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::init(cupcfd::comm::Communicator& comm,
 				  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 				  int * exchangeIDXSend, int nExchangeIDXSend,
 				  int * tRanks, int nTRanks)
@@ -157,10 +157,12 @@ namespace cupcfd
 			MPI_Comm_group(this->comm.comm, &tmpGroup);
 			MPI_Group_incl(tmpGroup, this->nSProc, this->sProc, &this->sendGroup);
 			MPI_Group_incl(tmpGroup, this->nRProc, this->rProc, &this->recvGroup);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		void ExchangePatternOneSidedNonBlocking<T>::packSendBuffer(T * data, int nData)
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::packSendBuffer(T * data, int nData)
 		{
 			// Pack from the data array into a send buffer
 
@@ -172,12 +174,20 @@ namespace cupcfd
 				int exchangeID = this->sAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
+				#ifdef DEBUG
+					if (localID < 0 || localID >= nData) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				this->sendBuffer[i] = data[localID];
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		void ExchangePatternOneSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData)
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData)
 		{
 			// Unpack from window into the data array
 
@@ -190,12 +200,20 @@ namespace cupcfd
 				int exchangeID = this->rAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
+				#ifdef DEBUG
+					if (localID < 0 || localID >= nData) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				data[localID] = this->winData[i];
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		void ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData)
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData)
 		{
 			// Pack the send buffer
 			this->packSendBuffer(sourceData, nData);
@@ -232,10 +250,12 @@ namespace cupcfd
 						this->sProc[i], this->targetDispls[i], sendCount, dType,
 						this->win);
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		void ExchangePatternOneSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData)
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData)
 		{
 			// End this epoch for data retrieval.
 			// Avoid use of Win_fence due to collective nature
@@ -246,6 +266,8 @@ namespace cupcfd
 
 			// Unpack the recv buffer/window
 			this->unpackRecvBuffer(sinkData, nData);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

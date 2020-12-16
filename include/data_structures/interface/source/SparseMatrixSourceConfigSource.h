@@ -70,7 +70,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(const SparseMatrixSourceConfigSource<I,T>& source);
+				// virtual void operator=(const SparseMatrixSourceConfigSource<I,T>& source);
 
 				// === Pure Virtual Methods ===
 

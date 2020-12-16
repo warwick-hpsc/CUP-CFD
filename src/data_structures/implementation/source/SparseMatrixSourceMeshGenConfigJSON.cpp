@@ -31,7 +31,7 @@ namespace cupcfd
 			std::ifstream source(configFilePath, std::ifstream::binary);
 			source >> this->configData;
 
-			for(int i = 0; i < this->topLevel.size(); i++)
+			for(std::size_t i = 0; i < this->topLevel.size(); i++)
 			{
 				this->configData = this->configData[this->topLevel[i]];
 			}
@@ -63,10 +63,10 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
+		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig __attribute__((unused)))
 		{
 			// ToDo
-			return cupcfd::error::E_ERROR;
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 	}
 }

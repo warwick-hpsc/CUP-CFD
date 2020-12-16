@@ -36,11 +36,11 @@ namespace cupcfd
 
 			}
 
-			template <class I, class T, class L>
-			void MeshSourceConfigSource<I,T,L>::operator=(MeshSourceConfigSource<I,T,L>& source)
-			{
+			// template <class I, class T, class L>
+			// void MeshSourceConfigSource<I,T,L>::operator=(MeshSourceConfigSource<I,T,L>& source)
+			// {
 
-			}
+			// }
 
 			// template <class I, class T, class L>
 			// MeshSourceConfigSource<I,T,L> * MeshSourceConfigSource<I,T,L>::clone()

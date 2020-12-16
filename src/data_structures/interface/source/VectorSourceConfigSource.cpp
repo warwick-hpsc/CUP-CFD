@@ -22,11 +22,11 @@ namespace cupcfd
 
 		}
 
-		template <class I, class T>
-		VectorSourceConfigSource<I,T>::VectorSourceConfigSource(const VectorSourceConfigSource<I,T>& source)
-		{
+		// template <class I, class T>
+		// VectorSourceConfigSource<I,T>::VectorSourceConfigSource(const VectorSourceConfigSource<I,T>& source)
+		// {
 
-		}
+		// }
 
 		template <class I, class T>
 		VectorSourceConfigSource<I,T>::~VectorSourceConfigSource()
@@ -34,11 +34,11 @@ namespace cupcfd
 
 		}
 
-		template <class I, class T>
-		void VectorSourceConfigSource<I,T>::operator=(const VectorSourceConfigSource<I,T>& source)
-		{
+		// template <class I, class T>
+		// void VectorSourceConfigSource<I,T>::operator=(const VectorSourceConfigSource<I,T>& source)
+		// {
 
-		}
+		// }
 
 		// template <class I, class T>
 		// VectorSourceConfigSource<I,T> * VectorSourceConfigSource<I,T>::clone()

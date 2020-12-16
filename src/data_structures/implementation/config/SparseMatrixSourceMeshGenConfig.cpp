@@ -36,11 +36,11 @@ namespace cupcfd
 			// Nothing to do beyond intialiser list currently.
 		}
 
-		template <class I, class T>
-		void SparseMatrixSourceMeshGenConfig<I,T>::operator=(SparseMatrixSourceMeshGenConfig<I,T>& source)
-		{
+		// template <class I, class T>
+		// void SparseMatrixSourceMeshGenConfig<I,T>::operator=(SparseMatrixSourceMeshGenConfig<I,T>& source)
+		// {
 
-		}
+		// }
 
 		template <class I, class T>
 		SparseMatrixSourceMeshGenConfig<I,T> * SparseMatrixSourceMeshGenConfig<I,T>::clone()
@@ -49,10 +49,10 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfig<I,T>::buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource)
+		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfig<I,T>::buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource __attribute__((unused)))
 		{
 			// Not implemented.
-			return cupcfd::error::E_ERROR;
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 	}
 }

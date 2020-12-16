@@ -260,7 +260,7 @@ namespace cupcfd
 			idx = this->nodeToIDX[node];
 			std::vector<I> adjNodesVec = this->adjacencies[idx];
 
-			for(I i = 0; i< adjNodesVec.size(); i++)
+			for(std::size_t i = 0; i< adjNodesVec.size(); i++)
 			{
 				adjNodes[i] = this->IDXToNode[adjNodesVec[i]];
 			}

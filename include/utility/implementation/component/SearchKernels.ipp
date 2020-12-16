@@ -24,18 +24,19 @@ namespace cupcfd
 		namespace kernels
 		{
 			template <class I, class T>
- 			I linearSearch(T * source, I nEle, T target)
+ 			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I* index)
  			{
  				for(I i = 0; i < nEle; i++)
  				{
  					if(source[i] == target)
  					{
- 						return i;
+ 						*index = i;
+ 						return cupcfd::error::E_SUCCESS;
  					}
  				}
 
  				// Target not found. Return -1 to signify no valid index.
- 				return -1;
+ 				return cupcfd::error::E_SEARCH_NOT_FOUND;
  			}
 
  			template <class I, class T>

@@ -85,7 +85,7 @@ namespace cupcfd
 		}
 
 		template <class T>
-		void ExchangePattern<T>::init(cupcfd::comm::Communicator& comm,
+		cupcfd::error::eCodes ExchangePattern<T>::init(cupcfd::comm::Communicator& comm,
 									  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 									  int * exchangeIDXSend, int nExchangeIDXSend,
 									  int * tRanks, int nTRanks)
@@ -273,6 +273,8 @@ namespace cupcfd
 			free(sortIndexes);
 			free(sendCount);
 			free(recvCount);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

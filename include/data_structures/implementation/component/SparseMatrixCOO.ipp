@@ -49,39 +49,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		I SparseMatrixCOO<I,T>::getRowSize()
-		{
-			std::size_t s = this->row.size();
-			#ifdef DEBUG
-				// Need to cast size_t to I. First, check that no data is lost:
-				if (s > (std::size_t)std::numeric_limits<I>::max()) {
-					std::string msg("row size ");
-					msg += s;
-					msg += std::string(" exceeds max value of type ");
-					msg += typeid(I).name();
-					throw(std::runtime_error(msg));
-				}
-			#endif
-			return (I)s;
-		}
-		template <class I, class T>
-		I SparseMatrixCOO<I,T>::getValSize()
-		{
-			std::size_t s = this->val.size();
-			#ifdef DEBUG
-				// Need to cast size_t to I. First, check that no data is lost:
-				if (s > (std::size_t)std::numeric_limits<I>::max()) {
-					std::string msg("val size ");
-					msg += s;
-					msg += std::string(" exceeds max value of type ");
-					msg += typeid(I).name();
-					throw(std::runtime_error(msg));
-				}
-			#endif
-			return (I)s;
-		}
-
-		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::resize(I rows, I columns)
 		{
 			// Clear the matrix

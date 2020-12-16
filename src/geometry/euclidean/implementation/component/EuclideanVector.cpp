@@ -37,7 +37,7 @@ namespace cupcfd
 			EuclideanVector<T,N>::EuclideanVector()
 			: CustomMPIType()
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = T(0);
 				}
@@ -47,7 +47,7 @@ namespace cupcfd
 			EuclideanVector<T,N>::EuclideanVector(T scalar)
 			: CustomMPIType()
 			{
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = scalar;
 				}
@@ -85,7 +85,7 @@ namespace cupcfd
 			{
 				T dotP = 0.0;
 
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					dotP = dotP + (this->cmp[i] * vec.cmp[i]);
 				}
@@ -129,7 +129,7 @@ namespace cupcfd
 				this->length(&scalar);
 				scalar = T(1.0) / scalar;
 
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					this->cmp[i] = this->cmp[i] * T(scalar);
 				}
@@ -144,7 +144,7 @@ namespace cupcfd
 				this->length(&scalar);
 				scalar = T(1.0) / scalar;
 
-				for(int i = 0; i < N; i++)
+				for(uint i = 0; i < N; i++)
 				{
 					result.cmp[i] = this->cmp[i] * T(scalar);
 				}

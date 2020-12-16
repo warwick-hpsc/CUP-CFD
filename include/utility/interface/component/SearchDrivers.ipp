@@ -47,16 +47,7 @@ namespace cupcfd
 		 	template <class I, class T>
 		 	cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I * index)
  			{
- 				*index = cupcfd::utility::kernels::linearSearch(source, nEle, target);
-
-				if(*index == -1)
-				{
-					return cupcfd::error::E_SEARCH_NOT_FOUND;
-				}
-				else
- 				{
-					return cupcfd::error::E_SEARCH_SUCCESS;
- 				}
+ 				return cupcfd::utility::kernels::linearSearch(source, nEle, target, index);
  			}
 
  			template <class I, class T>

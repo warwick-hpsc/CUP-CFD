@@ -66,7 +66,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshSourceConfigSource<I,T,L>& source);
+					// virtual void operator=(MeshSourceConfigSource<I,T,L>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.

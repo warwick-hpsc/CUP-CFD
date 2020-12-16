@@ -73,7 +73,9 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::reset()
 		{
-			// std::cout << "DistributedAdjacencyList<I, T>::reset() CALLED" << std::endl;
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
 
 			// Clear Data - Note we do not reset the MPI Communicator.
 			// A new object should be created if using a new communicator.
@@ -111,6 +113,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::operator=(DistributedAdjacencyList<I, T>& source)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Deep copy the contents from source to destination.
 			// This involves copying
 			// (a) Top level variables
@@ -227,6 +233,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addLocalNode(T node)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Check node does not exist already as a local node.
 			bool found;
 
@@ -253,6 +263,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addGhostNode(T node)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Check node does not exist already as a local node.
 			bool found;
 
@@ -279,6 +293,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addNode(T node)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Since the node type is unspecified, we default to adding it as a ghost node.
 			return this->addGhostNode(node);
 		}
@@ -316,6 +334,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addEdge(T src, T dst)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			cupcfd::error::eCodes status;
 			bool srcExists;
 			bool dstExists;
@@ -354,6 +376,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addUndirectedEdge(T src, T dst)
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			cupcfd::error::eCodes err;
 
 			err = this->addEdge(src, dst);
@@ -374,6 +400,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::finalize()
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			std::cout << "DistributedAdjacencyList::finalize() CALLED" << std::endl;
 
 			cupcfd::error::eCodes err;
@@ -772,6 +802,10 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::sortNodesByLocal()
 		{
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Kernels may wish to only loop over local nodes. We wish to maintain index parity with any data arrays
 			// between the locally assigned index for a node, and it's data.
 			// As such, we want the graph data to be sorted by local nodes first, else we'd have to check for every
@@ -873,10 +907,13 @@ namespace cupcfd
 			auto it = this->nodeDistType.begin();
 			I ptr = 0;
 
-			while(it != this->nodeDistType.end())
-			{
-				if(it->second == GHOST)
-				{
+			while(it != this->nodeDistType.end()) {
+				if(it->second == GHOST) {
+					#ifdef DEBUG
+						if (ptr >= nNodes) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					nodes[ptr] = it->first;
 					ptr++;
 				}
@@ -892,10 +929,13 @@ namespace cupcfd
 			auto it = this->nodeDistType.begin();
 			I ptr = 0;
 
-			while(it != this->nodeDistType.end())
-			{
-				if(it->second == LOCAL)
-				{
+			while(it != this->nodeDistType.end()) {
+				if(it->second == LOCAL) {
+					#ifdef DEBUG
+						if (ptr >= nNodes) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					nodes[ptr] = it->first;
 					ptr++;
 				}

@@ -544,8 +544,23 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
+			template <class I>
+			I safeConvertSizeT(std::size_t s) {
+				#ifdef DEBUG
+					// Need to cast size_t to I. First, check that s is representatable in type I
+					if (s > (std::size_t)std::numeric_limits<I>::max()) {
+						std::string msg("boundaries size ");
+						msg += s;
+						msg += std::string(" exceeds max value of type ");
+						msg += typeid(I).name();
+						throw(std::runtime_error(msg));
+					}
+				#endif
+				return (I)s;
+			}
+
 		} // namespace drivers
-	} // array
+	} // utility
 } // cupcfd
 
 #endif
