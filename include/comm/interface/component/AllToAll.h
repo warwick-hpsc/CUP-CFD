@@ -63,7 +63,7 @@ namespace cupcfd
 		 *
 		 * @param sendBuffer The buffer containing the data to be sent to all ranks, including itself.
 		 * @param nSendBuffer The size of sendBuffer - should be equal to sum(sendCounts)
-		 * @param nSendBounds An array of the number of elements to be sent to each process.
+		 * @param sendCounts An array of the number of elements to be sent to each process.
 		 * Data is assigned in order to destination processes from sendBuffer in chunks matching the sizes specified.
 		 * @param nSendCounts The size of nSendBounds in the number of elements of type int.
 		 * Must be the same size as the number of processes in mpComm.
@@ -98,7 +98,7 @@ namespace cupcfd
 		 *
 		 * @param sendBuffer The buffer containing the data to be sent to all ranks, including itself.
 		 * @param nSendBuffer The size of sendBuffer - should be equal to sum(sendCounts)
-		 * @param nSendBounds An array of the number of elements to be sent to each process.
+		 * @param sendCounts An array of the number of elements to be sent to each process.
 		 * Data is assigned in order to destination processes from sendBuffer in chunks matching the sizes specified.
 		 * @param nSendCounts The size of nSendBounds in the number of elements of type int.
 		 * Must be the same size as the number of processes in mpComm.

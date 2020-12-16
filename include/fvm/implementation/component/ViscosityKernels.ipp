@@ -51,7 +51,7 @@ namespace cupcfd
 
 			for(ip = 0; ip < mesh.properties.lTCells; ip++)
 			{
-				#ifndef NDEBUG
+				#ifdef DEBUG
 					if (ip >= nTE) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}
@@ -148,7 +148,7 @@ namespace cupcfd
 				I ip = mesh.getFaceCell1ID(i);
 				// I in = mesh.getFaceCell2ID(i);
 
-				#ifndef NDEBUG
+				#ifdef DEBUG
 					if (ib >= nVisEffBoundary) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}
@@ -162,7 +162,7 @@ namespace cupcfd
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
 				{
-					#ifndef NDEBUG
+					#ifdef DEBUG
 						if (ib >= nVisEffCell) {
 							return cupcfd::error::E_INVALID_INDEX;
 						}
@@ -172,7 +172,7 @@ namespace cupcfd
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_SYMP)
 				{
-					#ifndef NDEBUG
+					#ifdef DEBUG
 						if (ib >= nVisEffCell) {
 							return cupcfd::error::E_INVALID_INDEX;
 						}
@@ -182,7 +182,7 @@ namespace cupcfd
 				}
 				else if(it == cupcfd::geometry::mesh::RTYPE_WALL)
 				{
-					#ifndef NDEBUG
+					#ifdef DEBUG
 						if (ib >= nTE) {
 							return cupcfd::error::E_INVALID_INDEX;
 						}
@@ -258,7 +258,7 @@ namespace cupcfd
 		{
 			for(I ip = 0; ip < mesh.properties.lTCells; ip++)
 			{
-				#ifndef DEBUG
+				#ifdef DEBUG
 					if (ip >= nVisEffCell) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}
@@ -269,7 +269,7 @@ namespace cupcfd
 
 			for(I ip = 0; ip < mesh.properties.lBoundaries; ip++)
 			{
-				#ifndef DEBUG
+				#ifdef DEBUG
 					if (ip >= nVisEffBoundary) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}

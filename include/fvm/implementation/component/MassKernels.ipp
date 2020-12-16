@@ -196,10 +196,10 @@ namespace cupcfd
 
 					fact = apv;
 
-					#ifndef DEBUG
-					if ( ((i*2)+1) >= nRFace) {
-						return cupcfd::error::E_INVALID_INDEX;
-					}
+					#ifdef DEBUG
+						if ( ((i*2)+1) >= nRFace) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
 					#endif
 					rface[(i*2)] = -fact;
 					rface[(i*2)+1] = -fact;

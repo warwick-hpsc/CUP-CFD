@@ -98,7 +98,7 @@
 
 			for(I i = 0; i < mesh.properties.lFaces; i++)
 			{
-				#ifndef DEBUG
+				#ifdef DEBUG
 					if (i >= nMassFlux) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}
@@ -110,7 +110,7 @@
 				// Get Cell 2 Index
 				in = mesh.getFaceCell2ID(i);
 
-				#ifndef DEBUG
+				#ifdef DEBUG
 					if (ip >= nUCell || in >= nUCell) {
 						return cupcfd::error::E_INVALID_INDEX;
 					}
@@ -242,7 +242,7 @@
 					it = mesh.getRegionType(ir);
 					ip = mesh.getFaceCell1ID(i);
 
-					#ifndef DEBUG
+					#ifdef DEBUG
 						if (ib >= nUBoundary) {
 							return cupcfd::error::E_INVALID_INDEX;
 						}

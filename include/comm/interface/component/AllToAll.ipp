@@ -30,33 +30,25 @@ namespace cupcfd
 										   int chunkSize,
 										   cupcfd::comm::Communicator& mpComm)
 		{
-			cupcfd::error::eCodes err;
+			#ifdef DEBUG
+				// Error Check 1: Is the send buffer a suitable size?
+				if(nSendBuffer < (mpComm.size * chunkSize)) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
 
-			// Error Check 1: Is the send buffer a suitable size?
-			if(nSendBuffer < (mpComm.size * chunkSize))
-			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
-			}
+				// Error Check 2: Is the recv buffer a suitable size?
+				if(nRecvBuffer < (mpComm.size * chunkSize)) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
 
-			// Error Check 2: Is the recv buffer a suitable size?
-			if(nRecvBuffer < (mpComm.size * chunkSize))
-			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
-			}
-
-			// Error Check 3: Comm Size is at least 1
+				// Error Check 3: Comm Size is at least 1
+				if (mpComm.size <= 1) {
+					return cupcfd::error::E_MPI_ERR;
+				}
+			#endif
 
 			// Process with a suitable communication call
-			err = cupcfd::comm::mpi::AllToAllMPI(sendBuffer, chunkSize, recvBuffer, chunkSize, mpComm.comm);
-
-			// Error Check 3: Did the communication call complete successfully?
-			if(err == cupcfd::error::E_MPI_ERR)
-			{
-				return cupcfd::error::E_MPI_ERR;
-			}
-
-			// If no errors encountered, return a suitable success code
-			return cupcfd::error::E_SUCCESS;
+			return cupcfd::comm::mpi::AllToAllMPI(sendBuffer, chunkSize, recvBuffer, chunkSize, mpComm.comm);
 		}
 
 		template <class T>
@@ -66,13 +58,37 @@ namespace cupcfd
 		{
 			// === Pass through to suitable communicator library ===
 
-			// Error Checks
-			// Error Check 1: Communicator is at least of size 1
+			#ifdef DEBUG
+				// Error Checks
+				// Error Check 1: Communicator is at least of size 1
+				if (mpComm.size <= 1) {
+					return cupcfd::error::E_MPI_ERR;
+				}
+				if (nSendCounts != mpComm.size) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				if (nRecvCounts != mpComm.size) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
-			// Error Check 2: Send Buffer is of a suitable size
+				// Error Check 2: Send Buffer is of a suitable size
+				int nSendActual = 0;
+				for (int i=0; i<mpComm.size; i++) {
+					nSendActual += sendCounts[i];
+				}
+				if (nSendActual != nSendBuffer) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
-			// Error Check 3: Recv Buffer is of a suitable size
-
+				// Error Check 3: Recv Buffer is of a suitable size
+				int nRecvActual = 0;
+				for (int i=0; i<mpComm.size; i++) {
+					nRecvActual += recvCounts[i];
+				}
+				if (nRecvActual != nRecvBuffer) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+			#endif
 
 			// Use MPI communicator library
 			// ToDo: Displacements are computed in the MPI wrapper function, should it be moved up a level to here?
@@ -90,12 +106,55 @@ namespace cupcfd
 		{
 			// === Pass through to suitable communicator library ===
 
-			// Error Checks
-			// Error Check 1: Communicator is at least of size 1
+			#ifdef DEBUG
+				// Error Checks
+				// Error Check 1: Communicator is at least of size 1
+				if (mpComm.size <= 1) {
+					return cupcfd::error::E_MPI_ERR;
+				}
+				if (nSendCounts != mpComm.size) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				if (nRecvCounts != mpComm.size) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
-			// Error Check 2: Send Buffer is of a suitable size
+				// Error Check 2: Send Buffer is of a suitable size
+				if (nSendCounts != nSDispls) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				int nSendActual = 0;
+				for (int i=0; i<mpComm.size; i++) {
+					nSendActual += sendCounts[i];
+				}
+				if (nSendActual != nSendBuffer) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				for (int i=0; i<mpComm.size-1; i++) {
+					int relativeDisp = sDispls[i+1] - sDispls[i];
+					if (relativeDisp != sendCounts[i]) {
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					}
+				}
 
-			// Error Check 3: Recv Buffer is of a suitable size
+				// Error Check 3: Recv Buffer is of a suitable size
+				if (nRecvCounts != nRDispls) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				int nRecvActual = 0;
+				for (int i=0; i<mpComm.size; i++) {
+					nRecvActual += recvCounts[i];
+				}
+				if (nRecvActual != nRecvBuffer) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				for (int i=0; i<mpComm.size-1; i++) {
+					int relativeDisp = rDispls[i+1] - rDispls[i];
+					if (relativeDisp != recvCounts[i]) {
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					}
+				}
+			#endif
 
 			// Use MPI communicator library
 			return cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, sDispls, recvBuffer, recvCounts, rDispls, mpComm.comm);
@@ -129,7 +188,7 @@ namespace cupcfd
 			int nGroupID = 0;
 
 			int * groupSize = nullptr;
-			int nGroupSize = 0;
+			// int nGroupSize = 0;
 
 			int * sendCounts = nullptr;
 			int nSendCounts = 0;
