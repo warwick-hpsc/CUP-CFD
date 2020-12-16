@@ -17,7 +17,6 @@
 #include "ArrayDrivers.h"
 #include "SearchDrivers.h"
 #include "StatisticsDrivers.h"
-#include "Scatter.h"
 #include "Gather.h"
 #include "AllToAll.h"
 

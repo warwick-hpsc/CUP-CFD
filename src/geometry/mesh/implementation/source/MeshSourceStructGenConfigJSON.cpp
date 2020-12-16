@@ -21,21 +21,18 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T>
-			MeshSourceStructGenConfigJSON<I,T>::MeshSourceStructGenConfigJSON(std::string configFilePath, std::string * topLevel, int nTopLevel)
-			{
+			MeshSourceStructGenConfigJSON<I,T>::MeshSourceStructGenConfigJSON(std::string configFilePath, std::string * topLevel, int nTopLevel) {
 				// Copy the top level strings
-				for(int i = 0; i < nTopLevel; i++)
-				{
+				for(int i = 0; i < nTopLevel; i++) {
 					this->topLevel.push_back(topLevel[i]);
 				}
-
 				this->topLevel.push_back("MeshSourceStructGen");
 
 				std::ifstream source(configFilePath, std::ifstream::binary);
 				source >> this->configData;
-
-				for(int i = 0; i < this->topLevel.size(); i++)
-				{
+				int iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<int>(this->topLevel.size());
+				for(int i = 0; i < iLimit; i++) {
 					this->configData = this->configData[this->topLevel[i]];
 				}
 			}

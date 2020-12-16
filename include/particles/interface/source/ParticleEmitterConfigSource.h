@@ -44,12 +44,6 @@ namespace cupcfd
 				ParticleEmitterConfigSource();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				ParticleEmitterConfigSource(ParticleEmitterConfigSource<E,P,I,T>& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */

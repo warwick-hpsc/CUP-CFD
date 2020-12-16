@@ -33,12 +33,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		PartitionerParmetisConfig<I,T>::PartitionerParmetisConfig(PartitionerParmetisConfig<I,T>& source)
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
 		PartitionerParmetisConfig<I,T>::~PartitionerParmetisConfig()
 		{
 			// Nothing to do currently

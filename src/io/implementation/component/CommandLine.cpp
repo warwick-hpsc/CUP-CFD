@@ -14,6 +14,7 @@
 #include <cstring>
 #include <iostream>
 #include "Error.h"
+#include "ArrayDrivers.h"
 
 namespace cupcfd
 {
@@ -165,8 +166,9 @@ namespace cupcfd
 			}
 
 			// Error Check: Does the flag have sufficient arguments for index arg
-			if(arg >= this->optionsToArgs[flag].size())
-			{
+			// if(arg >= this->optionsToArgs[flag].size()) {
+			int size = cupcfd::utility::drivers::safeConvertSizeT<int>(this->optionsToArgs[flag].size());
+			if(arg >= size) {
 				// Error - arg value too high
 				*result = "";
 				return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_ARG;

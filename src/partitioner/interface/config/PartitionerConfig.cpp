@@ -24,12 +24,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		PartitionerConfig<I,T>::PartitionerConfig(PartitionerConfig& source)
-		{
-			*this = source;
-		}
-
-		template <class I, class T>
 		PartitionerConfig<I,T>::~PartitionerConfig()
 		{
 

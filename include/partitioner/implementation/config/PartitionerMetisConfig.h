@@ -38,14 +38,6 @@ namespace cupcfd
 				 * @tparam T The datatype of the partitioner nodes/graph to be partitioned.
 				 */
 				PartitionerMetisConfig();
-				/**
-				 * Constructor:
-				 * Copies the configuration from the source to this newly created object
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes/graph to be partitioned.
-				 */
-				PartitionerMetisConfig(PartitionerMetisConfig<I,T>& source);
 
 				/**
 				 * Deconstructor.

@@ -289,7 +289,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, I * cellLabels, I nCellLabels) {
 				// Check Size of Arrays are suitable
-				if (nCsrIndices != nCellLabels) {
+				if (nCsrIndices != (nCellLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
@@ -672,7 +672,7 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels) {
-				if (nCsrIndices != nFaceLabels) {
+				if (nCsrIndices != (nFaceLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
@@ -901,7 +901,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * boundaryLabels, I nBoundaryLabels) {
 				// Size Check
-				if (nCsrIndices != nBoundaryLabels) {
+				if (nCsrIndices != (nBoundaryLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 

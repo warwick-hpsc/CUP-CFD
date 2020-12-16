@@ -52,17 +52,6 @@ namespace cupcfd
 				 */
 				virtual ~ParticleSourceConfig();
 
-				// === Concrete Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(ParticleSourceConfig<P,I,T>& source);
-
 				// === Pure Virtual Methods ===
 
 				/**

@@ -44,12 +44,6 @@ namespace cupcfd
 				PartitionerConfig();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				PartitionerConfig(PartitionerConfig& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */

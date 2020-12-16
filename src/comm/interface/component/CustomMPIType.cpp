@@ -25,10 +25,10 @@ namespace cupcfd
 
 			}
 
-			// CustomMPIType::~CustomMPIType()
-			// {
+			CustomMPIType::~CustomMPIType()
+			{
 
-			// }
+			}
 
 			// === Pure Virtual Methods ===
 			// Here to satisfy linker

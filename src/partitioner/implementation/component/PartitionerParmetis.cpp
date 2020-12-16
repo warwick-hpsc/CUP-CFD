@@ -48,8 +48,6 @@ namespace cupcfd
 
 			// Set to base-0 indexes
 			this->numflag = 0;
-
-
 		}
 
 		template <class I, class T>
@@ -68,7 +66,7 @@ namespace cupcfd
 		  nVwgt(0),
 		  nAdjwgt(0),
 		  nUbvec(0),
-		  nCon(0),
+		  nCon(nCon),
 		  numflag(0),
 		  PartitionerInterface<I,T>(sourceGraph, nParts)
 		{
@@ -86,11 +84,11 @@ namespace cupcfd
 			// Now we have base items set up, and Parmetis specific items set to null/uninitialised,
 			// start setting up the Parmetis data structures
 
-			// === Set NCon Size ===
-			status = this->setNCon(1);
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setNCon() failed")));
-			}
+			// // === Set NCon Size ===
+			// status = this->setNCon(1);
+			// if (status != cupcfd::error::E_SUCCESS) {
+			// 	throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setNCon() failed")));
+			// }
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
@@ -114,8 +112,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		PartitionerParmetis<I,T>::~PartitionerParmetis()
-		{
+		PartitionerParmetis<I,T>::~PartitionerParmetis() {
 			// === Reset the partitioner components specific to the Parmetis variant ===
 
 			// Set nCon to 0 (i.e. not set)
@@ -135,21 +132,17 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetWorkArrays()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetWorkArrays() {
 			// Free allocated arrays
-			if(this->xadj != nullptr)
-			{
+			if(this->xadj != nullptr) {
 				free(this->xadj);
 			}
 
-			if(this->adjncy != nullptr)
-			{
+			if(this->adjncy != nullptr) {
 				free(this->adjncy);
 			}
 
-			if(this->vtxdist != nullptr)
-			{
+			if(this->vtxdist != nullptr) {
 				free(this->vtxdist);
 			}
 
@@ -167,8 +160,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNParts(I nParts)
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNParts(I nParts) {
 			cupcfd::error::eCodes status;
 
 			// Set the sub-domain value
@@ -177,8 +169,7 @@ namespace cupcfd
 			// Reset in case arrays exist - they will need to be recreated/resized
 			// ubvec does not use nparts so no need to reset it.
 			status = this->resetSubdomainWeights();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -186,8 +177,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNCon(I nCon)
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNCon(I nCon) {
 			cupcfd::error::eCodes status;
 
 			// Set the number of weights that each vertex has (also number of balance constraints)
@@ -197,15 +187,13 @@ namespace cupcfd
 
 			status = this->resetSubdomainWeights();
 
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->resetVertexImbalanceWeights();
 
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -213,28 +201,24 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setWorkArrays(cupcfd::data_structures::DistributedAdjacencyList<I, T>& distGraph)
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setWorkArrays(cupcfd::data_structures::DistributedAdjacencyList<I, T>& distGraph) {
 			cupcfd::error::eCodes status;
 
 			// Error Checks:
 			// Check that the provided graph has been finalised, so that it has all the data we need
-			if(distGraph.finalized == false)
-			{
+			if(distGraph.finalized == false) {
 				return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
 			}
 
 			// Error Check:
 			// Check that the number of local nodes in the partition graph is not zero (we need some work to operate with)
-			if(distGraph.nLONodes == 0)
-			{
+			if(distGraph.nLONodes == 0) {
 				return cupcfd::error::E_DISTGRAPH_NO_LOCAL_NODES;
 			}
 
 			// (a) Clear any exiting work arrays
 			status = this->resetWorkArrays();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -260,8 +244,7 @@ namespace cupcfd
 			// Retrieve the number of adjacency nodes for each node
 			I nEdges = 0;
 
-			for(I i = 0; i < this->nNodes; i++)
-			{
+			for(I i = 0; i < this->nNodes; i++) {
 				I adjCount;
 				distGraph.connGraph.getAdjacentNodeCount(this->nodes[i], &adjCount);
 				nEdges = nEdges + adjCount;
@@ -281,8 +264,7 @@ namespace cupcfd
 			// where locally owned nodes are assigned a global index sequentially across the ranks
 			// Loop over nodes
 			I ptr = 0;
-			for(I i = 0; i < this->nNodes; i++)
-			{
+			for(I i = 0; i < this->nNodes; i++) {
 				I adjCount = this->xadj[i+1] - this->xadj[i];
 
 				// Get nodes adjacent to current node
@@ -290,8 +272,7 @@ namespace cupcfd
 				distGraph.connGraph.getAdjacentNodes(this->nodes[i], scratch, adjCount);
 
 				// Loop over each adjacent node
-				for(I j = 0; j < adjCount; j++)
-				{
+				for(I j = 0; j < adjCount; j++) {
 					// Retrieve and store the adjacent nodes global index
 					this->adjncy[ptr] = distGraph.nodeToGlobal[scratch[j]];
 					ptr = ptr + 1;
@@ -310,8 +291,7 @@ namespace cupcfd
 			this->vtxdist = (idx_t *) malloc(sizeof(idx_t) * this->nVtxdist);
 
 			this->vtxdist[0] = 0;
-			for(I i = 1; i < this->nVtxdist; i++)
-			{
+			for(I i = 1; i < this->nVtxdist; i++) {
 				this->vtxdist[i] = this->vtxdist[i-1] + distGraph.processNodeCounts[i-1];
 			}
 
@@ -319,15 +299,12 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexEdgeWeights()
-		{
-			if(this->vwgt != nullptr)
-			{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexEdgeWeights() {
+			if(this->vwgt != nullptr) {
 				free(this->vwgt);
 			}
 
-			if(this->adjwgt != nullptr)
-			{
+			if(this->adjwgt != nullptr) {
 				free(this->adjwgt);
 			}
 
@@ -345,10 +322,8 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetSubdomainWeights()
-		{
-			if(this->tpwgts == nullptr)
-			{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetSubdomainWeights() {
+			if(this->tpwgts == nullptr) {
 				free(this->tpwgts);
 			}
 
@@ -359,10 +334,8 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexImbalanceWeights()
-		{
-			if(this->ubvec == nullptr)
-			{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexImbalanceWeights() {
+			if(this->ubvec == nullptr) {
 				free(this->ubvec);
 			}
 
@@ -373,28 +346,24 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setWeightArrays()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setWeightArrays() {
 			// ToDo: Currently weights for vertex, edges are not set via this method since they are
 			// fixed.
 			return cupcfd::error::E_PARMETIS_ERROR;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setSubdomainWeightArrays()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setSubdomainWeightArrays() {
 			cupcfd::error::eCodes status;
 
 			// Error Check 1: Check nCon has been set
-			if(this->nCon < 1)
-			{
+			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
 				return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Error Check 2: Check nparts has been set
-			if(this->nParts < 1)
-			{
+			if(this->nParts < 1) {
 				// Error Case - Cannot allocate suitably sized array
 				// Technically partitioning requires a minimum nParts of 2...
 				return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
@@ -402,16 +371,14 @@ namespace cupcfd
 
 			// Reset the subdomain weights to free memory in case it is already allocated
 			status = this->resetSubdomainWeights();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			this->nTpwgts = this->nCon * this->nParts;
 			this->tpwgts = (real_t *) malloc(sizeof(real_t) * this->nTpwgts);
 
-			for(I i = 0; i < this->nTpwgts; i++)
-			{
+			for(I i = 0; i < this->nTpwgts; i++) {
 				this->tpwgts[i] = 1.0/this->nParts;
 			}
 
@@ -419,29 +386,25 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setVertexImbalanceWeightArrays()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::setVertexImbalanceWeightArrays() {
 			cupcfd::error::eCodes status;
 
 			// Error Check 1: Check nCon has been set
-			if(this->nCon < 1)
-			{
+			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
 				return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Reset to free memory in case it is already allocated
 			status = this->resetVertexImbalanceWeights();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			this->nUbvec = this->nCon;
 			this->ubvec = (real_t *) malloc(sizeof(real_t) * this->nUbvec);
 
-			for(I i = 0; i < this->nUbvec; i++)
-			{
+			for(I i = 0; i < this->nUbvec; i++) {
 				this->ubvec[i] = 1.05;
 			}
 
@@ -449,46 +412,38 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::partition()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::partition() {
 			cupcfd::error::eCodes status;
 
 			// === Input Error Checks ===
 			// Error Check 1 - Work arrays all exist
-			if(this->xadj == nullptr)
-			{
+			if(this->xadj == nullptr) {
 				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
-			if(this->adjncy == nullptr)
-			{
+			if(this->adjncy == nullptr) {
 				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
-			if(this->vtxdist == nullptr)
-			{
+			if(this->vtxdist == nullptr) {
 				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
-			if(this->nCon < 1)
-			{
+			if(this->nCon < 1) {
 				return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Error Check 2 - Number of parts has been set to something greater than 1
-			if(this->nParts <= 1)
-			{
+			if(this->nParts <= 1) {
 				// Error - Can't partition into one or fewer parts
 				return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
 			}
 
-			if(this->tpwgts == nullptr)
-			{
+			if(this->tpwgts == nullptr) {
 				return cupcfd::error::E_PARMETIS_INVALID_SUBDOMAIN_WEIGHT_ARRAYS;
 			}
 
-			if(this->ubvec == nullptr)
-			{
+			if(this->ubvec == nullptr) {
 				return cupcfd::error::E_PARMETIS_INVALID_VERTEX_IMBALANCE_WEIGHT_ARRAYS;
 			}
 
@@ -498,8 +453,7 @@ namespace cupcfd
 
 			// Reset the results array since we are about to overwrite it
 			status = this->resetResultStorage();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -514,13 +468,11 @@ namespace cupcfd
 			idx_t * vwgt = this->vwgt;
 			idx_t * adjwgt = this->adjwgt;
 
-			if(vwgt == nullptr)
-			{
+			if(vwgt == nullptr) {
 				vwgt = NULL;
 			}
 
-			if(adjwgt == nullptr)
-			{
+			if(adjwgt == nullptr) {
 				adjwgt = NULL;
 			}
 
@@ -544,8 +496,7 @@ namespace cupcfd
 										   );
 
 			// N.B.Parmetis manual states this is METIS_ERROR (i.e. not PARMETIS_ERROR)
-			if(ret == METIS_ERROR)
-			{
+			if(ret == METIS_ERROR) {
 				return cupcfd::error::E_PARMETIS_LIBRARY_ERROR;
 			}
 
@@ -553,42 +504,36 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts) {
 			cupcfd::error::eCodes status;
 
 			// === Set NCon Size ===
 			status = this->setNCon(1);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// === Set Partition Size ===
 			status = this->setNParts(nParts);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// setSubdomainWeightArrays cannot be set till nCon and nParts set so do so here.
 			status = this->setSubdomainWeightArrays();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(graph);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -596,8 +541,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::reset()
-		{
+		cupcfd::error::eCodes PartitionerParmetis<I,T>::reset() {
 			// Base class reset
 			this->PartitionerInterface<I,T>::reset();
 

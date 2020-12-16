@@ -90,9 +90,6 @@ namespace cupcfd
 
 				// === CRTP Methods ===
 
-				I getRowSize();
-				I getValSize();
-
 				inline cupcfd::error::eCodes resize(I rows, I columns);
 				inline cupcfd::error::eCodes clear();
 				inline cupcfd::error::eCodes setElement(I row, I col, T val);

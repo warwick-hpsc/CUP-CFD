@@ -14,6 +14,7 @@
 #define CUPCFD_DATA_STRUCTURES_DISTRIBUTED_ADJACENCY_LIST_IPP_H
 
 #include "Gather.h"
+#include "ArrayDrivers.h"
 #include <iostream>
 
 namespace cupcfd
@@ -22,8 +23,7 @@ namespace cupcfd
 	{
 		template <class I, class T>
 		template <class C>
-		cupcfd::error::eCodes DistributedAdjacencyList<I,T>::buildSerialAdjacencyList(AdjacencyList<C,I,T> * destGraph, I rank)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I,T>::buildSerialAdjacencyList(AdjacencyList<C,I,T> * destGraph, I rank) {
 			cupcfd::error::eCodes status;
 			// === Error Checks ===
 			// (1) Are all members of the sourceGraph communicator present - use a barrier
@@ -31,14 +31,12 @@ namespace cupcfd
 			//status = Barrier(cupcfd::comm::Communicator& mpComm);
 
 			// (2) Check that the sourceGraph is finalised
-			if(this->finalized == false)
-			{
+			if(this->finalized == false) {
 				return cupcfd::error::E_ERROR;
 			}
 			
 			// (3) Check that destGraph is not null on the specified rank
-			if((this->comm->rank == rank) && (destGraph == nullptr))
-			{
+			if((this->comm->rank == rank) && (destGraph == nullptr)) {
 				return cupcfd::error::E_ERROR;
 			}
 			
@@ -60,13 +58,12 @@ namespace cupcfd
 			T * recvNodeProcCount = nullptr;
 
 			status = cupcfd::comm::GatherV(localNodes, nLocalNodes, 
-									   &recvNodes, &nRecvNodes, 
-									   &recvNodeProcCount, &nRecvNodeProcCount, 
-									   rank, *(this->comm));
+											&recvNodes, &nRecvNodes, 
+											&recvNodeProcCount, &nRecvNodeProcCount, 
+											rank, *(this->comm));
 						
 									   
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 			
@@ -75,8 +72,7 @@ namespace cupcfd
 
 			I nEdges;
 			status = this->connGraph.getEdgeCount(&nEdges);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 			
@@ -84,8 +80,7 @@ namespace cupcfd
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
 			
 			status = this->connGraph.getEdges(edgeNode1, nEdges, edgeNode2, nEdges);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -105,8 +100,7 @@ namespace cupcfd
 									   &recvEdge1, &nRecvEdge1, 
 									   &recvEdge1ProcCount, &nRecvEdge1ProcCount, 
 									   rank, *(this->comm));
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 							   
@@ -114,27 +108,22 @@ namespace cupcfd
 									   &recvEdge2, &nRecvEdge2, 
 									   &recvEdge2ProcCount, &nRecvEdge2ProcCount, 
 									   rank, *(this->comm));								   
-			
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 			
 			// === Graph Reconstruction ===
 			
-			if(this->comm->rank == rank)
-			{			
+			if(this->comm->rank == rank) {			
 				// (1) We can now reconstruct the graph by adding the nodes to the serial graph
-				for(I i = 0; i < nRecvNodes; i++)
-				{
+				for(I i = 0; i < nRecvNodes; i++) {
 					destGraph->addNode(recvNodes[i]);
 				}
 	
 				// (2) Now we can add the edges
 				// If the edge already exists (e.g. overlap with ghost nodes),
 				// nothing should change.
-				for(I i = 0; i < nRecvEdge1; i++)
-				{
+				for(I i = 0; i < nRecvEdge1; i++) {
 					destGraph->addEdge(recvEdge1[i], recvEdge2[i]);
 				}
 				
@@ -158,8 +147,7 @@ namespace cupcfd
 		
 		template <class I, class T>
 		template <class D>
-		cupcfd::error::eCodes DistributedAdjacencyList<I,T>::buildExchangePattern(cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>** pattern)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I,T>::buildExchangePattern(cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>** pattern) {
 			*pattern = new cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>();
 
 			// Items needed to initialise the exchange pattern
@@ -176,8 +164,7 @@ namespace cupcfd
 			I nMapLocalToExchangeIDX = this->connGraph.nNodes;
 			I * mapLocalToExchangeIDX = (I *) malloc(sizeof(I) * nMapLocalToExchangeIDX);
 
-			for(I i = 0; i < nMapLocalToExchangeIDX; i++)
-			{
+			for(I i = 0; i < nMapLocalToExchangeIDX; i++) {
 				I localID = i;
 				I globalID = this->nodeToGlobal[this->connGraph.IDXToNode[localID]];
 				mapLocalToExchangeIDX[i] = globalID;
@@ -193,10 +180,9 @@ namespace cupcfd
 			I nTRanks = this->sendGlobalIDsAdjncy.size();
 			I * tRanks = (I *) malloc(sizeof(I) * nTRanks);
 
-			for(I i = 0; i < this->sendGlobalIDsXAdj.size()-1; i++)
-			{
-				for(I j = 0; j < this->sendGlobalIDsXAdj[i+1] - this->sendGlobalIDsXAdj[i]; j++)
-				{
+			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(this->sendGlobalIDsXAdj.size());
+			for(I i = 0; i < size; i++) {
+				for(I j = 0; j < this->sendGlobalIDsXAdj[i+1] - this->sendGlobalIDsXAdj[i]; j++) {
 					tRanks[this->sendGlobalIDsXAdj[i] + j] = this->sendRank[i];
 				}
 			}

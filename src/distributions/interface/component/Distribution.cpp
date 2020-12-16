@@ -32,11 +32,11 @@ namespace cupcfd
 		// 	// Nothing to do currently
 		// }
 
-		// template <class I, class T>
-		// Distribution<I,T>::~Distribution()
-		// {
+		template <class I, class T>
+		Distribution<I,T>::~Distribution()
+		{
 
-		// }
+		}
 
 		// // === Concrete Methods ===
 

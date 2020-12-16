@@ -58,21 +58,7 @@ namespace cupcfd
 				 */
 				virtual ~ParticleSystemConfigSource();
 
-				// === Concrete Methods ===
-
 				// === Virtual Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(ParticleSystemConfigSource<S,E,P,M,I,T,L>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.

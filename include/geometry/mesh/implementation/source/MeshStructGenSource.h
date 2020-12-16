@@ -130,7 +130,7 @@ namespace cupcfd
 					 *
 					 * @return The unique coordinate label
 					 */
-					I calculateLabel(I xCoord, I yCoord, I zCoord, I xMin, I xMax, I yMin, I yMax, I zMin, I zMax);
+					I calculateLabel(I xCoord, I yCoord, I zCoord, I xMin, I xMax, I yMin, I yMax, I zMin);
 
 					/**
 					 * Utility functions - compute the X coordinate in a scheme for a given label.
