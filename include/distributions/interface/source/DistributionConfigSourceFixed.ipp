@@ -30,20 +30,14 @@ namespace cupcfd
 		
 		}
 		
-		template <class I, class T>
-		DistributionConfigSourceFixed<I,T>::DistributionConfigSourceFixed(const DistributionConfigSourceFixed<I,T>& source)
-		{
+		// template <class I, class T>
+		// DistributionConfigSourceFixed<I,T>::DistributionConfigSourceFixed(const DistributionConfigSourceFixed<I,T>& source)
+		// {
 		
-		}
+		// }
 		
 		template <class I, class T>
 		DistributionConfigSourceFixed<I,T>::~DistributionConfigSourceFixed()
-		{
-		
-		}
-		
-		template <class I, class T>
-		void DistributionConfigSourceFixed<I,T>::operator=(const DistributionConfigSourceFixed<I,T>& source)
 		{
 		
 		}

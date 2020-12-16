@@ -29,11 +29,11 @@ namespace cupcfd
 		
 		}
 		
-		template <class I, class T>
-		DistributionConfigSourceNormal<I,T>::DistributionConfigSourceNormal(const DistributionConfigSourceNormal<I,T>& source)
-		{
+		// template <class I, class T>
+		// DistributionConfigSourceNormal<I,T>::DistributionConfigSourceNormal(const DistributionConfigSourceNormal<I,T>& source)
+		// {
 		
-		}
+		// }
 		
 		template <class I, class T>
 		DistributionConfigSourceNormal<I,T>::~DistributionConfigSourceNormal()
@@ -81,12 +81,6 @@ namespace cupcfd
 		
 		// === Pure Virtual Methods ===
 		// Definitions here to satisfy linker
-		
-		template <class I, class T>
-		void DistributionConfigSourceNormal<I,T>::operator=(const DistributionConfigSourceNormal<I,T>& source)
-		{
-			// Pure Virtual
-		}
 		
 		// template <class I, class T>
 		// DistributionConfigSourceNormal<I,T> * DistributionConfigSourceNormal<I,T>::clone()

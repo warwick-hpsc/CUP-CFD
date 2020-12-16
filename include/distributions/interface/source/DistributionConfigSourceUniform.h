@@ -66,8 +66,7 @@ namespace cupcfd
 
 				// === Concrete Methods ===
 
-				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig);
-				virtual void operator=(const DistributionConfigSourceUniform<I,T>& source);
+				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig) = 0;
 
 				// === Pure Virtual Methods ===
 				virtual DistributionConfigSourceUniform<I,T> * clone() = 0;
