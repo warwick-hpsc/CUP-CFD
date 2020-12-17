@@ -404,8 +404,6 @@ namespace cupcfd
 				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
-			std::cout << "DistributedAdjacencyList::finalize() CALLED" << std::endl;
-
 			cupcfd::error::eCodes err;
 
 			// =========================================================================================================
@@ -704,8 +702,6 @@ namespace cupcfd
 			// =========================================================================================================
 			// Use Deep Copy Operator
 			this->connGraph = this->buildGraph;
-			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
-			return cupcfd::error::E_ERROR;
 
 			// =========================================================================================================
 			// ToDo: Should now be able to reset the buildGraph to free some space.
@@ -721,13 +717,9 @@ namespace cupcfd
 			// === Loop over the neighbours, and store the globalIDs of cells to be received, sorted by global id ===
 			// Get the ghost GIDs
 
-			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
-			return cupcfd::error::E_ERROR;
 			T * ghosts = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostsGIDs = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostrank = (T *) malloc(sizeof(T) * this->nLGhNodes);
-			std::cout << "DistributedAdjacencyList::finalize() ABORTING EARLY" << std::endl;
-			return cupcfd::error::E_ERROR;
 			this->getGhostNodes(ghosts, this->nLGhNodes);
 
 
@@ -793,8 +785,6 @@ namespace cupcfd
 
 			// Sort the nodes so local nodes have lower local indexes than ghost nodes
 			this->sortNodesByLocal();
-
-			std::cout << "DistributedAdjacencyList::finalize() COMPLETE" << std::endl;
 
 			return cupcfd::error::E_SUCCESS;
 		}

@@ -125,8 +125,6 @@ namespace cupcfd
 				*mesh = new M(comm);
 				(*mesh)->addData(*source, assignedCellLabels, nAssignedCellLabels);
 				(*mesh)->finalize();
-				std::cout << "buildUnstructuredMesh() ABORTING EARLY" << std::endl;
-				return cupcfd::error::E_ERROR;
 				
 				// Cleanup
 				delete naiveConnGraph;

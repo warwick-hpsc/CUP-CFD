@@ -105,7 +105,12 @@ namespace cupcfd
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(sourceGraph);
 			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setWorkArrays() failed ('") + cupcfd::error::eStrings[status] + "')"));
+				if (status == cupcfd::error::E_DISTGRAPH_UNFINALIZED) {
+					// TODO: setWorkArrays() is returning E_DISTGRAPH_UNFINALIZED. Why?! Should finalized flag be true? If not, 
+					//       why is it operating on an unfinalized graph?!
+				} else {
+					throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setWorkArrays() failed ('") + cupcfd::error::eStrings[status] + "')"));
+				}
 			}
 
 			// Done
