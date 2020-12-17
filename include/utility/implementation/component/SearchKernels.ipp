@@ -36,7 +36,7 @@ namespace cupcfd
  				}
 
  				// Target not found. Return -1 to signify no valid index.
- 				return cupcfd::error::E_SEARCH_NOT_FOUND;
+ 				DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_NOT_FOUND;
  			}
 
  			template <class I, class T>

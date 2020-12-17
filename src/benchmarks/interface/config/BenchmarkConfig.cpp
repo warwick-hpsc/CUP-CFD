@@ -39,8 +39,6 @@ namespace cupcfd
 
 		}
 
-		// === Concrete Methods ===
-
 		// === Pure Virtual Methods ===
 
 		template <class I, class T>
@@ -49,19 +47,5 @@ namespace cupcfd
 			this->benchmarkName = source.benchmarkName;
 			this->repetitions = source.repetitions;
 		}
-
-		// template <class I, class T>
-		// BenchmarkConfig<I,T> * BenchmarkConfig<I,T>::clone()
-		// {
-		// 	// Nothing to do here
-		// 	return nullptr;
-		// }
-
-		// template <class I, class T>
-		// cupcfd::error::eCodes BenchmarkConfig<I,T>::buildBenchmark(Benchmark<I,T> ** bench)
-		// {
-		// 	// Nothing to do here
-		// 	return cupcfd::error::E_SUCCESS;
-		// }
 	}
 }

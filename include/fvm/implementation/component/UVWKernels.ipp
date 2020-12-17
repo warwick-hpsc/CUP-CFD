@@ -100,7 +100,7 @@
 			{
 				#ifdef DEBUG
 					if (i >= nMassFlux) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -112,34 +112,34 @@
 
 				#ifdef DEBUG
 					if (ip >= nUCell || in >= nUCell) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nVCell || in >= nVCell) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nWCell || in >= nWCell) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nVisEffCell || in >= nVisEffCell) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nDudx || in >= nDudx) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nDvdx || in >= nDvdx) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nDwdx || in >= nDwdx) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nSu || in >= nSu) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nSv || in >= nSv) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nSw || in >= nSw) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -208,7 +208,7 @@
 
 					#ifndef NDEBUG
 						if ((i*2)+1 >= nRFace) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					rFace[i*2] = -visFace - std::max(massFlux[i], T(0.0));
@@ -244,25 +244,25 @@
 
 					#ifdef DEBUG
 						if (ib >= nUBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nVBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nWBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nVisEffBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nAu) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nAv) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nAw) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 

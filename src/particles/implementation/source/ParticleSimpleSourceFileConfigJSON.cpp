@@ -91,7 +91,7 @@ namespace cupcfd
 				// Check the value and return the appropriate ID
 				if(dataSourceType == Json::Value::null)
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				else
 				{
@@ -100,10 +100,10 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class I, class T>
@@ -119,7 +119,7 @@ namespace cupcfd
 				// Check the value and return the appropriate ID
 				if(dataSourceType == Json::Value::null)
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				else if(dataSourceType == "HDF5")
 				{
@@ -129,10 +129,10 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 	}
 }

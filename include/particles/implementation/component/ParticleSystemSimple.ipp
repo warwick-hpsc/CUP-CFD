@@ -156,7 +156,7 @@ namespace cupcfd
 			}
 			
 			// Proxy behaviour - sorts and copies
-			status = cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes);
+			status = cupcfd::utility::drivers::merge_sort_index(rankIDs, nParticles, rankIDIndexes, nParticles);
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: merge_sort_index() failed" << std::endl;
 				return status;
@@ -390,7 +390,7 @@ namespace cupcfd
 							if (particles[i].getParticleID() == particle_id_to_track) {
 								if (found_particle_to_track) {
 									std::cout << "ERROR: Multiple particles have ID " << particle_id_to_track << std::endl;
-									return cupcfd::error::E_ERROR;
+									DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 								}
 								found_particle_to_track = true;
 								particle_idx_to_track = i;
@@ -458,7 +458,7 @@ namespace cupcfd
 				}
 				if (trueNumTravellingParticles != tmp) {
 					std::cout << "ERROR: Bug detected in stack-based tracking of #travelling particles. Stack claims " << tmp << " but actual is " << trueNumTravellingParticles << std::endl;
-					return cupcfd::error::E_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 				}
 
 				if (found_particle_to_track) {
@@ -468,7 +468,7 @@ namespace cupcfd
 						if (first_pass) {
 							if (bg.getInFlightPos() == tracked_particle_copy.getInFlightPos()) {
 								std::cout << "ERROR: particle " << bg.getParticleID() << " has not moved in first pass of update" << std::endl;
-								return cupcfd::error::E_ERROR;
+								DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 							}
 						}
 
@@ -479,7 +479,7 @@ namespace cupcfd
 								 (bg.getCellGlobalID() == tracked_particle_copy.getCellGlobalID()) )
 							{
 								std::cout << "ERROR: particle " << bg.getParticleID() << " has not changed but it is only particle with travel time" << std::endl;
-								return cupcfd::error::E_ERROR;
+								DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 							}
 						}
 					}
@@ -498,7 +498,7 @@ namespace cupcfd
 						}
 					}
 
-					return cupcfd::error::E_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 				}
 
 				first_pass = false;
@@ -523,7 +523,7 @@ namespace cupcfd
 
 				if (!this->particles[i].stateValid()) {
 					std::cout << "ERROR: particle " << this->particles[i].getParticleID() << " in invalid state" << std::endl;
-					return cupcfd::error::E_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 				}
 
 				// Can't guarantee there are no inactive particles so have this check guard here.
@@ -651,13 +651,13 @@ namespace cupcfd
 
 						if (this->nTravelParticles < 0) {
 							std::cout << "ERROR: nTravelParticles has dropped below 0" << std::endl;
-							return cupcfd::error::E_ERROR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 						}
 					}
 				}
 				else {
 					std::cout << "ERROR: Attempting to update an inactive particle" << std::endl;
-					return cupcfd::error::E_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 				}
 			}
 				
@@ -740,7 +740,7 @@ namespace cupcfd
 					for (I k=0; k<this->getNParticles(); k++) {
 						if (this->particles[k].getParticleID() == newParticles[j].getParticleID()) {
 							std::cout << "ERROR: Particle with ID " << newParticles[j].getParticleID() << " already in system" << std::endl;
-							return cupcfd::error::E_ERROR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 						}
 					}
 

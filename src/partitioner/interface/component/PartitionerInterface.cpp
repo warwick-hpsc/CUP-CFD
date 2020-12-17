@@ -146,14 +146,14 @@ namespace cupcfd
 			if(this->result == nullptr)
 			{
 				// Error - Results array is not allocated
-				return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NO_RESULTS;
 			}
 
 			// Error Check 2: The size of the communicator the node allocations will be distributed must be equal to or larger than the number of partitions
 			// (If larger then some ranks will clearly get no allocated nodes - generate a warning in this case?)
 			if(this->workComm.size < this->nParts)
 			{
-				return cupcfd::error::E_PARMETIS_UNDERSIZED_COMM;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_UNDERSIZED_COMM;
 			}
 
 			// === Distribute the partition ===

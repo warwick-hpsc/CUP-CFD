@@ -53,17 +53,6 @@ namespace cupcfd
 				 */
 				virtual ~VectorSourceConfig();
 
-				// === Concrete Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @return Nothing.
-				 */
-				// virtual void operator=(VectorSourceConfig<I,T>& source);
-
 				// === Pure Virtual Methods ===
 
 				/**

@@ -42,7 +42,7 @@ namespace cupcfd
 				int err = MPI_Bcast(buf, nEle, dType, sourcePID, comm);
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Reached end without error

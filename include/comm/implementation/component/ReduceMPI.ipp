@@ -27,7 +27,7 @@ namespace cupcfd
 			cupcfd::error::eCodes reduceMPI(T * bSend, int nBSend, T * bRecv, int nBRecv, MPI_Op op, int sProcess, MPI_Comm comm)
 			{
 				if (nBSend != nBRecv) {
-					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				
 				T dummy;
@@ -44,7 +44,7 @@ namespace cupcfd
 				int err = MPI_Reduce(bSend, bRecv, nBSend, dType, op, sProcess, comm);
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -85,7 +85,7 @@ namespace cupcfd
 			cupcfd::error::eCodes allReduceMPI(T * bSend, int nBSend, T * bRecv, int nBRecv, MPI_Op op, MPI_Comm comm)
 			{
 				if (nBSend != nBRecv) {
-					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				T dummy;
@@ -102,7 +102,7 @@ namespace cupcfd
 				int err = MPI_Allreduce(bSend, bRecv, nBSend, dType, op, comm);
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;

@@ -216,7 +216,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			// Make RHS Vector Source

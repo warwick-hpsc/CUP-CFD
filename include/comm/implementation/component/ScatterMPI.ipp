@@ -43,7 +43,7 @@ namespace cupcfd
 				// Use the MPI library for the distribution
 				err = MPI_Scatter(bufferSend, nSend, dTypeSend, bufferRecv, nRecv, dTypeRecv, sourcePID, comm);
 				if(err != MPI_SUCCESS) {
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				// If received this point, presumed to be successful
@@ -55,27 +55,27 @@ namespace cupcfd
 				int commSize, commRank;
 				int err = MPI_Comm_size(comm, &commSize);
 				if(err != MPI_SUCCESS) {
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				err = MPI_Comm_rank(comm, &commRank);
 				if(err != MPI_SUCCESS) {
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				if (commRank == sourcePID) {
 					if (commSize != nSendCounts) {
-						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 					int nSendActual = 0;
 					for (int i=0; i<commSize; i++) {
 						nSendActual += sendCounts[i];
 					}
 					if (nSendActual != nSend) {
-						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				} else {
 					if (nRecv != sendCounts[commRank]) {
-						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				}
 
@@ -108,7 +108,7 @@ namespace cupcfd
 
 				err = MPI_Scatterv(bufferSend, sendCounts, displs, dTypeSend, bufferRecv, nRecv, dTypeRecv, sourcePID, comm);
 				if(err != MPI_SUCCESS) {
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				if(displs != nullptr) {

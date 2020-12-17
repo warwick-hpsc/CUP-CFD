@@ -19,17 +19,6 @@ namespace cupcfd
 	{
 		namespace mesh
 		{
-			// === Concrete Methods ===
-			
-			// === Pure Virtual Methods ===
-			// Here to satisfy the linker
-			
-			// template <class I, class T, class L>
-			// cupcfd::error::eCodes MeshSourceConfig<I,T,L>::buildMeshSource(MeshSource<I,T,L> ** source)
-			// {
-			// 	// Nothing to do here.
-			// }
-
 		}
 	}
 }

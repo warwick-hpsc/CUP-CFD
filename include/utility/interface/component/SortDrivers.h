@@ -77,6 +77,7 @@ namespace cupcfd
 			 * @param source The source data array
 			 * @param nSource The size of source as the number of elements of type T
 			 * @param indexes The index array the result is written to by the function
+			 * @param nIndexes The size of indexes as the number of elements of type T
 			 *
 			 * @tparam I The type of the indexing scheme (integer based)
 			 * @tparam T The type of the stored array data
@@ -85,7 +86,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes);
+			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
 			 * Determine whether an array is sorted

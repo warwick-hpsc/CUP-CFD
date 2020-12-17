@@ -23,12 +23,6 @@ namespace cupcfd
 
 		}
 
-		// template <class S, class E, class P, class M, class I, class T, class L>
-		// ParticleSystemConfig<S,E,P,M,I,T,L>::ParticleSystemConfig(ParticleSystemConfig<S,E,P,M,I,T,L>& source)
-		// {
-
-		// }
-
 		template <class S, class E, class P, class M, class I, class T, class L>
 		ParticleSystemConfig<S,E,P,M,I,T,L>::~ParticleSystemConfig()
 		{

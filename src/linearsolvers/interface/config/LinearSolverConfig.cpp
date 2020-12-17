@@ -37,20 +37,6 @@ namespace cupcfd
 		{
 
 		}
-
-		// template <class C, class I, class T>
-		// LinearSolverConfig<C,I,T> * LinearSolverConfig<C,I,T>::clone()
-		// {
-		// 	// Pure Virtual Class, Left to inheriting classes (plus we can't return an abstract object)
-		// }
-
-		// template <class C, class I, class T>
-		// cupcfd::error::eCodes LinearSolverConfig<C,I,T>::buildLinearSolver(LinearSolverInterface<C,I,T> ** solverSystem,
-		// 																		cupcfd::data_structures::SparseMatrix<C,I,T>& matrix,
-		// 																		cupcfd::comm::Communicator& solverComm)
-		// {
-
-		// }
 	}
 }
 

@@ -61,7 +61,7 @@ namespace cupcfd
 			}
 
 			// Shouldn't reach this part if we have a valid format
-			return cupcfd::error::E_ERROR;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 		}
 	}
 }

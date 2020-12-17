@@ -54,7 +54,7 @@ namespace cupcfd
 				// Error Status Check
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -72,7 +72,7 @@ namespace cupcfd
 				err = MPI_Comm_size(comm, &commSize);
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				// Compute Displacements from send/recv counts
@@ -127,7 +127,7 @@ namespace cupcfd
 
 				if(err != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;

@@ -286,7 +286,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			void intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result)
+			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult)
 			{
 				// Loop over whichever array has more elements - this way we cannot miss elements from finishing early
 				// and elements not in array1 cannot possibly be in the intersect array, even if in array2
@@ -323,10 +323,15 @@ namespace cupcfd
 					{
 						// Element from source was found in the search array, so is present in both.
 						// Add to results
+						if (ptr >= nResult) {
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						}
 						result[ptr] = sourcePtr[i];
-						ptr = ptr + 1;
+						ptr++;
 					}
 				}
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 

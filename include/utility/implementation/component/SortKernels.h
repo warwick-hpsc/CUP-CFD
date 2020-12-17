@@ -57,7 +57,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes);
+			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
 			 * Evaluate whether an array is sorted in ascending order based on the < and == operators of type T.

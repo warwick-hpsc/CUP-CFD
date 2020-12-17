@@ -30,28 +30,11 @@ namespace cupcfd
 		
 		}
 		
-		// template <class I, class T>
-		// DistributionConfigSourceFixed<I,T>::DistributionConfigSourceFixed(const DistributionConfigSourceFixed<I,T>& source)
-		// {
-		
-		// }
-		
 		template <class I, class T>
 		DistributionConfigSourceFixed<I,T>::~DistributionConfigSourceFixed()
 		{
 		
 		}
-		
-		// template <class I, class T>
-		// cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::getFixedValue(T * value)
-		// {
-		// }
-						
-		// template <class I, class T>
-		// DistributionConfigSourceFixed<I,T> * DistributionConfigSourceFixed<I,T>::clone()
-		// {
-		
-		// }
 		
 		template <class I, class T>
 		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)

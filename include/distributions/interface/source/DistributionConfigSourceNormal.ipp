@@ -29,12 +29,6 @@ namespace cupcfd
 		
 		}
 		
-		// template <class I, class T>
-		// DistributionConfigSourceNormal<I,T>::DistributionConfigSourceNormal(const DistributionConfigSourceNormal<I,T>& source)
-		// {
-		
-		// }
-		
 		template <class I, class T>
 		DistributionConfigSourceNormal<I,T>::~DistributionConfigSourceNormal()
 		{
@@ -78,39 +72,6 @@ namespace cupcfd
 			
 			return cupcfd::error::E_SUCCESS;
 		}
-		
-		// === Pure Virtual Methods ===
-		// Definitions here to satisfy linker
-		
-		// template <class I, class T>
-		// DistributionConfigSourceNormal<I,T> * DistributionConfigSourceNormal<I,T>::clone()
-		// {
-		// 	// Pure Virtual
-		// }
-		
-		// template <class I, class T>
-		// cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getLBound(T * lBound)
-		// {
-		// 	// Pure Virtual
-		// }
-
-		// template <class I, class T>
-		// cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getUBound(T * uBound)
-		// {
-		// 	// Pure Virtual
-		// }
-
-		// template <class I, class T>
-		// cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getMean(T * mean)
-		// {
-		// 	// Pure Virtual
-		// }
-
-		// template <class I, class T>
-		// cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getStDev(T * stDev)
-		// {
-		// 	// Pure Virtual
-		// }
 	}
 }
 

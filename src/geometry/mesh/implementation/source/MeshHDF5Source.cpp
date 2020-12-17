@@ -83,7 +83,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Labels in this format are just numerically ascending, but indexed from 1 so adjust from zero-based indexes.
@@ -97,7 +97,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Labels in this format are just numerically ascending, but indexed from 1 so adjust from zero-based indexes.
@@ -111,7 +111,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getVertexLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Labels in this format are just numerically ascending, but indexed from 1 so adjust from zero-based indexes.
@@ -125,7 +125,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Labels in this format are just numerically ascending, but indexed from 1 so adjust from zero-based indexes.
@@ -139,7 +139,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getRegionLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Labels in this format are just numerically ascending, but indexed from 1 so adjust from zero-based indexes.
@@ -197,7 +197,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellNFaces(I * nFaces, I nNFaces, I * cellLabels, I nCellLabels) {
 				// Size Check
 				if (nNFaces != nCellLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -223,7 +223,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellVolume(T * cellVol, I nCellVol, I * cellLabels, I nCellLabels) {
 				// Size Check
 				if (nCellVol != nCellLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -246,7 +246,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels) {
 				// Size Check
 				if (nCellCenter != nCellLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -290,7 +290,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, I * cellLabels, I nCellLabels) {
 				// Check Size of Arrays are suitable
 				if (nCsrIndices != (nCellLabels+1)) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// ================================================================
@@ -308,7 +308,7 @@ namespace cupcfd
 					nFacesTotal += nFaces[i];
 				}
 				if (nCsrData != nFacesTotal) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -360,7 +360,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceIsBoundary(bool * isBoundary, I nIsBoundary, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nIsBoundary != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// If Cell 2 is 0, then it is a boundary face.
@@ -393,7 +393,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceNVertices(I * nVertices, I nNVertices, I * faceLabels, I nFaceLabels) {
 				// Error Check: Size Check
 				if (nNVertices != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -432,7 +432,7 @@ namespace cupcfd
 
 				// Error Check: Size Check
 				if (nFaceBoundaryLabels != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Error Check: Check they are all boundary faces
@@ -446,7 +446,7 @@ namespace cupcfd
 				for(I i = 0; i < nFaceLabels; i++) {
 					if(isBoundary[i] == false) {
 						free(isBoundary);
-						return cupcfd::error::E_ERROR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 					}
 				}
 
@@ -473,7 +473,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceCell1Labels != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -498,7 +498,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceCell2Labels != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -534,7 +534,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceArea(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceLambda != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -559,7 +559,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceLambda(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceLambda != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -584,7 +584,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceNormal != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -629,7 +629,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels) {
 				// Size Check
 				if (nFaceCenter != nFaceLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -673,7 +673,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels) {
 				if (nCsrIndices != (nFaceLabels+1)) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// ToDo: This can be faster: Using these function as they are currently written will reload the same data more than once.
@@ -693,7 +693,7 @@ namespace cupcfd
 					}
 				}
 				if (nVerticesTotal != nCsrData) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Update indices array
@@ -764,7 +764,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels) {
 				// Size Check
 				if (nVertCoords != nVertexLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -810,7 +810,7 @@ namespace cupcfd
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryLabels != nBoundaryFaceLabels) {
-						return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 					}
 
 					// Setup Access
@@ -841,7 +841,7 @@ namespace cupcfd
 
 				// Size Check
 				if (nNVertices != nBoundaryLabels) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Setup Access
@@ -876,7 +876,7 @@ namespace cupcfd
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryRegionLabels != nBoundaryLabels) {
-						return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 					}
 
 					// Setup Access
@@ -902,7 +902,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * boundaryLabels, I nBoundaryLabels) {
 				// Size Check
 				if (nCsrIndices != (nBoundaryLabels+1)) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// ToDo: This can be faster: Using these function as they are currently written will reload the same data more than once.
@@ -923,7 +923,7 @@ namespace cupcfd
 					}
 				}
 				if (nVerticesTotal != nCsrData) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// Update indices array
@@ -996,7 +996,7 @@ namespace cupcfd
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryDistance != nBoundaryLabels) {
-						return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 					}
 
 					// Setup Access
@@ -1021,7 +1021,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getRegionName(std::string * names __attribute__((unused)), I nNames __attribute__((unused)), I * regionLabels __attribute__((unused)), I nRegionLabels __attribute__((unused))) {
 				// ToDo
-				return cupcfd::error::E_NOT_IMPLEMENTED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_IMPLEMENTED;
 			}
 		}
 	}

@@ -177,7 +177,7 @@ namespace cupcfd
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 			
 			I fromCellLocalID;
@@ -190,7 +190,7 @@ namespace cupcfd
 				toCellGlobalID = cell1GlobalID;
 			} else {
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
             // Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
@@ -210,7 +210,7 @@ namespace cupcfd
 			}
 			if (!localFaceAccessible) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " through inaccessible face" << std::endl;
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			status = this->safelySetCellGlobalID(toCellGlobalID, faceLocalID);
@@ -319,7 +319,7 @@ namespace cupcfd
 		{
 			if(!(this->isRegistered()))
 			{
-				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 			}
 		
 			*dType = ParticleSimple<I,T>::mpiType;
@@ -347,14 +347,12 @@ namespace cupcfd
 			// Error Check - Only Register if currently unregistered
 			if(this->isRegistered())
 			{
-				return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 			}
 
 			int mpiErr;
 
 			const int nb = 14;
-
-			// Only need one block since all of same type
 
 			// Keep as blocks of size 1 incase of compiler rearranging members
 			int blocklengths[nb];
@@ -481,7 +479,7 @@ namespace cupcfd
 			
 			if (idx > nb) {
 				std::cout << "ERROR: Added too many items to ParticleSimple MPI_type" << std::endl;
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			MPI_Datatype vecType;
@@ -491,32 +489,32 @@ namespace cupcfd
 
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecType);
 
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class ParticleSimple<I,T>), &vecTypeResized);
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			// Store statically so the get method can retrieve it later
@@ -526,7 +524,7 @@ namespace cupcfd
 			mpiErr = MPI_Type_free(&vecType);
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			ParticleSimple<I,T>::mpiDataTypeReg = true;
@@ -542,13 +540,13 @@ namespace cupcfd
 			// Error Check - Only Deregister if currently registered
 			if(!this->isRegistered())
 			{
-				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 			}
 
 			mpiErr = MPI_Type_free(&(ParticleSimple<I,T>::mpiType));
 			if(mpiErr != MPI_SUCCESS)
 			{
-				return cupcfd::error::E_MPI_ERR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 			}
 
 			ParticleSimple<I,T>::mpiDataTypeReg = false;

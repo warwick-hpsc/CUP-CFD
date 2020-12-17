@@ -34,7 +34,7 @@ namespace cupcfd
 
 			if(dataSourceType == Json::Value::null)
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			else if(dataSourceType.asString() == "int")
 			{
@@ -44,10 +44,10 @@ namespace cupcfd
 
 			// Found, but not a matching value
 
-			return cupcfd::error::E_CONFIG_INVALID_VALUE;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 		}
 
-		return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+		DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 	}
 
 	cupcfd::error::eCodes SystemConfigJSON::getFloatingPointDataType(floatingDataType * dataType)
@@ -58,7 +58,7 @@ namespace cupcfd
 
 			if(dataSourceType == Json::Value::null)
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			else if(dataSourceType.asString() == "float")
 			{
@@ -73,10 +73,10 @@ namespace cupcfd
 
 			// Found, but not a matching value
 
-			return cupcfd::error::E_CONFIG_INVALID_VALUE;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 		}
 
-		return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+		DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 	}
 
 	cupcfd::error::eCodes SystemConfigJSON::getMeshSpecialisationType(meshDataType * dataType)
@@ -87,7 +87,7 @@ namespace cupcfd
 
 			if(dataSourceType == Json::Value::null)
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			else if(dataSourceType.asString() == "MiniAoS")
 			{
@@ -101,9 +101,9 @@ namespace cupcfd
 			}
 			// Found, but not a matching value
 
-			return cupcfd::error::E_CONFIG_INVALID_VALUE;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 		}
 
-		return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+		DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 	}
 }

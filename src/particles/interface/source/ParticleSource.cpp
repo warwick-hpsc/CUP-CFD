@@ -29,18 +29,6 @@ namespace cupcfd
 		{
 			// Currently Nothing to Clean Up.
 		}
-
-		// === Pure Virtual ===
-
-		// template <class P, class I, class T>
-		// cupcfd::error::eCodes ParticleSource<P,I,T>::getNParticles(I * nParticles)
-		// {
-		// }
-
-		// template <class P, class I, class T>
-		// cupcfd::error::eCodes ParticleSource<P,I,T>::getParticles(Particle<P,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase)
-		// {
-		// }
 	}
 }
 

@@ -212,13 +212,13 @@ namespace cupcfd
 			// Error Checks:
 			// Check that the provided graph has been finalised, so that it has all the data we need
 			if(distGraph.finalized == false) {
-				return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
 			}
 
 			// Error Check:
 			// Check that the number of local nodes in the partition graph is not zero (we need some work to operate with)
 			if(distGraph.nLONodes == 0) {
-				return cupcfd::error::E_DISTGRAPH_NO_LOCAL_NODES;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_DISTGRAPH_NO_LOCAL_NODES;
 			}
 
 			// (a) Clear any exiting work arrays
@@ -354,7 +354,7 @@ namespace cupcfd
 		cupcfd::error::eCodes PartitionerParmetis<I,T>::setWeightArrays() {
 			// ToDo: Currently weights for vertex, edges are not set via this method since they are
 			// fixed.
-			return cupcfd::error::E_PARMETIS_ERROR;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_ERROR;
 		}
 
 		template <class I, class T>
@@ -364,14 +364,14 @@ namespace cupcfd
 			// Error Check 1: Check nCon has been set
 			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
-				return cupcfd::error::E_PARMETIS_INVALID_NCON;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Error Check 2: Check nparts has been set
 			if(this->nParts < 1) {
 				// Error Case - Cannot allocate suitably sized array
 				// Technically partitioning requires a minimum nParts of 2...
-				return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
 			}
 
 			// Reset the subdomain weights to free memory in case it is already allocated
@@ -397,7 +397,7 @@ namespace cupcfd
 			// Error Check 1: Check nCon has been set
 			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
-				return cupcfd::error::E_PARMETIS_INVALID_NCON;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Reset to free memory in case it is already allocated
@@ -423,33 +423,33 @@ namespace cupcfd
 			// === Input Error Checks ===
 			// Error Check 1 - Work arrays all exist
 			if(this->xadj == nullptr) {
-				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
 			if(this->adjncy == nullptr) {
-				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
 			if(this->vtxdist == nullptr) {
-				return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_WORK_ARRAY;
 			}
 
 			if(this->nCon < 1) {
-				return cupcfd::error::E_PARMETIS_INVALID_NCON;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_NCON;
 			}
 
 			// Error Check 2 - Number of parts has been set to something greater than 1
 			if(this->nParts <= 1) {
 				// Error - Can't partition into one or fewer parts
-				return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
 			}
 
 			if(this->tpwgts == nullptr) {
-				return cupcfd::error::E_PARMETIS_INVALID_SUBDOMAIN_WEIGHT_ARRAYS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_SUBDOMAIN_WEIGHT_ARRAYS;
 			}
 
 			if(this->ubvec == nullptr) {
-				return cupcfd::error::E_PARMETIS_INVALID_VERTEX_IMBALANCE_WEIGHT_ARRAYS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_INVALID_VERTEX_IMBALANCE_WEIGHT_ARRAYS;
 			}
 
 			// Error Check 3 - Communicator is set to something other than SELF/size greater than 1
@@ -502,7 +502,7 @@ namespace cupcfd
 
 			// N.B.Parmetis manual states this is METIS_ERROR (i.e. not PARMETIS_ERROR)
 			if(ret == METIS_ERROR) {
-				return cupcfd::error::E_PARMETIS_LIBRARY_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_LIBRARY_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;

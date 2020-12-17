@@ -66,7 +66,7 @@ namespace cupcfd
 		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig __attribute__((unused)))
 		{
 			// ToDo
-			return cupcfd::error::E_NOT_IMPLEMENTED;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 	}
 }

@@ -65,7 +65,7 @@ namespace cupcfd
 		{
 			if(nData != nIndexes)
 			{
-				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Setup Access

@@ -102,7 +102,7 @@ namespace cupcfd
 			{
 				#ifndef NDEBUG
 					if (i >= nMassFlux) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -111,16 +111,16 @@ namespace cupcfd
 
 				#ifndef NDEBUG
 					if (ip >= nVisEff || in >= nVisEff) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nAu) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nSu || in >= nSu) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= ndPhidx || in >= ndPhidx) {
-						return cupcfd::error::E_INVALID_INDEX;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -130,7 +130,7 @@ namespace cupcfd
 				{
 					#ifndef NDEBUG
 						if (ip >= nPhiCell || in >= nPhiCell) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -211,7 +211,7 @@ namespace cupcfd
 
 					#ifndef NDEBUG
 						if ((i*2)+1 >= nRFace) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						} 
 					#endif
 					RFace[(i*2)] = -VisFace - fmax(MassFlux[i], 0.0);
@@ -231,7 +231,7 @@ namespace cupcfd
 				{
 					#ifndef NDEBUG
 						if (ip >= nDen) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -242,10 +242,10 @@ namespace cupcfd
 
 					#ifndef NDEBUG
 						if (ib >= nPhiBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nVisEffBoundary) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -396,7 +396,7 @@ namespace cupcfd
 						{
 							#ifndef NDEBUG
 								if (ib >= nCpBoundary) {
-									return cupcfd::error::E_INVALID_INDEX;
+									DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 								}
 							#endif
 
@@ -430,7 +430,7 @@ namespace cupcfd
 								{
 									#ifndef NDEBUG
 										if (ip >= nTE) {
-											return cupcfd::error::E_INVALID_INDEX;
+											DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 										}
 									#endif
 

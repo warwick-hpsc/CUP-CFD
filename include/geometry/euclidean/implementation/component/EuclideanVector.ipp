@@ -271,7 +271,7 @@ namespace cupcfd
 				{
 					// Both single points, but not same point since the previous check failed
 					// Therefore must not be overlapping
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 				
 				if((x1 == x2))
@@ -288,7 +288,7 @@ namespace cupcfd
 					}
 					else
 					{
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
 			
@@ -307,7 +307,7 @@ namespace cupcfd
 					}
 					else
 					{
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
 			
@@ -322,7 +322,7 @@ namespace cupcfd
 				if(!(arth::isEqual(coplanarCheck, (T) 0)))
 				{				
 					// Not coplanar points
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 						
 				// Let vec u = x2-x1, and vec v = x4-x3.
@@ -350,7 +350,7 @@ namespace cupcfd
 					if(!(arth::isEqual(numerator2, (T) 0)))
 					{
 						// Lines are parallel and non-intersecting
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 					else
 					{
@@ -375,7 +375,7 @@ namespace cupcfd
 						{
 							// Colinear, but not overlapping since neither the min nor max
 							// of the first range lies in the second range
-							return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 						}
 					}
 				}
@@ -392,7 +392,7 @@ namespace cupcfd
 				}
 				
 				// Didn't match previous check, so doesn't intersect within range.
-				return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 			}
 			
 			*/
@@ -423,7 +423,7 @@ namespace cupcfd
 				{
 					// Both single points, but not same point since the previous check failed
 					// Therefore must not be overlapping
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 				
 				if((x1 == x2))
@@ -440,7 +440,7 @@ namespace cupcfd
 					}
 					else
 					{
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
 			
@@ -459,7 +459,7 @@ namespace cupcfd
 					}
 					else
 					{
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
 			
@@ -474,7 +474,7 @@ namespace cupcfd
 				if(!(arth::isEqual(coplanarCheck, (T) 0)))
 				{
 					// Not coplanar points
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 
 				// Simultanious Equation Solving
@@ -560,13 +560,13 @@ namespace cupcfd
 						{
 							// Colinear, but not overlapping since neither the min nor max
 							// of the first range lies in the second range
-							return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 						}
 					}
 					else
 					{
 						// Parallel, but not colinear so they never meet
-						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 					
 				}
@@ -696,7 +696,7 @@ namespace cupcfd
 				if((r < 0) || (s < 0) || (r > 1) || (s > 1))
 				{
 					// Have to travel more than the length of the range to reach the intersection point
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 				
 				// Equation 1
@@ -716,7 +716,7 @@ namespace cupcfd
 				}
 				else
 				{
-					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 
 
@@ -837,7 +837,7 @@ namespace cupcfd
 			{
 				if(!(this->isRegistered()))
 				{
-					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 			
 				*dType = EuclideanVector<T,N>::mpiType;

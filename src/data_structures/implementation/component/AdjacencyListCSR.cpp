@@ -118,7 +118,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -152,7 +152,7 @@ namespace cupcfd
 			if(!nodeExists)
 			{
 				*exists = false;
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
@@ -163,7 +163,7 @@ namespace cupcfd
 			if(!nodeExists)
 			{
 				*exists = false;
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Get Node Count Adjacent to srcNode
@@ -203,7 +203,7 @@ namespace cupcfd
 
 			if(nodeExists == false)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (2) Check the destination node exists
@@ -212,7 +212,7 @@ namespace cupcfd
 
 			if(nodeExists == false)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (3) Check that edge doesn't already exist
@@ -226,7 +226,7 @@ namespace cupcfd
 			// Add if edge doesn't already exist
 			if(edgeExists)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
 			}
 
 			// Retrieve internal indexes for the nodes
@@ -262,7 +262,7 @@ namespace cupcfd
 
 			if(!exists)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			I idx = this->nodeToIDX[node];
@@ -289,7 +289,7 @@ namespace cupcfd
 			// Error Check: Check the array is large enough
 			if(count > nAdjNodes)
 			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			idx = this->nodeToIDX[node];

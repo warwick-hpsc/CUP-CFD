@@ -31,14 +31,14 @@ namespace cupcfd
 			// Error Check: bRecv cannot be null (sink process only)
 			if((bRecv == nullptr || bRecv == NULL) && mpComm.rank == sinkProcess)
 			{
-				return cupcfd::error::E_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NULL_PTR;
 			}
 
 			// Error Check: Verify recv buffer size is appropriate (sink process only)
 			// Naturally, we're trusting the callee to accurately report the buffer size
 			if((nBRecv < (nElePerProcess * mpComm.size)) && mpComm.rank == sinkProcess)
 			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
@@ -61,14 +61,14 @@ namespace cupcfd
 			// Error Check: bRecv cannot be null
 			if(bRecv == nullptr || bRecv == NULL)
 			{
-				return cupcfd::error::E_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NULL_PTR;
 			}
 			
 			// Error Check: Verify recv buffer size is appropriate (sink process only)
 			// Naturally, we're trusting the callee to accurately report the buffer size
 			if(nBRecv < (nElePerProcess * mpComm.size))
 			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
@@ -93,7 +93,7 @@ namespace cupcfd
 			// Error Check: bRecv cannot be null (sink process only)
 			if((bRecv == nullptr || bRecv == NULL) && mpComm.rank == sinkProcess)
 			{
-				return cupcfd::error::E_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NULL_PTR;
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
@@ -130,12 +130,12 @@ namespace cupcfd
 			// We expect *bRecv, *bRecvCounts to be NULL or nullptr on all processes.
 			if(*bRecv != NULL && *bRecv != nullptr)
 			{
-				return cupcfd::error::E_NOT_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
 			if(*bRecvCounts != NULL && *bRecvCounts != nullptr)
 			{
-				return cupcfd::error::E_NOT_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
 			// Buffers for receiving will only be setup on the sink process
@@ -221,12 +221,12 @@ namespace cupcfd
 			// We expect *bRecv, *bRecvCounts to be NULL or nullptr on all processes.
 			if(*bRecv != NULL && *bRecv != nullptr)
 			{
-				return cupcfd::error::E_NOT_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
 			if(*bRecvCounts != NULL && *bRecvCounts != nullptr)
 			{
-				return cupcfd::error::E_NOT_NULL_PTR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
 			// Buffers for receiving will only be setup on the sink process

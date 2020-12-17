@@ -108,7 +108,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes)
+			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes)
 			{
 				T * left;
 				T * right;
@@ -143,7 +143,7 @@ namespace cupcfd
 				leftIndexes = (I *) malloc(sizeof(I) * n_l);
 				memcpy(leftIndexes, indexes, n_l * sizeof(I));
 
-				returnValLeft = merge_sort(left, n_l, leftIndexes);
+				returnValLeft = merge_sort(left, n_l, leftIndexes, n_l);
 
 				// Copy Right
 				right = (T *) malloc(sizeof(T) * n_r);
@@ -153,7 +153,7 @@ namespace cupcfd
 				rightIndexes = (I *) malloc(sizeof(I) * n_r);
 				memcpy(rightIndexes, indexes + n_l, n_r * sizeof(I));
 
-				returnValRight = merge_sort(right, n_r, rightIndexes);
+				returnValRight = merge_sort(right, n_r, rightIndexes, n_r);
 
 				left_idx = 0;
 				right_idx = 0;

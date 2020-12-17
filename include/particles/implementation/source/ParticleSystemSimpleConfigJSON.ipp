@@ -84,7 +84,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			
 			return cupcfd::error::E_SUCCESS;
@@ -110,7 +110,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			
 			return cupcfd::error::E_SUCCESS;

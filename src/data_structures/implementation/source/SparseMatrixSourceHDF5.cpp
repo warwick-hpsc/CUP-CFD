@@ -120,7 +120,7 @@ namespace cupcfd
 			// Error Check: Size of the rowIndices array should be the same as the number of rows
 			if(nRowIndices != nRows)
 			{
-				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Get the row ranges from the file - number of entries should be stored rows + 1

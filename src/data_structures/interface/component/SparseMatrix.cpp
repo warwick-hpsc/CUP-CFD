@@ -37,7 +37,7 @@ namespace cupcfd
 			// Error Check: Check the graph is finalized
 			if(graph.finalized == false)
 			{
-				return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
 			}
 
 			// (1) Reset the matrix
@@ -112,7 +112,7 @@ namespace cupcfd
 			// Error Check: Check the graph is finalized
 			if(graph.finalized == false)
 			{
-				return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_DISTGRAPH_UNFINALIZED;
 			}
 
 			// (1) Reset the matrix

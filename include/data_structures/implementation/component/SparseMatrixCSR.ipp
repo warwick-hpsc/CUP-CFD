@@ -98,12 +98,12 @@ namespace cupcfd
 
 			if(rows < 1)
 			{
-				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
 			}
 
 			if(columns < 1)
 			{
-				return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
 			}
 
 			// Resize the existing vectors to 0 (vector can resize when adding later....)
@@ -160,12 +160,12 @@ namespace cupcfd
 			// Error Check: Within Range -- Greater than baseIndex
 			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
 			{
-				return cupcfd::error::E_MATRIX_ROW_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
 			{
-				return cupcfd::error::E_MATRIX_COL_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
 			// Find the row details
@@ -254,12 +254,12 @@ namespace cupcfd
 			// Error Check: Ensure we are within range
 			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
 			{
-				return cupcfd::error::E_MATRIX_ROW_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
 			{
-				return cupcfd::error::E_MATRIX_COL_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
 			// Get the start and end index for this row index
@@ -343,7 +343,7 @@ namespace cupcfd
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0)
 			{
 				// The row does not exist - error
-				return cupcfd::error::E_MATRIX_ROW_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			// Get the index range for this row
@@ -370,7 +370,7 @@ namespace cupcfd
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0)
 			{
 				// The row does not exist - error
-				return cupcfd::error::E_MATRIX_ROW_OOB;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			// Get the index range for this row

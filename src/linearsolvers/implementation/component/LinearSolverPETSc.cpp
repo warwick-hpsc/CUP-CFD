@@ -148,7 +148,7 @@ namespace cupcfd
 			// Error Check that the vector has been setup
 			if(this->x == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Set the value of the x vector in the PETSc object
@@ -171,13 +171,13 @@ namespace cupcfd
 			// Error Check - Are nScalars and nIndexes the same
 			if(nScalars != nIndexes)
 			{
-				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Error Check - Has the Vector X been setup
 			if(this->x == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Error Check - Are all the indexes within the bounds of the vector scheme?
@@ -191,14 +191,14 @@ namespace cupcfd
 				{
 					// Cleanup
 					free(shiftedIndexes);
-					return cupcfd::error::E_INVALID_INDEX;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
 				if((indexes[i] - indexBase) < 0)
 				{
 					// Cleanup
 					free(shiftedIndexes);
-					return cupcfd::error::E_INVALID_INDEX;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
 				// Copy the index across to a zero-shifted version
@@ -241,7 +241,7 @@ namespace cupcfd
 			// Error Check that the vector has been setup
 			if(this->b == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Set the value of the x vector in the PETSc object
@@ -264,19 +264,19 @@ namespace cupcfd
 			// Error Check - Are nScalars and nIndexes the same
 			if(nScalars != nIndexes)
 			{
-				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Error Check - Check the value of mGlobal is greater than 0
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Error Check - Has the Vector X been setup
 			if(this->b == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Error Check - Are all the indexes within the bounds of the vector scheme?
@@ -290,14 +290,14 @@ namespace cupcfd
 				{
 					// Cleanup
 					free(shiftedIndexes);
-					return cupcfd::error::E_INVALID_INDEX;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
 				if((indexes[i] - indexBase) < 0)
 				{
 					// Cleanup
 					free(shiftedIndexes);
-					return cupcfd::error::E_INVALID_INDEX;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
 				// Copy the index across to a zero-shifted version
@@ -412,7 +412,7 @@ namespace cupcfd
 				// Setup a PETSc Sequential Vector
 				err = VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->x));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
 			else if(this->comm.size > 1)
@@ -420,13 +420,13 @@ namespace cupcfd
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->x));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
 			else
 			{
 				// Comm Size is less than 1 - Error
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			// Get the Local Ownership range of the Vector X
@@ -434,7 +434,7 @@ namespace cupcfd
 			// For parallel, number of ranks + 1
 			err = VecGetOwnershipRanges(this->x, &(this->xRanges));
 			if (err != 0) {
-				return cupcfd::error::E_PETSC_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -452,7 +452,7 @@ namespace cupcfd
 				// Setup a PETSc Sequential Vector
 				err = VecCreateSeq(PETSC_COMM_SELF, this->mGlobal, &(this->b));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
 			else if(this->comm.size > 1)
@@ -460,20 +460,20 @@ namespace cupcfd
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->b));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
 			else
 			{
 				// Comm Size is less than 1 - Error
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			// Get the Local Ownership range of the Vector B
 			// For serial, this will be of size 1 + 1
 			err = VecGetOwnershipRanges(this->b, &(this->bRanges));
 			if (err != 0) {
-				return cupcfd::error::E_PETSC_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			// Should be the same as the X Vector (else we will have issues....)
@@ -501,7 +501,7 @@ namespace cupcfd
 				int nNNZRows;
 				err = matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// To do this, create an array to store the number of non-zeroes per row and initially set them all to zero
@@ -524,7 +524,7 @@ namespace cupcfd
 					int nNNZCols;
 					err = matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
 					if (err != 0) {
-						return cupcfd::error::E_PETSC_ERROR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 					}
 
 					// Store the number of columns for the matching matrix rowIndex in nnzRows[i]
@@ -548,7 +548,7 @@ namespace cupcfd
 					int nNNZCols;
 					err = matrix.getRowColumnIndexes(nnzRows[i], &nnzCols, &nNNZCols);
 					if (err != 0) {
-						return cupcfd::error::E_PETSC_ERROR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 					}
 
 					for(int j = 0; j < nNNZCols; j++)
@@ -568,32 +568,32 @@ namespace cupcfd
 				// Create the Matrix Object
 				err = MatCreate(PETSC_COMM_SELF, &(this->a));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the Matrix Type to a Sequential Matrix
 				err = MatSetType(this->a, MATSEQAIJ);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the global size of the matrix, leave the local size to PETSc
 				// Since this is a sequential matrix, they should end up being one and the same anyway
 				err = MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the number of non-zero values per row for preallocation purposes
 				err = MatSeqAIJSetPreallocation(this->a, -1, nnz);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the column indices of the non-zero location to improve preallocation
 				err = MatSeqAIJSetColumnIndices(this->a, indices);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Since introducing new non-zero location is expensive, disable their inclusion
@@ -604,11 +604,11 @@ namespace cupcfd
 				// an error code....
 				err = MatSetOption(this->a, MAT_NEW_NONZERO_LOCATIONS, PETSC_FALSE);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 				err = MatSetOption(this->a, MAT_NEW_NONZERO_LOCATION_ERR, PETSC_TRUE);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Cleanup temporary storage
@@ -628,7 +628,7 @@ namespace cupcfd
 				// int nnzCount = 0;
 				err = matrix.getNonZeroRowIndexes(&nnzRows, &nNNZRows);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Get the matrix local data sizes...
@@ -704,13 +704,13 @@ namespace cupcfd
 				// Use the communicator assigned during setup
 				err = MatCreate(this->comm.comm, &(this->a));
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the Matrix Type to a Parallel MPI Matrix
 				err = MatSetType(this->a, MATMPIAIJ);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Set the global size of the matrix, leave the local size to PETSc
@@ -718,7 +718,7 @@ namespace cupcfd
 				// Set the local columns to be equivalent to the rows we have (since this affects the x vector)
 				err = MatSetSizes(this->a, PETSC_DECIDE, PETSC_DECIDE, this->mGlobal, this->nGlobal);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// IMPORTANT TODO: Fix the preallocation, setting of local sizes
@@ -730,7 +730,7 @@ namespace cupcfd
 				// Ideally want to use Preallocation, but just do basic setup for now
 				err = MatSetUp(this->a);
 				if (err != 0) {
-					return cupcfd::error::E_PETSC_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 
 				// Since introducing new non-zero location is expensive, disable their inclusion
@@ -753,13 +753,13 @@ namespace cupcfd
 			else
 			{
 				// Comm Size is less than 1 - Error
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			// Get Ownership Range for the Matrix
 			err = MatGetOwnershipRanges(this->a, &(this->aRanges));
 			if (err != 0) {
-				return cupcfd::error::E_PETSC_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -816,18 +816,18 @@ namespace cupcfd
 		{
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			if(this->nGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_COL_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_COL_SIZE_UNSET;
 			}
 
 			// Error Check: Check that the PETSc matrix object has been setup
 			if(this->a == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
 			}
 
 			// Get an array of the unique row indexes - we will set the values for these rows one by one
@@ -894,13 +894,13 @@ namespace cupcfd
 			// Check the global row count is greater than 0
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
 			if(this->x == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			if(this->comm.size == 1)
@@ -997,7 +997,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 
@@ -1013,13 +1013,13 @@ namespace cupcfd
 			// Check the global row count is greater than 0
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
 			if(this->x == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			if(this->comm.size == 1)
@@ -1219,7 +1219,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -1233,13 +1233,13 @@ namespace cupcfd
 			// Check the global row count is greater than 0
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
 			if(this->b == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			if(this->comm.size == 1)
@@ -1336,7 +1336,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 
@@ -1352,13 +1352,13 @@ namespace cupcfd
 			// Check the global row count is greater than 0
 			if(this->mGlobal <= 0)
 			{
-				return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
 			if(this->b == PETSC_NULL)
 			{
-				return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			if(this->comm.size == 1)
@@ -1558,7 +1558,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -1575,7 +1575,7 @@ namespace cupcfd
 				// Error Check: Check that the PETSc matrix object has been setup
 				if(this->a == PETSC_NULL)
 				{
-					return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
 				}
 
 				// ToDo: Error Check: Check the bounds of the matrix object are within the index bounds of the PETSc matrix's global indices.
@@ -1621,7 +1621,7 @@ namespace cupcfd
 			}
 			else
 			{
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;

@@ -27,12 +27,6 @@ namespace cupcfd
 		
 		}
 		
-		// template <class I, class T>
-		// DistributionConfigSource<I,T>::DistributionConfigSource(const DistributionConfigSource<I,T>& source)
-		// {
-		
-		// }
-		
 		template <class I, class T>
 		DistributionConfigSource<I,T>::~DistributionConfigSource()
 		{

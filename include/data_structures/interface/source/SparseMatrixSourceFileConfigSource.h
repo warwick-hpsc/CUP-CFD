@@ -73,7 +73,6 @@ namespace cupcfd
 				 */
 				virtual cupcfd::error::eCodes getFileFormat(SparseMatrixFileFormat * format) = 0;
 
-				// virtual void operator=(const SparseMatrixSourceFileConfigSource<I,T>& source);
 				virtual SparseMatrixSourceFileConfigSource<I,T> * clone() = 0;
 				virtual cupcfd::error::eCodes buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig) = 0;
 		};

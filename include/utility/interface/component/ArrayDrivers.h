@@ -84,8 +84,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			// cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest, I * nDestEle);
-			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest);
+			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest, I * nDestEle);
 
 			/**
 			 * Retrieve the elements that are unique in an array (i.e. there exist no duplicates)
@@ -209,7 +208,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
-			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount);
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount);
 
 			/**
 			 * Build an array of the distinct elements in a source array (i.e. count the first instance of an element, but not duplicates), and

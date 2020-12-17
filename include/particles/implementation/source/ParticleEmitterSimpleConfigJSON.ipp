@@ -78,7 +78,7 @@ namespace cupcfd
 				}
 				else
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				
 				if(this->configData["Position"].isMember("Y"))
@@ -89,7 +89,7 @@ namespace cupcfd
 				}
 				else
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}	
 				
 				if(this->configData["Position"].isMember("Z"))
@@ -100,7 +100,7 @@ namespace cupcfd
 				}
 				else
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				
 				// ToDo: Check they are valid doubles?
@@ -112,7 +112,7 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 		
 		template <class I, class T>
@@ -214,12 +214,12 @@ namespace cupcfd
 				}
 
 				// No matching field names were found
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			
 			// No viable JSON found for a distribution
 			std::cout << "ERROR: Field '" << fieldName << "' not found in ParticleEmitterSimple's json" << std::endl;
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class I, class T>

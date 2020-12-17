@@ -47,7 +47,7 @@ namespace cupcfd
 
 				if(dataSourceType == Json::Value::null)
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				else
 				{
@@ -56,10 +56,10 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
@@ -71,7 +71,7 @@ namespace cupcfd
 
 				if(dataSourceType == Json::Value::null)
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				else
 				{
@@ -80,10 +80,10 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
@@ -95,7 +95,7 @@ namespace cupcfd
 
 				if(dataSourceType == Json::Value::null)
 				{
-					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				else
 				{
@@ -104,10 +104,10 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
@@ -176,11 +176,11 @@ namespace cupcfd
 				}
 
 				// No viable JSON found for a distribution
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			// No DtDistribution field
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
@@ -207,7 +207,7 @@ namespace cupcfd
 			}
 
 			// No field found
-			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>

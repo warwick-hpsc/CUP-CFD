@@ -38,7 +38,7 @@ namespace cupcfd
 				// Error Check: Check dst is large enough to hold src.
 				if(nDst < nSrc)
 				{
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				int byteSize = sizeof(T);
@@ -95,8 +95,7 @@ namespace cupcfd
 
 
 			template <class I, class T>
-			// cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle)
-			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest)
+			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle)
 			{
 
 				bool isSorted;
@@ -125,7 +124,7 @@ namespace cupcfd
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele)
 			// {
 			// 	if (nSource1Ele != nSource2Ele) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 
 			// 	kernels::add(source1, source2, source1, nSource1Ele);
@@ -137,10 +136,10 @@ namespace cupcfd
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle)
 			// {
 			// 	if (nSource1Ele != nSource2Ele) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 			// 	if (nSource1Ele != nDestEle) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 
 			// 	kernels::add(source1, source2, dest, nSource1Ele);
@@ -221,7 +220,7 @@ namespace cupcfd
 				I nEleDst2;
 				drivers::distinctCount(source, nEleSource, &nEleDst2);
 				if (nEleDst2 != nEleDst) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// (3) Call the kernel on a sorted array.
@@ -252,7 +251,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount)
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount)
 			{
 				bool sorted;
 				T * arrPtr;
@@ -275,7 +274,7 @@ namespace cupcfd
 				I nEleDst2;
 				drivers::distinctCount(source, nEleSource, &nEleDst2);
 				if (nEleDst2 != nEleDst) {
-					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// (3) Call the kernel on a sorted array.
@@ -303,7 +302,7 @@ namespace cupcfd
 				*dupCount = (I *) malloc(sizeof(I) * *nEleDst);
 
 				// Pass work along to driver that performs the same functionas this, but with the results array set up.
-				cupcfd::error::eCodes err = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount);
+				cupcfd::error::eCodes err = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount, *nEleDst);
 
 				// Responsibility for freeing the dst and dupCount arrays is left to the caller, since they contain the results.
 				return err;
@@ -527,7 +526,7 @@ namespace cupcfd
 				*result = (T* ) malloc(sizeof(T) * *nResult);
 
 				// Compute the set minus array.
-				kernels::intersectArray(source1Ptr, nSource1, source2Ptr, nSource2, *result);
+				kernels::intersectArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
 
 				// Cleanup
 				// Result is not freed here, it is used to pass the results back to the caller

@@ -35,29 +35,6 @@ namespace cupcfd
 		{
 			// Nothing to do
 		}
-
-		// === Concrete Methods ===
-
-		// template <class I, class T>
-		// void VectorSourceConfig<I,T>::operator=(VectorSourceConfig<I,T>& source)
-		// {
-		// 	// Nothing to do
-		// }
-
-		// === Pure Virtual Methods ===
-		// Here to satisfy linker
-
-		// template <class I, class T>
-		// VectorSourceConfig<I,T> * VectorSourceConfig<I,T>::clone()
-		// {
-		// 	return nullptr;
-		// }
-
-		// template <class I, class T>
-		// cupcfd::error::eCodes VectorSourceConfig<I,T>::buildVectorSource(VectorSource<I,T> ** vectorSource)
-		// {
-		// 	return cupcfd::error::E_SUCCESS;
-		// }
 	}
 }
 

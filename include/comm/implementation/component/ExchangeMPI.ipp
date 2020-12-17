@@ -29,10 +29,10 @@ namespace cupcfd
 															 MPI_Request ** requests, int * nRequests)
 			{
 				if (nSendBuffer < (nTRanks*elePerRank)) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				if (nRecvBuffer < (nTRanks*elePerRank)) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				int err;
@@ -62,7 +62,7 @@ namespace cupcfd
 					
 					if(err != MPI_SUCCESS)
 					{
-						return cupcfd::error::E_MPI_ERR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 					}
 				}
 
@@ -75,7 +75,7 @@ namespace cupcfd
 					
 					if(err != MPI_SUCCESS)
 					{
-						return cupcfd::error::E_MPI_ERR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 					}
 				}
 
@@ -94,7 +94,7 @@ namespace cupcfd
 															 MPI_Request ** requests, int * nRequests)
 			{
 				if (nSendCount < nSRanks) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				int sendSize = 0;
 				for(int i = 0; i < nSRanks; i++) {
@@ -103,11 +103,11 @@ namespace cupcfd
 					}
 				}
 				if (nSendBuffer < sendSize) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				if (nRecvCount < nRRanks) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				int recvSize = 0;
 				for(int i = 0; i < nRRanks; i++) {
@@ -116,7 +116,7 @@ namespace cupcfd
 					}
 				}
 				if (nRecvBuffer < recvSize) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				int err;
@@ -161,7 +161,7 @@ namespace cupcfd
 						reqPtr++;
 						
 						if(err != MPI_SUCCESS) {
-							return cupcfd::error::E_MPI_ERR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 						}
 					}
 				}
@@ -175,7 +175,7 @@ namespace cupcfd
 						reqPtr++;
 						
 						if(err != MPI_SUCCESS) {
-							return cupcfd::error::E_MPI_ERR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 						}
 					}
 				}
@@ -196,7 +196,7 @@ namespace cupcfd
 															 MPI_Request * requests, int nRequests)
 			{
 				if (nSendCount < nSRanks) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				int sendSize = 0;
 				int sendCountActual = 0;
@@ -207,14 +207,14 @@ namespace cupcfd
 					}
 				}
 				if (nSendBuffer < sendSize) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				if (nRequests < sendCountActual) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				if (nRecvCount < nRRanks) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				int recvSize = 0;
 				int recvCountActual = 0;
@@ -225,10 +225,10 @@ namespace cupcfd
 					}
 				}
 				if (nRecvBuffer < recvSize) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 				if (nRequests < recvCountActual) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				int err;
@@ -263,7 +263,7 @@ namespace cupcfd
 						reqPtr++;
 						
 						if(err != MPI_SUCCESS) {
-							return cupcfd::error::E_MPI_ERR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 						}
 					}
 				}
@@ -278,7 +278,7 @@ namespace cupcfd
 						reqPtr++;
 						
 						if(err != MPI_SUCCESS) {
-							return cupcfd::error::E_MPI_ERR;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 						}
 					}
 				}

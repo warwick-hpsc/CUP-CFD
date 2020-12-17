@@ -32,12 +32,12 @@ namespace cupcfd
 
 			// (2) Check that the sourceGraph is finalised
 			if(this->finalized == false) {
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 			
 			// (3) Check that destGraph is not null on the specified rank
 			if((this->comm->rank == rank) && (destGraph == nullptr)) {
-				return cupcfd::error::E_ERROR;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 			
 			// === Data Gathering ===

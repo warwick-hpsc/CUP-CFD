@@ -77,7 +77,7 @@ namespace cupcfd
 			{
 				if(!(this->isRegistered()))
 				{
-					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 			
 				*dType = EuclideanPoint<T,N>::mpiType;
@@ -103,7 +103,7 @@ namespace cupcfd
 				// Error Check - Only Register if currently unregistered
 				if(this->isRegistered())
 				{
-					return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 				}
 
 				int mpiErr;
@@ -130,32 +130,32 @@ namespace cupcfd
 
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecType);
 
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class EuclideanPoint<T,N>), &vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Store statically so the get method can retrieve it later
@@ -165,7 +165,7 @@ namespace cupcfd
 				mpiErr = MPI_Type_free(&vecType);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				EuclideanPoint<T,N>::mpiDataTypeReg = true;
@@ -181,13 +181,13 @@ namespace cupcfd
 				// Error Check - Only Deregister if currently registered
 				if(!this->isRegistered())
 				{
-					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 
 				mpiErr = MPI_Type_free(&(EuclideanPoint<T,N>::mpiType));
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				EuclideanPoint<T,N>::mpiDataTypeReg = false;

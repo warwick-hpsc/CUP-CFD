@@ -33,7 +33,7 @@ namespace cupcfd
 			
 			// ToDo: Error Checks
 			if (nEleBSend != chunkSize*mpComm.size) {
-				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 			}
 
 			// Since this function uses a fixed chunk size, we can opt for Scatter over ScatterV.
@@ -85,7 +85,7 @@ namespace cupcfd
 				cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes);
+				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
 
 				// Now we have a sorted order by original index, let us reorder bSendCpy to that order (pSendCpy already sorted by now)
 				cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);

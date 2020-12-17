@@ -111,12 +111,12 @@ namespace cupcfd
 					else
 					{
 						// No expected Partitioner Field found
-						return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 					}
 				}
 
 				// Partitioner Field not found
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			template <class I, class T, class L>

@@ -70,13 +70,13 @@ namespace cupcfd
 			// Error Check: Check that nParts is set
 			if(this->getNParts() == 0)
 			{
-				return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 			}
 
 			// Error Check: Ensure that there is data in the node store.
 			if(this->nodes == nullptr)
 			{
-				return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
 			}
 
 			// AllGather - Get the number of nodes on each rank

@@ -207,7 +207,6 @@ int main (int argc, char ** argv)
 
 		mesh::CupCfdAoSMesh<int, double, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
-		return 0;
 		if(status != cupcfd::error::E_SUCCESS)
 		{
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";

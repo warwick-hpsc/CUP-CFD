@@ -76,7 +76,7 @@ namespace cupcfd
 				if(!accessTest.good())
 				{
 					// File isn't open, so shouldn't need to close?
-					return cupcfd::error::E_FILE_MISSING;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_FILE_MISSING;
 				}
 
 				// (2) Mesh Source File Format
@@ -92,7 +92,7 @@ namespace cupcfd
 				else
 				{
 					// Unexpected File Format
-					return cupcfd::error::E_INVALID_FILE_FORMAT;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_FILE_FORMAT;
 				}
 
 				// Done!

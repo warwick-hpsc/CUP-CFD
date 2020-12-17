@@ -86,13 +86,13 @@ namespace cupcfd
  				if(isSortedStatus == -1)
  				{
  					// Is not sorted error
- 					return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
+ 					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
  				}
 
  				// Check whether array was sorted
  				if(sortCheck == false)
  				{
- 					return cupcfd::error::E_SEARCH_UNSORTED;
+ 					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_UNSORTED;
  				}
 
  				// ================================================================
@@ -106,11 +106,11 @@ namespace cupcfd
 
  				if(*index == -1)
  				{
-					return cupcfd::error::E_SEARCH_NOT_FOUND;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_NOT_FOUND;
  				}
  				else
  				{
-					return cupcfd::error::E_SEARCH_SUCCESS;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_SUCCESS;
  				}
  			}
 

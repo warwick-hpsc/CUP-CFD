@@ -32,27 +32,23 @@ namespace cupcfd
 		template <class I, class T>
 		DistributedAdjacencyList<I, T>::DistributedAdjacencyList(cupcfd::comm::Communicator& comm)
 		{
-			// std::cout << "DistributedAdjacencyList CONSTRUCTOR CALLED" << std::endl;
-
 			this->comm = comm.clone();
 
 			this->processNodeCounts = nullptr;
 			cupcfd::error::eCodes status = this->reset();
-			if (status != cupcfd::error::E_SUCCESS)
-			{
-				// std::cout << "DistributedAdjacencyList<I, T>::reset() FAILED" << std::endl;
+			if (status != cupcfd::error::E_SUCCESS) {
+				std::cout << "DistributedAdjacencyList<I, T>::reset() FAILED" << std::endl;
+				DEBUGGABLE_ERROR;
 				int ierr = -1;
 				MPI_Abort(MPI_COMM_WORLD, ierr);
 			} else {
-				// std::cout << "DistributedAdjacencyList<I, T>::reset() SUCCESS" << std::endl;
+				std::cout << "DistributedAdjacencyList<I, T>::reset() SUCCESS" << std::endl;
 			}
 
 			// ToDo: Should put a barrier in here to ensure that every participating process has created the graph.
 
 			// ToDo: Should distribute a unique random graph identifier to establish whether the same graph
 			// object is in use across processes.
-
-			// std::cout << "DistributedAdjacencyList CONSTRUCTOR COMPLETE" << std::endl;
 		}
 
 		template <class I, class T>
@@ -104,8 +100,6 @@ namespace cupcfd
 			this->nodeOwner = std::map<T, I>();
 
 			// ToDo: Should some form of blocking barrier here be placed here to enforce consistency across processes?
-
-			// std::cout << "DistributedAdjacencyList<I, T>::reset() COMPLETE" << std::endl;
 
 			return cupcfd::error::eCodes::E_SUCCESS;
 		}
@@ -245,7 +239,7 @@ namespace cupcfd
 
 			if(found == true)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 
 			// If it does not exist as either, add it as a local node
@@ -275,7 +269,7 @@ namespace cupcfd
 
 			if(found == true)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 
 			// If it does not exist as either, add it as a local node
@@ -313,14 +307,14 @@ namespace cupcfd
 			this->buildGraph.existsNode(src, &srcExists);
 			if(!srcExists)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Check that the destination node exists
 			this->buildGraph.existsNode(dst, &dstExists);
 			if(!dstExists)
 			{
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Both nodes exist
@@ -341,7 +335,6 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 			bool srcExists;
 			bool dstExists;
-			// bool edgeExists;
 
 			// Behaviour for this function is to add a node as a ghost node if it is missing, rather
 			// than to return an error code
@@ -601,7 +594,7 @@ namespace cupcfd
 						//std::cout << "Error: Rank " << i << ", Mismatch in local ghost cells and remotely claimed cells\n";
 						//std::cout << "This rank has " << this->nLGhNodes << " registered ghost cells,";
 						//std::cout << "the number of ghost cells on this rank claimed by other processes is " << nOwnership << "\n";
-						return cupcfd::error::E_ADJACENCY_LIST_NODE_CLAIM_MISMATCH;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_CLAIM_MISMATCH;
 					}
 
 					// Check 2: Every ghost cell should be claimed by another process only once - cannot have two processes both claiming to own
@@ -626,7 +619,7 @@ namespace cupcfd
 					{
 						// Error - fewer process ids were assigned that reported number of claimed nodes
 						// ToDo: Suitable Error Code
-						return cupcfd::error::E_ERROR;
+						DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 					}
 
 					// Can now pair claimed nodes with the process that claims them
@@ -722,7 +715,6 @@ namespace cupcfd
 			T * ghostrank = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			this->getGhostNodes(ghosts, this->nLGhNodes);
 
-
 			for(I i = 0; i < this->nLGhNodes; i++)
 			{
 				ghostsGIDs[i] = this->nodeToGlobal[ghosts[i]];
@@ -731,7 +723,7 @@ namespace cupcfd
 
 			// Now group the global IDs by neighbour rank, by sorting the ranks and then reordering the ghostGIDs
 			I * indexes = (I *) malloc(sizeof(I) * this->nLGhNodes);
-			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes);
+			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
 			cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
 
 			// Loop over neighbour ranks, this should already have been sorted
@@ -901,7 +893,7 @@ namespace cupcfd
 				if(it->second == GHOST) {
 					#ifdef DEBUG
 						if (ptr >= nNodes) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					nodes[ptr] = it->first;
@@ -923,7 +915,7 @@ namespace cupcfd
 				if(it->second == LOCAL) {
 					#ifdef DEBUG
 						if (ptr >= nNodes) {
-							return cupcfd::error::E_INVALID_INDEX;
+							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					nodes[ptr] = it->first;

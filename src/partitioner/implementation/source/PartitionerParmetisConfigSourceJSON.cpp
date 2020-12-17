@@ -45,7 +45,7 @@ namespace cupcfd
 			// name was found (and thus a correct configuration match)
 			if(this->configData == Json::Value::null)
 			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			*config = new PartitionerParmetisConfig<I,T>();

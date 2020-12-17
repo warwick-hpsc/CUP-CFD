@@ -152,7 +152,7 @@ namespace cupcfd
 			// Sort the copied ranks array.
 			// SortIndexes is an array of the original index positions in matching sorted order - we will use this to reshuffle
 			// copyExchangeIDXSend so that they still match pairwise.
-			cupcfd::utility::drivers::merge_sort_index(copyTRanks, nTRanks, sortIndexes);
+			cupcfd::utility::drivers::merge_sort_index(copyTRanks, nTRanks, sortIndexes, nTRanks);
 
 			// Reorder the data elements of copyExchangeIDXSend to be pairwise matching with copyTRanks so we don't lose
 			// the original association
@@ -173,7 +173,7 @@ namespace cupcfd
 			// this->sProc: An array that contains only the process ranks we will send to, each rank will be unique
 			// dupCount: Track a count of how many times a rank in sProc appeared in the original copyTRanks array. This will
 			// let us know how many elements we are sending to that matching rank.
-			cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount);
+			cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount, nDupCount);
 
 			// === Store in pattern as a CSR ===
 			this->nSXAdj = this->nSProc + 1;

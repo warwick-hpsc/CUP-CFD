@@ -14,6 +14,16 @@
 
 #include <string>
 #include <unordered_map>
+#include <iostream>
+
+#ifndef DEBUGGABLE_ERROR
+	#ifdef DEBUG
+		// #define DEBUGGABLE_ERROR fprintf(stderr, "%s:%d\n\n", __FILE__, __LINE__); fflush(stderr); fflush(stdout);
+ 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << __LINE__ << std::endl; }
+	#else
+		#define DEBUGGABLE_ERROR 
+	#endif
+#endif
 
 namespace cupcfd
 {

@@ -213,7 +213,7 @@ namespace cupcfd
 			// }
 			// if(noResults)
 			// {
-			// 	return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+			// 	DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NO_RESULTS;
 			// }
 
 
@@ -238,11 +238,11 @@ namespace cupcfd
 				// === Input Error Checks ===
 				// Error Check 1 - Work arrays all exist
 				if(this->xadj == nullptr) {
-					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
 				if(this->adjncy == nullptr) {
-					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
 				// Error Check 2 - Nodes array exists
@@ -250,7 +250,7 @@ namespace cupcfd
 				// Error Check 3 - Number of parts is acceptable value
 				if(this->nParts < 1) {
 					// Error - Can't partition into zero or fewer parts (will treat 1 as a straight copy of input)
-					return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 				}
 
 				// Error Check 4 - Check Ncon is acceptable value
@@ -292,7 +292,7 @@ namespace cupcfd
 											  &(this->objval),
 											  this->result);
 				if (ret != METIS_OK) {
-					return cupcfd::error::E_METIS_ERROR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_METIS_ERROR;
 				}
 			}
 
@@ -319,7 +319,7 @@ namespace cupcfd
 			// return cupcfd::error::E_SUCCESS;
 
 			// Above code is nonense.
-			return cupcfd::error::E_NOT_IMPLEMENTED;
+			DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 
 		template <class I, class T>

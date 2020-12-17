@@ -41,7 +41,7 @@ namespace cupcfd
 				mpiErr = MPI_Gather(bSend, nElePerProcess, dType, bRecv, nElePerProcess, dType, sinkProcess, comm);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -66,7 +66,7 @@ namespace cupcfd
 				mpiErr = MPI_Allgather(bSend, nElePerProcess, dType, bRecv, nElePerProcess, dType, comm);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				return cupcfd::error::E_SUCCESS;
@@ -92,13 +92,13 @@ namespace cupcfd
 				mpiErr = MPI_Comm_size(comm, &commSize);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				mpiErr = MPI_Comm_rank(comm, &commRank);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				int * displs = nullptr;
@@ -120,7 +120,7 @@ namespace cupcfd
 				mpiErr = MPI_Gatherv(bSend, nEleSend, dType, bRecv, bRecvCounts, displs, dType, sinkPID, comm);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				// Cleanup
@@ -152,13 +152,13 @@ namespace cupcfd
 				mpiErr = MPI_Comm_size(comm, &commSize);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 				
 				mpiErr = MPI_Comm_rank(comm, &commRank);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Compute Displacements from expected recv counts for each process
@@ -174,7 +174,7 @@ namespace cupcfd
 				mpiErr = MPI_Allgatherv(bSend, nEleSend, dType, bRecv, bRecvCounts, displs, dType, comm);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					return cupcfd::error::E_MPI_ERR;
+					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Cleanup - all ranks will have a displacement array
