@@ -93,8 +93,11 @@ namespace cupcfd
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::resize(I rows, I columns)
 		{
+			cupcfd::error::eCodes status;
+
 			// Clear the matrix
-			this->clear();
+			status = this->clear();
+			CHECK_ERROR_CODE(status)
 
 			if(rows < 1)
 			{

@@ -63,6 +63,8 @@ namespace cupcfd
 				// === Virtual Methods ===
 
 				virtual SparseMatrixSourceMeshGenConfigSource<I,T> * clone() = 0;
+				
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig) = 0;
 		};
 	}

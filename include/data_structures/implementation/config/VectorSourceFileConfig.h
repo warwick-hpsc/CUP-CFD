@@ -68,7 +68,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~VectorSourceFileConfig();
+				~VectorSourceFileConfig();
 
 				// === Concrete Methods ===
 
@@ -107,7 +107,10 @@ namespace cupcfd
 				// === Overridden Inherited Methods ===
 
 				void operator=(VectorSourceFileConfig<I,T>& source);
+				
 				VectorSourceFileConfig<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildVectorSource(VectorSource<I,T> ** vectorSource);
 		};
 	}

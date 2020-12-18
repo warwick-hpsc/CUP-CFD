@@ -190,7 +190,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) = 0;
+					cupcfd::error::eCodes getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
 					/**
 					 * Get the stored cell center point of a cell
@@ -202,7 +202,7 @@ namespace cupcfd
 					 *
 					 * @return The center point of the cell
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> getCellCenter(I cellID) = 0;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getCellCenter(I cellID);
 
 					/**
 					 * Get the stored cell volume of a cell
@@ -216,7 +216,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellVolume(I cellID, T * vol) = 0;
+					cupcfd::error::eCodes getCellVolume(I cellID, T * vol);
 
 					/**
 					 * Get the stored cell volume of a cell.
@@ -228,7 +228,7 @@ namespace cupcfd
 					 *
 					 * @return The volume of the cell
 					 */
-					virtual T getCellVolume(I cellID) = 0;
+					T getCellVolume(I cellID);
 
 
 					/**
@@ -251,7 +251,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellNFaces(I cellID, I * nFaces) = 0;
+					cupcfd::error::eCodes getCellNFaces(I cellID, I * nFaces);
 
 					/**
 					 * Get the number of faces associated with a cell
@@ -270,7 +270,7 @@ namespace cupcfd
 					 * @tparam T The type of the stored array data
 					 *
 					 */
-					virtual I getCellNFaces(I cellID) = 0;
+					I getCellNFaces(I cellID);
 
 					/**
 					 * Get the number of faces associated with a cell that are stored on this rank.
@@ -290,7 +290,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellStoredNFaces(I cellID, I * nFaces) = 0;
+					cupcfd::error::eCodes getCellStoredNFaces(I cellID, I * nFaces);
 
 					/**
 					 * Get the number of faces associated with a cell that are stored on this rank.
@@ -308,7 +308,7 @@ namespace cupcfd
 					 *
 					 * @return The number of cell faces
 					 */
-					virtual I getCellStoredNFaces(I cellID) = 0;
+					I getCellStoredNFaces(I cellID);
 
 					/**
 					 * Return the number of vertices a cell has
@@ -328,7 +328,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellNVertices(I cellID, I * nVertices) = 0;
+					cupcfd::error::eCodes getCellNVertices(I cellID, I * nVertices);
 
 					/**
 					 * Return the number of vertices a cell has.
@@ -346,7 +346,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
-					virtual I getCellNVertices(I cellID) = 0;
+					I getCellNVertices(I cellID);
 
 					/**
 					 * Return the number of vertices associated with a cell that are stored on this rank.
@@ -366,7 +366,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellStoredNVertices(I cellID, I * nVertices) = 0;
+					 cupcfd::error::eCodes getCellStoredNVertices(I cellID, I * nVertices);
 
 					/**
 					 * Return the number of vertices associated with a cell that are stored on this rank.
@@ -384,7 +384,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
-					virtual I getCellStoredNVertices(I cellID) = 0;
+					 I getCellStoredNVertices(I cellID);
 
 					/**
 					 * Get the local face ID of one of the faces associated with a cell that is stored on this rank.
@@ -402,7 +402,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellFaceID(I cellID, I cellFaceID, I * faceID) = 0;
+					cupcfd::error::eCodes getCellFaceID(I cellID, I cellFaceID, I * faceID);
 
 					/**
 					 * Get the local face ID of one of the faces associated with a cell that is stored on this rank.
@@ -417,7 +417,7 @@ namespace cupcfd
 					 *
 					 * @return The local ID of the face in the mesh on this process
 					 */
-					virtual I getCellFaceID(I cellID, I cellFaceID) = 0;
+					I getCellFaceID(I cellID, I cellFaceID);
 
 					/**
 					 * Set the stored center point of a cell
@@ -431,7 +431,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) = 0;
+					cupcfd::error::eCodes setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
 					/**
 					 * Set the stored cell volume
@@ -445,7 +445,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setCellVolume(I cellID, T vol) = 0;
+					cupcfd::error::eCodes setCellVolume(I cellID, T vol);
 
 					/**
 					 * Add a cell to the mesh on this rank.
@@ -461,10 +461,10 @@ namespace cupcfd
 					 *
 					 * @return The id of the added cell
 					 */
-					virtual cupcfd::error::eCodes addCell(L cellLabel,
+					cupcfd::error::eCodes addCell(L cellLabel,
 													   cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
 													   T vol,
-													   bool isLocal) = 0;
+													   bool isLocal);
 
 					/**
 					 * Add a cell to the mesh on this rank.
@@ -479,7 +479,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes addCell(L cellLabel, bool isLocal) = 0;
+					 cupcfd::error::eCodes addCell(L cellLabel, bool isLocal);
 
 					/**
 					 * Retrieve the local cell ID on this MPI rank for the given cell label.
@@ -496,7 +496,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getCellID(L cellLabel, I * cellID) = 0;
+					cupcfd::error::eCodes getCellID(L cellLabel, I * cellID);
 
 					/**
 					 * Retrieve the local cell ID on this MPI rank for the given cell label.
@@ -511,7 +511,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID for the given cell label
 					 */
-					virtual I getCellID(L cellLabel) = 0;
+					I getCellID(L cellLabel);
 
 					// =========================== Face Operators ===========================
 
@@ -527,7 +527,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceNVertices(I faceID, I * nVertices) = 0;
+					inline cupcfd::error::eCodes getFaceNVertices(I faceID, I * nVertices);
 
 					/**
 					 * Get the number of vertices associated with a face
@@ -539,7 +539,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
-					virtual I getFaceNVertices(I faceID) = 0;
+					inline I getFaceNVertices(I faceID);
 
 					/**
 					 * Get the local cell ID in the mesh of the first cell associated with a face
@@ -555,7 +555,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceCell1ID(I faceID, I * cellID) = 0;
+					cupcfd::error::eCodes getFaceCell1ID(I faceID, I * cellID);
 
 					/**
 					 * Get the local cell ID in the mesh of the first cell associated with a face
@@ -569,7 +569,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID in the mesh
 					 */
-					virtual I getFaceCell1ID(I faceID) = 0;
+					I getFaceCell1ID(I faceID);
 
 					/**
 					 * Get the local cell ID in the mesh of the second cell associated with a face
@@ -584,7 +584,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceCell2ID(I faceID, I * cellID) = 0;
+					cupcfd::error::eCodes getFaceCell2ID(I faceID, I * cellID);
 
 					/**
 					 * Get the local cell ID in the mesh of the second cell associated with a face
@@ -598,7 +598,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID in the mesh
 					 */
-					virtual I getFaceCell2ID(I faceID) = 0;
+					I getFaceCell2ID(I faceID);
 
 					/**
 					 * Get the stored lambda value for this face
@@ -612,7 +612,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceLambda(I faceID, T * lambda) = 0;
+					cupcfd::error::eCodes getFaceLambda(I faceID, T * lambda);
 
 					/**
 					 * Get the stored lambda value for this face
@@ -624,7 +624,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face lambda value
 					 */
-					virtual T getFaceLambda(I faceID) = 0;
+					T getFaceLambda(I faceID);
 
 					/**
 					 * Get the stored face normal vector. This will point from cell 1 towards cell 2.
@@ -638,7 +638,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) = 0;
+					cupcfd::error::eCodes getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm);
 
 					/**
 					 * Get the stored face normal vector. This will point from cell 1 towards cell 2.
@@ -650,7 +650,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face normal vector
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanVector<T,3> getFaceNorm(I faceID) = 0;
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> getFaceNorm(I faceID);
 
 					/**
 					 * Get the local mesh ID of one of the face vertexes.
@@ -672,7 +672,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceVertex(I faceID, I faceVertexID, I * vertexID) = 0;
+					cupcfd::error::eCodes getFaceVertex(I faceID, I faceVertexID, I * vertexID);
 
 					/**
 					 * Get the local mesh ID of one of the face vertexes
@@ -693,7 +693,7 @@ namespace cupcfd
 					 * for the given faceVertexID (e.g. ID 3 in a triangular face since there are only three vertices in a zero
 					 * indexed scheme)
 					 */
-					virtual I getFaceVertex(I faceID, I faceVertexID) = 0;
+					I getFaceVertex(I faceID, I faceVertexID);
 
 					/**
 					 * Get the stored face center point
@@ -707,7 +707,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) = 0;
+					cupcfd::error::eCodes getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
 					/**
 					 * Get the stored face center point
@@ -719,7 +719,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face center point
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceCenter(I faceID) = 0;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceCenter(I faceID);
 
 					/**
 					 * Get the stored face rlencos
@@ -733,7 +733,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceRLencos(I faceID, T * rlencos) = 0;
+					cupcfd::error::eCodes getFaceRLencos(I faceID, T * rlencos);
 
 					/**
 					 * Get the stored face rlencos
@@ -745,7 +745,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face rlencos
 					 */
-					virtual T getFaceRLencos(I faceID) = 0;
+					T getFaceRLencos(I faceID);
 
 					/**
 					 * Get the stored face area
@@ -759,7 +759,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceArea(I faceID, T * area) = 0;
+					cupcfd::error::eCodes getFaceArea(I faceID, T * area);
 
 					/**
 					 * Get the stored face area
@@ -771,7 +771,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face area
 					 */
-					virtual T getFaceArea(I faceID) = 0;
+					T getFaceArea(I faceID);
 
 					/**
 					 * Get the stored face xpac
@@ -785,7 +785,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) = 0;
+					cupcfd::error::eCodes getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac);
 
 					/**
 					 * Get the stored face xpac
@@ -797,7 +797,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face xpac
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXpac(I faceID) = 0;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXpac(I faceID);
 
 					/**
 					 * Get the stored face xnac
@@ -811,7 +811,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) = 0;
+					cupcfd::error::eCodes getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac);
 
 					/**
 					 * Get the stored face xnac
@@ -823,7 +823,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face xnac
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXnac(I faceID) = 0;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXnac(I faceID);
 
 					/**
 					 * Identify whether the face is a boundary face
@@ -837,7 +837,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceIsBoundary(I faceID, bool * result) = 0;
+					cupcfd::error::eCodes getFaceIsBoundary(I faceID, bool * result);
 
 					/**
 					 * Identify whether the face is a boundary face
@@ -851,7 +851,7 @@ namespace cupcfd
 					 * @retval true The face is a boundary
 					 * @retval false The face is not a boundary
 					 */
-					virtual bool getFaceIsBoundary(I faceID) = 0;
+					bool getFaceIsBoundary(I faceID);
 
 					/**
 					 * Get the stored local boundary id in the mesh of the boundary associated with a face
@@ -865,7 +865,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceBoundaryID(I faceID, I * boundaryID) = 0;
+					cupcfd::error::eCodes getFaceBoundaryID(I faceID, I * boundaryID);
 
 					/**
 					 * Get the stored local mesh id of the boundary associated with a face
@@ -879,7 +879,7 @@ namespace cupcfd
 					 * @retval -1 The face is not a boundary face
 					 * @retval >-1 The boundary id
 					 */
-					virtual I getFaceBoundaryID(I faceID) = 0;
+					I getFaceBoundaryID(I faceID);
 
 					/**
 					 * Set the stored cell ID of the first associated cell of the face
@@ -893,7 +893,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceCell1ID(I faceID, I cellID) = 0;
+					cupcfd::error::eCodes setFaceCell1ID(I faceID, I cellID);
 
 					/**
 					 * Set the stored cell ID of the second associated cell of the face
@@ -907,7 +907,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceCell2ID(I faceID, I cellID) = 0;
+					cupcfd::error::eCodes setFaceCell2ID(I faceID, I cellID);
 
 					/**
 					 * Set the stored face lambda of a face in the mesh
@@ -921,7 +921,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceLambda(I faceID, T lambda) = 0;
+					cupcfd::error::eCodes setFaceLambda(I faceID, T lambda);
 
 					/**
 					 * Set the stored face normal vector
@@ -935,7 +935,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) = 0;
+					cupcfd::error::eCodes setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm);
 
 					/**
 					 * Set the vertex of one of the associated face vertices
@@ -949,7 +949,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceVertex(I faceID, I faceVertexID, I vertexID) = 0;
+					cupcfd::error::eCodes setFaceVertex(I faceID, I faceVertexID, I vertexID);
 
 					/**
 					 * Set the stored face center
@@ -963,7 +963,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) = 0;
+					cupcfd::error::eCodes setFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
 					/**
 					 * Set the stored face rlencos
@@ -977,7 +977,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceRLencos(I faceID, T rlencos) = 0;
+					cupcfd::error::eCodes setFaceRLencos(I faceID, T rlencos);
 
 					/**
 					 * Set the stored face area
@@ -991,7 +991,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceArea(I faceID, T area) = 0;
+					cupcfd::error::eCodes setFaceArea(I faceID, T area);
 
 					/**
 					 * Set the stored face xpac
@@ -1005,7 +1005,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) = 0;
+					cupcfd::error::eCodes setFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac);
 
 					/**
 					 * Set the stored face xnac
@@ -1019,7 +1019,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) = 0;
+					cupcfd::error::eCodes setFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac);
 
 					/**
 					 * Set the stored face local boundary ID
@@ -1033,7 +1033,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setFaceBoundaryID(I faceID, I boundaryID) = 0;
+					cupcfd::error::eCodes setFaceBoundaryID(I faceID, I boundaryID);
 
 
 					/**
@@ -1068,7 +1068,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes addFace(
+					cupcfd::error::eCodes addFace(
 								L faceLabel,
 								L cell1Label,
 								L cell2OrBoundaryLabel,
@@ -1080,14 +1080,14 @@ namespace cupcfd
 								cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac,
 								cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac,
 								T rlencos,
-								T area) = 0;
+								T area);
 
-					virtual cupcfd::error::eCodes addFace(
+					cupcfd::error::eCodes addFace(
 								L faceLabel,
 								L cell1Label,
 								L cell2OrBoundaryLabel,
 								bool isBoundary,
-								L * vertexLabels, I nVertexLabels) = 0;
+								L * vertexLabels, I nVertexLabels);
 
 
 					/**
@@ -1105,7 +1105,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getFaceID(L faceLabel, I * faceID) = 0;
+					cupcfd::error::eCodes getFaceID(L faceLabel, I * faceID);
 
 					/**
 					 * Retrieve the local face ID on this MPI rank for the given face label.
@@ -1120,7 +1120,7 @@ namespace cupcfd
 					 *
 					 * @return The face ID
 					 */
-					virtual I getFaceID(L faceLabel) = 0;
+					I getFaceID(L faceLabel);
 
 					// === Boundary Operators ===
 
@@ -1136,7 +1136,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryFaceID(I boundaryID, I * faceID) = 0;
+					cupcfd::error::eCodes getBoundaryFaceID(I boundaryID, I * faceID);
 
 					/**
 					 * Get the local face ID in the mesh associated with this boundary
@@ -1148,7 +1148,7 @@ namespace cupcfd
 					 *
 					 * @return The local face ID associated with this local boundary ID.
 					 */
-					virtual I getBoundaryFaceID(I boundaryID) = 0;
+					I getBoundaryFaceID(I boundaryID);
 
 					/**
 					 * Get the local vertex ID in the mesh of a vertex associated with the boundary
@@ -1163,7 +1163,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID) = 0;
+					cupcfd::error::eCodes getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID);
 
 					/**
 					 * Get the local vertex ID in the mesh of a vertex associated with the boundary
@@ -1176,7 +1176,7 @@ namespace cupcfd
 					 *
 					 * @return The local vertex ID in the mesh
 					 */
-					virtual I getBoundaryVertex(I boundaryID, I boundaryVertexID) = 0;
+					I getBoundaryVertex(I boundaryID, I boundaryVertexID);
 
 					/**
 					 * Get the stored boundary distance
@@ -1190,7 +1190,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryDistance(I boundaryID, T * distance) = 0;
+					cupcfd::error::eCodes getBoundaryDistance(I boundaryID, T * distance);
 
 					/**
 					 * Get the stored boundary distance
@@ -1202,7 +1202,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary distance
 					 */
-					virtual T getBoundaryDistance(I boundaryID) = 0;
+					T getBoundaryDistance(I boundaryID);
 
 					/**
 					 * Get the stored boundary yplus
@@ -1216,7 +1216,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryYPlus(I boundaryID, T * yPlus) = 0;
+					cupcfd::error::eCodes getBoundaryYPlus(I boundaryID, T * yPlus);
 
 					/**
 					 * Get the stored boundary yplus
@@ -1228,7 +1228,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary yplus
 					 */
-					virtual T getBoundaryYPlus(I boundaryID) = 0;
+					T getBoundaryYPlus(I boundaryID);
 
 					/**
 					 * Get the stored boundary uplus
@@ -1242,7 +1242,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryUPlus(I boundaryID, T * uPlus) = 0;
+					cupcfd::error::eCodes getBoundaryUPlus(I boundaryID, T * uPlus);
 
 					/**
 					 * Get the stored boundary uplus
@@ -1254,7 +1254,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary uplus
 					 */
-					virtual T getBoundaryUPlus(I boundaryID) = 0;
+					T getBoundaryUPlus(I boundaryID);
 
 					/**
 					 * Get the local region id in the mesh of the associated region of this boundary
@@ -1268,7 +1268,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryRegionID(I boundaryID, I * regionID) = 0;
+					cupcfd::error::eCodes getBoundaryRegionID(I boundaryID, I * regionID);
 
 					/**
 					 * Get the local region id in the mesh of the associated region of this boundary
@@ -1280,7 +1280,7 @@ namespace cupcfd
 					 *
 					 * @return The local region ID in the mesh associated with this boundary
 					 */
-					virtual I getBoundaryRegionID(I boundaryID) = 0;
+					I getBoundaryRegionID(I boundaryID);
 
 					/**
 					 * Get the stored boundary shear
@@ -1294,7 +1294,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) = 0;
+					cupcfd::error::eCodes getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear);
 
 					/**
 					 * Get the stored boundary shear
@@ -1306,7 +1306,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary shear
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanVector<T,3> getBoundaryShear(I boundaryID) = 0;
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> getBoundaryShear(I boundaryID);
 
 					/**
 					 * Get the stored boundary Q
@@ -1320,7 +1320,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryQ(I boundaryID, T * q) = 0;
+					cupcfd::error::eCodes getBoundaryQ(I boundaryID, T * q);
 
 					/**
 					 * Get the stored boundary Q
@@ -1332,7 +1332,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary Q
 					 */
-					virtual T getBoundaryQ(I boundaryID) = 0;
+					T getBoundaryQ(I boundaryID);
 
 					/**
 					 * Get the stored boundary H
@@ -1346,7 +1346,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryH(I boundaryID, T * h) = 0;
+					cupcfd::error::eCodes getBoundaryH(I boundaryID, T * h);
 
 					/**
 					 * Get the stored boundary H
@@ -1358,7 +1358,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary H
 					 */
-					virtual T getBoundaryH(I boundaryID) = 0;
+					T getBoundaryH(I boundaryID);
 
 					/**
 					 * Get the stored boundary T
@@ -1372,7 +1372,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryT(I boundaryID, T * t) = 0;
+					cupcfd::error::eCodes getBoundaryT(I boundaryID, T * t);
 
 					/**
 					 * Get the stored boundary T
@@ -1384,7 +1384,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary T
 					 */
-					virtual T getBoundaryT(I boundaryID) = 0;
+					T getBoundaryT(I boundaryID);
 
 
 					/**
@@ -1399,7 +1399,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryFaceID(I boundaryID, I faceID) = 0;
+					cupcfd::error::eCodes setBoundaryFaceID(I boundaryID, I faceID);
 
 					/**
 					 * Set the local vertex ID in the mesh of a vertex associated with this boundary
@@ -1414,7 +1414,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID) = 0;
+					cupcfd::error::eCodes setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID);
 
 					/**
 					 * Set the stored boundary distance
@@ -1428,7 +1428,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryDistance(I boundaryID, T distance) = 0;
+					cupcfd::error::eCodes setBoundaryDistance(I boundaryID, T distance);
 
 					/**
 					 * Set the stored boundary yplus
@@ -1442,7 +1442,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryYPlus(I boundaryID, T yPlus) = 0;
+					cupcfd::error::eCodes setBoundaryYPlus(I boundaryID, T yPlus);
 
 					/**
 					 * Set the stored boundary uplus
@@ -1456,7 +1456,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryUPlus(I boundaryID, T uPlus) = 0;
+					cupcfd::error::eCodes setBoundaryUPlus(I boundaryID, T uPlus);
 
 					/**
 					 * Set the local region ID in the mesh associated with this boundary
@@ -1470,7 +1470,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryRegionID(I boundaryID, I regionID) = 0;
+					cupcfd::error::eCodes setBoundaryRegionID(I boundaryID, I regionID);
 
 					/**
 					 * Set the stored boundary shear
@@ -1484,7 +1484,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) = 0;
+					cupcfd::error::eCodes setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear);
 
 					/**
 					 * Set the stored boundary Q
@@ -1498,7 +1498,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryQ(I boundaryID, T q) = 0;
+					cupcfd::error::eCodes setBoundaryQ(I boundaryID, T q);
 
 					/**
 					 * Set the stored boundary H
@@ -1512,7 +1512,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryH(I boundaryID, T h) = 0;
+					cupcfd::error::eCodes setBoundaryH(I boundaryID, T h);
 
 					/**
 					 * Set the stored boundary T
@@ -1526,7 +1526,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setBoundaryT(I boundaryID, T t) = 0;
+					cupcfd::error::eCodes setBoundaryT(I boundaryID, T t);
 
 					/**
 					 * Add a boundary to the mesh on this rank.
@@ -1546,11 +1546,11 @@ namespace cupcfd
 					 *
 					 * @return The local id of the added boundary in the unstructured mesh
 					 */
-					virtual cupcfd::error::eCodes addBoundary(
+					cupcfd::error::eCodes addBoundary(
 							L boundaryLabel,
 							L regionLabel,
 							L * vertexLabels, I nVertexLabels,
-							T distance) = 0;
+							T distance);
 
 					/**
 					 * Add a boundary to the mesh on this rank. Boundary properties are set to defaults.
@@ -1567,10 +1567,10 @@ namespace cupcfd
 					 *
 					 * @return The local id of the added boundary in the unstructured mesh
 					 */
-					virtual cupcfd::error::eCodes addBoundary(
+					cupcfd::error::eCodes addBoundary(
 							L boundaryLabel,
 							L regionLabel,
-							L * vertexLabels, I nVertexLabels) = 0;
+							L * vertexLabels, I nVertexLabels);
 
 
 					/**
@@ -1588,7 +1588,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getBoundaryID(L boundaryLabel, I * boundaryID) = 0;
+					cupcfd::error::eCodes getBoundaryID(L boundaryLabel, I * boundaryID);
 
 					/**
 					 * Retrieve the local boundary ID on this MPI rank for the given boundary label.
@@ -1603,7 +1603,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID for the given cell label
 					 */
-					virtual I getBoundaryID(L boundaryLabel) = 0;
+					I getBoundaryID(L boundaryLabel);
 
 
 					// === Region Operators ===
@@ -1620,7 +1620,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionType(I regionID, RType * type) = 0;
+					cupcfd::error::eCodes getRegionType(I regionID, RType * type);
 
 					/**
 					 * Get the stored region type
@@ -1632,7 +1632,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region type
 					 */
-					virtual RType getRegionType(I regionID) = 0;
+					RType getRegionType(I regionID);
 
 					/**
 					 * Get the stored region std
@@ -1646,7 +1646,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionStd(I regionID, bool * std) = 0;
+					cupcfd::error::eCodes getRegionStd(I regionID, bool * std);
 
 					/**
 					 * Get the stored region std
@@ -1658,7 +1658,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region std
 					 */
-					virtual bool getRegionStd(I regionID) = 0;
+					bool getRegionStd(I regionID);
 
 					/**
 					 * Get the stored region ylog
@@ -1672,7 +1672,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionYLog(I regionID, T * yLog) = 0;
+					cupcfd::error::eCodes getRegionYLog(I regionID, T * yLog);
 
 					/**
 					 * Get the stored region ylog
@@ -1684,7 +1684,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region ylog
 					 */
-					virtual T getRegionYLog(I regionID) = 0;
+					T getRegionYLog(I regionID);
 
 					/**
 					 * Get the stored region elog
@@ -1698,7 +1698,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionELog(I regionID, T * eLog) = 0;
+					cupcfd::error::eCodes getRegionELog(I regionID, T * eLog);
 
 					/**
 					 * Get the stored region elog
@@ -1710,7 +1710,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region elog
 					 */
-					virtual T getRegionELog(I regionID) = 0;
+					T getRegionELog(I regionID);
 
 					/**
 					 * Get the stored region density
@@ -1724,7 +1724,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionDensity(I regionID, T * density) = 0;
+					cupcfd::error::eCodes getRegionDensity(I regionID, T * density);
 
 					/**
 					 * Get the stored region density
@@ -1736,7 +1736,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region density
 					 */
-					virtual T getRegionDensity(I regionID) = 0;
+					T getRegionDensity(I regionID);
 
 					/**
 					 * Get the stored region turbke
@@ -1750,7 +1750,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionTurbKE(I regionID, T * turbKE) = 0;
+					cupcfd::error::eCodes getRegionTurbKE(I regionID, T * turbKE);
 
 					/**
 					 * Get the stored region turbke
@@ -1762,7 +1762,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region turbke
 					 */
-					virtual T getRegionTurbKE(I regionID) = 0;
+					T getRegionTurbKE(I regionID);
 
 					/**
 					 * Get the stored region turbdiss
@@ -1776,7 +1776,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionTurbDiss(I regionID, T * turbDiss) = 0;
+					cupcfd::error::eCodes getRegionTurbDiss(I regionID, T * turbDiss);
 
 					/**
 					 * Get the stored region turbdiss
@@ -1788,7 +1788,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region turbDiss
 					 */
-					virtual T getRegionTurbDiss(I regionID) = 0;
+					T getRegionTurbDiss(I regionID);
 
 					/**
 					 * Get the stored region splvl
@@ -1802,7 +1802,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionSplvl(I regionID, T * splvl) = 0;
+					cupcfd::error::eCodes getRegionSplvl(I regionID, T * splvl);
 
 					/**
 					 * Get the stored region splvl
@@ -1814,7 +1814,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region splvl
 					 */
-					virtual T getRegionSplvl(I regionID) = 0;
+					T getRegionSplvl(I regionID);
 
 					/**
 					 * Get the stored region den
@@ -1828,7 +1828,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionDen(I regionID, T * den) = 0;
+					cupcfd::error::eCodes getRegionDen(I regionID, T * den);
 
 					/**
 					 * Get the stored region den
@@ -1840,7 +1840,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region den
 					 */
-					virtual T getRegionDen(I regionID) = 0;
+					T getRegionDen(I regionID);
 
 					/**
 					 * Get the stored region force tangent
@@ -1854,7 +1854,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) = 0;
+					cupcfd::error::eCodes getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent);
 
 					/**
 					 * Get the stored region force tangent
@@ -1866,7 +1866,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region tangent
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionForceTangent(I regionID) = 0;
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionForceTangent(I regionID);
 
 					/**
 					 * Get the stored region uvw
@@ -1880,7 +1880,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) = 0;
+					cupcfd::error::eCodes getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw);
 
 					/**
 					 * Get the stored region uvw
@@ -1892,7 +1892,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region uvw
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionUVW(I regionID) = 0;
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionUVW(I regionID);
 
 					/**
 					 * Get the stored region name
@@ -1906,7 +1906,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionName(I regionID, std::string& regionName) = 0;
+					cupcfd::error::eCodes getRegionName(I regionID, std::string& regionName);
 
 					/**
 					 * Get the stored region name
@@ -1918,7 +1918,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region name
 					 */
-					virtual std::string getRegionName(I regionID) = 0;
+					std::string getRegionName(I regionID);
 
 					/**
 					 * Get the stored region flux
@@ -1932,7 +1932,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionFlux(I regionID, bool * flux) = 0;
+					cupcfd::error::eCodes getRegionFlux(I regionID, bool * flux);
 
 					/**
 					 * Get the stored region flux
@@ -1944,7 +1944,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region flux
 					 */
-					virtual bool getRegionFlux(I regionID) = 0;
+					bool getRegionFlux(I regionID);
 
 					/**
 					 * Get the stored region adiab
@@ -1958,7 +1958,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionAdiab(I regionID, bool * adiab) = 0;
+					cupcfd::error::eCodes getRegionAdiab(I regionID, bool * adiab);
 
 					/**
 					 * Get the stored region adiab
@@ -1970,7 +1970,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region adaib
 					 */
-					virtual bool getRegionAdiab(I regionID) = 0;
+					bool getRegionAdiab(I regionID);
 
 					/**
 					 * Get the stored region R
@@ -1984,7 +1984,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionR(I regionID, T * r) = 0;
+					cupcfd::error::eCodes getRegionR(I regionID, T * r);
 
 					/**
 					 * Get the stored region R
@@ -1996,7 +1996,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region R
 					 */
-					virtual T getRegionR(I regionID) = 0;
+					T getRegionR(I regionID);
 
 					/**
 					 * Get the stored region T
@@ -2010,7 +2010,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionT(I regionID, T * t) = 0;
+					cupcfd::error::eCodes getRegionT(I regionID, T * t);
 
 					/**
 					 * Get the stored region T
@@ -2022,7 +2022,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region T
 					 */
-					virtual T getRegionT(I regionID) = 0;
+					T getRegionT(I regionID);
 
 
 					/**
@@ -2037,7 +2037,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionType(I regionID, RType type) = 0;
+					cupcfd::error::eCodes setRegionType(I regionID, RType type);
 
 					/**
 					 * Set the stored region std
@@ -2051,7 +2051,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionStd(I regionID, bool std) = 0;
+					cupcfd::error::eCodes setRegionStd(I regionID, bool std);
 
 					/**
 					 * Set the stored region ylog
@@ -2065,7 +2065,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionYLog(I regionID, T yLog) = 0;
+					cupcfd::error::eCodes setRegionYLog(I regionID, T yLog);
 
 					/**
 					 * Set the stored region elog
@@ -2079,7 +2079,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionELog(I regionID, T eLog) = 0;
+					cupcfd::error::eCodes setRegionELog(I regionID, T eLog);
 
 					/**
 					 * Set the stored region density
@@ -2093,7 +2093,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionDensity(I regionID, T density) = 0;
+					cupcfd::error::eCodes setRegionDensity(I regionID, T density);
 
 					/**
 					 * Set the stored region turbke
@@ -2107,7 +2107,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionTurbKE(I regionID, T turbKE) = 0;
+					cupcfd::error::eCodes setRegionTurbKE(I regionID, T turbKE);
 
 					/**
 					 * Set the stored region turbdiss
@@ -2121,7 +2121,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionTurbDiss(I regionID, T turbDiss) = 0;
+					cupcfd::error::eCodes setRegionTurbDiss(I regionID, T turbDiss);
 
 					/**
 					 * Set the stored region splvl
@@ -2135,7 +2135,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionSplvl(I regionID, T splvl) = 0;
+					cupcfd::error::eCodes setRegionSplvl(I regionID, T splvl);
 
 					/**
 					 * Set the stored region den
@@ -2149,7 +2149,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionDen(I regionID, T den) = 0;
+					cupcfd::error::eCodes setRegionDen(I regionID, T den);
 
 					/**
 					 * Set the stored region force tangent
@@ -2163,7 +2163,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) = 0;
+					cupcfd::error::eCodes setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent);
 
 					/**
 					 * Set the stored region uvw
@@ -2177,7 +2177,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) = 0;
+					cupcfd::error::eCodes setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw);
 
 					/**
 					 * Set the stored region name
@@ -2191,7 +2191,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionName(I regionID, std::string& regionName) = 0;
+					cupcfd::error::eCodes setRegionName(I regionID, std::string& regionName);
 
 					/**
 					 * Set the stored region flux
@@ -2205,7 +2205,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionFlux(I regionID, bool flux) = 0;
+					cupcfd::error::eCodes setRegionFlux(I regionID, bool flux);
 
 					/**
 					 * Set the stored region adiab
@@ -2219,7 +2219,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionAdiab(I regionID, bool adiab) = 0;
+					cupcfd::error::eCodes setRegionAdiab(I regionID, bool adiab);
 
 					/**
 					 * Set the stored region R of a region
@@ -2233,7 +2233,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionR(I regionID, T r) = 0;
+					cupcfd::error::eCodes setRegionR(I regionID, T r);
 
 					/**
 					 * Set the stored region T of a region
@@ -2247,7 +2247,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setRegionT(I regionID, T t) = 0;
+					cupcfd::error::eCodes setRegionT(I regionID, T t);
 
 					/**
 					 * Add a region with a set type and name. All other characteristics of the region are set to defaults.
@@ -2262,7 +2262,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes addRegion(
+					cupcfd::error::eCodes addRegion(
 										L regionLabel,
 										RType type,
 										bool std,
@@ -2279,7 +2279,7 @@ namespace cupcfd
 										T t,
 										cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
 										cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
-										std::string& regionName) = 0;
+										std::string& regionName);
 
 					/**
 					 * Add a region with a name a default type. All other characteristics of the region are set to defaults.
@@ -2293,7 +2293,9 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes addRegion(L regionLabel, std::string& regionName) = 0;
+					cupcfd::error::eCodes addRegion(
+										L regionLabel,
+										std::string& regionName);
 
 					/**
 					 * Retrieve the local region ID on this MPI rank for the given region label.
@@ -2310,7 +2312,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getRegionID(L regionLabel, I * regionID) = 0;
+					cupcfd::error::eCodes getRegionID(L regionLabel, I * regionID);
 
 
 					/**
@@ -2326,7 +2328,7 @@ namespace cupcfd
 					 *
 					 * @return The local region ID for the given vertex label
 					 */
-					virtual I getRegionID(L regionLabel) = 0;
+					I getRegionID(L regionLabel);
 
 					// === Vertex Operators ===
 
@@ -2342,7 +2344,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) = 0;
+					cupcfd::error::eCodes getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 
 					/**
 					 * Get the position of a vertex
@@ -2354,7 +2356,7 @@ namespace cupcfd
 					 *
 					 * @return The vertex position
 					 */
-					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> getVertexPos(I vertexID) = 0;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getVertexPos(I vertexID);
 
 					/**
 					 * Set the position of a vertex
@@ -2368,7 +2370,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes setVertexPos(I vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) = 0;
+					cupcfd::error::eCodes setVertexPos(I vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 
 
 					/**
@@ -2383,7 +2385,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) = 0;
+					cupcfd::error::eCodes addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 
 
 					/**
@@ -2401,7 +2403,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					virtual cupcfd::error::eCodes getVertexID(L vertexLabel, I * vertexID) = 0;
+					cupcfd::error::eCodes getVertexID(L vertexLabel, I * vertexID);
 
 					/**
 					 * Retrieve the local vertex ID on this MPI rank for the given vertex label.
@@ -2416,7 +2418,7 @@ namespace cupcfd
 					 *
 					 * @return The local vertex ID for the given vertex label
 					 */
-					virtual I getVertexID(L vertexLabel) = 0;
+					I getVertexID(L vertexLabel);
 
 					// === Other ===
 

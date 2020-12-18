@@ -71,7 +71,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~SparseMatrixSourceFileConfig();
+				~SparseMatrixSourceFileConfig();
 
 				// === Concrete Methods ===
 
@@ -110,7 +110,10 @@ namespace cupcfd
 				// === Overridden Inherited Methods ===
 
 				void operator=(SparseMatrixSourceFileConfig<I,T>& source);
+				
 				SparseMatrixSourceFileConfig<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource);
 		};
 	}

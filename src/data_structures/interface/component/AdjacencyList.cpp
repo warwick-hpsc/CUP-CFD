@@ -92,8 +92,11 @@ namespace cupcfd
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getNodes(T * nodes, I nNodes)
 		{
 			// Error check on size of nodes array
+
 			I nodeCount;
-			this->getNodeCount(&nodeCount);
+			cupcfd::error::eCodes status;
+			status = this->getNodeCount(&nodeCount);
+			CHECK_ERROR_CODE(status)
 
 			if(nNodes < nodeCount)
 			{
@@ -123,13 +126,17 @@ namespace cupcfd
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getEdges(T * nodes1, I nNodes1,
 																 T * nodes2, I nNodes2)
 		{
+			cupcfd::error::eCodes status;
+
 			// Get the number of nodes
 			I nNodes;
-			this->getNodeCount(&nNodes);
+			status = this->getNodeCount(&nNodes);
+			CHECK_ERROR_CODE(status)
 
 			// Get the number of edges
 			I nEdges;
-			this->getEdgeCount(&nEdges);
+			status = this->getEdgeCount(&nEdges);
+			CHECK_ERROR_CODE(status)
 
 			// Error Check - Are the results arrays sufficiently large?
 			if(nNodes1 < nEdges)
@@ -144,7 +151,8 @@ namespace cupcfd
 
 			// Get a copy of the nodes
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
-			this->getNodes(nodes, nNodes);
+			status = this->getNodes(nodes, nNodes);
+			CHECK_ERROR_CODE(status)
 
 			I ptr = 0;
 			// For each node, get a copy of the adjacent nodes
@@ -157,14 +165,15 @@ namespace cupcfd
 				T * adjNodes = (T *) malloc(sizeof(T) * nAdjNodes);
 
 				// Get adjacent nodes
-				this->getAdjacentNodes(nodes[i], adjNodes, nAdjNodes);
+				status = this->getAdjacentNodes(nodes[i], adjNodes, nAdjNodes);
+				CHECK_ERROR_CODE(status)
 
 				// Copy to results array
 				for(I j = 0; j < nAdjNodes; j++)
 				{
 					nodes1[ptr] = nodes[i];
 					nodes2[ptr] = adjNodes[j];
-					ptr = ptr + 1;
+					ptr++;
 				}
 
 				// Cleanup

@@ -60,11 +60,16 @@ namespace cupcfd
 		template <class C, class I, class T>
 		void BenchmarkLinearSolver<C,I,T>::runBenchmark()
 		{
+			cupcfd::error::eCodes err;
 
 			// Get the non-zero rows assigned to this rank
 			I * rowIndexes;
 			I nRowIndexes;
-			matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			err = matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			if (err != cupcfd::error::E_SUCCESS) {
+				DEBUGGABLE_ERROR;
+				throw( std::string("BenchmarkLinearSolver::runBenchmark(): ERROR: ") + cupcfd::error::eStrings[err]);
+			}
 
 			// Start tracking parameters/time for this block
 			this->startBenchmarkBlock(this->benchmarkName);

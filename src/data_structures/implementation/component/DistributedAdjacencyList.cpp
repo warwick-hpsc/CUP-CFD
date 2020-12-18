@@ -37,12 +37,12 @@ namespace cupcfd
 			this->processNodeCounts = nullptr;
 			cupcfd::error::eCodes status = this->reset();
 			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "DistributedAdjacencyList<I, T>::reset() FAILED" << std::endl;
-				DEBUGGABLE_ERROR;
-				int ierr = -1;
-				MPI_Abort(MPI_COMM_WORLD, ierr);
+				// TODO: Does it matter that reset() is not returning SUCCESS?
+				// std::cout << "DistributedAdjacencyList<I, T>::reset() FAILED" << std::endl;
+				// DEBUGGABLE_ERROR;
+				// MPI_Abort(MPI_COMM_WORLD, -1);
 			} else {
-				std::cout << "DistributedAdjacencyList<I, T>::reset() SUCCESS" << std::endl;
+				// std::cout << "DistributedAdjacencyList<I, T>::reset() SUCCESS" << std::endl;
 			}
 
 			// ToDo: Should put a barrier in here to ensure that every participating process has created the graph.
@@ -70,7 +70,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::reset()
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Clear Data - Note we do not reset the MPI Communicator.
@@ -108,7 +108,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::operator=(DistributedAdjacencyList<I, T>& source)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Deep copy the contents from source to destination.
@@ -228,7 +228,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addLocalNode(T node)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Check node does not exist already as a local node.
@@ -258,7 +258,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addGhostNode(T node)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Check node does not exist already as a local node.
@@ -288,7 +288,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addNode(T node)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Since the node type is unspecified, we default to adding it as a ghost node.
@@ -329,7 +329,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addEdge(T src, T dst)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			cupcfd::error::eCodes status;
@@ -370,7 +370,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addUndirectedEdge(T src, T dst)
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			cupcfd::error::eCodes err;
@@ -394,7 +394,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::finalize()
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			cupcfd::error::eCodes err;
@@ -785,7 +785,7 @@ namespace cupcfd
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::sortNodesByLocal()
 		{
 			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+				DEBUGGABLE_ERROR; return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
 			// Kernels may wish to only loop over local nodes. We wish to maintain index parity with any data arrays

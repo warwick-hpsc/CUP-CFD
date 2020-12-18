@@ -84,24 +84,31 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~SparseMatrixSourceHDF5();
+				~SparseMatrixSourceHDF5();
 
 				// === Concrete Methods ===
 
 				// === Inherited Overloads ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNNZ(I * nnz);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNRows(I * nRows);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNCols(I * nCols);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getMatrixIndicesBase(I * indicesBase);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNNZRows(I * rowIndices, I nRowIndices);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues);
 
 				// === Pure Virtual Methods ===

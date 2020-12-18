@@ -166,7 +166,7 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 */
-				virtual ~DistributedAdjacencyList();
+				~DistributedAdjacencyList();
 
 				// === Concrete Methods ===
 
@@ -180,6 +180,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes reset();
 
 				/**
@@ -193,7 +194,8 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes operator=(DistributedAdjacencyList<I, T>& source);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes operator=(DistributedAdjacencyList<I, T>& source);
 
 				/**
 				 * Tests whether the node is known to exist within the portion of the list stored on
@@ -209,6 +211,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsLocalNode( T node, bool * found);
 
 				/**
@@ -225,6 +228,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsGhostNode(T node, bool * found);
 
 				/**
@@ -240,6 +244,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsNode(T node, bool * found);
 
 				/**
@@ -255,6 +260,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS Node already exists in the list (as ghost or local), nothing was changed.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addLocalNode(T node);
 
 				/**
@@ -271,6 +277,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS Node already exists in the list (as ghost or local), nothing was changed.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addGhostNode(T node);
 
 				/**
@@ -285,6 +292,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS Node already exists in the list (as ghost or local), nothing was changed.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addNode(T node);
 
 				/**
@@ -301,6 +309,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING At least one of the src or dst nodes was not found in the graph
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsEdge(T src, T dst, bool * found);
 
 				/**
@@ -317,6 +326,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addEdge(T src, T dst);
 
 
@@ -334,6 +344,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addUndirectedEdge(T src, T dst);
 
 				/**
@@ -348,6 +359,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes finalize();
 
 				/**
@@ -359,6 +371,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes sortNodesByLocal();
 
 				//template <class T>
@@ -376,6 +389,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getGhostNodes(T * nodes, I nNodes);
 
 				/**
@@ -390,6 +404,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getLocalNodes(T * nodes, I nNodes);
 
 				/**
@@ -412,6 +427,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				template <class C>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildSerialAdjacencyList(AdjacencyList<C,I,T> * destGraph, I rank);
 
 				/**
@@ -446,6 +462,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				template <class D>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildExchangePattern(cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>** pattern);
 		};
 	} // namespace data_structures

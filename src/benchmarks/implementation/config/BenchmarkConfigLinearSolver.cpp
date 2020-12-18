@@ -140,7 +140,8 @@ namespace cupcfd
 					for( I j = 0; j < nColumnIndexes; j++)
 					{
 						// ToDo: Element by Element call is likely v.slow
-						matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
+						status = matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
+						CHECK_ERROR_CODE(status)
 					}
 
 					free(columnIndexes);
@@ -197,7 +198,8 @@ namespace cupcfd
 					for( I j = 0; j < nColumnIndexes; j++)
 					{
 						// ToDo: Element by Element call is likely v.slow
-						matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
+						status = matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
+						CHECK_ERROR_CODE(status)
 					}
 
 					free(columnIndexes);
@@ -238,7 +240,8 @@ namespace cupcfd
 			// Get the non-zero rows assigned to this rank
 			I * rowIndexes;
 			I nRowIndexes;
-			matrix->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			status = matrix->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			CHECK_ERROR_CODE(status)
 
 			// Setup a data array
 			T nData = nRowIndexes;

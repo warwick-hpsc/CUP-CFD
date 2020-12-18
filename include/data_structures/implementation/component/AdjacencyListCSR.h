@@ -75,18 +75,25 @@ namespace cupcfd
 
 				// === CRTP Methods ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes reset();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addNode(T node);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsNode(T node, bool * exists);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addEdge(T node, T adjNode);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsEdge(T srcNode, T dstNode, bool * exists);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAdjacentNodeCount(T node, I * count);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAdjacentNodes(T node, T * adjNodes, I nAdjNodes);
 		};
 	} // namespace adjacency_list

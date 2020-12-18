@@ -33,8 +33,6 @@ namespace cupcfd
 			 * @tparam T The type of the stored array data
 			 *
 			 * @return An error status indicating the success or failure of the operation
-			 * @retval -1 The target was not found at any index.
-			 * @retval >=0 The index in source where the first discovered instance of target was found.
 			 */
   			template <class I, class T>
 			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I* index);
@@ -52,11 +50,9 @@ namespace cupcfd
 			 * @tparam T The type of the stored array data
  			 *
 			 * @return An error status indicating the success or failure of the operation
- 			 * @retval -1 The target was not found at any index.
-			 * @retval >=0 The index in source where the first discovered instance of target was found.
  			 */
  			template <class I, class T>
- 			I binarySearch(T * source, I nEle, T target);
+ 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I* index);
 
  		} // namespace kernels
  	} // namespace utility

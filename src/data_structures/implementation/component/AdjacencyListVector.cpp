@@ -39,8 +39,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		AdjacencyListVector<I, T>::~AdjacencyListVector()
-		{
+		AdjacencyListVector<I, T>::~AdjacencyListVector() {
 		   // Reset node/edge counts
 			this->nNodes = 0;
 			this->nEdges = 0;
@@ -57,8 +56,7 @@ namespace cupcfd
 		// === CRTP Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I,T>::reset()
-		{
+		cupcfd::error::eCodes AdjacencyListVector<I,T>::reset() {
 		   // Reset node/edge counts
 			this->nNodes = 0;
 			this->nEdges = 0;
@@ -75,20 +73,14 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I,T>::addNode(T node)
-		{
+		cupcfd::error::eCodes AdjacencyListVector<I,T>::addNode(T node) {
 			cupcfd::error::eCodes status;
 			bool nodeExists;
 
 			status = this->existsNode(node, &nodeExists);
+			CHECK_ERROR_CODE(status)
 
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
-
-			if(!nodeExists)
-			{
+			if(!nodeExists) {
 				// Generate a new local index
 				I nodeLocalIDX = this->nNodes;
 
@@ -104,21 +96,17 @@ namespace cupcfd
 
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I, T>::existsNode(T node, bool * exists)
-		{
-			if(this->nodeToIDX.find(node) != this->nodeToIDX.end())
-			{
+		cupcfd::error::eCodes AdjacencyListVector<I, T>::existsNode(T node, bool * exists) {
+			if(this->nodeToIDX.find(node) != this->nodeToIDX.end()) {
 				*exists = true;
 			}
-			else
-			{
+			else {
 				*exists = false;
 			}
 
@@ -126,8 +114,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I, T>::addEdge(T node, T adjNode)
-		{
+		cupcfd::error::eCodes AdjacencyListVector<I, T>::addEdge(T node, T adjNode) {
 			cupcfd::error::eCodes status;
 			I nodeLocalIDX, adjNodeLocalIDX;
 
@@ -135,33 +122,28 @@ namespace cupcfd
 
 			// (1) Check the source node exists
 			nodeExists = false;
-			this->existsNode(node, &nodeExists);
+			status = this->existsNode(node, &nodeExists);
+			CHECK_ERROR_CODE(status)
 
-			if(nodeExists == false)
-			{
+			if(nodeExists == false) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (2) Check the destination node exists
 			nodeExists = false;
-			this->existsNode(adjNode, &nodeExists);
+			status = this->existsNode(adjNode, &nodeExists);
+			CHECK_ERROR_CODE(status)
 
-			if(nodeExists == false)
-			{
+			if(nodeExists == false) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (3) Check that edge doesn't already exist
 			status = this->existsEdge(node, adjNode, &edgeExists);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
 
 			// Add if edge doesn't already exist
-			if(edgeExists)
-			{
+			if(edgeExists) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
 			}
 
@@ -177,29 +159,22 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I, T>::existsEdge(T srcNode, T dstNode, bool * exists)
-		{
+		cupcfd::error::eCodes AdjacencyListVector<I, T>::existsEdge(T srcNode, T dstNode, bool * exists) {
 			bool nodeExists;
 			cupcfd::error::eCodes status;
 
 			status = this->existsNode(srcNode, &nodeExists);
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
 
-			if(!nodeExists)
-			{
+			if(!nodeExists) {
 				*exists = false;
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
 
-			if(!nodeExists)
-			{
+			if(!nodeExists) {
 				*exists = false;
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -210,9 +185,7 @@ namespace cupcfd
 
 			// Search edge list for destination node and return existance (or lack thereof)
 			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
 
 			// Error check on status
 
@@ -220,13 +193,13 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I, T>::getAdjacentNodeCount(T node, I * count)
-		{
+		cupcfd::error::eCodes AdjacencyListVector<I, T>::getAdjacentNodeCount(T node, I * count) {
+			cupcfd::error::eCodes status;
 			bool exists;
-			this->existsNode(node, &exists);
+			status = this->existsNode(node, &exists);
+			CHECK_ERROR_CODE(status)
 
-			if(!exists)
-			{
+			if(!exists) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
@@ -236,32 +209,24 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListVector<I, T>::getAdjacentNodes(T node, T * adjNodes, I nAdjNodes)
-		{
-
+		cupcfd::error::eCodes AdjacencyListVector<I, T>::getAdjacentNodes(T node, T * adjNodes, I nAdjNodes) {
 			cupcfd::error::eCodes status;
 			I idx, count;
 
 			// Get the number of adjacent nodes
 			// Error Check: If the node does not exist it will be raised as an error here
 			status = this->getAdjacentNodeCount(node, &count);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
 
 			// Error Check: Check the array is large enough
-			if(count > nAdjNodes)
-			{
+			if(count > nAdjNodes) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			idx = this->nodeToIDX[node];
 			std::vector<I> adjNodesVec = this->adjacencies[idx];
 
-			for(std::size_t i = 0; i< adjNodesVec.size(); i++)
-			{
+			for(std::size_t i = 0; i< adjNodesVec.size(); i++) {
 				adjNodes[i] = this->IDXToNode[adjNodesVec[i]];
 			}
 

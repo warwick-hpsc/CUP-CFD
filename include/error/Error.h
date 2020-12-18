@@ -16,15 +16,6 @@
 #include <unordered_map>
 #include <iostream>
 
-#ifndef DEBUGGABLE_ERROR
-	#ifdef DEBUG
-		// #define DEBUGGABLE_ERROR fprintf(stderr, "%s:%d\n\n", __FILE__, __LINE__); fflush(stderr); fflush(stdout);
- 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << __LINE__ << std::endl; }
-	#else
-		#define DEBUGGABLE_ERROR 
-	#endif
-#endif
-
 namespace cupcfd
 {
 	namespace error
@@ -149,5 +140,24 @@ namespace cupcfd
 		extern const char* eStrings[];
 	}
 }
+
+#ifndef DEBUGGABLE_ERROR
+	#ifdef DEBUG
+		// #define DEBUGGABLE_ERROR fprintf(stderr, "%s:%d\n\n", __FILE__, __LINE__); fflush(stderr); fflush(stdout);
+ 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << __LINE__ << std::endl; }
+	#else
+		#define DEBUGGABLE_ERROR 
+	#endif
+#endif
+
+#ifndef CHECK_ERROR_CODE
+	#define STRINGIZE_DETAIL(x) #x
+	#define STRINGIZE(x) STRINGIZE_DETAIL(x)
+	#ifdef DEBUG
+ 		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { throw(std::string(__FILE__)+":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]); } }
+	#else
+		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { return E; } }
+	#endif
+#endif
 
 #endif

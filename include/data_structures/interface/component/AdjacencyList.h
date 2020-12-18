@@ -100,6 +100,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING The node was not found, so no valid index can be set
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNodeLocalIndex(T node, I * idx);
 
 				/**
@@ -117,6 +118,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_INVALID_INDEX The provided lookup index is outside of the
 				 * valid range (i.e. < 0 or >= the number of nodes).
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getLocalIndexNode(I idx, T * node);
 
 				/**
@@ -130,6 +132,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNodeCount(I * nNodes);
 
 				/**
@@ -146,6 +149,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The destination location for the node data
 				 * is too small.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNodes(T * nodes, I nNodes);
 
 				/**
@@ -160,6 +164,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getEdgeCount(I * nEdges);
 
 				/**
@@ -182,6 +187,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The destination location for at least one
 				 * of the arrays is too small.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getEdges(T * nodes1, I nNodes1,
 													T * nodes2, I nNodes2);
 
@@ -197,6 +203,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes reset();
 
 				/**
@@ -211,6 +218,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS The node cannot be added for it already exists. No changes are made.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addNode(T node);
 
 				/**
@@ -226,6 +234,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsNode(T node, bool * exists);
 
 				/**
@@ -243,6 +252,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING The source or destination node are missing from
 				 * the adjacency list
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addEdge(T node, T adjNode);
 
 				/**
@@ -261,6 +271,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING One of both of the nodes do not exist in this
 				 * adjacency list
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes existsEdge(T srcNode, T dstNode, bool * exists);
 
 				/**
@@ -277,6 +288,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING The node provided does not exist
 				 * in the adjacency list
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAdjacentNodeCount(T node, I * count);
 
 				/**
@@ -297,6 +309,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The provided array is too small to hold
 				 * the adjacent node data
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAdjacentNodes(T node, T * adjNodes, I nAdjNodes);
 
 		};
