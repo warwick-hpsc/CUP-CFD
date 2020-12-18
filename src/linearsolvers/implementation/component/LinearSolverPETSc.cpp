@@ -55,14 +55,17 @@ namespace cupcfd
 			this->aRanges = nullptr;
 
 			status = this->setupVectorX();
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorX() failed"));
 			}
 			status = this->setupVectorB();
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorB() failed"));
 			}
 			status = this->setupMatrixA(matrix);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupMatrixA() failed"));
 			}
@@ -79,16 +82,13 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorX()
-		{
-			if(this->x != PETSC_NULL)
-			{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorX() {
+			if(this->x != PETSC_NULL) {
 				VecDestroy(&(this->x));
 				this->x = PETSC_NULL;
 			}
 
-			if(this->xRanges != nullptr)
-			{
+			if(this->xRanges != nullptr) {
 				// Note: it seems like xRanges is poIing at a PETSc Iernal array
 				// Once the vector is destroyed, it looses values, so presume
 				// that PETSc has freed it, in which case we just set this to nullptr.
@@ -100,16 +100,13 @@ namespace cupcfd
 
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorB()
-		{
-			if(this->b != PETSC_NULL)
-			{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorB() {
+			if(this->b != PETSC_NULL) {
 				VecDestroy(&(this->b));
 				this->b = PETSC_NULL;
 			}
 
-			if(this->bRanges != nullptr)
-			{
+			if(this->bRanges != nullptr) {
 				// Note: it seems like xRanges is pointing at a PETSc Internal array
 				// Once the vector is destroyed, it looses values, so presume
 				// that PETSc has freed it, in which case we just set this to nullptr.
@@ -120,16 +117,13 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetMatrixA()
-		{
-			if(this->a != PETSC_NULL)
-			{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetMatrixA() {
+			if(this->a != PETSC_NULL) {
 				MatDestroy(&(this->a));
 				this->a = PETSC_NULL;
 			}
 
-			if(this->aRanges != nullptr)
-			{
+			if(this->aRanges != nullptr) {
 				// Note: Presuming PETSc frees this since it is a const so may be
 				// poIing Iernally? For the vectors it seems to lose values
 				// once the vector is destroyed, so likely same for Matrix
@@ -143,11 +137,9 @@ namespace cupcfd
 
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorX(T scalar)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorX(T scalar) {
 			// Error Check that the vector has been setup
-			if(this->x == PETSC_NULL)
-			{
+			if(this->x == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
@@ -166,36 +158,30 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorX(T * scalars, I nScalars,
-																I * indexes, I nIndexes, I indexBase)
-		{
+																I * indexes, I nIndexes, I indexBase) {
 			// Error Check - Are nScalars and nIndexes the same
-			if(nScalars != nIndexes)
-			{
+			if(nScalars != nIndexes) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Error Check - Has the Vector X been setup
-			if(this->x == PETSC_NULL)
-			{
+			if(this->x == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Error Check - Are all the indexes within the bounds of the vector scheme?
 			I * shiftedIndexes = (I *) malloc(sizeof(I) * nIndexes);
 
-			for(I i = 0; i < nIndexes; i++)
-			{
+			for(I i = 0; i < nIndexes; i++) {
 				I indexOffset = (indexes[i] - indexBase);
 
-				if((indexes[i] - indexBase) >= this->mGlobal)
-				{
+				if((indexes[i] - indexBase) >= this->mGlobal) {
 					// Cleanup
 					free(shiftedIndexes);
 					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
-				if((indexes[i] - indexBase) < 0)
-				{
+				if((indexes[i] - indexBase) < 0) {
 					// Cleanup
 					free(shiftedIndexes);
 					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
@@ -210,12 +196,10 @@ namespace cupcfd
 			// Petsc always uses zero based indexes for it's index scheme.
 			// We can correct for this by offsetting using the indexBase.
 
-			if(indexBase == 0)
-			{
+			if(indexBase == 0) {
 				// Convert to PETScScalar Type (Means choice of datatype for class doesn't matter as much)
 				PetscScalar * tmp = (PetscScalar *) malloc(sizeof(PetscScalar) * nScalars);
-				for(I i = 0; i < nScalars; i++)
-				{
+				for(I i = 0; i < nScalars; i++) {
 					tmp[i] = PetscScalar(scalars[i]);
 				}
 
@@ -236,11 +220,9 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorB(T scalar)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorB(T scalar) {
 			// Error Check that the vector has been setup
-			if(this->b == PETSC_NULL)
-			{
+			if(this->b == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
@@ -259,42 +241,35 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesVectorB(T * scalars, I nScalars,
-																I * indexes, I nIndexes, I indexBase)
-		{
+																I * indexes, I nIndexes, I indexBase) {
 			// Error Check - Are nScalars and nIndexes the same
-			if(nScalars != nIndexes)
-			{
+			if(nScalars != nIndexes) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Error Check - Check the value of mGlobal is greater than 0
-			if(this->mGlobal <= 0)
-			{
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Error Check - Has the Vector X been setup
-			if(this->b == PETSC_NULL)
-			{
+			if(this->b == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
 			// Error Check - Are all the indexes within the bounds of the vector scheme?
 			I * shiftedIndexes = (I *) malloc(sizeof(I) * nIndexes);
 
-			for(I i = 0; i < nIndexes; i++)
-			{
+			for(I i = 0; i < nIndexes; i++) {
 				I indexOffset = (indexes[i] - indexBase);
 
-				if((indexes[i] - indexBase) >= this->mGlobal)
-				{
+				if((indexes[i] - indexBase) >= this->mGlobal) {
 					// Cleanup
 					free(shiftedIndexes);
 					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
 				}
 
-				if((indexes[i] - indexBase) < 0)
-				{
+				if((indexes[i] - indexBase) < 0) {
 					// Cleanup
 					free(shiftedIndexes);
 					DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
@@ -309,11 +284,9 @@ namespace cupcfd
 			// Petsc always uses zero based indexes for it's index scheme.
 			// We can correct for this by offsetting using the indexBase.
 
-			if(indexBase == 0)
-			{
+			if(indexBase == 0) {
 				PetscScalar * tmp = (PetscScalar *) malloc(sizeof(PetscScalar) * nScalars);
-				for(I i = 0; i < nScalars; i++)
-				{
+				for(I i = 0; i < nScalars; i++) {
 					tmp[i] = PetscScalar(scalars[i]);
 				}
 
@@ -334,15 +307,13 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearVectorX()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearVectorX() {
 			cupcfd::error::eCodes status;
 
 			// Since we use a template, typecast 0 to the relevant type
 			status = setValuesVectorX((T) 0);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -350,15 +321,13 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearVectorB()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearVectorB() {
 			cupcfd::error::eCodes status;
 
 			// Since we use a template, typecase 0 to the relevant type
 			status = setValuesVectorB((T) 0);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -366,28 +335,27 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::reset()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::reset() {
 			cupcfd::error::eCodes status;
 
 			// Reset Vector X
 			status = this->resetVectorX();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// Reset Vector B
 			status = this->resetVectorB();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// Reset Matrix A
 			status = this->resetMatrixA();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -398,15 +366,13 @@ namespace cupcfd
 		// Empty Definitions included here to satisfy linker
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorX()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorX() {
 			PetscErrorCode err;
 
 			// Reset any current vectors
 			this->resetVectorX();
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// === Comm Size is set to 1 - Serial Linear Solver ===
 
 				// Setup a PETSc Sequential Vector
@@ -415,16 +381,14 @@ namespace cupcfd
 					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->x));
 				if (err != 0) {
 					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
-			else
-			{
+			else {
 				// Comm Size is less than 1 - Error
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
@@ -441,12 +405,10 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorB()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorB() {
 			PetscErrorCode err;
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// === Comm Size is set to 1 - Serial Linear Solver ===
 
 				// Setup a PETSc Sequential Vector
@@ -455,16 +417,14 @@ namespace cupcfd
 					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// Setup a PETSc Parallel (MPI) Vector
 				err = VecCreateMPI(this->comm.comm, PETSC_DECIDE, this->mGlobal, &(this->b));
 				if (err != 0) {
 					DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 				}
 			}
-			else
-			{
+			else {
 				// Comm Size is less than 1 - Error
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
@@ -484,15 +444,13 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix) {
 			PetscErrorCode err;
 
 			// ToDo: Error Check - The Matrix Global Sizes must match the global sizes of the linear solver
 			// (even if it doesn't store that much data)
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// Retrieve the non-zero structure from the SparseMatrix object and pass through to
 				// the PETSc matrix initialisation routine to help with preallocation.
 
@@ -509,16 +467,14 @@ namespace cupcfd
 				PetscInt * nnz = (PetscInt *) malloc(sizeof(PetscInt) * this->mGlobal);
 
 				// Zero the array
-				for(int i = 0; i < this->mGlobal; i++)
-				{
+				for(int i = 0; i < this->mGlobal; i++) {
 					nnz[i] = 0;
 				}
 
 				int nnzCount = 0;
 
 
-				for(int i = 0; i < nNNZRows; i++)
-				{
+				for(int i = 0; i < nNNZRows; i++) {
 					// For each row, get the number of columns (what we're actually interested in)
 					int * nnzCols;
 					int nNNZCols;
@@ -541,8 +497,7 @@ namespace cupcfd
 				PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * nnzCount);
 
 				int ptr = 0;
-				for(int i = 0; i < nNNZRows; i++)
-				{
+				for(int i = 0; i < nNNZRows; i++) {
 					// For each row, get the column indexes
 					int * nnzCols;
 					int nNNZCols;
@@ -551,8 +506,7 @@ namespace cupcfd
 						DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
 					}
 
-					for(int j = 0; j < nNNZCols; j++)
-					{
+					for(int j = 0; j < nNNZCols; j++) {
 						// Don't forget to remove offset for matrix indexing so it is base zero
 						indices[ptr] = nnzCols[j] - matrix.baseIndex;
 						ptr = ptr + 1;
@@ -615,8 +569,7 @@ namespace cupcfd
 				free(nnz);
 				free(indices);
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// Retrieve the non-zero structure from the SparseMatrix object and pass through to
 				// the PETSc matrix initialisation routine to help with preallocation.
 				// ToDo: This functionality should probably be moved to the SparseMatrix object itself, since it will
@@ -640,8 +593,7 @@ namespace cupcfd
 				// Off-Diagonal Count
 				int * o_nnz = (PetscInt *) malloc(sizeof(PetscInt) * this->mLocal);
 
-				for(int i = 0; i < this->mLocal; i++)
-				{
+				for(int i = 0; i < this->mLocal; i++) {
 					d_nnz[i] = 0;
 					o_nnz[i] = 0;
 				}
@@ -660,8 +612,7 @@ namespace cupcfd
 				// As such, this currently relies on the provided matrix following this pattern, but it is not enforced.
 
 				/*
-				for(int i = 0; i < nNNZRows; i++)
-				{
+				for(int i = 0; i < nNNZRows; i++) {
 					// For each row, get the column indexes and the number of columns (what we're actually interested in)
 					int * nnzCols;
 					int nNNZCols;
@@ -675,18 +626,15 @@ namespace cupcfd
 
 					int rowBaseZero = nnzRows[i] - matrix.baseIndex;
 
-					for(int j = 0; j < nNNZCols; j++)
-					{
+					for(int j = 0; j < nNNZCols; j++) {
 						int colBaseZero = nnzCols[j] - matrix.baseIndex;
 
 						// Integer division important here
-						if((rowBaseZero/3) == (colBaseZero/3))
-						{
+						if((rowBaseZero/3) == (colBaseZero/3)) {
 							// NZ lies in diagonal matrix, increase count for this row by 1
 							d_nnz[i] = d_nnz[i] + 1;
 						}
-						else
-						{
+						else {
 							// NZ lies in off-diagonal matrix, increase count for this row by 1
 							o_nnz[i] = o_nnz[i] + 1;
 						}
@@ -750,8 +698,7 @@ namespace cupcfd
 				// Get Ownership Range for the Matrix
 				//MatGetOwnershipRanges(this->a, &(this->aRanges));
 			}
-			else
-			{
+			else {
 				// Comm Size is less than 1 - Error
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
@@ -766,45 +713,39 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setup(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setup(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix) {
 			cupcfd::error::eCodes status;
 
 			// Create the vector X and zero it
 			status = setupVectorX();
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->setValuesVectorX(0.0);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// Create the vector B and zero it
 			status = setupVectorB();
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->setValuesVectorB(0.0);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// Create the matrix A, using the input Matrix to define the non-zero positions
 			status = setupMatrixA(matrix);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
@@ -812,47 +753,46 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix)
-		{
-			if(this->mGlobal <= 0)
-			{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix) {
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
-			if(this->nGlobal <= 0)
-			{
+			if(this->nGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_COL_SIZE_UNSET;
 			}
 
 			// Error Check: Check that the PETSc matrix object has been setup
-			if(this->a == PETSC_NULL)
-			{
+			if(this->a == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
 			}
+
+			cupcfd::error::eCodes status;
 
 			// Get an array of the unique row indexes - we will set the values for these rows one by one
 			int * rowIndexes;
 			int nRowIndexes;
-			matrix.getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			status = matrix.getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			CHECK_ERROR_CODE(status)
 
-			for(int i = 0; i < nRowIndexes; i++)
-			{
+			for(int i = 0; i < nRowIndexes; i++) {
 				// Get the columns ids for the row
 				int * columnIndexes;
 				int nColumnIndexes;
-				matrix.getRowColumnIndexes(rowIndexes[i], &columnIndexes, &nColumnIndexes);
+				status = matrix.getRowColumnIndexes(rowIndexes[i], &columnIndexes, &nColumnIndexes);
+				CHECK_ERROR_CODE(status)
 
 				// Get the nnz values for the row
 				T * nnzValues;
 				PetscScalar * petscNNZValues;
 				int nNNZValues;
-				matrix.getRowNNZValues(rowIndexes[i], &nnzValues, &nNNZValues);
+				status = matrix.getRowNNZValues(rowIndexes[i], &nnzValues, &nNNZValues);
+				CHECK_ERROR_CODE(status)
 
 				// ToDo: Would like to omit this copy, and place data in array directly
 				// Could create new instance of getRowNNZValues, but would have to include PETSc header
 				petscNNZValues = (PetscScalar *) malloc(sizeof(PetscScalar) * nNNZValues);
-				for(int j = 0; j < nNNZValues; j++)
-				{
+				for(int j = 0; j < nNNZValues; j++) {
 					petscNNZValues[j] = nnzValues[j];
 				}
 
@@ -880,31 +820,26 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearMatrixA()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::clearMatrixA() {
 			return cupcfd::error::E_SUCCESS;
 		}
 
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorX(T ** result, I * nResult)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorX(T ** result, I * nResult) {
 			cupcfd::error::eCodes status;
 
 			// Check the global row count is greater than 0
-			if(this->mGlobal <= 0)
-			{
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
-			if(this->x == PETSC_NULL)
-			{
+			if(this->x == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// PETSc can only return values from vector on same processor
 				// However, since this is serial, the process owns all indices in the vector
 				// Thus, we can just generate a full indices set and return the vector contents in the array
@@ -920,8 +855,7 @@ namespace cupcfd
 				PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 				// PETSc always uses 0-based indexes
-				for(int i = 0; i < this->mGlobal; i++)
-				{
+				for(int i = 0; i < this->mGlobal; i++) {
 					indices[i] = (PetscInt) i;
 				}
 
@@ -930,8 +864,7 @@ namespace cupcfd
 
 				// Copy data from tmp result to result for type conversion
 				// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-				for(I i = 0; i < *nResult; i++)
-				{
+				for(I i = 0; i < *nResult; i++) {
 					(*result)[i] = T(tmpResult[i]);
 				}
 
@@ -940,8 +873,7 @@ namespace cupcfd
 				free(tmpResult);
 
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// Expensive - Everyone gets a copy of the vector and distributed comms will require all-to-all
 				// However, we know the range from the distributed PETSc objects, so we know how many elements we
 				// need from each process
@@ -955,8 +887,7 @@ namespace cupcfd
 
 				// PETSc always uses 0-based indexes
 				// Get values for local indexes
-				for(I i = 0; i < rangeSize; i++)
-				{
+				for(I i = 0; i < rangeSize; i++) {
 					indices[i] = (PetscInt) xRanges[this->comm.rank] + i;
 				}
 
@@ -969,8 +900,7 @@ namespace cupcfd
 
 				T * tmpBuffer = (T *) malloc(sizeof(T) * rangeSize);
 
-				for(I i = 0; i < rangeSize; i++)
-				{
+				for(I i = 0; i < rangeSize; i++) {
 					tmpBuffer[i] = T(tmpResult[i]);
 				}
 
@@ -984,8 +914,8 @@ namespace cupcfd
 
 				// This will place the final allgather directly into the results array
 				status = AllGatherV(tmpBuffer, rangeSize, result, nResult, &recvCounts, &nRecvCounts, this->comm);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
@@ -995,8 +925,7 @@ namespace cupcfd
 				free(tmpBuffer);
 				free(recvCounts);
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
@@ -1006,24 +935,20 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorX(T ** result, I * nResult,
-																 I * indexes, I nIndexes, I indexBase)
-		{
+																 I * indexes, I nIndexes, I indexBase) {
 			cupcfd::error::eCodes status;
 
 			// Check the global row count is greater than 0
-			if(this->mGlobal <= 0)
-			{
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
-			if(this->x == PETSC_NULL)
-			{
+			if(this->x == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// Serial - Just load specific indices from the Vector
 
 				// Note: We need to convert types for PETSc - this may incur a loss of precision if the
@@ -1037,8 +962,7 @@ namespace cupcfd
 				PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 				// PETSc always uses 0-based indexes
-				for(int i = 0; i < nIndexes; i++)
-				{
+				for(int i = 0; i < nIndexes; i++) {
 					indices[i] = indexes[i] - indexBase;
 				}
 
@@ -1047,8 +971,7 @@ namespace cupcfd
 
 				// Copy data from tmp result to result for type conversion
 				// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-				for(I i = 0; i < *nResult; i++)
-				{
+				for(I i = 0; i < *nResult; i++) {
 					(*result)[i] = T(tmpResult[i]);
 				}
 
@@ -1056,28 +979,24 @@ namespace cupcfd
 				free(indices);
 				free(tmpResult);
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// (1) Validity Check - If all requested indices across processes are local, we don't need to do
 				// any large scale comms beyond a notification
 
 				I nOffNodeCount = 0;
 				I nTotalOffNodeCount = 0;
 
-				for(I i = 0; i < nIndexes; i++)
-				{
+				for(I i = 0; i < nIndexes; i++) {
 					I baseZeroIndex = indexes[i] - indexBase;
 
-					if((baseZeroIndex < this->xRanges[this->comm.rank]) || (baseZeroIndex >= this->xRanges[this->comm.rank + 1]))
-					{
+					if((baseZeroIndex < this->xRanges[this->comm.rank]) || (baseZeroIndex >= this->xRanges[this->comm.rank + 1])) {
 						nOffNodeCount = nOffNodeCount + 1;
 					}
 				}
 
 				cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
 
-				if(nTotalOffNodeCount == 0)
-				{
+				if(nTotalOffNodeCount == 0) {
 					// All indices are local across all processes, so no need for futher comms
 					*nResult = nIndexes;
 					*result = (T *) malloc(sizeof(T) * (*nResult));
@@ -1086,8 +1005,7 @@ namespace cupcfd
 					PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 					// PETSc always uses 0-based indexes
-					for(int i = 0; i < nIndexes; i++)
-					{
+					for(int i = 0; i < nIndexes; i++) {
 						indices[i] = indexes[i] - indexBase;
 					}
 
@@ -1096,8 +1014,7 @@ namespace cupcfd
 
 					// Copy data from tmp result to result for type conversion
 					// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-					for(I i = 0; i < *nResult; i++)
-					{
+					for(I i = 0; i < *nResult; i++) {
 						(*result)[i] = T(tmpResult[i]);
 					}
 
@@ -1105,8 +1022,7 @@ namespace cupcfd
 					free(indices);
 					free(tmpResult);
 				}
-				else
-				{
+				else {
 					// (2) If there is a off-node requested indice globally then we will need to perform an exchange of some sort.
 					// Build a temporary distributed graph so that information is gathered about who 'owns' which indexes.
 					// We can then use this to build an exchange pattern
@@ -1123,37 +1039,36 @@ namespace cupcfd
 					PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * rangeSize);
 
 					// Setup the PETSc indices to read all local data
-					for(I i = this->xRanges[this->comm.rank]; i < this->xRanges[this->comm.rank + 1]; i++)
-					{
+					for(I i = this->xRanges[this->comm.rank]; i < this->xRanges[this->comm.rank + 1]; i++) {
 						indices[i - this->xRanges[this->comm.rank]] = i;
 
 						// Need to add all of the local indices as local nodes in case another node requests them
-						graph.addLocalNode(i);
+						status = graph.addLocalNode(i);
+						CHECK_ERROR_CODE(status)
 					}
 
 					// Setup the Ghost Nodes of the Graph
-					for(I i = 0; i < nIndexes;i++)
-					{
+					for(I i = 0; i < nIndexes;i++) {
 						I baseZeroIndex = indexes[i] - indexBase;
 
-						if((baseZeroIndex < this->xRanges[this->comm.rank]) || (baseZeroIndex >= this->xRanges[this->comm.rank + 1]))
-						{
+						if((baseZeroIndex < this->xRanges[this->comm.rank]) || (baseZeroIndex >= this->xRanges[this->comm.rank + 1])) {
 							// Add any row indices that are non-local requested indices as ghost nodes
-							graph.addGhostNode(baseZeroIndex);
+							status = graph.addGhostNode(baseZeroIndex);
+							CHECK_ERROR_CODE(status)
 						}
 					}
 
 					// Finalize
 					status = graph.finalize();
-
-					if(status != cupcfd::error::E_SUCCESS)
-					{
+					CHECK_ERROR_CODE(status)
+					if(status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
 
 					// Build exchange pattern
 					cupcfd::comm::ExchangePatternTwoSidedNonBlocking<T> * pattern;
-					graph.buildExchangePattern(&pattern);
+					status = graph.buildExchangePattern(&pattern);
+					CHECK_ERROR_CODE(status)
 
 					// Setup data buffers and global indexes
 					I nDataBuffer = graph.connGraph.nNodes;
@@ -1164,8 +1079,7 @@ namespace cupcfd
 
 					// Loop over the Local/Global IDs of the exchange pattern, and copy to the data buffer if it a local node
 					// since it is expected to be sent (we know that local nodes are those nodes (PETSc indices) in the local range)
-					for(I i = 0; i < nDataBuffer; i++)
-					{
+					for(I i = 0; i < nDataBuffer; i++) {
 						// Copy Data to correct positions in the data buffer for the exchange
 						// Ordering of data in the exchange buffer is the same order as that of the localIDs in the graph
 						// I.e. The node at localID 0 in the graph stores its data at index 0 in the data buffer
@@ -1173,18 +1087,17 @@ namespace cupcfd
 						// Looping over Graph Local Indexes
 						// (1) Get Node (PETScIndex) at that local index
 						I node;
-						graph.connGraph.getLocalIndexNode(i, &node);
+						status = graph.connGraph.getLocalIndexNode(i, &node);
+						CHECK_ERROR_CODE(status)
 
 						// Is this a Node/PETScIndex that we own/is local
-						if((node >= this->xRanges[this->comm.rank]) && (node < this->xRanges[this->comm.rank + 1]))
-						{
+						if((node >= this->xRanges[this->comm.rank]) && (node < this->xRanges[this->comm.rank + 1])) {
 							// It is, so find and copy its data to the buffer
 							// Data is stored in the array read from the PETSc object, but offset from the index by the range minimum
 							I lookupID = node - this->xRanges[this->comm.rank];
 							dataBuffer[i] = T(tmpResult[lookupID]);
 						}
-						else
-						{
+						else {
 							// It is not, so the data will be overwritten in the exchange. Set it to 0 for now
 							dataBuffer[i] = 0.0;
 						}
@@ -1198,14 +1111,14 @@ namespace cupcfd
 					*nResult = nIndexes;
 					*result = (T *) malloc(sizeof(T) * (*nResult));
 
-					for(I i = 0; i < nIndexes; i++)
-					{
+					for(I i = 0; i < nIndexes; i++) {
 						// Find the position of the current index in the dataBuffer
 						// Can look it up via the graph (node and base zero PETSc index are same here)
 						I baseZeroIndex = indexes[i] - indexBase;
 
 						I localID;
-						graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
+						status = graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
+						CHECK_ERROR_CODE(status)
 
 						// This localID is the position of the data i the dataBuffer, copy across
 						(*result)[i] = dataBuffer[localID];
@@ -1217,8 +1130,7 @@ namespace cupcfd
 					free(dataBuffer);
 				}
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
@@ -1226,24 +1138,20 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorB(T ** result, I * nResult)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorB(T ** result, I * nResult) {
 			cupcfd::error::eCodes status;
 
 			// Check the global row count is greater than 0
-			if(this->mGlobal <= 0)
-			{
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
-			if(this->b == PETSC_NULL)
-			{
+			if(this->b == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// PETSc can only return values from vector on same processor
 				// However, since this is serial, the process owns all indices in the vector
 				// Thus, we can just generate a full indices set and return the vector contents in the array
@@ -1259,8 +1167,7 @@ namespace cupcfd
 				PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 				// PETSc always uses 0-based indexes
-				for(int i = 0; i < this->mGlobal; i++)
-				{
+				for(int i = 0; i < this->mGlobal; i++) {
 					indices[i] = (PetscInt) i;
 				}
 
@@ -1269,8 +1176,7 @@ namespace cupcfd
 
 				// Copy data from tmp result to result for type conversion
 				// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-				for(I i = 0; i < *nResult; i++)
-				{
+				for(I i = 0; i < *nResult; i++) {
 					(*result)[i] = T(tmpResult[i]);
 				}
 
@@ -1279,8 +1185,7 @@ namespace cupcfd
 				free(tmpResult);
 
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// Expensive - Everyone gets a copy of the vector and distributed comms will require all-to-all
 				// However, we know the range from the distributed PETSc objects, so we know how many elements we
 				// need from each process
@@ -1294,8 +1199,7 @@ namespace cupcfd
 
 				// PETSc always uses 0-based indexes
 				// Get values for local indexes
-				for(I i = 0; i < rangeSize; i++)
-				{
+				for(I i = 0; i < rangeSize; i++) {
 					indices[i] = (PetscInt) bRanges[this->comm.rank] + i;
 				}
 
@@ -1308,8 +1212,7 @@ namespace cupcfd
 
 				T * tmpBuffer = (T *) malloc(sizeof(T) * rangeSize);
 
-				for(I i = 0; i < rangeSize; i++)
-				{
+				for(I i = 0; i < rangeSize; i++) {
 					tmpBuffer[i] = T(tmpResult[i]);
 				}
 
@@ -1323,8 +1226,8 @@ namespace cupcfd
 
 				// This will place the final allgather directly into the results array
 				status = AllGatherV(tmpBuffer, rangeSize, result, nResult, &recvCounts, &nRecvCounts, this->comm);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
@@ -1334,8 +1237,7 @@ namespace cupcfd
 				free(tmpBuffer);
 				free(recvCounts);
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
@@ -1345,24 +1247,20 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesVectorB(T ** result, I * nResult,
-																I * indexes, I nIndexes, I indexBase)
-		{
+																I * indexes, I nIndexes, I indexBase) {
 			cupcfd::error::eCodes status;
 
 			// Check the global row count is greater than 0
-			if(this->mGlobal <= 0)
-			{
+			if(this->mGlobal <= 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET;
 			}
 
 			// Check the Vector exists/has been setup
-			if(this->b == PETSC_NULL)
-			{
+			if(this->b == PETSC_NULL) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR;
 			}
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// Serial - Just load specific indices from the Vector
 
 				// Note: We need to convert types for PETSc - this may incur a loss of precision if the
@@ -1376,8 +1274,7 @@ namespace cupcfd
 				PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 				// PETSc always uses 0-based indexes
-				for(int i = 0; i < nIndexes; i++)
-				{
+				for(int i = 0; i < nIndexes; i++) {
 					indices[i] = indexes[i] - indexBase;
 				}
 
@@ -1386,8 +1283,7 @@ namespace cupcfd
 
 				// Copy data from tmp result to result for type conversion
 				// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-				for(I i = 0; i < *nResult; i++)
-				{
+				for(I i = 0; i < *nResult; i++) {
 					(*result)[i] = T(tmpResult[i]);
 				}
 
@@ -1395,28 +1291,24 @@ namespace cupcfd
 				free(indices);
 				free(tmpResult);
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 				// (1) Validity Check - If all requested indices across processes are local, we don't need to do
 				// any large scale comms beyond a notification
 
 				I nOffNodeCount = 0;
 				I nTotalOffNodeCount = 0;
 
-				for(I i = 0; i < nIndexes; i++)
-				{
+				for(I i = 0; i < nIndexes; i++) {
 					I baseZeroIndex = indexes[i] - indexBase;
 
-					if((baseZeroIndex < this->bRanges[this->comm.rank]) || (baseZeroIndex >= this->bRanges[this->comm.rank + 1]))
-					{
+					if((baseZeroIndex < this->bRanges[this->comm.rank]) || (baseZeroIndex >= this->bRanges[this->comm.rank + 1])) {
 						nOffNodeCount = nOffNodeCount + 1;
 					}
 				}
 
 				cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
 
-				if(nTotalOffNodeCount == 0)
-				{
+				if(nTotalOffNodeCount == 0) {
 					// All indices are local across all processes, so no need for futher comms
 					*nResult = nIndexes;
 					*result = (T *) malloc(sizeof(T) * (*nResult));
@@ -1425,8 +1317,7 @@ namespace cupcfd
 					PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * (*nResult));
 
 					// PETSc always uses 0-based indexes
-					for(int i = 0; i < nIndexes; i++)
-					{
+					for(int i = 0; i < nIndexes; i++) {
 						indices[i] = indexes[i] - indexBase;
 					}
 
@@ -1435,8 +1326,7 @@ namespace cupcfd
 
 					// Copy data from tmp result to result for type conversion
 					// ToDo: Possible loss of precision depending on PETSc Scalar size settings
-					for(I i = 0; i < *nResult; i++)
-					{
+					for(I i = 0; i < *nResult; i++) {
 						(*result)[i] = T(tmpResult[i]);
 					}
 
@@ -1444,8 +1334,7 @@ namespace cupcfd
 					free(indices);
 					free(tmpResult);
 				}
-				else
-				{
+				else {
 					// (2) If there is a off-node requested indice globally then we will need to perform an exchange of some sort.
 					// Build a temporary distributed graph so that information is gathered about who 'owns' which indexes.
 					// We can then use this to build an exchange pattern
@@ -1462,37 +1351,36 @@ namespace cupcfd
 					PetscInt * indices = (PetscInt *) malloc(sizeof(PetscInt) * rangeSize);
 
 					// Setup the PETSc indices to read all local data
-					for(I i = this->bRanges[this->comm.rank]; i < this->bRanges[this->comm.rank + 1]; i++)
-					{
+					for(I i = this->bRanges[this->comm.rank]; i < this->bRanges[this->comm.rank + 1]; i++) {
 						indices[i - this->bRanges[this->comm.rank]] = i;
 
 						// Need to add all of the local indices as local nodes in case another node requests them
-						graph.addLocalNode(i);
+						status = graph.addLocalNode(i);
+						CHECK_ERROR_CODE(status)
 					}
 
 					// Setup the Ghost Nodes of the Graph
-					for(I i = 0; i < nIndexes;i++)
-					{
+					for(I i = 0; i < nIndexes;i++) {
 						I baseZeroIndex = indexes[i] - indexBase;
 
-						if((baseZeroIndex < this->bRanges[this->comm.rank]) || (baseZeroIndex >= this->bRanges[this->comm.rank + 1]))
-						{
+						if((baseZeroIndex < this->bRanges[this->comm.rank]) || (baseZeroIndex >= this->bRanges[this->comm.rank + 1])) {
 							// Add any row indices that are non-local requested indices as ghost nodes
-							graph.addGhostNode(baseZeroIndex);
+							status = graph.addGhostNode(baseZeroIndex);
+							CHECK_ERROR_CODE(status)
 						}
 					}
 
 					// Finalize
 					status = graph.finalize();
-
-					if(status != cupcfd::error::E_SUCCESS)
-					{
+					CHECK_ERROR_CODE(status)
+					if(status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
 
 					// Build exchange pattern
 					cupcfd::comm::ExchangePatternTwoSidedNonBlocking<T> * pattern;
-					graph.buildExchangePattern(&pattern);
+					status = graph.buildExchangePattern(&pattern);
+					CHECK_ERROR_CODE(status)
 
 					// Setup data buffers and global indexes
 					I nDataBuffer = graph.connGraph.nNodes;
@@ -1503,8 +1391,7 @@ namespace cupcfd
 
 					// Loop over the Local/Global IDs of the exchange pattern, and copy to the data buffer if it a local node
 					// since it is expected to be sent (we know that local nodes are those nodes (PETSc indices) in the local range)
-					for(I i = 0; i < nDataBuffer; i++)
-					{
+					for(I i = 0; i < nDataBuffer; i++) {
 						// Copy Data to correct positions in the data buffer for the exchange
 						// Ordering of data in the exchange buffer is the same order as that of the localIDs in the graph
 						// I.e. The node at localID 0 in the graph stores its data at index 0 in the data buffer
@@ -1512,18 +1399,17 @@ namespace cupcfd
 						// Looping over Graph Local Indexes
 						// (1) Get Node (PETScIndex) at that local index
 						I node;
-						graph.connGraph.getLocalIndexNode(i, &node);
+						status = graph.connGraph.getLocalIndexNode(i, &node);
+						CHECK_ERROR_CODE(status)
 
 						// Is this a Node/PETScIndex that we own/is local
-						if((node >= this->bRanges[this->comm.rank]) && (node < this->bRanges[this->comm.rank + 1]))
-						{
+						if((node >= this->bRanges[this->comm.rank]) && (node < this->bRanges[this->comm.rank + 1])) {
 							// It is, so find and copy its data to the buffer
 							// Data is stored in the array read from the PETSc object, but offset from the index by the range minimum
 							I lookupID = node - this->bRanges[this->comm.rank];
 							dataBuffer[i] = T(tmpResult[lookupID]);
 						}
-						else
-						{
+						else {
 							// It is not, so the data will be overwritten in the exchange. Set it to 0 for now
 							dataBuffer[i] = 0.0;
 						}
@@ -1537,14 +1423,14 @@ namespace cupcfd
 					*nResult = nIndexes;
 					*result = (T *) malloc(sizeof(T) * (*nResult));
 
-					for(I i = 0; i < nIndexes; i++)
-					{
+					for(I i = 0; i < nIndexes; i++) {
 						// Find the position of the current index in the dataBuffer
 						// Can look it up via the graph (node and base zero PETSc index are same here)
 						I baseZeroIndex = indexes[i] - indexBase;
 
 						I localID;
-						graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
+						status = graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
+						CHECK_ERROR_CODE(status)
 
 						// This localID is the position of the data i the dataBuffer, copy across
 						(*result)[i] = dataBuffer[localID];
@@ -1556,8 +1442,7 @@ namespace cupcfd
 					free(dataBuffer);
 				}
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
@@ -1565,16 +1450,13 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix)
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::getValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix) {
 			cupcfd::error::eCodes status;
 
-			if(this->comm.size == 1)
-			{
+			if(this->comm.size == 1) {
 				// Error Check: Check Petsc Matrix is setup
 				// Error Check: Check that the PETSc matrix object has been setup
-				if(this->a == PETSC_NULL)
-				{
+				if(this->a == PETSC_NULL) {
 					DEBUGGABLE_ERROR; return cupcfd::error::E_LINEARSOLVER_INVALID_MATRIX;
 				}
 
@@ -1590,23 +1472,23 @@ namespace cupcfd
 				int * cols;
 
 				// ToDo: Will do row by row for now, but would be more efficient to do in one go
-				matrix.getNonZeroRowIndexes(&rows, &nRows);
+				status = matrix.getNonZeroRowIndexes(&rows, &nRows);
+				CHECK_ERROR_CODE(status)
 
-				for(int i = 0; i < nRows; i++)
-				{
+				for(int i = 0; i < nRows; i++) {
 					// Correct any row offsets for PETSc so it is base 0
 					PetscInt rowIndex = rows[i] - matrix.baseIndex;
 
-					matrix.getRowColumnIndexes(rowIndex, &cols, &nCols);
+					status = matrix.getRowColumnIndexes(rowIndex, &cols, &nCols);
+					CHECK_ERROR_CODE(status)
 					PetscScalar * vals = (PetscScalar *) malloc(sizeof(PetscScalar) * nCols);
 					MatGetValues(this->a, 1, &rowIndex, nCols, cols, vals);
 
-					for(int j = 0; j < nCols; j++)
-					{
+					for(int j = 0; j < nCols; j++) {
 						// Copy value over to the matrix object
 						status = matrix.setElement(rowIndex, cols[j], vals[j]);
-						if(status != cupcfd::error::E_SUCCESS)
-						{
+						CHECK_ERROR_CODE(status)
+						if(status != cupcfd::error::E_SUCCESS) {
 							return status;
 						}
 					}
@@ -1615,12 +1497,10 @@ namespace cupcfd
 
 				free(rows);
 			}
-			else if(this->comm.size > 1)
-			{
+			else if(this->comm.size > 1) {
 
 			}
-			else
-			{
+			else {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
 			}
 
@@ -1628,8 +1508,7 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::solve()
-		{
+		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::solve() {
 			this->algSolver->solve(&a, &b, &x);
 
 			return cupcfd::error::E_SUCCESS;

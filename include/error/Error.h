@@ -144,7 +144,7 @@ namespace cupcfd
 #ifndef DEBUGGABLE_ERROR
 	#ifdef DEBUG
 		// #define DEBUGGABLE_ERROR fprintf(stderr, "%s:%d\n\n", __FILE__, __LINE__); fflush(stderr); fflush(stdout);
- 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << __LINE__ << std::endl; }
+ 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << STRINGIZE(__LINE__) << std::endl; }
 	#else
 		#define DEBUGGABLE_ERROR 
 	#endif
@@ -154,7 +154,7 @@ namespace cupcfd
 	#define STRINGIZE_DETAIL(x) #x
 	#define STRINGIZE(x) STRINGIZE_DETAIL(x)
 	#ifdef DEBUG
- 		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { throw(std::string(__FILE__)+":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]); } }
+ 		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
 	#else
 		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { return E; } }
 	#endif

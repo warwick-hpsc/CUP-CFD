@@ -48,8 +48,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::reset()
-		{
+		cupcfd::error::eCodes PartitionerNaive<I,T>::reset() {
 			// Nothing to reset beyond the base class components
 			this->PartitionerInterface<I,T>::reset();
 
@@ -57,8 +56,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::partition()
-		{
+		cupcfd::error::eCodes PartitionerNaive<I,T>::partition() {
 			// The naive partition approach simply divides the total number of nodes
 			// stored across the various node stores in the communicator for the partitioner.
 
@@ -68,14 +66,12 @@ namespace cupcfd
 			// This naturally means that it does not account for any edge data (hence naive!)
 
 			// Error Check: Check that nParts is set
-			if(this->getNParts() == 0)
-			{
+			if(this->getNParts() == 0) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 			}
 
 			// Error Check: Ensure that there is data in the node store.
-			if(this->nodes == nullptr)
-			{
+			if(this->nodes == nullptr) {
 				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
 			}
 
@@ -116,8 +112,7 @@ namespace cupcfd
 			// can be placed in the correct partition group.
 
 			// If this partition also has a remainder, then 1 more extra cell must be assigned to it.
-			for(I i = 0; i < this->nNodes; i++)
-			{
+			for(I i = 0; i < this->nNodes; i++) {
 				// Zero-Indexed
 
 				// Compute the group assignment for a node base on its count position when globally
@@ -128,18 +123,15 @@ namespace cupcfd
 				// ToDo: Should just use min
 				// Add 1 to remainder for each prior group
 				I check;
-				if(group < partitionerRemainder)
-				{
+				if(group < partitionerRemainder) {
 					check = group;
 				}
-				else
-				{
+				else {
 					check = partitionerRemainder;
 				}
 
 				// Adjust group assignment if within remainder limits
-				if((group > 0) && (id < ((group * partitionSize) + check)))
-				{
+				if((group > 0) && (id < ((group * partitionSize) + check))) {
 					group = group - 1;
 				}
 
@@ -152,8 +144,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
+		cupcfd::error::eCodes PartitionerNaive<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts) {
 			cupcfd::error::eCodes status;
 
 			this->setNParts(nParts);
@@ -164,13 +155,13 @@ namespace cupcfd
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
 
 			// Make a copy of locally owned nodes from the graph
-			graph.getLocalNodes(nodes, nNodes);
+			status = graph.getLocalNodes(nodes, nNodes);
+			CHECK_ERROR_CODE(status)
 
 			// Set the nodes in the partitioner
 			status = this->setNodeStorage(nodes, nNodes);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 

@@ -92,15 +92,11 @@ namespace cupcfd
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setVertexImbalanceWeightArrays() failed")));
-			}
+			CHECK_ERROR_CODE(status)
 
 			// setSubdomainWeightArrays cannot be set till nCon and nParts set so do so here.
 			status = this->setSubdomainWeightArrays();
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setSubdomainWeightArrays() failed")));
-			}
+			CHECK_ERROR_CODE(status)
 
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(sourceGraph);
@@ -108,8 +104,9 @@ namespace cupcfd
 				if (status == cupcfd::error::E_DISTGRAPH_UNFINALIZED) {
 					// TODO: setWorkArrays() is returning E_DISTGRAPH_UNFINALIZED. Why?! Should finalized flag be true? If not, 
 					//       why is it operating on an unfinalized graph?!
+					//       Ignore error for now, as app was running before.
 				} else {
-					throw(std::runtime_error(std::string("PartitionerParmetis: CONSTRUCTOR: setWorkArrays() failed ('") + cupcfd::error::eStrings[status] + "')"));
+					CHECK_ERROR_CODE(status)
 				}
 			}
 
@@ -234,7 +231,8 @@ namespace cupcfd
 
 
 			// Make a copy of locally owned nodes from the graph
-			distGraph.getLocalNodes(this->nodes, this->nNodes);
+			status = distGraph.getLocalNodes(this->nodes, this->nNodes);
+			CHECK_ERROR_CODE(status)
 
 			// (c) Setup xadj indirect node->edges array
 			// Allocate suitable space, should always be one more than there are nodes
@@ -251,7 +249,8 @@ namespace cupcfd
 
 			for(I i = 0; i < this->nNodes; i++) {
 				I adjCount;
-				distGraph.connGraph.getAdjacentNodeCount(this->nodes[i], &adjCount);
+				status = distGraph.connGraph.getAdjacentNodeCount(this->nodes[i], &adjCount);
+				CHECK_ERROR_CODE(status)
 				nEdges = nEdges + adjCount;
 
 				// Set next index along, this should leave the final position being set at one past the final index of adjncy
@@ -274,7 +273,8 @@ namespace cupcfd
 
 				// Get nodes adjacent to current node
 				T * scratch = (T *) malloc(sizeof(T) * adjCount);
-				distGraph.connGraph.getAdjacentNodes(this->nodes[i], scratch, adjCount);
+				status = distGraph.connGraph.getAdjacentNodes(this->nodes[i], scratch, adjCount);
+				CHECK_ERROR_CODE(status)
 
 				// Loop over each adjacent node
 				for(I j = 0; j < adjCount; j++) {

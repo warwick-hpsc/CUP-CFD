@@ -1656,6 +1656,7 @@ namespace cupcfd
 				// Reuse the same communicator as the distributed graph, since all members of the comm associated with this
 				// mesh must participate
 				status = data.buildDistributedAdjacencyList(&partGraph, *(this->cellConnGraph->comm), assignedCellLabels, nAssignedCellLabels);
+				CHECK_ERROR_CODE(status)
 				if (status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
@@ -1668,8 +1669,10 @@ namespace cupcfd
 				if(lCells > 0) {
 					// (c) Get the labels from the partition graph
 					I * cellLabels = (I *) malloc(sizeof(I) * nCells);
-					partGraph->getLocalNodes(cellLabels, lCells);
-					partGraph->getGhostNodes(cellLabels + lCells, ghCells);
+					status = partGraph->getLocalNodes(cellLabels, lCells);
+					CHECK_ERROR_CODE(status)
+					status = partGraph->getGhostNodes(cellLabels + lCells, ghCells);
+					CHECK_ERROR_CODE(status)
 
 					// (d) Get the labels of all faces associated with only *local* cells - faces that are between local-> ghost will be caught in this.
 
@@ -1677,6 +1680,7 @@ namespace cupcfd
 					I nCellFacesSum;
 					I * nCellFaces = (I *) malloc(sizeof(I) * lCells);
 					status = data.getCellNFaces(nCellFaces, lCells, cellLabels, lCells);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1688,6 +1692,7 @@ namespace cupcfd
 					I * cellFaceLabelInd = (I *) malloc(sizeof(I) * (lCells+1));
 					I * cellFaceLabelData = (I *) malloc(sizeof(I) * nCellFacesSum);
 					status = data.getCellFaceLabels(cellFaceLabelInd, lCells+1, cellFaceLabelData, nCellFacesSum, cellLabels, lCells);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1702,6 +1707,7 @@ namespace cupcfd
 					// (ei) Reduce down to only faces that are boundaries
 					bool * faceLabelIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(faceLabelIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1735,6 +1741,7 @@ namespace cupcfd
 					I nBoundaryLabels = nFaceBoundaries;
 					I * boundaryLabels = (I *) malloc(sizeof(I) * nBoundaryLabels);
 					status = data.getFaceBoundaryLabels(boundaryLabels, nBoundaryLabels, faceWithBoundary, nFaceBoundaries);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1750,6 +1757,7 @@ namespace cupcfd
 					I * faceVerticesCount = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 
 					status = data.getFaceNVertices(faceVerticesCount, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1761,6 +1769,7 @@ namespace cupcfd
 					I * boundaryVerticesCount = (I *) malloc(sizeof(I) * nBoundaryLabelsDistinct);
 
 					status = data.getFaceNVertices(boundaryVerticesCount, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1778,6 +1787,7 @@ namespace cupcfd
 					status = data.getFaceVerticesLabelsCSR(faceVertLabelCSRInd, nFaceLabelsDistinct+1,
 															  vertLabelData, faceVerticesCountTotal,
 															  faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1787,6 +1797,7 @@ namespace cupcfd
 					status = data.getFaceVerticesLabelsCSR(bndVertLabelCSRInd, nBoundaryLabelsDistinct+1,
 															  vertLabelData + faceVerticesCountTotal, boundaryVerticesCountTotal,
 															  boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1802,6 +1813,7 @@ namespace cupcfd
 					// their numbers are typically far far fewer
 					I nRegions;
 					status = data.getRegionCount(&nRegions);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1813,6 +1825,7 @@ namespace cupcfd
 					}
 
 					status = data.getRegionLabels(regionLabels, nRegions, regionIndices,nRegions);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1833,6 +1846,7 @@ namespace cupcfd
 					//Final Vertices Labels are stored in vertexLabelsDistinct
 					euc::EuclideanPoint<T,3> * pointTmpStore = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nVertexLabelsDistinct);
 					status = data.getVertexCoords(pointTmpStore, nVertexLabelsDistinct, vertexLabelsDistinct, nVertexLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1861,6 +1875,7 @@ namespace cupcfd
 					I nBoundaryRegionLabels = nBoundaryLabelsDistinct;
 					I * boundaryRegionLabels = (I *) malloc(sizeof(I) * nBoundaryRegionLabels);
 					status = data.getBoundaryRegionLabels(boundaryRegionLabels, nBoundaryRegionLabels, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1871,6 +1886,7 @@ namespace cupcfd
 					// Boundary Distance
 					T * bDistance = (T *) malloc(sizeof(T) * nBoundaryLabelsDistinct);
 					status = data.getBoundaryDistance(bDistance, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1896,12 +1912,14 @@ namespace cupcfd
 
 					// Read Cell Center
 					status = data.getCellCenter(pointTmpStore, nCells, cellLabels, nCells);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
 
 					// Read Cell Volume
 					status = data.getCellVolume(cellVol, nCells, cellLabels, nCells);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1927,6 +1945,7 @@ namespace cupcfd
 					// For boundary and non-boundary faces
 					I * fCell1Labels = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 					status = data.getFaceCell1Labels(fCell1Labels, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1935,6 +1954,7 @@ namespace cupcfd
 					// For non-boundary faces only
 					I * fCell2Labels = (I *) malloc(sizeof(I) * nFaceWithoutBoundary);
 					status = data.getFaceCell2Labels(fCell2Labels, nFaceWithoutBoundary, faceWithoutBoundary, nFaceWithoutBoundary);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1946,6 +1966,7 @@ namespace cupcfd
 					// Boundary faces only
 					I * fBndLabels = (I *) malloc(sizeof(I) * nFaceBoundaries);
 					status = data.getFaceBoundaryLabels(fBndLabels, nFaceBoundaries, faceWithBoundary, nFaceBoundaries);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1953,6 +1974,7 @@ namespace cupcfd
 					// Is Boundary
 					bool * fIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(fIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1960,6 +1982,7 @@ namespace cupcfd
 					// Face Lambda
 					T * fLambda = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceLambda(fLambda, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1967,6 +1990,7 @@ namespace cupcfd
 					// Face Area
 					T * fArea = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceArea(fArea, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1974,6 +1998,7 @@ namespace cupcfd
 					// Face Center
 					euc::EuclideanPoint<T,3> * fCenter = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceCenter(fCenter, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -1981,6 +2006,7 @@ namespace cupcfd
 					// Face Normal
 					euc::EuclideanVector<T,3> * fNorm = (euc::EuclideanVector<T,3> *) malloc(sizeof(euc::EuclideanVector<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceNormal(fNorm, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
+					CHECK_ERROR_CODE(status)
 					if (status != cupcfd::error::E_SUCCESS) {
 						return status;
 					}
@@ -2022,6 +2048,7 @@ namespace cupcfd
 
 						status = this->addFace(faceLabelsDistinct[i], fCell1Labels[i], fCell2OrBoundLabel, fIsBoundary[i], fLambda[i], fNorm[i],
 												  vertLabelData + vertDataPtr, rangeSize, fCenter[i], xpac, xnac, rlencos, fArea[i]);
+						CHECK_ERROR_CODE(status)
 						if (status != cupcfd::error::E_SUCCESS) {
 							return status;
 						}
@@ -2072,6 +2099,7 @@ namespace cupcfd
 				// data is also propagated to any ghost cells that are unable to compute it locally (e.g. due to insufficient face data)
 
 				status = this->finalize();
+				CHECK_ERROR_CODE(status)
 				if (status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}

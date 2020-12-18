@@ -49,7 +49,8 @@ namespace cupcfd
 			I nLocalNodes = this->nLONodes;
 		 	T * localNodes = (T *) malloc(sizeof(T) * nLocalNodes);
 
-			this->getLocalNodes(localNodes, nLocalNodes);
+			status = this->getLocalNodes(localNodes, nLocalNodes);
+			CHECK_ERROR_CODE(status)
 
 			I nRecvNodes;
 			T * recvNodes = nullptr;
@@ -61,8 +62,7 @@ namespace cupcfd
 											&recvNodes, &nRecvNodes, 
 											&recvNodeProcCount, &nRecvNodeProcCount, 
 											rank, *(this->comm));
-						
-									   
+			CHECK_ERROR_CODE(status)				   
 			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -72,6 +72,7 @@ namespace cupcfd
 
 			I nEdges;
 			status = this->connGraph.getEdgeCount(&nEdges);
+			CHECK_ERROR_CODE(status)
 			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -80,6 +81,7 @@ namespace cupcfd
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
 			
 			status = this->connGraph.getEdges(edgeNode1, nEdges, edgeNode2, nEdges);
+			CHECK_ERROR_CODE(status)
 			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -97,17 +99,19 @@ namespace cupcfd
 			T * recvEdge2ProcCount = nullptr;
 			
 			status = cupcfd::comm::GatherV(edgeNode1, nEdges, 
-									   &recvEdge1, &nRecvEdge1, 
-									   &recvEdge1ProcCount, &nRecvEdge1ProcCount, 
-									   rank, *(this->comm));
+										   &recvEdge1, &nRecvEdge1, 
+										   &recvEdge1ProcCount, &nRecvEdge1ProcCount, 
+										   rank, *(this->comm));
+			CHECK_ERROR_CODE(status)
 			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 							   
 			status = cupcfd::comm::GatherV(edgeNode2, nEdges, 
-									   &recvEdge2, &nRecvEdge2, 
-									   &recvEdge2ProcCount, &nRecvEdge2ProcCount, 
-									   rank, *(this->comm));								   
+										   &recvEdge2, &nRecvEdge2, 
+										   &recvEdge2ProcCount, &nRecvEdge2ProcCount, 
+										   rank, *(this->comm));								   
+			CHECK_ERROR_CODE(status)
 			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -117,14 +121,16 @@ namespace cupcfd
 			if(this->comm->rank == rank) {			
 				// (1) We can now reconstruct the graph by adding the nodes to the serial graph
 				for(I i = 0; i < nRecvNodes; i++) {
-					destGraph->addNode(recvNodes[i]);
+					status = destGraph->addNode(recvNodes[i]);
+					CHECK_ERROR_CODE(status)
 				}
 	
 				// (2) Now we can add the edges
 				// If the edge already exists (e.g. overlap with ghost nodes),
 				// nothing should change.
 				for(I i = 0; i < nRecvEdge1; i++) {
-					destGraph->addEdge(recvEdge1[i], recvEdge2[i]);
+					status = destGraph->addEdge(recvEdge1[i], recvEdge2[i]);
+					CHECK_ERROR_CODE(status)
 				}
 				
 				free(recvNodes);
@@ -189,9 +195,9 @@ namespace cupcfd
 
 
 			(*pattern)->init(*(this->comm),
-						 mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
-						 &(this->sendGlobalIDsAdjncy[0]), this->sendGlobalIDsAdjncy.size(),
-						 tRanks, nTRanks);
+							 mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
+							 &(this->sendGlobalIDsAdjncy[0]), this->sendGlobalIDsAdjncy.size(),
+							 tRanks, nTRanks);
 
 			free(mapLocalToExchangeIDX);
 			free(tRanks);

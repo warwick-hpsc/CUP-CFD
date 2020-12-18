@@ -83,6 +83,7 @@ namespace cupcfd
 
 			// Convert the distributed graph to a serial graph on the root process
 			status = sourceGraph.buildSerialAdjacencyList(rootGraph, this->workComm.root_rank);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				throw(std::runtime_error("PartitionerMetis: CONSTRUCTOR: buildSerialAdjacencyList() failed"));
 			}
@@ -93,14 +94,16 @@ namespace cupcfd
 			// (b) The work storage
 			if(this->workComm.root) {
 				I nNodes;
-				rootGraph->getNodeCount(&nNodes);
+				status = rootGraph->getNodeCount(&nNodes);
+				CHECK_ERROR_CODE(status)
 
 				//std::shared_ptr<std::array<T,nNodes>> nodes;
 				T * nodes = (T *) malloc(sizeof(T) * nNodes);
 
 				// Make a copy of locally owned nodes from the graph and store them in the partitioner
 				// ToDo: Since we use the setter, this adds an unnecessary copy - could operate directly on pointers inside object
-				rootGraph->getNodes(nodes, nNodes);
+				status = rootGraph->getNodes(nodes, nNodes);
+				CHECK_ERROR_CODE(status)
 				this->setNodeStorage(nodes, nNodes);
 
 				// Setup the work arrays
@@ -157,6 +160,8 @@ namespace cupcfd
 			// AdjacencyListCSR has no features for distributed nodes, so it can only refer to nodes that are
 			// stored within the AdjacencyListCSR, and so we can treat it as serial data
 
+			cupcfd::error::eCodes status;
+
 			if(graph.nNodes == 0) {
 				//std::cout << "Error in Metis setWorkArrays, partition graph has zero nodes\n";
 			}
@@ -170,7 +175,8 @@ namespace cupcfd
 			this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
 
 			// Make a copy of locally owned nodes from the graph
-			graph.getNodes(this->nodes, this->nNodes);
+			status = graph.getNodes(this->nodes, this->nNodes);
+			CHECK_ERROR_CODE(status)
 
 			// Make a copy of the graph CSR
 			this->nXAdj = graph.xadj.size();
@@ -328,6 +334,7 @@ namespace cupcfd
 
 			// Base class reset
 			status = this->PartitionerInterface<I,T>::reset();
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
