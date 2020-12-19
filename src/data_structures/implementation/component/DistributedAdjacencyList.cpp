@@ -46,6 +46,8 @@ namespace cupcfd
 
 			// ToDo: Should distribute a unique random graph identifier to establish whether the same graph
 			// object is in use across processes.
+
+			this->finalized = false;
 		}
 
 		template <class I, class T>
