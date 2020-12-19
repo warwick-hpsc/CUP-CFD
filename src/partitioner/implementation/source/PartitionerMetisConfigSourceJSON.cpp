@@ -42,7 +42,7 @@ namespace cupcfd
 			// Since we don't currently load any other options, we just check that at least a valid JSON record was passed.
 			if(this->configData == Json::Value::null)
 			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			*config = new PartitionerMetisConfig<I,T>();

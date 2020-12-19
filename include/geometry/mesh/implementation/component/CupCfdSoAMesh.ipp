@@ -98,7 +98,7 @@ namespace cupcfd
 			{
 				if(this->finalized == false)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_UNFINALIZED;
+					return cupcfd::error::E_UNFINALIZED;
 				}
 
 				*nVertices = this->cellNGVertices[cellID];

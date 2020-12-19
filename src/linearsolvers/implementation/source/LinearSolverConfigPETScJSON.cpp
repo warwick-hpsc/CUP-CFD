@@ -39,119 +39,99 @@ namespace cupcfd
 		// === Concrete Methods ===
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getPETScAlgorithm(PETScAlgorithm * solverAlg)
-		{
+		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getPETScAlgorithm(PETScAlgorithm * solverAlg) {
 			Json::Value dataSourceType;
 
-			if(this->configData.isMember("Algorithm"))
-			{
+			if(this->configData.isMember("Algorithm")) {
 				// Access the correct field
 				dataSourceType = this->configData["Algorithm"];
 
 				// Check the value and return the appropriate ID
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else if(dataSourceType == "CommandLine")
-				{
+				else if(dataSourceType == "CommandLine") {
 					*solverAlg = PETSC_KSP_CMDLINE;
 					return cupcfd::error::E_SUCCESS;
 				}
-				else if(dataSourceType == "CGAMG")
-				{
+				else if(dataSourceType == "CGAMG") {
 					*solverAlg = PETSC_KSP_CGAMG;
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getETol(T * eTol)
-		{
+		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getETol(T * eTol) {
 			Json::Value dataSourceType;
 
-			if(this->configData.isMember("eTol"))
-			{
+			if(this->configData.isMember("eTol")) {
 				// Access the correct field
 				dataSourceType = this->configData["eTol"];
 
 				// Check the value and return the appropriate ID
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*eTol = T(dataSourceType.asDouble());
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getRTol(T * rTol)
-		{
+		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::getRTol(T * rTol) {
 			Json::Value dataSourceType;
 
-			if(this->configData.isMember("rTol"))
-			{
+			if(this->configData.isMember("rTol")) {
 				// Access the correct field
 				dataSourceType = this->configData["rTol"];
 
 				// Check the value and return the appropriate ID
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*rTol = T(dataSourceType.asDouble());
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::buildLinearSolverConfig(LinearSolverConfig<C,I,T> ** linearSolverConfig)
-		{
+		cupcfd::error::eCodes LinearSolverConfigPETScJSON<C,I,T>::buildLinearSolverConfig(LinearSolverConfig<C,I,T> ** linearSolverConfig) {
 			cupcfd::error::eCodes status;
 
 			PETScAlgorithm solverAlg;
 			T eTol, rTol;
 
 			status = this->getPETScAlgorithm(&solverAlg);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			status = this->getETol(&eTol);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			status = this->getRTol(&rTol);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			*linearSolverConfig = new LinearSolverConfigPETSc<C,I,T>(solverAlg, eTol, rTol);
 

@@ -38,7 +38,7 @@ namespace cupcfd
 				// Error Check: Check dst is large enough to hold src.
 				if(nDst < nSrc)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				int byteSize = sizeof(T);
@@ -124,7 +124,7 @@ namespace cupcfd
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele)
 			// {
 			// 	if (nSource1Ele != nSource2Ele) {
-			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 
 			// 	kernels::add(source1, source2, source1, nSource1Ele);
@@ -136,10 +136,10 @@ namespace cupcfd
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle)
 			// {
 			// 	if (nSource1Ele != nSource2Ele) {
-			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 			// 	if (nSource1Ele != nDestEle) {
-			// 		DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			// 	}
 
 			// 	kernels::add(source1, source2, dest, nSource1Ele);
@@ -220,7 +220,7 @@ namespace cupcfd
 				I nEleDst2;
 				drivers::distinctCount(source, nEleSource, &nEleDst2);
 				if (nEleDst2 != nEleDst) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// (3) Call the kernel on a sorted array.
@@ -274,7 +274,7 @@ namespace cupcfd
 				I nEleDst2;
 				drivers::distinctCount(source, nEleSource, &nEleDst2);
 				if (nEleDst2 != nEleDst) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// (3) Call the kernel on a sorted array.

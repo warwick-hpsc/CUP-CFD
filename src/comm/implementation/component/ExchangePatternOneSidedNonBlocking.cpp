@@ -176,7 +176,7 @@ namespace cupcfd
 
 				#ifdef DEBUG
 					if (localID < 0 || localID >= nData) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -202,7 +202,7 @@ namespace cupcfd
 
 				#ifdef DEBUG
 					if (localID < 0 || localID >= nData) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 

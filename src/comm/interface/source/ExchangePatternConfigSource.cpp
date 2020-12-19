@@ -26,17 +26,14 @@ namespace cupcfd
 
 		}
 
-		cupcfd::error::eCodes ExchangePatternConfigSource::buildExchangePatternConfig(ExchangePatternConfig ** config)
-		{
+		cupcfd::error::eCodes ExchangePatternConfigSource::buildExchangePatternConfig(ExchangePatternConfig ** config) {
 			cupcfd::error::eCodes status;
 
 			// Get the required data from the source
 			ExchangeMethod method;
 			status = this->getExchangeMethod(&method);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			// Create new object
 			*config = new ExchangePatternConfig(method);

@@ -103,41 +103,41 @@ namespace cupcfd
 
 				#ifdef DEBUG
 					if (i >= nMassFlux) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 				if(!isBoundary)
 				{
 					#ifdef DEBUG
 						if (in >= nDudx || ip >= nDudx) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nDvdx || ip >= nDvdx) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nDwdx || ip >= nDwdx) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nDpdx || ip >= nDpdx) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nDenCell || ip >= nDenCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nUCell || ip >= nUCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nVCell || ip >= nVCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nWCell || ip >= nWCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nP || ip >= nP) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (in >= nAr || ip >= nAr) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -198,7 +198,7 @@ namespace cupcfd
 
 					#ifdef DEBUG
 						if ( ((i*2)+1) >= nRFace) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					rface[(i*2)] = -fact;
@@ -215,46 +215,46 @@ namespace cupcfd
 
 					#ifdef DEBUG
 						if (ip >= nSu) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nUCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nVCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nWCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nDenCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nDenBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nTeBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nTeCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nEdBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nViseffBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nTBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nEdCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nViseffCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nTCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -351,7 +351,7 @@ namespace cupcfd
 					i = mesh.getBoundaryFaceID(ib);
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					*flowin = *flowin + massFlux[i];
@@ -382,10 +382,10 @@ namespace cupcfd
 					i = mesh.getBoundaryFaceID(ib);
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ir >= nFlowRegion) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					*flowout = *flowout + massFlux[i];
@@ -452,19 +452,19 @@ namespace cupcfd
 
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nUBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nVboundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nWBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nDenBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -512,19 +512,19 @@ namespace cupcfd
 
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ir >= nFlowFact) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nUBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nVBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ib >= nWBoundary) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -549,7 +549,7 @@ namespace cupcfd
 					int ip = mesh.getFaceCell1ID(i);
 					#ifdef DEBUG
 						if (ip >= nSu) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 					su[ip] = su[ip] - massFlux[i];
@@ -575,10 +575,10 @@ namespace cupcfd
 
 				#ifdef DEBUG
 					if (ir >= nFlowFact) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ir >= nFlowRegion) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 

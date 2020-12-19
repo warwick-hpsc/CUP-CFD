@@ -41,84 +41,69 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		void ParticleSystemSimpleConfigJSON<M,I,T,L>::operator=(ParticleSystemSimpleConfigJSON<M,I,T,L>& source)
-		{
+		void ParticleSystemSimpleConfigJSON<M,I,T,L>::operator=(ParticleSystemSimpleConfigJSON<M,I,T,L>& source) {
 			this->configData = source.configData;
 		}
 
 		template <class M, class I, class T, class L>
-		ParticleSystemSimpleConfigJSON<M,I,T,L> * ParticleSystemSimpleConfigJSON<M,I,T,L>::clone()
-		{
+		ParticleSystemSimpleConfigJSON<M,I,T,L> * ParticleSystemSimpleConfigJSON<M,I,T,L>::clone() {
 			return new ParticleSystemSimpleConfigJSON<M,I,T,L>(*this);
 		}
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::getParticleEmitterConfigs(std::vector<ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> *>& configs)
-		{
+		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::getParticleEmitterConfigs(std::vector<ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> *>& configs) {
 			cupcfd::error::eCodes status;
 		
 			// If there any emitter configs, expect in array format.
 			// However, it is not required that there are any emitters (but none will be added to the system if this is the case)
 
-			if(this->configData.isMember("Emitters"))
-			{
-				for(Json::Value::ArrayIndex i = 0; i < this->configData["Emitters"].size(); i++)
-				{
+			if(this->configData.isMember("Emitters")) {
+				for(Json::Value::ArrayIndex i = 0; i < this->configData["Emitters"].size(); i++) {
 					// Only accept ParticleEmitterSimple emitters for now
-					if(this->configData["Emitters"][i].isMember("ParticleEmitterSimple"))
-					{
+					if(this->configData["Emitters"][i].isMember("ParticleEmitterSimple")) {
 						ParticleEmitterSimpleConfigJSON<I,T> emitterConfigJSON(this->configData["Emitters"][i]["ParticleEmitterSimple"]);
 						ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> * emitterConfig;
 						
 						// Error out if we have a incorrect ParticleEmitterSimple JSON format
 						status = emitterConfigJSON.buildParticleEmitterConfig(&emitterConfig);
-						if(status != cupcfd::error::E_SUCCESS)
-						{
-							std::cout << "ERROR: buildParticleEmitterConfig() failed" << std::endl;
-							return status;
-						}
+						CHECK_ERROR_CODE(status)
+						if(status != cupcfd::error::E_SUCCESS) return status;
 						
 						configs.push_back(emitterConfig);
 					}
 				}
 			}
-			else
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			else {
+				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			
 			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::getParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>, I, T> ** particleSourceConfig)
-		{
+		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::getParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>, I, T> ** particleSourceConfig) {
 			cupcfd::error::eCodes status;
 			
-			if(this->configData.isMember("ParticleSourceSimple"))
-			{
+			if(this->configData.isMember("ParticleSourceSimple")) {
 				// Try each type of source
 			
 				ParticleSimpleSourceFileConfigJSON<I,T> particleSourceConfigJSON(this->configData["ParticleSourceSimple"]);
 				status = particleSourceConfigJSON.buildParticleSourceConfig(particleSourceConfig);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					// No more types to try, so return with error
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: buildParticleSourceConfig() failed" << std::endl;
 					return status;
 				}
 			}
-			else
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			else {
+				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 			
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::buildParticleSystemConfig(ParticleSystemConfig<ParticleSystemSimple<M,I,T,L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M,I,T,L> ** config)
-		{
+		cupcfd::error::eCodes ParticleSystemSimpleConfigJSON<M,I,T,L>::buildParticleSystemConfig(ParticleSystemConfig<ParticleSystemSimple<M,I,T,L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M,I,T,L> ** config) {
 			cupcfd::error::eCodes status;
 			std::vector<ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> *> emitterConfigs;
 			ParticleSourceConfig<ParticleSimple<I,T>, I, T> * particleSourceConfig;
@@ -126,16 +111,12 @@ namespace cupcfd
 			// Retrieve the emitter configs specified by the JSON
 			// Required
 			status = this->getParticleEmitterConfigs(emitterConfigs);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				std::cout << "ERROR: getParticleEmitterConfigs() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			// Get a particle source (optional)
 			status = getParticleSourceConfig(&particleSourceConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			if(status != cupcfd::error::E_SUCCESS) {
 				particleSourceConfig = nullptr;
 			}
 
@@ -145,13 +126,11 @@ namespace cupcfd
 			// Cleanup the vector of pointers - likely a nicer way to do object passing but templates + inheritance 
 			// causing headaches when using plain vector of objects...
 			
-			for(std::size_t i = 0; i < emitterConfigs.size(); i++)
-			{
+			for(std::size_t i = 0; i < emitterConfigs.size(); i++) {
 				delete(emitterConfigs[i]);
 			}
 			
-			if(particleSourceConfig != nullptr)
-			{
+			if(particleSourceConfig != nullptr) {
 				delete(particleSourceConfig);
 			}
 			

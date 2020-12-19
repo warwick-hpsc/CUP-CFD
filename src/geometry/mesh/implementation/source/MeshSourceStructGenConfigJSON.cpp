@@ -50,30 +50,25 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			void MeshSourceStructGenConfigJSON<I,T>::operator=(MeshSourceStructGenConfigJSON<I,T>& source)
-			{
+			void MeshSourceStructGenConfigJSON<I,T>::operator=(MeshSourceStructGenConfigJSON<I,T>& source) {
 				this->topLevel = source.topLevel;
 				this->configData = source.configData;
 			}
 
 			template <class I, class T>
-			MeshSourceStructGenConfigJSON<I,T> * MeshSourceStructGenConfigJSON<I,T>::clone()
-			{
+			MeshSourceStructGenConfigJSON<I,T> * MeshSourceStructGenConfigJSON<I,T>::clone() {
 				return new MeshSourceStructGenConfigJSON<I,T>(*this);
 			}
 
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeX(I * cellX)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeX(I * cellX) {
 				const Json::Value dataSourceType = this->configData["CellX"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just largest int for now and presume it converts down without loss of precision (not ideal)
@@ -83,20 +78,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeY(I * cellY)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeY(I * cellY) {
 				const Json::Value dataSourceType = this->configData["CellY"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just largest int for now and presume it converts down without loss of precision (not ideal)
@@ -106,20 +98,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeZ(I * cellZ)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshCellSizeZ(I * cellZ) {
 				const Json::Value dataSourceType = this->configData["CellZ"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just largest int for now and presume it converts down without loss of precision (not ideal)
@@ -129,20 +118,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMin(T * sMinX)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMin(T * sMinX) {
 				const Json::Value dataSourceType = this->configData["SpatialXMin"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -153,20 +139,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMin(T * sMinY)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMin(T * sMinY) {
 				const Json::Value dataSourceType = this->configData["SpatialYMin"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -177,20 +160,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMin(T * sMinZ)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMin(T * sMinZ) {
 				const Json::Value dataSourceType = this->configData["SpatialZMin"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -201,20 +181,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMax(T * sMaxX)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialXMax(T * sMaxX) {
 				const Json::Value dataSourceType = this->configData["SpatialXMax"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -225,20 +202,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMax(T * sMaxY)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialYMax(T * sMaxY) {
 				const Json::Value dataSourceType = this->configData["SpatialYMax"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -249,20 +223,17 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMax(T * sMaxZ)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::getMeshSpatialZMax(T * sMaxZ) {
 				const Json::Value dataSourceType = this->configData["SpatialZMax"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					// ToDo: Need template type checking or specialisation to check for correct type conversion
 					// Should be reading it in as same type as I to prevent conversion errors/loss of precision
 					// Will just use double for now and presume it converts down OK
@@ -273,69 +244,50 @@ namespace cupcfd
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig)
-			{
+			cupcfd::error::eCodes MeshSourceStructGenConfigJSON<I,T>::buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig) {
 				cupcfd::error::eCodes status;
 				I cellX, cellY, cellZ;
 				T sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ;
 
 				status = this->getMeshCellSizeX(&cellX);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshCellSizeY(&cellY);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshCellSizeX(&cellZ);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialXMin(&sMinX);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialXMax(&sMaxX);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialYMin(&sMinY);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialYMax(&sMaxY);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialZMin(&sMinZ);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getMeshSpatialZMax(&sMaxZ);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				*meshSourceConfig = new MeshSourceStructGenConfig<I,T>(cellX, cellY, cellZ, sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ);
 

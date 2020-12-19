@@ -670,21 +670,15 @@ namespace cupcfd
 
 							status = this->getFaceCell1Labels(faceCell1, numEdges, data, numEdges);
 							CHECK_ERROR_CODE(status)
-							if(status != cupcfd::error::E_SUCCESS) {
-								return status;
-							}
+							if(status != cupcfd::error::E_SUCCESS) return status;
 
 							status = this->getFaceCell2Labels(faceCell2, numEdges, data, numEdges);
 							CHECK_ERROR_CODE(status)
-							if(status != cupcfd::error::E_SUCCESS) {
-								return status;
-							}
+							if(status != cupcfd::error::E_SUCCESS) return status;
 
 							status = this->getFaceIsBoundary(faceIsBoundary, numEdges, data, numEdges);
 							CHECK_ERROR_CODE(status)
-							if(status != cupcfd::error::E_SUCCESS) {
-								return status;
-							}
+							if(status != cupcfd::error::E_SUCCESS) return status;
 
 							// (5) Now we can start building the graph
 							// (a) First, we add the nodes (since this is the full dataset, it is just
@@ -731,9 +725,7 @@ namespace cupcfd
 						// Finalize the Distributed Adjacency Graph so everyone is aware of their neighbours
 						status = (*graph)->finalize();
 						CHECK_ERROR_CODE(status)
-						if(status != cupcfd::error::E_SUCCESS) {
-							return status;
-						}
+						if(status != cupcfd::error::E_SUCCESS) return status;
 
 						return cupcfd::error::E_SUCCESS;
 					}
@@ -787,9 +779,7 @@ namespace cupcfd
 
 						status = this->getCellCount(&nGCells);
 						CHECK_ERROR_CODE(status)
-						if(status != cupcfd::error::E_SUCCESS) {
-							return status;
-						}
+						if(status != cupcfd::error::E_SUCCESS) return status;
 
 						// (b) Get the connectivity graph for this 'even' distribution
 						r = nGCells % comm.size;

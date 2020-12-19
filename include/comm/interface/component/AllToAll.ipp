@@ -33,17 +33,17 @@ namespace cupcfd
 			#ifdef DEBUG
 				// Error Check 1: Is the send buffer a suitable size?
 				if(nSendBuffer < (mpComm.size * chunkSize)) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				// Error Check 2: Is the recv buffer a suitable size?
 				if(nRecvBuffer < (mpComm.size * chunkSize)) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				// Error Check 3: Comm Size is at least 1
 				if (mpComm.size <= 1) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 			#endif
 
@@ -62,13 +62,13 @@ namespace cupcfd
 				// Error Checks
 				// Error Check 1: Communicator is at least of size 1
 				if (mpComm.size <= 1) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 				if (nSendCounts != mpComm.size) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				if (nRecvCounts != mpComm.size) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Error Check 2: Send Buffer is of a suitable size
@@ -77,7 +77,7 @@ namespace cupcfd
 					nSendActual += sendCounts[i];
 				}
 				if (nSendActual != nSendBuffer) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Error Check 3: Recv Buffer is of a suitable size
@@ -86,7 +86,7 @@ namespace cupcfd
 					nRecvActual += recvCounts[i];
 				}
 				if (nRecvActual != nRecvBuffer) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 			#endif
 
@@ -110,48 +110,48 @@ namespace cupcfd
 				// Error Checks
 				// Error Check 1: Communicator is at least of size 1
 				if (mpComm.size <= 1) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 				if (nSendCounts != mpComm.size) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				if (nRecvCounts != mpComm.size) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Error Check 2: Send Buffer is of a suitable size
 				if (nSendCounts != nSDispls) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				int nSendActual = 0;
 				for (int i=0; i<mpComm.size; i++) {
 					nSendActual += sendCounts[i];
 				}
 				if (nSendActual != nSendBuffer) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				for (int i=0; i<mpComm.size-1; i++) {
 					int relativeDisp = sDispls[i+1] - sDispls[i];
 					if (relativeDisp != sendCounts[i]) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				}
 
 				// Error Check 3: Recv Buffer is of a suitable size
 				if (nRecvCounts != nRDispls) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				int nRecvActual = 0;
 				for (int i=0; i<mpComm.size; i++) {
 					nRecvActual += recvCounts[i];
 				}
 				if (nRecvActual != nRecvBuffer) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				for (int i=0; i<mpComm.size-1; i++) {
 					int relativeDisp = rDispls[i+1] - rDispls[i];
 					if (relativeDisp != recvCounts[i]) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				}
 			#endif

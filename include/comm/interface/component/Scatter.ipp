@@ -33,14 +33,13 @@ namespace cupcfd
 			
 			// ToDo: Error Checks
 			if (nEleBSend != chunkSize*mpComm.size) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 			}
 
 			// Since this function uses a fixed chunk size, we can opt for Scatter over ScatterV.
 			status = cupcfd::comm::mpi::ScatterMPI(bSend, chunkSize, bRecv, nEleBRecv, sProcess, mpComm.comm);
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -54,9 +53,8 @@ namespace cupcfd
 			// ToDo: Error Checks
 
 			status = cupcfd::comm::mpi::ScatterVMPI(bSend, nEleBSend, bRecv, nEleBRecv, chunkSizes, nEleChunkSizes, sProcess, mpComm.comm);
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -118,9 +116,8 @@ namespace cupcfd
 			//     Note: some of these pointers will be null for non-root processes, but this should be ok, since only root
 			//     needs them.
 			status = Scatter(sendCount, mpComm.size, nEleBRecv, 1, 1, mpComm, sProcess);
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			// (3) Now that each process knows their chunk size, we can allocate space for the recv buffer.
 			*bRecv = (T *) malloc(sizeof(T) * *nEleBRecv);
@@ -129,9 +126,8 @@ namespace cupcfd
 			//     We must scatter the grouped/sorted versions of the data buffer, and use the sendCount array that applies for all processes.
 			//     Again some of these may be null pointers for non-root processes
 			status = Scatter(bSendCpy, nEleBSend, *bRecv, *nEleBRecv, sendCount, mpComm.size, mpComm, sProcess);
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			// (5) Cleanup. Note we do not free the receive buffer here, the pointer to it is passed back as part of this function since
 			//     it contains the result.

@@ -50,7 +50,7 @@ namespace cupcfd
 			CHECK_ERROR_CODE(status)
 
 			if(!exists) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 			*idx = this->nodeToIDX[node];
 			return cupcfd::error::E_SUCCESS;
@@ -60,7 +60,7 @@ namespace cupcfd
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getLocalIndexNode(I idx, T * node) {
 			// Error Checking - Check Index is valid by ensuring it is within the node count
 			if(idx < 0 || idx >= nNodes) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ADJACENCY_LIST_INVALID_INDEX;
+				return cupcfd::error::E_ADJACENCY_LIST_INVALID_INDEX;
 			}
 
 			*node = this->IDXToNode[idx];
@@ -85,7 +85,7 @@ namespace cupcfd
 
 			if(nNodes < nodeCount) {
 				// The destination array does not have elements to hold all of the node data
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Begin the copy - since we are retrieving from a map 
@@ -119,11 +119,11 @@ namespace cupcfd
 
 			// Error Check - Are the results arrays sufficiently large?
 			if(nNodes1 < nEdges) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			if(nNodes2 < nEdges) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Get a copy of the nodes

@@ -50,73 +50,64 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			void MeshSourceFileConfigJSON<I,T>::operator=(MeshSourceFileConfigJSON<I,T>& source)
-			{
+			void MeshSourceFileConfigJSON<I,T>::operator=(MeshSourceFileConfigJSON<I,T>& source) {
 				this->topLevel = source.topLevel;
 				this->configData = source.configData;
 			}
 
 			template <class I, class T>
-			MeshSourceFileConfigJSON<I,T> * MeshSourceFileConfigJSON<I,T>::clone()
-			{
+			MeshSourceFileConfigJSON<I,T> * MeshSourceFileConfigJSON<I,T>::clone() {
 				return new MeshSourceFileConfigJSON<I,T>(*this);
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFileFormat(MeshFileFormat * fileFormat)
-			{
+			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFileFormat(MeshFileFormat * fileFormat) {
 				const Json::Value dataSourceType = this->configData["FileFormat"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else if(dataSourceType == "HDF5")
-				{
+				else if(dataSourceType == "HDF5") {
 					*fileFormat = MESH_FILE_FORMAT_HDF5;
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFilePath(std::string& sourceFilePath)
-			{
+			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::getFilePath(std::string& sourceFilePath) {
 				const Json::Value dataSourceType = this->configData["FilePath"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					sourceFilePath = dataSourceType.asString();
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig)
-			{
+			cupcfd::error::eCodes MeshSourceFileConfigJSON<I,T>::buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig) {
 				cupcfd::error::eCodes status;
 
 				MeshFileFormat fileFormat;
 				std::string sourceFilePath;
 
 				status = this->getFileFormat(&fileFormat);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
 				status = this->getFilePath(sourceFilePath);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 

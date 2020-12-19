@@ -24,8 +24,7 @@ namespace cupcfd
 		namespace mpi
 		{
 			template <class T>
-			cupcfd::error::eCodes BroadcastMPI(T * buf, int nEle, int sourcePID, MPI_Comm comm)
-			{
+			cupcfd::error::eCodes BroadcastMPI(T * buf, int nEle, int sourcePID, MPI_Comm comm) {
 				T dummy;
 				MPI_Datatype dType;
 				cupcfd::error::eCodes status;
@@ -33,16 +32,13 @@ namespace cupcfd
 				// Get the datatype based on the type of the dummy variable.
 				// If a CustomMPIType, this could be unregistered.
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				// MPI Broadcast
 				int err = MPI_Bcast(buf, nEle, dType, sourcePID, comm);
-				if(err != MPI_SUCCESS)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+				if(err != MPI_SUCCESS) {
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Reached end without error

@@ -44,8 +44,7 @@ namespace cupcfd
 
 	/*
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getConnectivityGraph(cupcfd::adjacency_list::AdjacencyListCSR<I, I>& graph)
-			{
+			cupcfd::error::eCodes MeshSource<I,T,L>::getConnectivityGraph(cupcfd::adjacency_list::AdjacencyListCSR<I, I>& graph) {
 				cupcfd::error::eCodes status;
 
 				// We use an empty adjacency list vector instead of the CSR version to build,
@@ -95,14 +94,13 @@ namespace cupcfd
 
 				// Add Nodes
 				I base = 1;
-				for(I i = 0; i < cellCount; i++)
-				{
+				for(I i = 0; i < cellCount; i++) {
 					I label = i;
 
 					status = buildGraph.addNode(label);
 
-					if(status != cupcfd::error::E_SUCCESS)
-					{
+					CHECK_ERROR_CODE(status)
+					if(status != cupcfd::error::E_SUCCESS) {
 						// Failed to add a node
 						return status;
 					}
@@ -110,34 +108,28 @@ namespace cupcfd
 
 				// Add Edges
 
-				for(I i = 0; i < cellCount; i++)
-				{
+				for(I i = 0; i < cellCount; i++) {
 					I cellLabel = i;
 
 					I ptr = pos[cellLabel];
 					I edgeCount = pos[cellLabel + 1] - pos[cellLabel];
 
-					for(I j = ptr; j < ptr + edgeCount; j++)
-					{
+					for(I j = ptr; j < ptr + edgeCount; j++) {
 						I faceLabel = data[j];
 
 						// Check that it is an face between two cells
-						if(!(isBoundary[faceLabel]))
-						{
-							if(faceCell1[faceLabel] == cellLabel)
-							{
+						if(!(isBoundary[faceLabel])) {
+							if(faceCell1[faceLabel] == cellLabel) {
 								// Current cell is cell1: Direction is cell1->cell2
 								status = buildGraph.addEdge(cellLabel, faceCell2[faceLabel]);
 							}
-							else if(faceCell2[faceLabel] == cellLabel)
-							{
+							else if(faceCell2[faceLabel] == cellLabel) {
 								// Current cell is cell1: Direction is cell2->cell1
 								status = buildGraph.addEdge(cellLabel, faceCell1[faceLabel]);
 							}
-							else
-							{
+							else {
 								// Mismatch between cell->face and face->cell - error
-								DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+								return cupcfd::error::E_ERROR;
 							}
 						}
 					}
@@ -159,8 +151,7 @@ namespace cupcfd
 			template <class I, class T, class L>
 			cupcfd::error::eCodes MeshSource<I,T,L>::partitionMeshSource(cupcfd::partitioner::Partitioner<I,I>& partitionEngine,
 																		cupcfd::mpi::Communicator& workComm,
-																		cupcfd::adjacency_list::DistributedAdjacencyList<I, I>& resultGraph)
-			{
+																		cupcfd::adjacency_list::DistributedAdjacencyList<I, I>& resultGraph) {
 				cupcfd::error::eCodes status;
 
 				// Note: to avoid blocking behaviour, all ranks of either the partitioner comm or resultGraph comm must call this method,
@@ -184,32 +175,27 @@ namespace cupcfd
 				I nLCells;
 
 				// Compute the local cell count, distribute a remainder amongst the lower ranks
-				if(workComm.rank < r)
-				{
+				if(workComm.rank < r) {
 					nLCells = ((I) nGCells) / ((I) resultGraph.comm.size) + 1;
 				}
-				else
-				{
+				else {
 					nLCells = ((I) nGCells) / ((I) resultGraph.comm.size);
 				}
 
 				I base;
 				I * naiveLocalCells = (I *) malloc(sizeof(I) * nLCells);
 
-				if(workComm.rank < r)
-				{
+				if(workComm.rank < r) {
 					base = (((I) nGCells) / ((I) resultGraph.comm.size) + 1) * resultGraph.comm.rank;
 				}
-				else
-				{
+				else {
 					base = ((((I) nGCells) / ((I) resultGraph.comm.size) + 1) * r) +
 							   (((I) nGCells) / ((I) resultGraph.comm.size) * (resultGraph.comm.rank - r));
 				}
 
 				// Assign local nodes naively - each rank get a range from base -> base+nLCells
 				// where base is assigned such that e.g. [0->9|10->19...] to divide into segments
-				for(I i = 0; i < nLCells; i++)
-				{
+				for(I i = 0; i < nLCells; i++) {
 					naiveLocalCells[i] = base + i;
 				}
 

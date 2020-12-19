@@ -97,7 +97,7 @@ namespace cupcfd
 
 						#ifdef DEBUG
 							if (ip >= nPhiCell || in >= nPhiCell) {
-								DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+								return cupcfd::error::E_INVALID_INDEX;
 							}
 						#endif
 						phiFace = (phiCell[in] * facn) + (phiCell[ip] * facp);
@@ -115,7 +115,7 @@ namespace cupcfd
 						ib = mesh.getFaceBoundaryID(i);
 						#ifdef DEBUG
 							if (ib >= nPhiBoundary) {
-								DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+								return cupcfd::error::E_INVALID_INDEX;
 							}
 						#endif
 						phiFace = phiBoundary[ib];

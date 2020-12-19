@@ -28,8 +28,7 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes AllToAllMPI(T * sendbuf, int sendcount,
 												  T * recvbuf, int recvcount,
-												  MPI_Comm comm)
-			{
+												  MPI_Comm comm) {
 				// MPI Error Status
 				int err;
 				cupcfd::error::eCodes status;
@@ -41,10 +40,8 @@ namespace cupcfd
 				// Retrieve the MPI Datatype for T
 				MPI_Datatype dType;
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				// MPI Call
 				err = MPI_Alltoall(sendbuf, sendcount, dType,
@@ -52,9 +49,8 @@ namespace cupcfd
 								   comm);
 
 				// Error Status Check
-				if(err != MPI_SUCCESS)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+				if(err != MPI_SUCCESS) {
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -63,16 +59,14 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts,
 												   T * recvbuf, int *recvcounts,
-												   MPI_Comm comm)
-			{
+												   MPI_Comm comm) {
 				int err;
 				int commSize;
 				cupcfd::error::eCodes status;
 
 				err = MPI_Comm_size(comm, &commSize);
-				if(err != MPI_SUCCESS)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+				if(err != MPI_SUCCESS) {
+					return cupcfd::error::E_MPI_ERR;
 				}
 				
 				// Compute Displacements from send/recv counts
@@ -82,8 +76,7 @@ namespace cupcfd
 				sdispls[0] = 0;
 				rdispls[0] = 0;
 
-				for(int i = 1; i < commSize; i++)
-				{
+				for(int i = 1; i < commSize; i++) {
 					sdispls[i] = sdispls[i-1] + sendcounts[i-1];
 					rdispls[i] = rdispls[i-1] + recvcounts[i-1];
 				}
@@ -91,11 +84,8 @@ namespace cupcfd
 				status = AllToAllVMPI(sendbuf, sendcounts, sdispls,
 								   recvbuf, recvcounts, rdispls,
 								   comm);
-								   
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)			   
+				if(status != cupcfd::error::E_SUCCESS) return status;
 				
 				// Cleanup
 				free(sdispls);
@@ -107,8 +97,7 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts, int *sdispls,
 												   T * recvbuf, int *recvcounts, int *rdispls,
-												   MPI_Comm comm)
-			{
+												   MPI_Comm comm) {
 				int err;
 				T dummy;
 				MPI_Datatype dType;
@@ -116,18 +105,15 @@ namespace cupcfd
 				
 				// Retrieve the MPI Datatype for T
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				err = MPI_Alltoallv(sendbuf, sendcounts, sdispls, dType,
 							  recvbuf, recvcounts, rdispls, dType,
 							  comm);
 
-				if(err != MPI_SUCCESS)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+				if(err != MPI_SUCCESS) {
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;

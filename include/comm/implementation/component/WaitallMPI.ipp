@@ -31,7 +31,7 @@ namespace cupcfd
 				err = MPI_Waitall(nRequests, requests, statuses);
 				if(err != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 		
 				free(statuses);

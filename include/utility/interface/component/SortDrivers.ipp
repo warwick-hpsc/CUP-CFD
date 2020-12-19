@@ -75,7 +75,7 @@ namespace cupcfd
 				// Size Error Check
 				if(nEle < 0)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
 				// ToDo: Could use inbuilt C++ is_sorted method instead

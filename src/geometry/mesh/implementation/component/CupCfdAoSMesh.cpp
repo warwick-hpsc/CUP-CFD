@@ -60,12 +60,12 @@ namespace cupcfd
 						bool isLocal) {
 				// Can only add if not finalized
 				if(this->finalized) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_FINALIZED;
+					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Cell bID does not already exist
 				if(this->cellBuildIDToLocalID.find(cellLabel) != this->cellBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_EXISTING_CELL;
+					return cupcfd::error::E_MESH_EXISTING_CELL;
 				}
 
 				cupcfd::error::eCodes status;
@@ -140,12 +140,12 @@ namespace cupcfd
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
 				// Can only add if not finalized
 				if(this->finalized == true) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_FINALIZED;
+					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check the vertex doesn't already exist
 				if(this->vertexBuildIDToLocalID.find(vertexLabel) != this->vertexBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_EXISTING_VERTEX;
+					return cupcfd::error::E_MESH_EXISTING_VERTEX;
 				}
 
 				// Vertex Object
@@ -188,12 +188,12 @@ namespace cupcfd
 																		  std::string& regionName) {
 				// Can only add if not finalized
 				if(this->finalized == true) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_FINALIZED;
+					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Region bID does not already exist
 				if(this->regionBuildIDToLocalID.find(regionLabel) != this->regionBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_EXISTING_REGION;
+					return cupcfd::error::E_MESH_EXISTING_REGION;
 				}
 
 				// Region Object
@@ -251,12 +251,12 @@ namespace cupcfd
 					T distance) {
 				// Can only add if not finalized
 				if(this->finalized == true) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_FINALIZED;
+					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Boundary bID does not already exist
 				if(this->boundaryBuildIDToLocalID.find(boundaryLabel) != this->boundaryBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_EXISTING_BOUNDARY;
+					return cupcfd::error::E_MESH_EXISTING_BOUNDARY;
 				}
 
 				// Create the object
@@ -269,14 +269,14 @@ namespace cupcfd
 				// Check the vertex count is valid
 				// Currently, we only handle 3-4 vertex faces/boundaries
 				if(nVertexLabels < 3 || nVertexLabels > 4) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
+					return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
 				}
 
 				// Copy the vertexIDs, if they exist
 				for(I i = 0; i < nVertexLabels; i++) {
 					// Check the vertex exists
 					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end()) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
+						return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
 					}
 
 					// Point Boundary at Vertex Local ID
@@ -299,7 +299,7 @@ namespace cupcfd
 
 				// Check the Region ID Exists
 				if(this->regionBuildIDToLocalID.find(regionLabel) == this->regionBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_REGION_LABEL;
+					return cupcfd::error::E_MESH_INVALID_REGION_LABEL;
 				}
 
 				// Set the internal boundary region ID to point at the local region ID
@@ -349,12 +349,12 @@ namespace cupcfd
 
 				// Can only add if not finalized
 				if(this->finalized == true) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_FINALIZED;
+					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Face bID does not already exist
 				if(this->faceBuildIDToLocalID.find(faceLabel) != this->faceBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_EXISTING_FACE;
+					return cupcfd::error::E_MESH_EXISTING_FACE;
 				}
 
 				// Create Object
@@ -362,7 +362,7 @@ namespace cupcfd
 
 				// Check Cell 1 exists
 				if(this->cellBuildIDToLocalID.find(cell1Label) == this->cellBuildIDToLocalID.end()) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
+					return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
 				}
 
 				// Point the face at the (current) local Cell ID for the given Build Cell ID
@@ -372,7 +372,7 @@ namespace cupcfd
 				if(isBoundary) {
 					// Check the Boundary ID exists
 					if(this->boundaryBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->boundaryBuildIDToLocalID.end()) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_BOUNDARY_LABEL;
+						return cupcfd::error::E_MESH_INVALID_BOUNDARY_LABEL;
 					}
 
 					// Set the boundary ID to point at the local ID of the provided build boundary ID
@@ -384,7 +384,7 @@ namespace cupcfd
 				else {
 					// Check the Cell ID exists
 					if(this->cellBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->cellBuildIDToLocalID.end()) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
+						return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
 					}
 
 					// Check this is not a face between two ghost cells
@@ -398,7 +398,7 @@ namespace cupcfd
 						CHECK_ERROR_CODE(status)
 
 						if(foundGhost1 && foundGhost2) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_FACE;
+							return cupcfd::error::E_MESH_INVALID_FACE;
 						}
 					}
 
@@ -407,13 +407,13 @@ namespace cupcfd
 					status = this->cellConnGraph->existsEdge(cell1Label, cell2OrBoundaryLabel, &found);
 					CHECK_ERROR_CODE(status)
 					if(found) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
+						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
 
 					status = this->cellConnGraph->existsEdge(cell2OrBoundaryLabel, cell1Label, &found);
 					CHECK_ERROR_CODE(status)
 					if(found) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
+						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
 
 					// Set the cell 2 ID to point at the local ID of the provided build Cell 2 ID
@@ -440,14 +440,14 @@ namespace cupcfd
 				// Check the vertex count is valid
 				// Currently, we only handle 3-4 vertex faces/boundaries
 				if(nVertexLabels < 3 || nVertexLabels > 4) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
+					return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
 				}
 
 				// Copy the vertexIDs, if they exist
 				for(I i = 0; i < nVertexLabels; i++) {
 					// Check the vertex exists
 					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end()) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
+						return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
 					}
 
 					// Point Boundary at Vertex Local ID
@@ -846,7 +846,7 @@ namespace cupcfd
 				status = this->cellConnGraph->finalize();
 				CHECK_ERROR_CODE(status)
 				if(status != cupcfd::error::E_SUCCESS) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+					return cupcfd::error::E_ERROR;
 				}
 
 				// Check that every boundary is mapped to a face
@@ -854,7 +854,7 @@ namespace cupcfd
 				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->boundaries.size());
 				for(I i = 0; i < iLimit; i++) {
 					if(this->boundaries[i].faceID == -1) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_MESH_UNMAPPED_BOUNDARY_FACE;
+						return cupcfd::error::E_MESH_UNMAPPED_BOUNDARY_FACE;
 					}
 				}
 

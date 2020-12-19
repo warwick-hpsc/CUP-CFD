@@ -158,7 +158,7 @@ namespace cupcfd
 				// Error Check - Only Register if currently unregistered
 				if(this->isRegistered())
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
+					return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 				}
 
 				int mpiErr;
@@ -185,32 +185,32 @@ namespace cupcfd
 
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecType);
 
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class EuclideanVector<T,N>), &vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				// Store statically so the get method can retrieve it later
@@ -220,7 +220,7 @@ namespace cupcfd
 				mpiErr = MPI_Type_free(&vecType);
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				EuclideanVector<T,N>::mpiDataTypeReg = true;
@@ -236,13 +236,13 @@ namespace cupcfd
 				// Error Check - Only Deregister if currently registered
 				if(!this->isRegistered())
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 
 				mpiErr = MPI_Type_free(&(EuclideanVector<T,N>::mpiType));
 				if(mpiErr != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				EuclideanVector<T,N>::mpiDataTypeReg = false;

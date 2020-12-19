@@ -25,7 +25,7 @@ namespace cupcfd
 				int err = MPI_Barrier(comm);
 				if(err != MPI_SUCCESS)
 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				return cupcfd::error::E_SUCCESS;

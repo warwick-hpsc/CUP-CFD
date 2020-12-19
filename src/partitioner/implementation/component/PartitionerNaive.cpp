@@ -67,12 +67,12 @@ namespace cupcfd
 
 			// Error Check: Check that nParts is set
 			if(this->getNParts() == 0) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
+				return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 			}
 
 			// Error Check: Ensure that there is data in the node store.
 			if(this->nodes == nullptr) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
+				return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
 			}
 
 			// AllGather - Get the number of nodes on each rank
@@ -161,9 +161,7 @@ namespace cupcfd
 			// Set the nodes in the partitioner
 			status = this->setNodeStorage(nodes, nNodes);
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			// Cleanup temporary store
 			free(nodes);

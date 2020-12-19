@@ -57,71 +57,62 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			void MeshConfigSourceJSON<I,T,L>::operator=(MeshConfigSourceJSON<I,T,L>& source)
-			{
+			void MeshConfigSourceJSON<I,T,L>::operator=(MeshConfigSourceJSON<I,T,L>& source) {
 				this->topLevel = source.topLevel;
 				this->configData = source.configData;
 				this->configFilePath = source.configFilePath;
 			}
 
 			template <class I, class T, class L>
-			MeshConfigSourceJSON<I,T,L> * MeshConfigSourceJSON<I,T,L>::clone()
-			{
+			MeshConfigSourceJSON<I,T,L> * MeshConfigSourceJSON<I,T,L>::clone() {
 				return new MeshConfigSourceJSON<I,T,L>(*this);
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::getPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I> ** partConfig)
-			{
+			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::getPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I> ** partConfig) {
 				cupcfd::error::eCodes status;
 
 				// Determine and build the correct polymorphic PartitionerConfig Type
 				// Search for one of the potential partitioner options under the "Partitioner" field
 
-				if(this->configData.isMember("Partitioner"))
-				{
+				if(this->configData.isMember("Partitioner")) {
 					// Partitioner field found, check which (if any) partitioner is specified
 
 					Json::Value partConfigData = this->configData;
 
-					if(partConfigData["Partitioner"].isMember("NaivePartitioner"))
-					{
+					if(partConfigData["Partitioner"].isMember("NaivePartitioner")) {
 						cupcfd::partitioner::PartitionerNaiveConfigSourceJSON<I,I> naiveConfigSource(partConfigData["Partitioner"]["NaivePartitioner"]);
 						status = naiveConfigSource.buildPartitionerConfig(partConfig);
 
 						// Return error or success depending on whether the object was built (e.g. missing options causes failure)
 						return status;
 					}
-					else if(partConfigData["Partitioner"].isMember("MetisPartitioner"))
-					{
+					else if(partConfigData["Partitioner"].isMember("MetisPartitioner")) {
 						cupcfd::partitioner::PartitionerMetisConfigSourceJSON<I,I> metisConfigSource(partConfigData["Partitioner"]["MetisPartitioner"]);
 						status = metisConfigSource.buildPartitionerConfig(partConfig);
 
 						// Return error or success depending on whether the object was built (e.g. missing options causes failure)
 						return status;
 					}
-					else if(partConfigData["Partitioner"].isMember("ParmetisPartitioner"))
-					{
+					else if(partConfigData["Partitioner"].isMember("ParmetisPartitioner")) {
 						cupcfd::partitioner::PartitionerParmetisConfigSourceJSON<I,I> parmetisConfigSource(partConfigData["Partitioner"]["ParmetisPartitioner"]);
 						status = parmetisConfigSource.buildPartitionerConfig(partConfig);
 
 						// Return error or success depending on whether the object was built (e.g. missing options causes failure)
 						return status;
 					}
-					else
-					{
+					else {
 						// No expected Partitioner Field found
-						DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+						return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 					}
 				}
 
 				// Partitioner Field not found
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			template <class I, class T, class L>
-			MeshSourceConfig<I,T,L> * MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig()
-			{
+			MeshSourceConfig<I,T,L> * MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig() {
 				// Determine and build the correct MeshSourceConfig type
 				// MeshSource Config stored under "MeshSource" in the Mesh JSON
 
@@ -137,15 +128,13 @@ namespace cupcfd
 
 				// Test Mesh Source from a File
 				status = source1Config.buildMeshSourceConfig(&sourceConfig);
-				if(status == cupcfd::error::E_SUCCESS)
-				{
+				if(status == cupcfd::error::E_SUCCESS) {
 					return sourceConfig;
 				}
 
 				// Test Mesh Source from Structured Generation
 				status = source2Config.buildMeshSourceConfig(&sourceConfig);
-				if(status == cupcfd::error::E_SUCCESS)
-				{
+				if(status == cupcfd::error::E_SUCCESS) {
 					return sourceConfig;
 				}
 
@@ -155,18 +144,15 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::buildMeshConfig(MeshConfig<I,T,L> ** config)
-			{
+			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::buildMeshConfig(MeshConfig<I,T,L> ** config) {
 				cupcfd::error::eCodes status;
 
 				// Get the partitioner config
 				cupcfd::partitioner::PartitionerConfig<I,I> * partConfig;
 
 				status = this->getPartitionerConfig(&partConfig);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				MeshSourceConfig<I,T,L> * sourceConfig = this->getMeshSourceConfig();
 

@@ -84,9 +84,6 @@ namespace cupcfd
 			// Convert the distributed graph to a serial graph on the root process
 			status = sourceGraph.buildSerialAdjacencyList(rootGraph, this->workComm.root_rank);
 			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::runtime_error("PartitionerMetis: CONSTRUCTOR: buildSerialAdjacencyList() failed"));
-			}
 
 			// Setup the internal data structures on the root process
 			// This includes:
@@ -219,7 +216,7 @@ namespace cupcfd
 			// }
 			// if(noResults)
 			// {
-			// 	DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+			// 	return cupcfd::error::E_PARTITIONER_NO_RESULTS;
 			// }
 
 
@@ -244,11 +241,11 @@ namespace cupcfd
 				// === Input Error Checks ===
 				// Error Check 1 - Work arrays all exist
 				if(this->xadj == nullptr) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
+					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
 				if(this->adjncy == nullptr) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
+					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
 				// Error Check 2 - Nodes array exists
@@ -256,7 +253,7 @@ namespace cupcfd
 				// Error Check 3 - Number of parts is acceptable value
 				if(this->nParts < 1) {
 					// Error - Can't partition into zero or fewer parts (will treat 1 as a straight copy of input)
-					DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
+					return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 				}
 
 				// Error Check 4 - Check Ncon is acceptable value
@@ -298,7 +295,7 @@ namespace cupcfd
 											  &(this->objval),
 											  this->result);
 				if (ret != METIS_OK) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_METIS_ERROR;
+					return cupcfd::error::E_METIS_ERROR;
 				}
 			}
 
@@ -325,7 +322,7 @@ namespace cupcfd
 			// return cupcfd::error::E_SUCCESS;
 
 			// Above code is nonense.
-			DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_IMPLEMENTED;
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 
 		template <class I, class T>
@@ -335,9 +332,7 @@ namespace cupcfd
 			// Base class reset
 			status = this->PartitionerInterface<I,T>::reset();
 			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if (status != cupcfd::error::E_SUCCESS) return status;
 
 			// Reset Members
 			this->nCon = 0;

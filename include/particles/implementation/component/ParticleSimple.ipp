@@ -30,8 +30,7 @@ namespace cupcfd
 		// === Concrete Methods ===
 		
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::operator=(const ParticleSimple<I,T>& source)
-		{
+		inline void ParticleSimple<I,T>::operator=(const ParticleSimple<I,T>& source) {
 			this->pos = source.pos;
 			this->inflightPos = source.inflightPos;
 			this->velocity = source.velocity;
@@ -54,64 +53,53 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::setAcceleration(cupcfd::geometry::euclidean::EuclideanVector<T,3>& acceleration)
-		{
+		inline void ParticleSimple<I,T>::setAcceleration(cupcfd::geometry::euclidean::EuclideanVector<T,3>& acceleration) {
 			this->acceleration = acceleration;
 		}
 
 		template <class I, class T>
-		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> ParticleSimple<I,T>::getAcceleration()
-		{
+		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> ParticleSimple<I,T>::getAcceleration() {
 			return this->acceleration;
 		}
 
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::setJerk(cupcfd::geometry::euclidean::EuclideanVector<T,3>& jerk)
-		{
+		inline void ParticleSimple<I,T>::setJerk(cupcfd::geometry::euclidean::EuclideanVector<T,3>& jerk) {
 			this->jerk = jerk;
 		}
 
 		template <class I, class T>
-		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> ParticleSimple<I,T>::getJerk()
-		{
+		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> ParticleSimple<I,T>::getJerk() {
 			return this->jerk;
 		}
 		
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::setDecayLevel(T decayLevel)
-		{
+		inline void ParticleSimple<I,T>::setDecayLevel(T decayLevel) {
 				this->decayLevel = decayLevel;
 		}
 		
 		template <class I, class T>
-		inline T ParticleSimple<I,T>::getDecayLevel()
-		{
+		inline T ParticleSimple<I,T>::getDecayLevel() {
 			return this->decayLevel;
 		}
 		
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::setDecayRate(T decayRate)
-		{
+		inline void ParticleSimple<I,T>::setDecayRate(T decayRate) {
 			this->decayRate = decayRate;
 		}
 		
 		template <class I, class T>
-		inline T ParticleSimple<I,T>::getDecayRate()
-		{
+		inline T ParticleSimple<I,T>::getDecayRate() {
 			return this->decayRate;
 		}
 		
 		template <class I, class T>
-		inline void ParticleSimple<I,T>::setInactive()
-		{
+		inline void ParticleSimple<I,T>::setInactive() {
 			this->decayLevel = T(0);
 		}
 		
 		template <class I, class T>
-		inline bool ParticleSimple<I,T>::getInactive() const
-		{
-			if(this->decayLevel > T(0))
-			{
+		inline bool ParticleSimple<I,T>::getInactive() const {
+			if(this->decayLevel > T(0)) {
 				return false;
 			}
 			
@@ -123,8 +111,7 @@ namespace cupcfd
 		cupcfd::error::eCodes ParticleSimple<I,T>::updateVelocityAtomic(
 			cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh __attribute__((unused)), 
 			I cellLocalID __attribute__((unused)), 
-			T dt)
-		{
+			T dt) {
 			// This particular particle is primarily for testing particle transport
 			// It doesn't really acknowledge the impact of mesh cells/state or other particles.
 			
@@ -142,15 +129,13 @@ namespace cupcfd
 		cupcfd::error::eCodes ParticleSimple<I,T>::updateStateAtomic(
 			cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh __attribute__((unused)), 
 			I cellLocalID __attribute__((unused)), 
-			T dt __attribute__((unused)))
-		{
+			T dt __attribute__((unused))) {
 			return cupcfd::error::E_SUCCESS;
 		}														    
 
 		template <class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I faceLocalID)
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I faceLocalID) {
 			cupcfd::error::eCodes status;
 
 			// If we are sitting at the non-boundary face, all that remains is to set the correct new cell ID and/or identify if we are going off rank
@@ -163,21 +148,17 @@ namespace cupcfd
 			// Get the Global IDs
 			I node1, node2;
 			status = mesh.cellConnGraph->connGraph.getLocalIndexNode(cell1LocalID, &node1);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getLocalIndexNode() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			status = mesh.cellConnGraph->connGraph.getLocalIndexNode(cell2LocalID, &node2);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getLocalIndexNode() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 					
 			I cell1GlobalID = mesh.cellConnGraph->nodeToGlobal[node1];
 			I cell2GlobalID = mesh.cellConnGraph->nodeToGlobal[node2];
 			if ((this->cellGlobalID != cell1GlobalID) && (this->cellGlobalID != cell2GlobalID)) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " between cells " << cell1GlobalID << " -> " << cell2GlobalID << ", BUT it is not in either, it is in cell " << this->cellGlobalID << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 			
 			I fromCellLocalID;
@@ -190,15 +171,15 @@ namespace cupcfd
 				toCellGlobalID = cell1GlobalID;
 			} else {
 				std::cout << "ERROR: cellGlobalID=" << this->cellGlobalID << " of particle " << this->particleID << " does not match with either cell that is either side of requested face update" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
             // Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
 			bool localFaceAccessible = false;
 			I nFaces = 0;
 			status = mesh.getCellNFaces(fromCellLocalID, &nFaces);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS || nFaces==0) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
 				return status;
 			}
 			for (I i=0; i<nFaces; i++) {
@@ -210,28 +191,23 @@ namespace cupcfd
 			}
 			if (!localFaceAccessible) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " through inaccessible face" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			status = this->safelySetCellGlobalID(toCellGlobalID, faceLocalID);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "Call to safelySetCellGlobalID() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 
 			// Update the Target Rank if we are crossing into a ghost cell
 			
 			T node = mesh.cellConnGraph->globalToNode[this->cellGlobalID];
 			bool isGhost;
 			status = mesh.cellConnGraph->existsGhostNode(node, &isGhost);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getLocalIndexNode() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			
 			// Check it exists as a ghost node
-			if(isGhost)
-			{
+			if(isGhost) {
 				// Update rank to be the rank that owns the ghost node
 				this->lastRank = this->rank;
 				this->rank = mesh.cellConnGraph->nodeOwner[node];
@@ -242,8 +218,7 @@ namespace cupcfd
 		
 		template <class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			cupcfd::error::eCodes status;
 			
 			// Treat walls as reflective surfaces
@@ -258,17 +233,14 @@ namespace cupcfd
 			
 			// If cell1ID does not match the cell we traversed, then we are in cell 2 and the normal is facing into the cell
 			// Make sure it faces inwards
-			if(cell1ID == cellLocalID)
-			{
+			if(cell1ID == cellLocalID) {
 				normal = T(-1) * normal;
 			}
 			
 			// Normalise it
 			status = normal.normalise();
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: normalise() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 				
 			// (2) Mirror the velocity
 			this->velocity = this->velocity - (2 * (this->velocity.dotProduct(normal)) * normal);
@@ -291,35 +263,30 @@ namespace cupcfd
 																		  
 		template <class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			// ToDo: This isn't correct behaviour typically, but for now we will just treat these the same as walls
 			return this->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
 		}																		  
 																		  
 		template <class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			// ToDo: This isn't correct behaviour typically, but for now we will just treat these the same as walls 
 			return this->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
 		}
 		
 		template <class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			// ToDo: This isn't correct behaviour typically, but for now we will just treat these the same as walls
 			return this->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID); 
 		}	
 		
 		
 		template <class I, class T>
-		inline cupcfd::error::eCodes ParticleSimple<I,T>::getMPIType(MPI_Datatype * dType)
-		{
-			if(!(this->isRegistered()))
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+		inline cupcfd::error::eCodes ParticleSimple<I,T>::getMPIType(MPI_Datatype * dType) {
+			if(!(this->isRegistered())) {
+				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 			}
 		
 			*dType = ParticleSimple<I,T>::mpiType;
@@ -328,26 +295,22 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		inline MPI_Datatype ParticleSimple<I,T>::getMPIType()
-		{
+		inline MPI_Datatype ParticleSimple<I,T>::getMPIType() {
 			return ParticleSimple<I,T>::mpiType;
 		}
 		
 		template <class I, class T>
-		inline bool ParticleSimple<I,T>::isRegistered()
-		{
+		inline bool ParticleSimple<I,T>::isRegistered() {
 			return ParticleSimple<I,T>::mpiDataTypeReg;
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleSimple<I,T>::registerMPIType()
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::registerMPIType() {
 			cupcfd::error::eCodes status;
 			
 			// Error Check - Only Register if currently unregistered
-			if(this->isRegistered())
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
+			if(this->isRegistered()) {
+				return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 			}
 
 			int mpiErr;
@@ -370,6 +333,7 @@ namespace cupcfd
 						
 			// Position
 			status = cupcfd::comm::mpi::getMPIType(this->pos, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
@@ -378,6 +342,7 @@ namespace cupcfd
 
 			// In-flight position
 			status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
@@ -386,6 +351,7 @@ namespace cupcfd
 			
 			// Velocity
 			status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
@@ -394,6 +360,7 @@ namespace cupcfd
 
 			// Acceleration
 			status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);
@@ -402,6 +369,7 @@ namespace cupcfd
 
 			// Jerk
 			status = cupcfd::comm::mpi::getMPIType(this->jerk, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);
@@ -410,6 +378,7 @@ namespace cupcfd
 			
 			// Particle ID
 			status = cupcfd::comm::mpi::getMPIType(this->particleID, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, particleID);
@@ -418,6 +387,7 @@ namespace cupcfd
 
 			// Cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->cellGlobalID, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
@@ -426,12 +396,14 @@ namespace cupcfd
 
 			// Last cell global ID
 			status = cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellGlobalID);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->lastCellGlobalID) - (char*)this );
 			idx++;
 			status = cupcfd::comm::mpi::getMPIType(this->lastLastCellGlobalID, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastLastCellGlobalID);
@@ -440,6 +412,7 @@ namespace cupcfd
 
 			// Rank
 			status = cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
@@ -447,6 +420,7 @@ namespace cupcfd
 			idx++;
 
 			status = cupcfd::comm::mpi::getMPIType(this->lastRank, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastRank);
@@ -455,6 +429,7 @@ namespace cupcfd
 			
 			// Travel dt
 			status = cupcfd::comm::mpi::getMPIType(this->travelDt, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);
@@ -463,6 +438,7 @@ namespace cupcfd
 
 			// Decay level
 			status = cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel;
@@ -471,6 +447,7 @@ namespace cupcfd
 
 			// Decay rate
 			status = cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) return status;
 			structTypes[idx] = componentType;
 			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);
@@ -479,7 +456,7 @@ namespace cupcfd
 			
 			if (idx > nb) {
 				std::cout << "ERROR: Added too many items to ParticleSimple MPI_type" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			MPI_Datatype vecType;
@@ -487,34 +464,29 @@ namespace cupcfd
 
 			mpiErr = MPI_Type_create_struct(nb, blocklengths, displ, structTypes, &vecType);
 
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecType);
 
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class ParticleSimple<I,T>), &vecTypeResized);
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			// Store statically so the get method can retrieve it later
@@ -522,9 +494,8 @@ namespace cupcfd
 
 			// Cleanup - Don't need the unresized type
 			mpiErr = MPI_Type_free(&vecType);
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			ParticleSimple<I,T>::mpiDataTypeReg = true;
@@ -533,20 +504,17 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleSimple<I,T>::deregisterMPIType()
-		{
+		cupcfd::error::eCodes ParticleSimple<I,T>::deregisterMPIType() {
 			int mpiErr;
 
 			// Error Check - Only Deregister if currently registered
-			if(!this->isRegistered())
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
+			if(!this->isRegistered()) {
+				return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 			}
 
 			mpiErr = MPI_Type_free(&(ParticleSimple<I,T>::mpiType));
-			if(mpiErr != MPI_SUCCESS)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+			if(mpiErr != MPI_SUCCESS) {
+				return cupcfd::error::E_MPI_ERR;
 			}
 
 			ParticleSimple<I,T>::mpiDataTypeReg = false;

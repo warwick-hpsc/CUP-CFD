@@ -156,7 +156,7 @@ namespace cupcfd
 				{
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)
-					DEBUGGABLE_ERROR; return cupcfd::error::E_EUC_VEC_PARALLEL;
+					return cupcfd::error::E_EUC_VEC_PARALLEL;
 				}
 
 				// Vector is not parallel, so we can compute the intersection point
@@ -238,7 +238,7 @@ namespace cupcfd
 				{
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)
-					DEBUGGABLE_ERROR; return cupcfd::error::E_EUC_VEC_PARALLEL;
+					return cupcfd::error::E_EUC_VEC_PARALLEL;
 				}
 
 				// Vector is not parallel, so we can compute the intersection point

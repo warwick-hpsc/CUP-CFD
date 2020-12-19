@@ -104,7 +104,7 @@ namespace cupcfd
 			else
 			{
 				// Error - arg is unsuitable for bool conversion
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
+				return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -126,7 +126,7 @@ namespace cupcfd
 			}
 			catch(std::invalid_argument e)
 			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
+				return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -148,7 +148,7 @@ namespace cupcfd
 			}
 			catch(std::invalid_argument e)
 			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
+				return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_TYPE;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -162,7 +162,7 @@ namespace cupcfd
 			{
 				// Error - Not Found
 				*result = "";
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CMDLINE_ERR_ARG_MISSING_FLAG;
+				return cupcfd::error::E_CMDLINE_ERR_ARG_MISSING_FLAG;
 			}
 
 			// Error Check: Does the flag have sufficient arguments for index arg
@@ -170,7 +170,7 @@ namespace cupcfd
 			if(arg >= size) {
 				// Error - arg value too high
 				*result = "";
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_ARG;
+				return cupcfd::error::E_CMDLINE_ERR_ARG_INVALID_ARG;
 			}
 
 			// Try to convert value

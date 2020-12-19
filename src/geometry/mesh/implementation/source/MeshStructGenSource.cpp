@@ -102,7 +102,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getCellLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Struct Gen uses zero-based index labels
@@ -120,7 +120,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Struct Gen uses zero-based index labels
@@ -153,7 +153,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getVertexLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Struct Gen uses zero-based index labels
@@ -171,7 +171,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Struct Gen uses zero-based index labels
@@ -190,7 +190,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getRegionLabels(I * labels, I nLabels, I * indexes, I nIndexes) {
 				if (nLabels != nIndexes) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Since we are using zero-based indexes, we will just assign the same label as the index
@@ -309,7 +309,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getCellCenter(euc::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels) {
 				if (nCellCenter != nCellLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Loop over each label
@@ -344,7 +344,7 @@ namespace cupcfd
 				// Error Checks: Array sizes need to be correct for CSR
 				// nCsrIndices = nCellLabels + 1
 				if (nCsrIndices != (nCellLabels+1)) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				// nCsrData = sum(nFaces) for each cell in cell labels
 				I nFacesTotal = 0;
@@ -352,7 +352,7 @@ namespace cupcfd
 					nFacesTotal += 6;
 				}
 				if (nCsrData != nFacesTotal) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Loop over each label
@@ -435,7 +435,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceIsBoundary(bool * isBoundary, I nIsBoundary, I * faceLabels, I nFaceLabels) {
 				if (nIsBoundary != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Number of faces in these planes.
@@ -502,7 +502,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceBoundaryLabels(I * faceBoundaryLabels, I nFaceBoundaryLabels, I * faceLabels, I nFaceLabels) {
 				if (nFaceBoundaryLabels != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				cupcfd::error::eCodes status;
@@ -511,6 +511,7 @@ namespace cupcfd
 				bool * isBoundary = (bool *) malloc(sizeof(bool) * nFaceLabels);
 
 				status = getFaceIsBoundary(isBoundary, nFaceLabels, faceLabels, nFaceLabels);
+				CHECK_ERROR_CODE(status)
 				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
@@ -518,7 +519,7 @@ namespace cupcfd
 				for(I i = 0; i < nFaceLabels; i++) {
 					if(isBoundary[i] == false) {
 						free(isBoundary);
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+						return cupcfd::error::E_ERROR;
 					}
 				}
 
@@ -562,7 +563,7 @@ namespace cupcfd
 							faceBoundaryLabels[i] = calculateLabel(1, yCoord, zCoord, 0, 1, 0, this->nY - 1, 0);//, this->nZ - 1);
 						} else {
 							// Error - This isn't a boundary edge int he structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 					}
 					else if(faceLabels[i] < (nFaceYZ + nFaceXZ)) {
@@ -584,7 +585,7 @@ namespace cupcfd
 							faceBoundaryLabels[i] = nBoundYZ + calculateLabel(xCoord, 1, zCoord, 0, this->nX - 1, 0, 1, 0);//, this->nZ - 1);
 						} else {
 							// Error - This isn't a boundary edge int he structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 
 					} else {
@@ -606,7 +607,7 @@ namespace cupcfd
 							faceBoundaryLabels[i] = nBoundYZ + nBoundXZ + calculateLabel(xCoord, yCoord, 1, 0, this->nX - 1, 0, this->nY - 1, 0);//, 1);
 						} else {
 							// Error - This isn't a boundary edge in the structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 					}
 				}
@@ -617,7 +618,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, I * faceLabels, I nFaceLabels) {
 				if (nFaceCell1Labels != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Number of faces in these planes.
@@ -715,7 +716,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, I * faceLabels, I nFaceLabels) {
 				if (nFaceCell2Labels != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Number of faces in these planes.
@@ -812,7 +813,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceLambda(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
 				if (nFaceLambda != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Since the cells are equally sized, think this should always be 0.5 since they are equidistant from the face?
@@ -837,7 +838,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceArea(T * faceArea, I nFaceArea, I * faceLabels, I nFaceLabels) {
 				if (nFaceArea != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
@@ -867,7 +868,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceNormal(euc::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels) {
 				if (nFaceNormal != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				
 				// Temporary Storage
@@ -921,7 +922,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceCenter(euc::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels) {
 				if (nFaceCenter != nFaceLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
@@ -951,12 +952,12 @@ namespace cupcfd
 				// Error Checks: Array Sizes
 				// nCsrIndices = nFaceLabels + 1
 				if(nCsrIndices != nFaceLabels + 1) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// nCsrData = Sum of vertices per each face = 4 * nFaceLabels for a structured cube grid.
 				if(nCsrData != nFaceLabels*4) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 
@@ -1055,7 +1056,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getVertexCoords(euc::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels) {
 				if(nVertCoords != nVertexLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Vertices are assigned labels in order of X, Y,Z Coordinates using the node coordinate scheme
@@ -1083,7 +1084,7 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, I * boundaryLabels, I nBoundaryLabels) {
 				if(nBoundaryFaceLabels != nBoundaryLabels) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
 				// Essentially an inversion of face->boundary
@@ -1122,7 +1123,7 @@ namespace cupcfd
 							boundaryFaceLabels[i] = calculateLabel(this->nX, yCoord, zCoord, 0, this->nX, 0, this->nY - 1, 0);//, this->nZ - 1);
 						} else {
 							// Error - This isn't a boundary edge int he structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 					}
 					else if(boundaryLabels[i] < (nBoundYZ + nBoundXZ)) {
@@ -1144,7 +1145,7 @@ namespace cupcfd
 							boundaryFaceLabels[i] = nFaceYZ + calculateLabel(xCoord, this->nY, zCoord, 0, this->nX - 1, 0, this->nY, 0);//, this->nZ - 1);
 						} else {
 							// Error - This isn't a boundary edge int he structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 
 					} else {
@@ -1166,7 +1167,7 @@ namespace cupcfd
 							boundaryFaceLabels[i] = nFaceYZ + nFaceXZ + calculateLabel(xCoord, yCoord, this->nZ, 0, this->nX - 1, 0, this->nY - 1, 0);//, this->nZ);
 						} else {
 							// Error - This isn't a boundary edge int he structured grid setup
-							DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+							return cupcfd::error::E_ERROR;
 						}
 					}
 				}
@@ -1206,6 +1207,7 @@ namespace cupcfd
 				I * faceLabels = (I *) malloc(sizeof(I) * nBoundaryLabels);
 
 				status = this->getBoundaryFaceLabels(faceLabels, nBoundaryLabels, boundaryLabels, nBoundaryLabels);
+				CHECK_ERROR_CODE(status)
 				if(status != cupcfd::error::E_SUCCESS) {
 					free(faceLabels);
 					return status;
@@ -1213,6 +1215,7 @@ namespace cupcfd
 
 				// Use the Face->Vertex Lookup method
 				status = this->getFaceVerticesLabelsCSR(csrIndices, nCsrIndices, csrData, nCsrData,  faceLabels, nBoundaryLabels);
+				CHECK_ERROR_CODE(status)
 				if(status != cupcfd::error::E_SUCCESS) {
 					free(faceLabels);
 					return status;
@@ -1227,7 +1230,7 @@ namespace cupcfd
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryDistance(T * boundaryDistance __attribute__((unused)), I nBoundaryDistance __attribute__((unused)), I * boundaryLabels __attribute__((unused)), I nBoundaryLabels __attribute__((unused)))
 			{
 				// Don't have a value for this currently.
-				DEBUGGABLE_ERROR; return cupcfd::error::E_SOURCE_MISSING;
+				return cupcfd::error::E_SOURCE_MISSING;
 			}
 
 			template <class I, class T>

@@ -60,8 +60,7 @@ namespace cupcfd
 		// Empty implementations to satisy the linker.
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZ(I * nnz)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZ(I * nnz) {
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nnz",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -71,8 +70,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNRows(I * nRows)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNRows(I * nRows) {
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nrows",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -82,8 +80,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNCols(I * nCols)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNCols(I * nCols) {
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "ncols",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -93,8 +90,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getMatrixIndicesBase(I * indicesBase)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getMatrixIndicesBase(I * indicesBase) {
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "base",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
@@ -104,23 +100,20 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZRows(I * rowIndices, I nRowIndices)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZRows(I * rowIndices, I nRowIndices) {
 			cupcfd::error::eCodes status;
 
 			// Get the number of rows
 			I nRows;
 			status = this->getNRows(&nRows);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			// Error Check: Size of the rowIndices array should be the same as the number of rows
-			if(nRowIndices != nRows)
-			{
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+			if(nRowIndices != nRows) {
+				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
 			// Get the row ranges from the file - number of entries should be stored rows + 1
@@ -134,8 +127,7 @@ namespace cupcfd
 			access.readData(rowRanges);
 
 			// Compute the sizes from the range difference
-			for(I index = 0; index < nRows; index++)
-			{
+			for(I index = 0; index < nRows; index++) {
 				rowIndices[index] = rowRanges[index + 1] - rowRanges[index];
 			}
 
@@ -146,8 +138,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes) {
 			cupcfd::error::eCodes status;
 
 			// Error Check: is rowIndex < number of rows?
@@ -164,6 +155,7 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -178,33 +170,28 @@ namespace cupcfd
 
 			// Setup the data store array
 			// Technically should never be negative, but may as well catch this case
-			if(*nColumnIndexes < 1)
-			{
+			if(*nColumnIndexes < 1) {
 				// Function still expected to return a non-null pointer.
 				*columnIndexes = (I *) malloc(sizeof(I) * 0);
 			}
-			else
-			{
+			else {
 				*columnIndexes = (I *) malloc(sizeof(I) * (*nColumnIndexes));
 			}
 
 			// Read Data if the range says it exists
-			if(*nColumnIndexes > 0)
-			{
+			if(*nColumnIndexes > 0) {
 				// Read the column data
 				cupcfd::io::hdf5::HDF5Record record2("/", "cols" , false);
 				cupcfd::io::hdf5::HDF5Access access2(this->fileName, record2);
 				cupcfd::io::hdf5::HDF5Properties properties2(access2);
 
-				for(I i = 0; i < *nColumnIndexes; i++)
-				{
+				for(I i = 0; i < *nColumnIndexes; i++) {
 					// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
 					properties2.addIndex(rowRange[0] + i);
 				}
 
 				// Read the column data
-				if(*nColumnIndexes > 0)
-				{
+				if(*nColumnIndexes > 0) {
 					access2.readData(*columnIndexes, properties2);
 				}
 			}
@@ -213,8 +200,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceHDF5<I,T>::getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues)
-		{
+		cupcfd::error::eCodes SparseMatrixSourceHDF5<I,T>::getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues) {
 			cupcfd::error::eCodes status;
 
 			// Error Check: is rowIndex < number of rows and greater or equal to the base?
@@ -234,6 +220,7 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
@@ -254,15 +241,13 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Access access2(this->fileName, record2);
 			cupcfd::io::hdf5::HDF5Properties properties2(access2);
 
-			for(I i = 0; i < *nNNZValues; i++)
-			{
+			for(I i = 0; i < *nNNZValues; i++) {
 				// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
 				properties2.addIndex(rowRange[0] + i);
 			}
 
 			// Read the column data
-			if(*nNNZValues > 0)
-			{
+			if(*nNNZValues > 0) {
 				access2.readData(*nnzValues, properties2);
 			}
 

@@ -65,8 +65,7 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::operator=(Particle& source)
-		{
+		inline void Particle<P, I, T>::operator=(Particle& source) {
 			static_cast<P*>(this)->operator=(source);
 		}
 
@@ -76,52 +75,45 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setPos(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
-		{
+		inline void Particle<P, I, T>::setPos(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
 			this->pos = pos;
 		}
 
 		template <class P, class I, class T>
-		inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Particle<P, I, T>::getPos()
-		{
+		inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Particle<P, I, T>::getPos() {
 			return this->pos;
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setInFlightPos(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& inflightPos)
-		{
+		inline void Particle<P, I, T>::setInFlightPos(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& inflightPos) {
 			this->inflightPos = inflightPos;
 		}
 
 		template <class P, class I, class T>
-		inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Particle<P, I, T>::getInFlightPos()
-		{
+		inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Particle<P, I, T>::getInFlightPos() {
 			return this->inflightPos;
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setVelocity(cupcfd::geometry::euclidean::EuclideanVector<T,3>& velocity)
-		{
+		inline void Particle<P, I, T>::setVelocity(cupcfd::geometry::euclidean::EuclideanVector<T,3>& velocity) {
 			this->velocity = velocity;
 		}
 
 		template <class P, class I, class T>
-		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> Particle<P, I, T>::getVelocity()
-		{
+		inline cupcfd::geometry::euclidean::EuclideanVector<T,3> Particle<P, I, T>::getVelocity() {
 			return this->velocity;
 		}
 
 		template <class P, class I, class T>
-		inline cupcfd::error::eCodes Particle<P, I, T>::safelySetCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID)
-		{
+		inline cupcfd::error::eCodes Particle<P, I, T>::safelySetCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID) {
 			if (this->cellGlobalID == cellGlobalID) {
 				std::cout << "ERROR: Attempting to update a particle " << this->particleID << " to be in cell " << cellGlobalID << " but it is already in that cell" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			if ( (cellGlobalID == this->lastLastCellGlobalID) || (cellGlobalID == this->lastCellGlobalID) ) {
 				std::cout << "ERROR: Attempting to move particle " << this->particleID << " to cell " << cellGlobalID << " but it was there recently (recent history is " << this->lastLastCellGlobalID << " -> " << this->lastCellGlobalID << " -> " << this->cellGlobalID << ")" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			this->lastLastCellGlobalID = this->lastCellGlobalID;
@@ -130,7 +122,7 @@ namespace cupcfd
 
 			if (cellEntryFaceLocalID == I(-1)) {
 				std::cout << "ERROR: Particle::safelySetCellGlobalID() called with invalid value of 'cellEntryFaceLocalID'" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 			this->cellEntryFaceLocalID = cellEntryFaceLocalID;
 
@@ -138,50 +130,42 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getCellGlobalID() const
-		{
+		inline I Particle<P, I, T>::getCellGlobalID() const {
 			return this->cellGlobalID;
 		}
 
 		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getLastCellGlobalID() const
-		{
+		inline I Particle<P, I, T>::getLastCellGlobalID() const {
 			return this->lastCellGlobalID;
 		}
 
 		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getCellEntryFaceLocalID() const
-		{
+		inline I Particle<P, I, T>::getCellEntryFaceLocalID() const {
 			return this->cellEntryFaceLocalID;
 		}
 
 		template <class P, class I, class T>
-		inline I Particle<P, I, T>::getParticleID() const
-		{
+		inline I Particle<P, I, T>::getParticleID() const {
 			return this->particleID;
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::setTravelTime(T dt)
-		{
+		inline void Particle<P, I, T>::setTravelTime(T dt) {
 			this->travelDt = dt;
 		}
 
 		template <class P, class I, class T>
-		inline T Particle<P, I, T>::getTravelTime() const
-		{
+		inline T Particle<P, I, T>::getTravelTime() const {
 			return this->travelDt;
 		}
 		
 		template <class P, class I, class T>
-		inline bool Particle<P, I, T>::getInactive() const
-		{
+		inline bool Particle<P, I, T>::getInactive() const {
 			return static_cast<P*>(this)->getInactive();
 		}
 
 		template <class P, class I, class T>
-		inline bool Particle<P, I, T>::stateValid() const
-		{
+		inline bool Particle<P, I, T>::stateValid() const {
 			if ((this->lastCellGlobalID != I(-1)) && (this->cellEntryFaceLocalID == I(-1))) {
 				std::cout << "ERROR: particle " << this->particleID << " has history of cell movement but cellEntryFaceLocalID is -1" << std::endl;
 				return false;
@@ -191,8 +175,7 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		inline void Particle<P, I, T>::print() const
-		{
+		inline void Particle<P, I, T>::print() const {
 			std::cout << "  > Particle " << this->particleID << " state:" << std::endl;
 			if (this->cellEntryFaceLocalID != -1) {
 				std::cout << "    > Cell ID: " << cellGlobalID << " , entered through local face ID " << this->cellEntryFaceLocalID << std::endl;
@@ -218,8 +201,7 @@ namespace cupcfd
 																			bool& doesIntersect, 
 																			cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
 																			bool& intersectionOnEdge,
-																			T& timeToIntersect)
-		{
+																			T& timeToIntersect) {
 			// Ensure false by default:
 			doesIntersect = false;
 			intersectionOnEdge = false;
@@ -237,8 +219,7 @@ namespace cupcfd
 			I num_faces_contacting_particle_within_tri = I(0);
 
 			I faceVertex0ID = mesh.getFaceVertex(faceID, 0);
-			for(I j = 1; j < (nFaceVertices-1); j++)
-			{
+			for(I j = 1; j < (nFaceVertices-1); j++) {
 				I faceVertex1ID = mesh.getFaceVertex(faceID, j);
 				I faceVertex2ID = mesh.getFaceVertex(faceID, j+1);
 
@@ -268,7 +249,7 @@ namespace cupcfd
 				if (doesIntersectTriangle) {
 					if (doesIntersect) {
 						std::cout << "ERROR: calculateFaceIntersection() has detected multiple face intersections for particle " << this->particleID << std::endl;
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+						return cupcfd::error::E_ERROR;
 					}
 
 					if (timeToIntersect == T(0.0)) {
@@ -289,7 +270,7 @@ namespace cupcfd
 			if (num_faces_contacting_particle_within_tri > 1) {
 				std::cout << "ERROR: Particle " << this->particleID << " of cell " << this->cellGlobalID << " is directly resting on " << num_faces_contacting_particle_within_tri << " triangles" << std::endl;
 				std::cout << "       Only " << num_faces_contacting_particle_on_edge << " of these have the particle on a triangle edge, indicating that triangles are overlapping" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -297,8 +278,7 @@ namespace cupcfd
 
 		template <class P, class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID, bool verbose)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, T * dt, I * exitFaceLocalID, bool verbose) {
 			cupcfd::error::eCodes status;
 		
 			// Note: We are treating velocity as if it cannot change within one atomic traversal of a cell.
@@ -309,8 +289,7 @@ namespace cupcfd
 			// does not match the particle rank because it needs to be transferred to that rank)
 		
 			// Check - if the particle has no remaining travel time, then don't change anything
-			if(arth::isEqual(this->getTravelTime(), T(0)))
-			{				
+			if(arth::isEqual(this->getTravelTime(), T(0))) {				
 				*exitFaceLocalID = -1;
 				*dt = T(0);
 				if (verbose) {
@@ -323,6 +302,7 @@ namespace cupcfd
 			I node = mesh.cellConnGraph->globalToNode[this->cellGlobalID];
 			I localCellID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(node, &localCellID);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
 				return status;
@@ -333,6 +313,7 @@ namespace cupcfd
 			// ****************************************************** //
 			I nFaces;
 			status = mesh.getCellNFaces(localCellID, &nFaces);
+			CHECK_ERROR_CODE(status)
 			if (status != cupcfd::error::E_SUCCESS) {
 				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
 				return status;
@@ -383,8 +364,7 @@ namespace cupcfd
 			bool face_was_found = false;
 			I num_faces_contacting_particle_on_edge = I(0);
 			I num_faces_contacting_particle_within_tri = I(0);
-			for(I i = 0; i < nFaces; i++)
-			{
+			for(I i = 0; i < nFaces; i++) {
 				// Retrieve the faces of the cell
 				I localFaceID = mesh.getCellFaceID(localCellID, i);
 
@@ -399,6 +379,7 @@ namespace cupcfd
 													intersection, 
 													intersectionOnEdge,
 													timeToIntersect);
+				CHECK_ERROR_CODE(status)
 				if (status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: calculateFaceIntersection() failed" << std::endl;
 					return status;
@@ -421,6 +402,7 @@ namespace cupcfd
 
 						T speed;
 						status = this->velocity.length(&speed);
+						CHECK_ERROR_CODE(status)
 						if (status != cupcfd::error::E_SUCCESS) {
 							std::cout << "ERROR: length() failed" << std::endl;
 							return status;
@@ -438,23 +420,23 @@ namespace cupcfd
 
 			if (!face_was_found) {
 				std::cout << "ERROR: Failed to find face of cell " << this->cellGlobalID << " that particle " << this->particleID << "  will intersect" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			if (exitTravelTime < T(0)) {
 				std::cout << "ERROR: Selected exit face " << exitFaceID << " of cell " << this->cellGlobalID << " will be reached by particle " << this->particleID << " in negative time " << exitTravelTime << ", should be positive time" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			if (num_faces_contacting_particle_within_tri > 1) {
 				std::cout << "ERROR: Particle " << this->particleID << " of cell " << this->cellGlobalID << " is directly resting on " << num_faces_contacting_particle_within_tri << " triangles" << std::endl;
 				std::cout << "       Only " << num_faces_contacting_particle_on_edge << " of these have the particle on a triangle edge, indicating that triangles are overlapping" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			if (exitDistance > max_inter_vertex_distance) {
 				std::cout << "ERROR: Particle " << this->particleID << " distance to selected face intersection " << exitDistance << " is greater than max inter-vertex distance " << max_inter_vertex_distance << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			
@@ -464,18 +446,16 @@ namespace cupcfd
 			// If there is not, then it is possible an invalid cell ID is set for the particle
 			// ToDo: Error Check for this?
 			
-			if(intersectionCount == 0)
-			{			
+			if(intersectionCount == 0) {			
 				// Error - No Face was found for exiting (assuming there would be travel time to reach it)
 				// This would suggest the particle is in the wrong cell for its position
 				std::cout << "ERROR: No exit face found for particle " << this->particleID << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 
 			// Verify with the travel time remaining whether it will actually exit the cell
 			// (a) Does not exit cell
-			if(exitTravelTime > this->travelDt)
-			{
+			if(exitTravelTime > this->travelDt) {
 				if (verbose) {
 					std::cout << "    > does not exit cell in this timestep, will travel for " << this->travelDt << std::endl;
 				}
@@ -490,8 +470,7 @@ namespace cupcfd
 				this->travelDt = 0.0;
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				if (verbose) {
 					std::cout << "    > exits cell in this timestep through local-face-ID " << exitFaceID << " after " << exitTravelTime << " seconds" << std::endl;
 				}
@@ -515,36 +494,31 @@ namespace cupcfd
 
 		template <class P, class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			return static_cast<P*>(this)->updateBoundaryFaceWall(mesh, cellLocalID, faceLocalID);
 		}
 																		  
 		template <class P, class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			return static_cast<P*>(this)->updateBoundaryFaceSymp(mesh, cellLocalID, faceLocalID);
 		}																		  
 																		  
 		template <class P, class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			return static_cast<P*>(this)->updateBoundaryFaceInlet(mesh, cellLocalID, faceLocalID);
 		}
 		
 		template <class P, class I, class T>
 		template <class M, class L> 
-		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I cellLocalID, I faceLocalID) {
 			return static_cast<P*>(this)->updateBoundaryFaceOutlet(mesh, cellLocalID, faceLocalID);
 		}	
 
 		template <class P, class I, class T>
 		template <class M, class L>
-		cupcfd::error::eCodes Particle<P, I, T>::redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh)
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			cupcfd::error::eCodes status;
 
 			bool verbose = false;
@@ -558,31 +532,23 @@ namespace cupcfd
 			I cellNode = mesh.cellConnGraph->globalToNode[cellGlobalID];
 			I cellLocalID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			I cellNumFaces;
 			status = mesh.getCellNFaces(cellLocalID, &cellNumFaces);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 
 			I lastCellGlobalID = this->lastCellGlobalID;
 			I lastCellNode = mesh.cellConnGraph->globalToNode[lastCellGlobalID];
 			I lastCellLocalID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			I lastCellNumFaces;
 			status = mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 
 			I entryFaceLocalID;
 			bool entryFaceFound = false;
@@ -609,10 +575,8 @@ namespace cupcfd
 															intersection, 
 															intersectionOnEdge,
 															timeToIntersect);
-						if (status != cupcfd::error::E_SUCCESS) {
-							std::cout << "ERROR: calculateFaceIntersection() failed" << std::endl;
-							return status;
-						}
+						CHECK_ERROR_CODE(status)
+						if (status != cupcfd::error::E_SUCCESS) return status;
 						if (doesIntersect) {
 							if (!entryFaceFound) {
 								entryFaceFound = true;
@@ -634,7 +598,7 @@ namespace cupcfd
 			}
 			if (!entryFaceFound) {
 				std::cout << "ERROR: Redetection of cell entry face of particle " << this->particleID << " failed" << std::endl;
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 			this->cellEntryFaceLocalID = entryFaceLocalID;
 
@@ -642,32 +606,27 @@ namespace cupcfd
 		}
 			
 		template <class P, class I, class T>
-		inline cupcfd::error::eCodes Particle<P, I, T>::getMPIType(MPI_Datatype * dType)
-		{
+		inline cupcfd::error::eCodes Particle<P, I, T>::getMPIType(MPI_Datatype * dType) {
 			return static_cast<P*>(this)->getMPIType(dType);
 		}
 		
 		template <class P, class I, class T>
-		inline MPI_Datatype Particle<P, I, T>::getMPIType()
-		{
+		inline MPI_Datatype Particle<P, I, T>::getMPIType() {
 			return static_cast<P*>(this)->getMPIType();
 		}
 		
 		template <class P, class I, class T>
-		cupcfd::error::eCodes Particle<P, I, T>::registerMPIType()
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::registerMPIType() {
 			return static_cast<P*>(this)->registerMPIType();
 		}
 		
 		template <class P, class I, class T>
-		cupcfd::error::eCodes Particle<P, I, T>::deregisterMPIType()
-		{
+		cupcfd::error::eCodes Particle<P, I, T>::deregisterMPIType() {
 			return static_cast<P*>(this)->deregisterMPIType();
 		}
 		
 		template <class P, class I, class T>
-		inline bool Particle<P, I, T>::isRegistered()
-		{
+		inline bool Particle<P, I, T>::isRegistered() {
 			return static_cast<P*>(this)->isRegistered();
 		}
 	}

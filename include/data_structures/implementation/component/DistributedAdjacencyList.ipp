@@ -31,13 +31,13 @@ namespace cupcfd
 			//status = Barrier(cupcfd::comm::Communicator& mpComm);
 
 			// (2) Check that the sourceGraph is finalised
-			if(this->finalized == false) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+			if(!this->finalized) {
+				return cupcfd::error::E_ERROR;
 			}
 			
 			// (3) Check that destGraph is not null on the specified rank
 			if((this->comm->rank == rank) && (destGraph == nullptr)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_ERROR;
+				return cupcfd::error::E_ERROR;
 			}
 			
 			// === Data Gathering ===
@@ -63,9 +63,7 @@ namespace cupcfd
 											&recvNodeProcCount, &nRecvNodeProcCount, 
 											rank, *(this->comm));
 			CHECK_ERROR_CODE(status)				   
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			// (2) Each rank must send data about the edges it has. This should include in both directions.
 			// It will need two stages, one to gather node1 in the edge, and a second to get node 2 in the edge.
@@ -73,18 +71,14 @@ namespace cupcfd
 			I nEdges;
 			status = this->connGraph.getEdgeCount(&nEdges);
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			T * edgeNode1 = (T *) malloc(sizeof(T) * nEdges);
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
 			
 			status = this->connGraph.getEdges(edgeNode1, nEdges, edgeNode2, nEdges);
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			I nRecvEdge1;
 			T * recvEdge1 = nullptr;
@@ -103,18 +97,14 @@ namespace cupcfd
 										   &recvEdge1ProcCount, &nRecvEdge1ProcCount, 
 										   rank, *(this->comm));
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 							   
 			status = cupcfd::comm::GatherV(edgeNode2, nEdges, 
 										   &recvEdge2, &nRecvEdge2, 
 										   &recvEdge2ProcCount, &nRecvEdge2ProcCount, 
 										   rank, *(this->comm));								   
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 			
 			// === Graph Reconstruction ===
 			

@@ -27,16 +27,14 @@ namespace cupcfd
 		namespace drivers
 		{
 			template <class I, class T>
-			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, bool * found)
- 			{
+			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, bool * found) {
 				I index;
 				cupcfd::error::eCodes status;
  				*found = false;
 
 				status = drivers::linearSearch(source, nEle, target, &index);
 
-				if(status == cupcfd::error::E_SEARCH_SUCCESS)
-				{
+				if(status == cupcfd::error::E_SEARCH_SUCCESS) {
 					// A valid index was found
 					*found = true;
 				}
@@ -45,22 +43,19 @@ namespace cupcfd
  			}
 
 		 	template <class I, class T>
-		 	cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I * index)
- 			{
+		 	cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I * index) {
  				return cupcfd::utility::kernels::linearSearch(source, nEle, target, index);
  			}
 
  			template <class I, class T>
- 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found)
- 			{
+ 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found) {
  				I index;
  				cupcfd::error::eCodes status;
 
  				*found = false;
  				status = drivers::binarySearch(source, nEle, target, &index);
 
- 				if(status == cupcfd::error::E_SEARCH_SUCCESS)
- 				{
+ 				if(status == cupcfd::error::E_SEARCH_SUCCESS) {
  					// A valid index was found, so it does exist in the array.
  					*found = true;
  				}
@@ -70,8 +65,7 @@ namespace cupcfd
  			}
 
  			template <class I, class T>
- 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index)
- 			{
+ 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index) {
  				I isSortedStatus;
  			 	bool sortCheck;
 
@@ -83,16 +77,14 @@ namespace cupcfd
  			 	isSortedStatus = cupcfd::utility::drivers::is_sorted(source, nEle, &sortCheck);
 
  				// Error check on is_sorted
- 				if(isSortedStatus == -1)
- 				{
+ 				if(isSortedStatus == -1) {
  					// Is not sorted error
- 					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
+ 					return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
  				}
 
  				// Check whether array was sorted
- 				if(sortCheck == false)
- 				{
- 					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_UNSORTED;
+ 				if(sortCheck == false) {
+ 					return cupcfd::error::E_SEARCH_UNSORTED;
  				}
 
  				// ================================================================
@@ -104,13 +96,11 @@ namespace cupcfd
  				// (3) Check whether value was found in binarySearch kernel.
  				// ================================================================
 
- 				if(*index == -1)
- 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_NOT_FOUND;
+ 				if(*index == -1) {
+					return cupcfd::error::E_SEARCH_NOT_FOUND;
  				}
- 				else
- 				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_SEARCH_SUCCESS;
+ 				else {
+					return cupcfd::error::E_SEARCH_SUCCESS;
  				}
  			}
 

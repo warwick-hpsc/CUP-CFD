@@ -37,15 +37,12 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig) {
 			cupcfd::error::eCodes status;
 			T fixedValue;
-			
 			status = this->getFixedValue(&fixedValue);
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			
 			*distConfig = new DistributionConfigFixed<I,T>(fixedValue);
 			return cupcfd::error::E_SUCCESS;

@@ -98,9 +98,7 @@ namespace cupcfd
 			this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
 			status = cupcfd::utility::drivers::copy(nodes, nNodes, this->nodes, this->nNodes);
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -137,13 +135,13 @@ namespace cupcfd
 			// Error Check 1: Ensure that the results array exists
 			if(this->result == nullptr) {
 				// Error - Results array is not allocated
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+				return cupcfd::error::E_PARTITIONER_NO_RESULTS;
 			}
 
 			// Error Check 2: The size of the communicator the node allocations will be distributed must be equal to or larger than the number of partitions
 			// (If larger then some ranks will clearly get no allocated nodes - generate a warning in this case?)
 			if(this->workComm.size < this->nParts) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PARMETIS_UNDERSIZED_COMM;
+				return cupcfd::error::E_PARMETIS_UNDERSIZED_COMM;
 			}
 
 			// === Distribute the partition ===
@@ -172,15 +170,11 @@ namespace cupcfd
 
 			status = resetNodeStorage();
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			status = resetResultStorage();
 			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			return cupcfd::error::E_SUCCESS;
 		}

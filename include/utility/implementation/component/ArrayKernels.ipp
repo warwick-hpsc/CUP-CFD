@@ -292,7 +292,7 @@ namespace cupcfd
 						// Element from source was found in the search array, so is present in both.
 						// Add to results
 						if (ptr >= nResult) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						result[ptr] = sourcePtr[i];
 						ptr++;

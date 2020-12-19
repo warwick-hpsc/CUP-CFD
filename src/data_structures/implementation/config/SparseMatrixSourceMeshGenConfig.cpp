@@ -46,7 +46,7 @@ namespace cupcfd
 		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfig<I,T>::buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource __attribute__((unused)))
 		{
 			// Not implemented.
-			DEBUGGABLE_ERROR; return cupcfd::error::E_NOT_IMPLEMENTED;
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 	}
 }

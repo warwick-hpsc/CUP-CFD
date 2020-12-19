@@ -47,28 +47,28 @@ namespace cupcfd
 		{
 			// Final Assembly and Final KSP Setup
 			if (MatAssemblyBegin(*a, MAT_FINAL_ASSEMBLY)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			if (MatAssemblyEnd(*a, MAT_FINAL_ASSEMBLY)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			if (KSPSetOperators(this->petscSolver, *a, *a)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			// Setup Internal Data Structures
 			if (KSPSetUp(this->petscSolver)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			// Solve
 			if (KSPSolve(this->petscSolver, *b, *x)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 			if (KSPGetConvergedReason(this->petscSolver, &(this->petscReason))) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -77,7 +77,7 @@ namespace cupcfd
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::setupPETScCommandLine()
 		{
 			if (KSPSetFromOptions(this->petscSolver)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -86,13 +86,13 @@ namespace cupcfd
 		cupcfd::error::eCodes LinearSolverPETScAlgorithm::setupPETScCGAMG()
 		{
 			if (KSPSetType(this->petscSolver, KSPCG)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 			if (KSPGetPC(this->petscSolver, &this->petscPrecon)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 			if (PCSetType(this->petscPrecon, PCGAMG)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			// Starting out with default values from
@@ -100,13 +100,13 @@ namespace cupcfd
 
 			// -pc_gamg_nsmooths
 			if (PCGAMGSetNSmooths(this->petscPrecon, 1)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 
 			// -pc_gamg_threshold
 			PetscReal threshold = 0.02;
 			if (PCGAMGSetThreshold(this->petscPrecon, &threshold, 1)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_PETSC_ERROR;
+				return cupcfd::error::E_PETSC_ERROR;
 			}
 			
 			return cupcfd::error::E_SUCCESS;

@@ -39,164 +39,139 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkName(std::string& benchmarkName)
-		{
-			if(this->configData.isMember("BenchmarkName"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkName(std::string& benchmarkName) {
+			if(this->configData.isMember("BenchmarkName")) {
 				const Json::Value dataSourceType = this->configData["BenchmarkName"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					benchmarkName = dataSourceType.asString();
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkRepetitions(I * repetitions)
-		{
-			if(this->configData.isMember("Repetitions"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getBenchmarkRepetitions(I * repetitions) {
+			if(this->configData.isMember("Repetitions")) {
 				const Json::Value dataSourceType = this->configData["Repetitions"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*repetitions = dataSourceType.asLargestInt();
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getNTimesteps(I * nTimesteps)
-		{
-			if(this->configData.isMember("NTimesteps"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getNTimesteps(I * nTimesteps) {
+			if(this->configData.isMember("NTimesteps")) {
 				const Json::Value dataSourceType = this->configData["NTimesteps"];
 
-				if(dataSourceType == Json::Value::null)
-				{
-					DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				if(dataSourceType == Json::Value::null) {
+					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*nTimesteps = dataSourceType.asLargestInt();
 					return cupcfd::error::E_SUCCESS;
 				}
 
 				// Found, but not a matching value
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_INVALID_VALUE;
+				return cupcfd::error::E_CONFIG_INVALID_VALUE;
 			}
 
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getDtDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** dtDistConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getDtDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** dtDistConfig) {
 			// Iterate through JSON formats for different potential distribution types
 			// Test each to see if a distribution can be built - if it can a viable format has been found.
 
 			// ToDo: Move this out to the DistributionConfig class or a generic method elsewhere (so when a new distribution type is added,
 			// we only have to edit one method.)
 
-			if(this->configData.isMember("DtDistribution"))
-			{
+			if(this->configData.isMember("DtDistribution")) {
 				cupcfd::distributions::DistributionConfig<I,T> * testDist;
 				cupcfd::error::eCodes status;
 
-				if(this->configData["DtDistribution"].isMember("FixedDistribution"))
-				{
+				if(this->configData["DtDistribution"].isMember("FixedDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceFixedJSON<I,T> test1(this->configData["DtDistribution"]["FixedDistribution"]);
 					status = test1.buildDistributionConfig(&testDist);
 
-					if(status == cupcfd::error::E_SUCCESS)
-					{
+					if(status == cupcfd::error::E_SUCCESS) {
 						// Don't cleanup testDist since we point the result at the same location
 						*dtDistConfig = testDist;
 						return cupcfd::error::E_SUCCESS;
 					}
-					else
-					{
+					else {
 						return status;
 					}
 				}
 
-				if(this->configData["DtDistribution"].isMember("NormalDistribution"))
-				{
+				if(this->configData["DtDistribution"].isMember("NormalDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData["DtDistribution"]["NormalDistribution"]);
 					status = test1.buildDistributionConfig(&testDist);
 
-					if(status == cupcfd::error::E_SUCCESS)
-					{
+					if(status == cupcfd::error::E_SUCCESS) {
 						// Don't cleanup testDist since we point the result at the same location
 						*dtDistConfig = testDist;
 						return cupcfd::error::E_SUCCESS;
 					}
-					else
-					{
+					else {
 						return status;
 					}
 				}
 
-				if(this->configData["DtDistribution"].isMember("UniformDistribution"))
-				{
+				if(this->configData["DtDistribution"].isMember("UniformDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData["DtDistribution"]["UniformDistribution"]);
 					status = test1.buildDistributionConfig(&testDist);
 
-					if(status == cupcfd::error::E_SUCCESS)
-					{
+					if(status == cupcfd::error::E_SUCCESS) {
 						// Don't cleanup testDist since we point the result at the same location
 						*dtDistConfig = testDist;
 						return cupcfd::error::E_SUCCESS;
 					}
-					else
-					{
+					else {
 						return status;
 					}
 				}
 
 				// No viable JSON found for a distribution
-				DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
 
 			// No DtDistribution field
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getParticleSystemConfig(cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> ** particleSystemConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::getParticleSystemConfig(cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> ** particleSystemConfig) {
 			cupcfd::error::eCodes status;
 
 			// Search for a JSON  Config describing the corret Particle System type matching the template
-			if(this->configData.isMember("ParticleSystemSimple"))
-			{
+			if(this->configData.isMember("ParticleSystemSimple")) {
 				cupcfd::particles::ParticleSystemSimpleConfigJSON<M,I,T,L> particleSystemConfigJSON(this->configData["ParticleSystemSimple"]);
 				cupcfd::particles::ParticleSystemConfig<cupcfd::particles::ParticleSystemSimple<M,I,T,L>, cupcfd::particles::ParticleEmitterSimple<I,T>, cupcfd::particles::ParticleSimple<I,T>, M,I,T,L> * tmp;
 
 				status = particleSystemConfigJSON.buildParticleSystemConfig(&tmp);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) {
 					return status;
 				}
 
@@ -207,12 +182,11 @@ namespace cupcfd
 			}
 
 			// No field found
-			DEBUGGABLE_ERROR; return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::buildBenchmarkConfig(BenchmarkConfigParticleSystemSimple<M,I,T,L> ** config)
-		{
+		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimpleJSON<M,I,T,L>::buildBenchmarkConfig(BenchmarkConfigParticleSystemSimple<M,I,T,L> ** config) {
 			cupcfd::error::eCodes status;
 
 			std::string benchmarkName;
@@ -222,32 +196,32 @@ namespace cupcfd
 			cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> * particleSystemConfig;
 
 			status = this->getBenchmarkName(benchmarkName);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->getBenchmarkRepetitions(&repetitions);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->getNTimesteps(&nTimesteps);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->getDtDistributionConfig(&dtDistConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 
 			status = this->getParticleSystemConfig(&particleSystemConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) {
 				return status;
 			}
 

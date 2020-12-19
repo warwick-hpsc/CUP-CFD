@@ -33,9 +33,8 @@ namespace cupcfd
 
 				// Get the datatype based on the type of the dummy variable
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;
@@ -43,7 +42,7 @@ namespace cupcfd
 				// Use the MPI library for the distribution
 				err = MPI_Scatter(bufferSend, nSend, dTypeSend, bufferRecv, nRecv, dTypeRecv, sourcePID, comm);
 				if(err != MPI_SUCCESS) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 				
 				// If received this point, presumed to be successful
@@ -55,27 +54,27 @@ namespace cupcfd
 				int commSize, commRank;
 				int err = MPI_Comm_size(comm, &commSize);
 				if(err != MPI_SUCCESS) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 				err = MPI_Comm_rank(comm, &commRank);
 				if(err != MPI_SUCCESS) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				if (commRank == sourcePID) {
 					if (commSize != nSendCounts) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 					int nSendActual = 0;
 					for (int i=0; i<commSize; i++) {
 						nSendActual += sendCounts[i];
 					}
 					if (nSendActual != nSend) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				} else {
 					if (nRecv != sendCounts[commRank]) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+						return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 					}
 				}
 
@@ -88,9 +87,8 @@ namespace cupcfd
 				
 				// Get the datatype based on the type of the dummy variable
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;
@@ -108,7 +106,7 @@ namespace cupcfd
 
 				err = MPI_Scatterv(bufferSend, sendCounts, displs, dTypeSend, bufferRecv, nRecv, dTypeRecv, sourcePID, comm);
 				if(err != MPI_SUCCESS) {
-					DEBUGGABLE_ERROR; return cupcfd::error::E_MPI_ERR;
+					return cupcfd::error::E_MPI_ERR;
 				}
 
 				if(displs != nullptr) {

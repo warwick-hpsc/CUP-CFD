@@ -53,16 +53,16 @@ namespace cupcfd
 			{
 				#ifdef DEBUG
 					if (ip >= nTE) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nED) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nDen) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 					if (ip >= nVisEff) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -150,7 +150,7 @@ namespace cupcfd
 
 				#ifdef DEBUG
 					if (ib >= nVisEffBoundary) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -164,7 +164,7 @@ namespace cupcfd
 				{
 					#ifdef DEBUG
 						if (ib >= nVisEffCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -174,7 +174,7 @@ namespace cupcfd
 				{
 					#ifdef DEBUG
 						if (ib >= nVisEffCell) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -184,10 +184,10 @@ namespace cupcfd
 				{
 					#ifdef DEBUG
 						if (ib >= nTE) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 						if (ip >= nDen) {
-							DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+							return cupcfd::error::E_INVALID_INDEX;
 						}
 					#endif
 
@@ -260,7 +260,7 @@ namespace cupcfd
 			{
 				#ifdef DEBUG
 					if (ip >= nVisEffCell) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 
@@ -271,7 +271,7 @@ namespace cupcfd
 			{
 				#ifdef DEBUG
 					if (ip >= nVisEffBoundary) {
-						DEBUGGABLE_ERROR; return cupcfd::error::E_INVALID_INDEX;
+						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
 

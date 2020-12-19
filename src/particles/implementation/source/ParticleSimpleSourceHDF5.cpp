@@ -64,24 +64,21 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getNParticles(I * nParticles)
-		{
+		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getNParticles(I * nParticles) {
 			cupcfd::error::eCodes status;
 
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nparticles",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
 			status = access.readData(nParticles);
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ERROR_CODE(status)
+			if (status != cupcfd::error::E_SUCCESS) return status;
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase)
-		{
+		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase) {
 			// ToDo: Don't really like that this is a m*n function where m and n could both get large.
 			// We could store the rank, but if the decomposition changes (e.g. different number of processes) between runs, it invalidates
 			// the ranks and possibly the global cell IDs if the decomposition changes from the partitioner.
@@ -127,8 +124,7 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Access accessDecayRate(this->fileName, recordDecayRate);
 			cupcfd::io::hdf5::HDF5Properties propertiesDecayRate(accessDecayRate);
 
-			for(I i = 0; i < nIndexes; i++)
-			{
+			for(I i = 0; i < nIndexes; i++) {
 				propertiesPosX.addIndex(indexes[i] - indexBase, 0);
 				propertiesPosY.addIndex(indexes[i] - indexBase, 1);
 				propertiesPosZ.addIndex(indexes[i] - indexBase, 2);
@@ -193,8 +189,7 @@ namespace cupcfd
 
 			*particleData = (Particle<ParticleSimple<I,T>,I,T> **) malloc(sizeof(Particle<ParticleSimple<I,T>,I,T> *) * (*nParticles));
 
-			for(I i = 0; i < nIndexes; i++)
-			{
+			for(I i = 0; i < nIndexes; i++) {
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos(posX[i], posY[i], posZ[i]);
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity(velX[i], velY[i], velZ[i]);
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> acceleration(accelX[i], accelY[i], accelZ[i]);

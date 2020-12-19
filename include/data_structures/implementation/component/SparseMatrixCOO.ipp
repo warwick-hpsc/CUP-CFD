@@ -56,11 +56,11 @@ namespace cupcfd
 			CHECK_ERROR_CODE(status)
 
 			if(rows < 1) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
+				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
 			}
 
 			if(columns < 1) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
+				return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
 			}
 
 			// Resize the existing vectors to 0 since no data (vector can resize when adding later....)
@@ -98,11 +98,11 @@ namespace cupcfd
 
 			// Error Check: Within Range -- Greater than baseIndex
 			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
+				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_COL_OOB;
+				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
 			// === Find the location of an existing value if it exists ===
@@ -188,11 +188,11 @@ namespace cupcfd
 
 			// Error Check: Ensure we are within range
 			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
+				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_COL_OOB;
+				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
 			// === Find the location of an existing value if it exists ===
@@ -293,7 +293,7 @@ namespace cupcfd
 
 			if(startIndex == -1) {
 				// The row does not exist - error
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
+				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			*nColumnIndexes = (stopIndex - startIndex) + 1;
@@ -337,7 +337,7 @@ namespace cupcfd
 
 			if(startIndex == -1) {
 				// The row does not exist - error
-				DEBUGGABLE_ERROR; return cupcfd::error::E_MATRIX_ROW_OOB;
+				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			*nNNZValues = (stopIndex - startIndex) + 1;
