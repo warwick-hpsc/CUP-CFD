@@ -119,6 +119,7 @@ namespace cupcfd
 					/**
 					 * Retrieve and create a dynamically allocated Partitioner Configuration
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I> ** partConfig);
 
 					/**
@@ -129,6 +130,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildMeshConfig(MeshConfig<I,T,L> ** config);
 			};
 		}

@@ -45,47 +45,53 @@ namespace cupcfd
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x,
-								  unsigned long long y);
+													unsigned long long y);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x,
-								  unsigned long long y,
-								  unsigned long long z);
+													unsigned long long y,
+													unsigned long long z);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x,
-								  unsigned long long y,
-								  unsigned long long z,
-								  unsigned long long u);
+													unsigned long long y,
+													unsigned long long z,
+													unsigned long long u);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x,
-								  unsigned long long y,
-								  unsigned long long z,
-								  unsigned long long u,
-								  unsigned long long v);
+													unsigned long long y,
+													unsigned long long z,
+													unsigned long long u,
+													unsigned long long v);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addIndex(unsigned long long x,
-								  unsigned long long y,
-								  unsigned long long z,
-								  unsigned long long u,
-								  unsigned long long v,
-								  unsigned long long w);
+													unsigned long long y,
+													unsigned long long z,
+													unsigned long long u,
+													unsigned long long v,
+													unsigned long long w);
 			};
 		}
 	}

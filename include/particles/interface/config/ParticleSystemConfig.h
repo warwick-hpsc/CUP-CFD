@@ -70,8 +70,9 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSystem(ParticleSystem<S,E,P,M,I,T,L> ** system,
-																	   std::shared_ptr<M> meshPtr) = 0;
+																	std::shared_ptr<M> meshPtr) = 0;
 		};
 	}
 }

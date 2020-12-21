@@ -281,9 +281,10 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updatePositionAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-																T * dt,
-																I * exitFaceLocalID, bool verbose);
+															T * dt,
+															I * exitFaceLocalID, bool verbose);
 				
 				/**
 				 * Calculate intersection of this particle with specified face. 
@@ -297,6 +298,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateFaceIntersection(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																I faceID, 
 																bool verbose, 
@@ -319,6 +321,7 @@ namespace cupcfd
 				 * has no further travel time.
 				**/
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes redetectEntryFaceID(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 				/**
@@ -335,9 +338,10 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-																I cellLocalID,
-																T dt);
+															I cellLocalID,
+															T dt);
 				/**
 				 * Update the state of non-positional properties (e.g. physical properties that a particle might have like mass, or source
 				 * properties of a cell) after travelling through the identified cell for a period of dT.
@@ -351,9 +355,10 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-																    I cellLocalID,
-																    T dt);
+													    I cellLocalID,
+													    T dt);
 
 				/**
 				 * Update properties of the particle that has been positioned at a cell face for further updates
@@ -368,8 +373,9 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-																 I faceLocalID);
+															I faceLocalID);
 
 
 				/**
@@ -386,8 +392,9 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-																		  I cellLocalID, I faceLocalID);
+															I cellLocalID, I faceLocalID);
 
 				/**
 				 * Update properties of the particle to handle encountering a boundary symp condition while
@@ -403,8 +410,9 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
-				cupcfd::error::eCodes updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-						  	  	  	  	  	  	  	  	  	  	  	  	  I cellLocalID, I faceLocalID);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, 
+															I cellLocalID, I faceLocalID);
 
 				/**
 				 * Update properties of the particle to handle encountering a boundary inlet condition while
@@ -420,8 +428,9 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-						  	  	  	  	  	  	  	  	  	  	  	  	   I cellLocalID, I faceLocalID);
+															I cellLocalID, I faceLocalID);
 
 				/**
 				 * Update properties of the particle to handle encountering a boundary outlet condition while
@@ -437,8 +446,9 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-						  	  	  	  	  	  	  	  	  	  	  	I cellLocalID, I faceLocalID);
+															I cellLocalID, I faceLocalID);
 
 
 
@@ -447,9 +457,12 @@ namespace cupcfd
 				// These are the methods required for MPI Communication of the particle.
 				// All specialised particles must implement these methods
 
+				__attribute__((warn_unused_result))
 				virtual inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
 				virtual inline MPI_Datatype getMPIType();
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes registerMPIType();
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes deregisterMPIType();
 				virtual inline bool isRegistered();
 
@@ -481,6 +494,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes safelySetCellGlobalID(I cellGlobalID, I cellEntryFaceLocalID);
 
 				/**

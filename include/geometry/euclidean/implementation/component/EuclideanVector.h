@@ -381,6 +381,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes dotProduct(const EuclideanVector<T,N>& vec, T * scalar);
 
 					/**
@@ -427,6 +428,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes length(T * length);
 
 					/**
@@ -440,6 +442,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes normalise();
 
 					/**
@@ -456,6 +459,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes normalise(cupcfd::geometry::euclidean::EuclideanVector<T,N>& result);
 
 
@@ -487,12 +491,15 @@ namespace cupcfd
 
 					// === Inherited Overloads ===
 
+					__attribute__((warn_unused_result))
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
 
 					inline MPI_Datatype getMPIType();
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes registerMPIType();
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes deregisterMPIType();
 
 					inline bool isRegistered();
@@ -596,7 +603,7 @@ namespace cupcfd
 			 */
 			template <class T>
 			inline bool isVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-											 	  const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4);
+											 	const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4);
 
 
 			/**
@@ -622,9 +629,10 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_GEOMETRY_NO_INTERSECT No intersection exists
 			 */
 			template <class T>
-			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-											 	  	  	  	  	  	  	  	 const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4,
-																			 EuclideanPoint<T,3>& intersectPoint);
+			__attribute__((warn_unused_result))
+			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2, 
+																		const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4, 
+																		EuclideanPoint<T,3>& intersectPoint);
 
 			/**
 			 * Test whether a point lies on a 3D line delinated by two other points

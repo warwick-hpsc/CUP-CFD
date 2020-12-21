@@ -66,6 +66,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getAttribute(std::string attrName, int * out);
 
 					/**
@@ -77,6 +78,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getAttribute(std::string attrName, float * out);
 
 					/**
@@ -88,45 +90,79 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getAttribute(std::string attrName, double * out);
 
 					// === Overloaded Inherited Virtual Methods ===
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellLabels(I * labels, I nLabels, I * indexes, I nIndexes);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceLabels(I * labels, I nLabels, I * indexes, I nIndexes);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getVertexLabels(I * labels, I nLabels, I * indexes, I nIndexes);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryLabels(I * labels, I nLabels, I * indexes, I nIndexes);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getRegionLabels(I * labels, I nLabels, I * indexes, I nIndexes);
 
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellCount(I * cellCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceCount(I * faceCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryCount(I * boundaryCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getRegionCount(I * regionCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getVertexCount(I * vertexCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMaxFaceCount(I * maxFaceCount);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMaxVertexCount(I * maxVertexCount);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellNFaces(I * nFaces, I nNFaces, I * cellLabels, I nCellLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellVolume(T * cellVol, I nCellVol, I * cellLabels, I nCellLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, I * cellLabels, I nCellLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceIsBoundary(bool * isBoundary, I nIsBoundary, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceNVertices(I * nVertices, I nNVertices, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceBoundaryLabels(I * faceBoundaryLabels, I nFaceBoundaryLabels, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceLambda(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceArea(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, I * boundaryLabels, I nBoundaryLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryNVertices(I * nVertices, I nNVertices, I * boundaryLabels, I nBoundaryLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryRegionLabels(I * boundaryRegionLabels, I nBoundaryRegionLabels, I * boundaryLabels, I nBoundaryLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryDistance(T * boundaryDistance, I nBoundaryDistance, I * boundaryLabels, I nBoundaryLabels);
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getRegionName(std::string * names, I nNames, I * regionLabels, I nRegionLabels);
 			};
 		} // namespace mesh

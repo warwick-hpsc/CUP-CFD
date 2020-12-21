@@ -40,6 +40,7 @@ namespace cupcfd
 		 *
 		 */
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 													T gammaBlend,
 													T small,

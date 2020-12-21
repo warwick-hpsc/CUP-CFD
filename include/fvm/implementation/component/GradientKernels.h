@@ -46,6 +46,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes GradientPhiGaussDolfyn(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I nGradient,
 													T * phiCell, I nPhiCell,
 													T * phiBoundary, I nPhiBoundary,

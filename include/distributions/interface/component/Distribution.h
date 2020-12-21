@@ -71,6 +71,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS Success
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getValues(T * values, I nValues) = 0;
 
 				/**

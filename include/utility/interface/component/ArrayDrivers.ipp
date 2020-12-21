@@ -33,11 +33,9 @@ namespace cupcfd
 			// Currently a wrapper for memcpy. Exists primarily so that copy calls
 			// could be switched out for another approach at a later time.
 			template <class I, class T>
-			cupcfd::error::eCodes copy(T * src, I nSrc, T * dst, I nDst)
-			{
+			cupcfd::error::eCodes copy(T * src, I nSrc, T * dst, I nDst) {
 				// Error Check: Check dst is large enough to hold src.
-				if(nDst < nSrc)
-				{
+				if(nDst < nSrc) {
 					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
 
@@ -47,8 +45,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes zero(T * source, I nEle)
-			{
+			cupcfd::error::eCodes zero(T * source, I nEle) {
 				// Typecast 0 to appropriate datatype
 				memset(source, (T) 0, nEle * sizeof(T));
 
@@ -56,15 +53,13 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count)
-			{
+			cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count) {
 				bool isSorted;
 				cupcfd::utility::drivers::is_sorted(source, nSourceEle, &isSorted);
 
 				// Error Check on is_sorted
 
-				if(!isSorted)
-				{
+				if(!isSorted) {
 					// Non-Destructive Sort
 					T * scratch = (T *) malloc(sizeof(T) * nSourceEle);
 					cupcfd::utility::drivers::merge_sort(source, scratch, nSourceEle);
@@ -72,16 +67,14 @@ namespace cupcfd
 					free(scratch);
 					return cupcfd::error::E_SUCCESS;;
 				}
-				else
-				{
+				else {
 					*count = cupcfd::utility::kernels::uniqueCount(source, nSourceEle);
 					return cupcfd::error::E_SUCCESS;
 				}
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest, I * nDestEle)
-			{
+			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest, I * nDestEle) {
 				// Determine number of unique elements
 				drivers::uniqueCount(source, nSourceEle, nDestEle);
 
@@ -95,16 +88,16 @@ namespace cupcfd
 
 
 			template <class I, class T>
-			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle)
-			{
+			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle) {
+				if (nSourceEle != nDestEle) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
 
 				bool isSorted;
 				cupcfd::utility::drivers::is_sorted(source, nSourceEle, &isSorted);
-
 				// Error Check on is_sorted
 
-				if(!isSorted)
-				{
+				if(!isSorted) {
 					// Non-Destructive Sort
 					T * scratch = (T *) malloc(sizeof(T) * nSourceEle);
 					cupcfd::utility::drivers::merge_sort(source, scratch, nSourceEle);
@@ -112,8 +105,7 @@ namespace cupcfd
 					free(scratch);
 					return cupcfd::error::E_SUCCESS;;
 				}
-				else
-				{
+				else {
 					kernels::uniqueArray(source, dest, nSourceEle);
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -148,16 +140,14 @@ namespace cupcfd
 			// }
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count)
-			{
+            cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count) {
 				bool sorted;
 				T * arrPtr;
 
 				// ToDo: Negative nEle Error Check
 
 				// If nEle is zero, count will be zero
-				if(nEle == 0)
-				{
+				if(nEle == 0) {
 					*count = 0;
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -166,13 +156,11 @@ namespace cupcfd
 				cupcfd::utility::drivers::is_sorted(source, nEle, &sorted);
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
-				if(!sorted)
-				{
+				if(!sorted) {
 					arrPtr = (T *) malloc(sizeof(T) * nEle);
 					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEle);
 				}
-				else
-				{
+				else {
 					arrPtr = source;
 				}
 
@@ -180,8 +168,7 @@ namespace cupcfd
 				*count = kernels::distinctCount(arrPtr, nEle);
 
 				// Cleanup
-				if(arrPtr != source)
-				{
+				if(arrPtr != source) {
 					free(arrPtr);
 				}
 
@@ -189,13 +176,11 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst)
-			{
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst) {
 				bool sorted;
 				T * arrPtr;
 
-				if(nEleSource <= 0)
-				{
+				if(nEleSource <= 0) {
 					// ToDo: This should probably be an warning error code
 					// It's not incorrect to return if there's nothing to do, but
 					// that status seems unusual...
@@ -206,13 +191,11 @@ namespace cupcfd
 				cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
-				if(!sorted)
-				{
+				if(!sorted) {
 					arrPtr = (T *) malloc(sizeof(T) * nEleSource);
 					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEleSource);
 				}
-				else
-				{
+				else {
 					arrPtr = source;
 				}
 
@@ -227,8 +210,7 @@ namespace cupcfd
 				kernels::distinctArray(arrPtr, dst, nEleSource);
 
 				// Result should now be in dst - cleanup
-				if(arrPtr != source)
-				{
+				if(arrPtr != source) {
 					free(arrPtr);
 				}
 
@@ -236,8 +218,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst)
-			{
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst) {
 				// Determine number of distinct elements
 				drivers::distinctCount(source, nEleSource, nEleDst);
 
@@ -251,8 +232,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount)
-			{
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount) {
 				bool sorted;
 				T * arrPtr;
 
@@ -260,13 +240,11 @@ namespace cupcfd
 				cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
-				if(!sorted)
-				{
+				if(!sorted) {
 					arrPtr = (T *) malloc(sizeof(T) * nEleSource);
 					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEleSource);
 				}
-				else
-				{
+				else {
 					arrPtr = source;
 				}
 
@@ -281,8 +259,7 @@ namespace cupcfd
 				kernels::distinctArray(arrPtr, dst, dupCount, nEleSource);
 
 				// Result should now be in dst - cleanup
-				if(arrPtr != source)
-				{
+				if(arrPtr != source) {
 					free(arrPtr);
 				}
 
@@ -290,8 +267,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount)
-			{
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount) {
 				// Determine number of distinct elements
 				drivers::distinctCount(source, nEleSource, nEleDst);
 
@@ -309,8 +285,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count)
-			{
+            cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
 				// If not sorted, make a copy and use that
 				bool source1Sorted;
 				bool source2Sorted;
@@ -322,25 +297,21 @@ namespace cupcfd
 				T * source1Ptr;
 				T * source2Ptr;
 
-				if(!source1Sorted)
-				{
+				if(!source1Sorted) {
 					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
 					cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
 					cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
 				}
-				else
-				{
+				else {
 					source1Ptr = source1;
 				}
 
-				if(!source2Sorted)
-				{
+				if(!source2Sorted) {
 					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
 					cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
 					cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
 				}
-				else
-				{
+				else {
 					source2Ptr = source2;
 				}
 
@@ -348,13 +319,11 @@ namespace cupcfd
 				*count = cupcfd::utility::kernels::minusCount(source1Ptr, nSource1, source2Ptr, nSource2);
 
 				// Cleanup if temporary arrays were allocated
-				if(source1Ptr != source1)
-				{
+				if(source1Ptr != source1) {
 					free(source1Ptr);
 				}
 
-				if(source2Ptr != source2)
-				{
+				if(source2Ptr != source2) {
 					free(source2Ptr);
 				}
 
@@ -362,8 +331,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes minusDistinctCount(T * source1, I nSource1, T * source2, I nSource2, I * count)
-			{
+			cupcfd::error::eCodes minusDistinctCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
 				T * source1Distinct;
 				I nSource1Distinct;
 
@@ -449,8 +417,7 @@ namespace cupcfd
 			// }
 
 			template <class I, class T>
-			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count)
-			{
+			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
 				// If not sorted, make a copy and use that
 				bool source1Sorted;
 				bool source2Sorted;
@@ -482,8 +449,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult)
-			{
+			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult) {
 				bool sorted1;
 				bool sorted2;
 				T * source1Ptr = nullptr;
@@ -495,27 +461,23 @@ namespace cupcfd
 				// Kernel requires sorted arrays. Check if source1 is sorted.
 				cupcfd::utility::drivers::is_sorted(source1, nSource1, &sorted1);
 
-				if(!sorted1)
-				{
+				if(!sorted1) {
 					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
 					cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
 					cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
 				}
-				else
-				{
+				else {
 					source1Ptr = source1;
 				}
 
 				// Kernel requires sorted arrays. Check if source2 is sorted.
 				cupcfd::utility::drivers::is_sorted(source2, nSource2, &sorted2);
-				if(!sorted2)
-				{
+				if(!sorted2) {
 					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
 					cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
 					cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
 				}
-				else
-				{
+				else {
 					source2Ptr = source2;
 				}
 
@@ -530,13 +492,11 @@ namespace cupcfd
 
 				// Cleanup
 				// Result is not freed here, it is used to pass the results back to the caller
-				if(source1Ptr != source1)
-				{
+				if(source1Ptr != source1) {
 					free(source1Ptr);
 				}
 
-				if(source2Ptr != source2)
-				{
+				if(source2Ptr != source2) {
 					free(source2Ptr);
 				}
 

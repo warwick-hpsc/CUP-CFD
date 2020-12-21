@@ -33,10 +33,13 @@ namespace cupcfd
  				*found = false;
 
 				status = drivers::linearSearch(source, nEle, target, &index);
-
 				if(status == cupcfd::error::E_SEARCH_SUCCESS) {
 					// A valid index was found
 					*found = true;
+				} else if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+					// Handle this error here
+					*found = false;
+					return cupcfd::error::E_SUCCESS;
 				}
 
 				return status;
@@ -54,10 +57,13 @@ namespace cupcfd
 
  				*found = false;
  				status = drivers::binarySearch(source, nEle, target, &index);
-
  				if(status == cupcfd::error::E_SEARCH_SUCCESS) {
  					// A valid index was found, so it does exist in the array.
  					*found = true;
+				} else if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+					// Handle this error here
+					*found = false;
+					return cupcfd::error::E_SUCCESS;
  				}
 
  				// Pass up the error code from the index search.
@@ -66,31 +72,27 @@ namespace cupcfd
 
  			template <class I, class T>
  			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index) {
- 				I isSortedStatus;
- 			 	bool sortCheck;
+ 				cupcfd::error::eCodes status;
+ 			 	bool isSorted;
 
  				// ================================================================
  				// (1) Array must be sorted to use binarySearch kernel.
  				//     Check status, and return error without searching if unsorted
  				// ================================================================
 
- 			 	isSortedStatus = cupcfd::utility::drivers::is_sorted(source, nEle, &sortCheck);
-
- 				// Error check on is_sorted
- 				if(isSortedStatus == -1) {
- 					// Is not sorted error
- 					return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
- 				}
-
- 				// Check whether array was sorted
- 				if(sortCheck == false) {
+ 			 	status = cupcfd::utility::drivers::is_sorted(source, nEle, &isSorted);
+ 				// if(status ) {
+ 				// 	return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
+ 				// }
+ 				if(isSorted == false) {
  					return cupcfd::error::E_SEARCH_UNSORTED;
  				}
 
  				// ================================================================
  				// (2) Array is sorted. Run binarySearch kernel.
  				// ================================================================
- 				*index = cupcfd::utility::kernels::binarySearch(source, nEle, target);
+ 				// *index = cupcfd::utility::kernels::binarySearch(source, nEle, target);
+ 				status = cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
 
  				 // ===============================================================
  				// (3) Check whether value was found in binarySearch kernel.

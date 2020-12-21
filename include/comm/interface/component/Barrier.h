@@ -25,6 +25,7 @@ namespace cupcfd
 		 *
 		 * @param mpComm The communicator containing the ranks involved in the barrier.
 		 */
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Barrier(cupcfd::comm::Communicator& mpComm);
 
 	} // namespace comm

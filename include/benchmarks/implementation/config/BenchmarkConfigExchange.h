@@ -68,8 +68,9 @@ namespace cupcfd
 				BenchmarkConfigExchange<I,T> * clone();
 
 				template <class N>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(BenchmarkExchange<I,T> ** bench,
-														  cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph);
+													cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph);
 		};
 	}
 }

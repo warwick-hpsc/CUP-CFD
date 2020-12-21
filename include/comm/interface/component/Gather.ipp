@@ -131,12 +131,15 @@ namespace cupcfd
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
 			// Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
-			Gather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			status = Gather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			if(mpComm.rank == sinkPID) {
 				// Get the total element count
-				cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
+				status = cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
+				CHECK_ERROR_CODE(status)
 
 				// Allocate memory for the array
 				*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
@@ -207,11 +210,15 @@ namespace cupcfd
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
 			// AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
-			AllGather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			status = AllGather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			// Get the total element count
-			cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
+			status = cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
+			CHECK_ERROR_CODE(status)
+			if(status != cupcfd::error::E_SUCCESS) return status;
 
 			// Allocate memory for the array
 			*bRecv = (T *) malloc(sizeof(T) * *nBRecv);

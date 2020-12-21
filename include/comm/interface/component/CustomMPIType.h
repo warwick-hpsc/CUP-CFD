@@ -74,6 +74,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_MPI_DATATYPE_UNREGISTERED The object has not yet registered its datatype with
 					 * the MPI library
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getMPIType(MPI_Datatype * dType) = 0;
 
 					/**
@@ -92,6 +93,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_MPI_DATATYPE_REGISTERED The datatype is already registered
 					 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes registerMPIType() = 0;
 
 					/**
@@ -103,6 +105,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_MPI_DATATYPE_UNREGISTERED The datatype is not registered
 					 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes deregisterMPIType() = 0;
 
 					/**

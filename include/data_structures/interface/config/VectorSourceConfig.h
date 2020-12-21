@@ -69,6 +69,7 @@ namespace cupcfd
 				 *
 				 * @param A pointer to the location where the pointer of the newly created object will be stored.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildVectorSource(VectorSource<I,T> ** vectorSource) = 0;
 		};
 	}

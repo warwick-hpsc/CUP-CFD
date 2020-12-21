@@ -84,7 +84,9 @@ namespace cupcfd
 				// === Methods ===
 				virtual void operator=(const DistributionConfigSourceUniformJSON<I,T>& source);
 				virtual DistributionConfigSourceUniformJSON<I,T> * clone();
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getLBound(T * lBound);
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getUBound(T * lBound);
 		};
 	}

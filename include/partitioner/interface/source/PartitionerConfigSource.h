@@ -59,6 +59,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_CONFIG_OPT_NOT_FOUND One or more required options were missing
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE One or more options had an invalid value
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitionerConfig(PartitionerConfig<I,T> ** config) = 0;
 		};
 	}

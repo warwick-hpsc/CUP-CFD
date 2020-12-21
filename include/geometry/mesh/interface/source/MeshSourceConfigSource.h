@@ -69,6 +69,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes buildMeshSourceConfig(MeshSourceConfig<I,T,L> ** meshSourceConfig) = 0;
 			};
 		}

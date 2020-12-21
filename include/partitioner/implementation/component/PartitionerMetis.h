@@ -107,6 +107,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resetWorkArrays();
 
 				/**
@@ -121,6 +122,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setWorkArrays(cupcfd::data_structures::AdjacencyListCSR<I, T>& graph);
 
 				/**
@@ -134,13 +136,18 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setNCon(I nCon);
 
 				// === Overriden Inherited Methods ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes assignRankNodes(T** rankNodes, I * nNodes);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes partition();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes reset();
 		};
 	}

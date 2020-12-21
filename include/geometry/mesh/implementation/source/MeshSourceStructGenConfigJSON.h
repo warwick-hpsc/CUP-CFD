@@ -99,27 +99,37 @@ namespace cupcfd
 					MeshSourceStructGenConfigJSON<I,T> * clone();
 
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeX(I * cellX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeY(I * cellY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeZ(I * cellZ);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialXMin(T * sMinX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialYMin(T * sMinY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialZMin(T * sMinZ);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialXMax(T * sMaxX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialYMax(T * sMaxY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialZMax(T * sMaxZ);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig);
 			};
 		}

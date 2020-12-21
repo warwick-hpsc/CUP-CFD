@@ -81,6 +81,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part) = 0;
 
 				/**
@@ -96,8 +97,9 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,
-															cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph) = 0;
+																cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph) = 0;
 		};
 	}
 }

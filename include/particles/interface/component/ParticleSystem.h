@@ -102,6 +102,7 @@ namespace cupcfd
 				 * The cell ID of the emitter will be set/overwritten according to the position of the emitter
 				 * in the mesh associated with this system
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes addParticleEmitter(const E& emitter);
 
 				/**
@@ -118,6 +119,7 @@ namespace cupcfd
 				 *
 				 * @param particle The particle to add
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes addParticle(const P& particle);
 
 				/**
@@ -127,16 +129,19 @@ namespace cupcfd
 				 * must uniquely identify an active particle (this could be an array index, an ID
 				 * in a particle data structure etc).
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes setParticleInactive(I particleID);
 
 				/**
 				 * Set the travel time of all active particles in the system to a specified value
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setActiveParticlesTravelTime(T travelTime);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes removeInactiveParticles();
 
 				/**
@@ -148,6 +153,7 @@ namespace cupcfd
 				 *
 				 * Any particle sent to another rank should be marked as inactive by this process
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes exchangeParticles();
 
 				/**
@@ -161,6 +167,7 @@ namespace cupcfd
 				 * Note: Since the travel time of the emitted particles will differ, this step should be done
 				 * *before* setActiveParticlesTravelTime if it is not intended to overwrite the values.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes generateEmitterParticles(T dt);
 
 				/**
@@ -174,6 +181,7 @@ namespace cupcfd
 				 *
 				 * Particles that have expired are made inaccessible/removed by the system
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateSystem(T dt);
 
 				/**
@@ -185,6 +193,7 @@ namespace cupcfd
 				 *
 				 * This method does not add any travel time to particles, or generate any new particles.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateSystemAtomic();
 
 

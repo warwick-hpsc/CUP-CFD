@@ -124,41 +124,49 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkName(std::string& benchmarkName);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkRepetitions(I * repetitions);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getLinearSolverConfig(cupcfd::linearsolvers::LinearSolverConfig<C,I,T> ** solverSystemConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getSparseMatrixSourceConfig(cupcfd::data_structures::SparseMatrixSourceConfig<I,T> ** matrixSourceConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRHSVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** rhsSourceConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getSolutionVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** solSourceConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchSolverDistribution(BenchSolverDistribution * solverDist);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmarkConfig(BenchmarkConfigLinearSolver<C,I,T> ** config);
 		};
 	}

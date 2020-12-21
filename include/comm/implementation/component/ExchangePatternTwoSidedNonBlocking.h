@@ -81,15 +81,20 @@ namespace cupcfd
 				virtual ~ExchangePatternTwoSidedNonBlocking();
 
 				// Inherited Methods
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
 						  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 						  int * exchangeIDXSend, int nExchangeIDXSend,
 						  int * tRanks, int nTRanks);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes packSendBuffer(T * data, int nData);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes exchangeStart(T * sourceData, int nData);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes exchangeStop(T * sinkData, int nData);
 		};
 	}

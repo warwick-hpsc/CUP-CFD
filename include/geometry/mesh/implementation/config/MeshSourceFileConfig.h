@@ -115,6 +115,7 @@ namespace cupcfd
 
 					inline void operator=(const MeshSourceFileConfig<I,T>& source);
 					MeshSourceFileConfig<I,T> * clone();
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
 			};
 		}

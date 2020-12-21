@@ -65,6 +65,7 @@ namespace cupcfd
 				 * @return An error code indicating the success or failure of the function
 				 * @retval cupcfd::error::E_SUCCESS The function completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getNParticles(I * nParticles) = 0;
 
 				/**
@@ -87,6 +88,7 @@ namespace cupcfd
 				 * @return An error code indicating the success or failure of the function
 				 * @retval cupcfd::error::E_SUCCESS The function completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getParticles(Particle<P,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase) = 0;
 		};
 	}

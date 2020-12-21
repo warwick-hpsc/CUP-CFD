@@ -37,6 +37,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The destination is too small to copy the source array
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes copy(T * src, I nSrc, T * dst, I nDst);
 
 			/**
@@ -52,6 +53,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes zero(T * source, I nEle);
 
 			/**
@@ -67,6 +69,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count);
 
 			/**
@@ -84,6 +87,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T ** dest, I * nDestEle);
 
 			/**
@@ -101,6 +105,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes uniqueArray(T * source, I nSourceEle, T * dest, I nDestEle);
 
 
@@ -119,6 +124,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			// template <class I, class T>
+			 //__attribute__((warn_unused_result))
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele);
 
 			/**
@@ -139,6 +145,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			// template <class I, class T>
+			 //__attribute__((warn_unused_result))
 			// cupcfd::error::eCodes add(T * source1, I nSource1Ele,T * source2, I nSource2Ele, T * dest, I nDestEle);
 
 			/**
@@ -154,6 +161,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count);
 
 			/**
@@ -171,6 +179,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst);
 
 			/**
@@ -188,6 +197,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst);
 
 			/**
@@ -208,6 +218,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount);
 
 			/**
@@ -229,6 +240,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount);
 
 			/**
@@ -248,6 +260,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count);
 
 			/**
@@ -267,6 +280,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes minusDistinctCount(T * source1, I nSource1, T * source2, I nSource2, I * count);
 
 			/**
@@ -288,6 +302,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			// template <class I, class T>
+			 //__attribute__((warn_unused_result))
 			// cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult);
 
 			/**
@@ -307,6 +322,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count);
 
 			/**
@@ -328,9 +344,11 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult);
 
 			template <class I>
+			__attribute__((warn_unused_result))
 			I safeConvertSizeT(std::size_t s);
 
 		} // namespace drivers

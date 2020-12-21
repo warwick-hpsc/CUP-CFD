@@ -45,6 +45,7 @@ namespace cupcfd
 		 * @tparam L The label datatype of the unstructured mesh
 		 */
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes FluxScalarDolfynFaceLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 														T * PhiCell, I nPhiCell,
 														T * PhiBoundary, I nPhiBoundary,

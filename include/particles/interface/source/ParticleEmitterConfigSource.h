@@ -66,6 +66,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleEmitterConfig(ParticleEmitterConfig<E,P,I,T> ** config) = 0;
 		};
 	}

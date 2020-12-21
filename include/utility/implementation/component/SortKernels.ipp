@@ -110,6 +110,10 @@ namespace cupcfd
 			template <class I, class T>
 			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes)
 			{
+				if (nIndexes != nSource) {
+					return -1;
+				}
+
 				T * left;
 				T * right;
 				I * leftIndexes;

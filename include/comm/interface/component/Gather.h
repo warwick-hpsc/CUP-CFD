@@ -47,6 +47,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Gather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -76,6 +77,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllGather(T * bSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -106,6 +108,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+        __attribute__((warn_unused_result))
         cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -145,6 +148,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -173,6 +177,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int * bRecvCounts, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -205,6 +210,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, cupcfd::comm::Communicator& mpComm);
 
 	} // namespace comm

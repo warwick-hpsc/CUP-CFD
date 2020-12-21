@@ -54,6 +54,8 @@ namespace cupcfd
 		template <class I, class T>
 		void BenchmarkExchange<I,T>::runBenchmark()
 		{
+			cupcfd::error::eCodes status;
+
 			// Expected size of data array is determined at init time (this is array of data both local and to be sent)
 			I dataSize = patternPtr->localToExchange.size();
 
@@ -75,7 +77,8 @@ namespace cupcfd
 				this->recordParameters();
 
 				this->startBenchmarkBlock("PackBuffer");
-				patternPtr->packSendBuffer(data, dataSize);
+				status = patternPtr->packSendBuffer(data, dataSize);
+				CHECK_ERROR_CODE(status)
 				this->stopBenchmarkBlock("PackBuffer");
 
 				this->startBenchmarkBlock("Exchange");

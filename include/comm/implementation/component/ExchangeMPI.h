@@ -80,12 +80,13 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes ExchangeMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * tRanks, int nTRanks,
-															 int elePerRank,
-															 MPI_Comm comm,
-															 MPI_Request ** requests, int * nRequests);
+														T * recvBuffer, int nRecvBuffer,
+														int * tRanks, int nTRanks,
+														int elePerRank,
+														MPI_Comm comm,
+														MPI_Request ** requests, int * nRequests);
 
 
 			/**
@@ -173,14 +174,15 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes ExchangeVMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 int * sendCount, int nSendCount,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * recvCount, int nRecvCount,
-															 int * sRanks, int nSRanks,
-															 int * rRanks, int nRRanks,
-															 MPI_Comm comm,
-															 MPI_Request ** requests, int * nRequests);
+														int * sendCount, int nSendCount,
+														T * recvBuffer, int nRecvBuffer,
+														int * recvCount, int nRecvCount,
+														int * sRanks, int nSRanks,
+														int * rRanks, int nRRanks,
+														MPI_Comm comm,
+														MPI_Request ** requests, int * nRequests);
 
 
 			/**
@@ -265,14 +267,15 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes ExchangeVMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 int * sendCount, int nSendCount,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * recvCount, int nRecvCount,
-															 int * sRanks, int nSRanks,
-															 int * rRanks, int nRRanks,
-															 MPI_Comm comm,
-															 MPI_Request * requests, int nRequests);
+														int * sendCount, int nSendCount,
+														T * recvBuffer, int nRecvBuffer,
+														int * recvCount, int nRecvCount,
+														int * sRanks, int nSRanks,
+														int * rRanks, int nRRanks,
+														MPI_Comm comm,
+														MPI_Request * requests, int nRequests);
 		}
 	}
 }

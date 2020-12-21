@@ -66,14 +66,17 @@ namespace cupcfd
 				/**
 				 * Get the file path where the Sparse Matrix Source File can be found
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFilePath(std::string& filePath) = 0;
 
 				/**
 				 * Get the file format of the Sparse Matrix Source File
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFileFormat(SparseMatrixFileFormat * format) = 0;
 
 				virtual SparseMatrixSourceFileConfigSource<I,T> * clone() = 0;
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig) = 0;
 		};
 	}

@@ -124,7 +124,6 @@ namespace cupcfd
 			nodeExists = false;
 			status = this->existsNode(node, &nodeExists);
 			CHECK_ERROR_CODE(status)
-
 			if(nodeExists == false) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -133,7 +132,6 @@ namespace cupcfd
 			nodeExists = false;
 			status = this->existsNode(adjNode, &nodeExists);
 			CHECK_ERROR_CODE(status)
-
 			if(nodeExists == false) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -141,7 +139,6 @@ namespace cupcfd
 			// (3) Check that edge doesn't already exist
 			status = this->existsEdge(node, adjNode, &edgeExists);
 			CHECK_ERROR_CODE(status)
-
 			// Add if edge doesn't already exist
 			if(edgeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
@@ -165,18 +162,18 @@ namespace cupcfd
 
 			status = this->existsNode(srcNode, &nodeExists);
 			CHECK_ERROR_CODE(status)
-
 			if(!nodeExists) {
 				*exists = false;
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				// return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
 			CHECK_ERROR_CODE(status)
-
 			if(!nodeExists) {
 				*exists = false;
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				// return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			// Retrieve internal indexes for the nodes
@@ -184,10 +181,15 @@ namespace cupcfd
 			I adjNodeLocalIDX = this->nodeToIDX[dstNode];
 
 			// Search edge list for destination node and return existance (or lack thereof)
-			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
-			CHECK_ERROR_CODE(status)
-
-			// Error check on status
+			// status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
+			I edgeIdx;
+			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, &edgeIdx);
+			if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+				// This error is ok, just means edge not found.
+				*exists = false;
+			} else {
+				CHECK_ERROR_CODE(status)
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}

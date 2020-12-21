@@ -44,6 +44,7 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
  			template <class I, class T>
+ 			__attribute__((warn_unused_result))
  			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I * index);
 
  			/**
@@ -65,6 +66,7 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
   			template <class I, class T>
+ 			__attribute__((warn_unused_result))
   			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, bool * found);
 
  			/**
@@ -90,6 +92,7 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
   			template <class I, class T>
+ 			__attribute__((warn_unused_result))
   			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index);
 
  			/**
@@ -113,6 +116,7 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
  			template <class I, class T>
+ 			__attribute__((warn_unused_result))
  			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found);
  		} // namespace drivers
  	} // namespace utility

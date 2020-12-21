@@ -102,8 +102,9 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildParticleSystem(ParticleSystem<ParticleSystemSimple<M, I, T, L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M, I, T, L> ** system,
-																	   std::shared_ptr<M> meshPtr);
+															std::shared_ptr<M> meshPtr);
 
 			private:
 				int numParticleSourcesOrEmitters;

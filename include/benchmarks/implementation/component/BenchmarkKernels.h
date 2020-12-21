@@ -57,36 +57,52 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes GradientPhiGaussDolfynBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynFaceLoopBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynBoundaryLoop1Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynBoundaryLoop2Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynBoundaryLoop3Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynBoundaryLoop4Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynBoundaryLoop5Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxMassDolfynRegionLoopBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxScalarDolfynFaceLoopBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxUVWDolfynFaceLoop1Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxUVWDolfynRegionLoop1Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxUVWDolfynBndsLoop1Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynCellLoop1Benchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynRegionLoopBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynBoundaryLoopBenchmark();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynCellLoop2Benchmark();
 
 				// === Overridden Inherited Methods ===

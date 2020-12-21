@@ -51,6 +51,8 @@ namespace cupcfd
 				// === Methods ===
 
 				virtual LinearSolverConfig<C,I,T> * clone() = 0;
+
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildLinearSolver(LinearSolverInterface<C,I,T> ** solverSystem,
 															 cupcfd::data_structures::SparseMatrix<C,I,T>& matrix,
 															 cupcfd::comm::Communicator& solverComm) = 0;

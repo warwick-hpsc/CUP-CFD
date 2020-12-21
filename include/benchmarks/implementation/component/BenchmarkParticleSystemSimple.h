@@ -48,9 +48,9 @@ namespace cupcfd
 				 *
 				 */
 				BenchmarkParticleSystemSimple(std::string benchmarkName, I repetitions,
-										I nTimesteps,
-										cupcfd::distributions::Distribution<I,T>& dtDist,
-										std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr);
+											I nTimesteps,
+											cupcfd::distributions::Distribution<I,T>& dtDist,
+											std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr);
 
 				/**
 				 *

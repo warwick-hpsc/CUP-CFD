@@ -75,6 +75,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSystemConfig(ParticleSystemConfig<S,E,P,M,I,T,L> ** config) = 0;
 		};
 	}

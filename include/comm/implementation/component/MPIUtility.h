@@ -34,6 +34,7 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
 			 * @retval E_SUCCESS Operation was completed successfully
 			 */
+__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(int dummy, MPI_Datatype * mpiType);
 
 			/**
@@ -44,6 +45,7 @@ namespace cupcfd
 			 *
 			 * @retval E_SUCCESS Operation was completed successfully
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(double dummy, MPI_Datatype * mpiType);
 
 			/**
@@ -54,6 +56,7 @@ namespace cupcfd
 			 *
 			 * @retval E_SUCCESS Operation was completed successfully
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(float dummy, MPI_Datatype * mpiType);
 
 			/**
@@ -64,6 +67,7 @@ namespace cupcfd
 			 *
 			 * @retval E_SUCCESS Operation was completed successfully
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(long dummy, MPI_Datatype * mpiType);
 
 			/**
@@ -74,6 +78,7 @@ namespace cupcfd
 			 *
 			 * @retval E_SUCCESS Operation was completed successfully
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(bool dummy, MPI_Datatype * mpiType);
 
 			/**
@@ -88,6 +93,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_MPI_DATATYPE_UNREGISTERED The object has not yet registered its datatype with
 			 * the MPI library
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMPIType(cupcfd::comm::mpi::CustomMPIType& customObject, MPI_Datatype * mpiType);
 		} // namespace mpi
 	} // namespace comm

@@ -90,6 +90,8 @@ namespace cupcfd
 
 				void operator=(const DistributionConfigFixed<I,T>& source);
 				DistributionConfigFixed<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildDistribution(Distribution<I,T> ** dist);
 		};
 	}

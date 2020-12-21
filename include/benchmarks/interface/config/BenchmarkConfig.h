@@ -79,6 +79,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(Benchmark<I,T> ** bench);
 		};
 	}

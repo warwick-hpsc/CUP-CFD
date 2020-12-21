@@ -32,6 +32,7 @@ namespace cupcfd
 			 * @retval E_SUCCESS Operation completed successfully.
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			 */
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes BarrierMPI(MPI_Comm comm);
 		}
 	}

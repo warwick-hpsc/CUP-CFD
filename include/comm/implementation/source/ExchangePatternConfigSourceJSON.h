@@ -69,6 +69,7 @@ namespace cupcfd
 				virtual ~ExchangePatternConfigSourceJSON();
 
 				// === Inherited Overloaded Methods ===
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getExchangeMethod(ExchangeMethod * method);
 
 				// === Concrete Methods ===
@@ -76,6 +77,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildExchangePatternConfig(ExchangePatternConfig ** patternConfig);
 
 				// === Pure Virtual Methods ===

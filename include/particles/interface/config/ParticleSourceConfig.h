@@ -69,6 +69,7 @@ namespace cupcfd
 				 * @param particleSource A pointer to the location where the pointer of the newly created object will be stored.
 				 * @param sourceId ID for this source, unique across all emitters and sources in system; used to create unique particle IDs
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId) = 0;
 		};
 	}

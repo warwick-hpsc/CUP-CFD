@@ -83,8 +83,9 @@ namespace cupcfd
 
 				virtual void operator=(const BenchmarkConfigParticleSystemSimple<M,I,T,L>& source);
 				BenchmarkConfigParticleSystemSimple<M,I,T,L> * clone();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(BenchmarkParticleSystemSimple<M,I,T,L> ** bench,
-														  std::shared_ptr<M> meshPtr);
+													std::shared_ptr<M> meshPtr);
 		};
 	}
 }

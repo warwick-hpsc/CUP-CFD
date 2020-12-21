@@ -125,6 +125,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes resetResultStorage();
 
 				/**
@@ -142,6 +143,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setNodeStorage(T * nodes, I nNodes);
 
 				/**
@@ -154,6 +156,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes resetNodeStorage();
 
 				/**
@@ -167,6 +170,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setNParts(I nParts);
 
 				/**
@@ -201,6 +205,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_PARTITIONER_NO_RESULTS There are no results to distribute.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes assignRankNodes(T** rankNodes,
 																   I * nNodes);
 
@@ -213,6 +218,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes reset();
 
 				// ========== Pure Virtual Methods ===============
@@ -237,6 +243,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA No node data is stored.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes partition() = 0;
 
 				/**
@@ -265,6 +272,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts) = 0;
 		};
 	}

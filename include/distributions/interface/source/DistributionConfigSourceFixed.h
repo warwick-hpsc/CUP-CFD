@@ -57,6 +57,7 @@ namespace cupcfd
 
 				// === Concrete Methods ===
 
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig);
 
 				// === Pure Virtual Methods ===
@@ -75,6 +76,7 @@ namespace cupcfd
 				 * or is improperly formatted
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE A suitable data source was found, but not with a valid value
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFixedValue(T * value) = 0;
 
 				virtual DistributionConfigSourceFixed<I,T> * clone() = 0;

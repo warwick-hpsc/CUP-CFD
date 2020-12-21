@@ -76,10 +76,13 @@ namespace cupcfd
 
 				// === Overloaded Methods ===
 
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFilePath(std::string& filePath);
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFileFormat(ParticleSimpleFileFormat * format);
 				virtual void operator=(const ParticleSimpleSourceFileConfigJSON<I,T>& source);
 				virtual ParticleSimpleSourceFileConfigJSON<I,T> * clone();
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>,I,T> ** config);
 		};
 	}

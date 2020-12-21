@@ -56,6 +56,7 @@ namespace cupcfd
 				virtual ~DistributionConfigSourceNormal();
 
 				// === Concrete Methods ===
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig);
 
 				// === Pure Virtual Methods ===
@@ -64,21 +65,25 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getLBound(T * lBound) = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getUBound(T * uBound) = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getMean(T * mean) = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getStDev(T * stDev) = 0;
 		};
 	}

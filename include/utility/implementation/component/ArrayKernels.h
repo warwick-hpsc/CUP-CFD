@@ -184,6 +184,7 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
 
 			/**

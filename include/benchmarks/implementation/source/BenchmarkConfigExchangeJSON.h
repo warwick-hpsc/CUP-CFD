@@ -85,20 +85,24 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkName(std::string& benchmarkName);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkRepetitions(I * repetitions);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getExchangePatternConfig(cupcfd::comm::ExchangePatternConfig ** patternConfig);
 
 
 				// === Overloaded Methods ===
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmarkConfig(BenchmarkConfigExchange<I,T> ** config);
 
 				// === Pure Virtual Methods ===

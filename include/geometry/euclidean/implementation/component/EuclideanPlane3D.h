@@ -344,6 +344,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes computeScalarPlaneEquation(T * a, T * b, T * c, T * d);
 
 
@@ -417,9 +418,10 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_EUC_VEC_PARALLEL The line is parallel with the plane and will never intersect
 					 * (or will intersect every point if it lies on the plane)
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes linePlaneIntersection(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& l,
-																	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
-																	 cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result);
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
+																cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result);
 
 					/**
 					 * Compute the shortest distance (i.e. perpendicular distance) to a point from this plane.
@@ -468,11 +470,12 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_EUC_VEC_PARALLEL The line is parallel with the plane and will never intersect
 					 * (or will intersect every point if it lies on the plane)
 					 */
+					__attribute__((warn_unused_result))
 					static cupcfd::error::eCodes linePlaneIntersection(cupcfd::geometry::euclidean::EuclideanVector<T,3>& normal,
-																			const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p0,
-																			const cupcfd::geometry::euclidean::EuclideanVector<T,3>& l,
-																			const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
-																			cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result);
+																		const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p0,
+																		const cupcfd::geometry::euclidean::EuclideanVector<T,3>& l,
+																		const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
+																		cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result);
 				protected:
 
 				private:

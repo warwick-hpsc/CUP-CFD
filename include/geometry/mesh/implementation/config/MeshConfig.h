@@ -149,8 +149,9 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 					 */
 					template <class M>
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildUnstructuredMesh(M ** mesh,
-																	 cupcfd::comm::Communicator& comm);
+																cupcfd::comm::Communicator& comm);
 			};
 		}
 	}

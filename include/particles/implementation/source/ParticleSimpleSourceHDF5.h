@@ -63,8 +63,10 @@ namespace cupcfd
 
 				// === Inherited Overloads ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNParticles(I * nParticles);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase);
 
 				// === Pure Virtual Methods ===

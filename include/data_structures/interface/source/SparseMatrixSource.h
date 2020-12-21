@@ -67,6 +67,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getNNZ(I * nnz) = 0;
 
 				/**
@@ -80,6 +81,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getNRows(I * nRows) = 0;
 
 				/**
@@ -93,6 +95,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getNCols(I * nCols) = 0;
 
 				/**
@@ -107,6 +110,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getMatrixIndicesBase(I * indicesBase) = 0;
 
 				/**
@@ -122,6 +126,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getNNZRows(I * rowIndices, I nRowIndices) = 0;
 
 				/**
@@ -141,6 +146,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB rowIndex is out of bounds for an acceptable row index (from the matrix base index)
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes) = 0;
 
 				/**
@@ -160,6 +166,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB rowIndex is out of bounds for an acceptable row index (from the matrix base index)
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues) = 0;
 		};
 	}

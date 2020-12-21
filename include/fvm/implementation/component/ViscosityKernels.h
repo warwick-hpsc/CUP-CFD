@@ -36,6 +36,7 @@ namespace cupcfd
 	namespace fvm
 	{
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes calculateViscosityDolfynCellLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T small,
 																T cmu,
@@ -50,6 +51,7 @@ namespace cupcfd
 		void calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes calculateViscosityDolfynBoundaryLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																	T tmcmu, T large, T small, T kappa, T visLam,
 																	T * TE, I nTE,
@@ -58,6 +60,7 @@ namespace cupcfd
 																	T * visEffBoundary, I nVisEffBoundary);
 
 		template <class M, class I, class T, class L>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes calculateViscosityDolfynCellLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																T visLam,
 																T * visEffCell, I nVisEffCell,

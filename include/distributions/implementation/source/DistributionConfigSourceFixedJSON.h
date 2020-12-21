@@ -100,6 +100,7 @@ namespace cupcfd
 
 				virtual void operator=(const DistributionConfigSourceFixedJSON<I,T>& source);
 
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFixedValue(T * value);
 				virtual DistributionConfigSourceFixedJSON<I,T> * clone();
 		};

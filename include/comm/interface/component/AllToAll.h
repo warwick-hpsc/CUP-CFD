@@ -44,6 +44,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED One of the required arrays (send/recv) is insufficiently sized.
 		 */
 		template <class T>
+		 __attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 										   T * recvBuffer, int nRecvBuffer,
 										   int chunkSize,
@@ -83,6 +84,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer, int * sendCounts, int nSendCounts,
 											T * recvBuffer, int nRecvBuffer, int * recvCounts, int nRecvCounts,
 											cupcfd::comm::Communicator& mpComm);
@@ -126,6 +128,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * sendCounts, int nSendCounts,
 											int * sDispls, int nSDispls,
@@ -201,6 +204,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * processIDs, int nProcessIDs,
 											T ** recvBuffer, int * nRecvBuffer,

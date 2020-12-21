@@ -78,10 +78,13 @@ namespace cupcfd
 				 */
 				virtual ~LinearSolverConfigPETScJSON();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getPETScAlgorithm(PETScAlgorithm * solverAlg);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getETol(T * eTol);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRTol(T * rTol);
 
 				// === Concrete Methods ===
@@ -89,6 +92,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildLinearSolverConfig(LinearSolverConfig<C,I,T> ** linearSolverConfig);
 
 				// === Pure Virtual Methods ===

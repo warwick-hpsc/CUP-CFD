@@ -53,9 +53,11 @@ namespace cupcfd
 
 				// === Overridden Inherited Methods ===
 				PartitionerNaiveConfig<I,T> * clone();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,
-															cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
+														cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
 		};
 	}
 }

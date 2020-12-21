@@ -307,6 +307,7 @@ namespace cupcfd
 
 					inline void operator=(const MeshSourceStructGenConfig<I,T>& source);
 					MeshSourceStructGenConfig<I,T> * clone();
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
 			};
 		} // namespace mesh

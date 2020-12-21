@@ -145,6 +145,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resetWorkArrays();
 
 				/**
@@ -166,6 +167,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_DISTGRAPH_UNFINALIZED Error: The distributed graph is unfinalised
 				 * @retval cupcfd::error::E_DISTGRAPH_NO_LOCAL_NODES Error: The distributed graph has no local nodes on this process
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setWorkArrays(cupcfd::data_structures::DistributedAdjacencyList<I, T>& distGraph);
 
 
@@ -176,6 +178,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resetVertexEdgeWeights();
 
 				/**
@@ -185,6 +188,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resetSubdomainWeights();
 
 				/**
@@ -194,6 +198,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resetVertexImbalanceWeights();
 
 				/**
@@ -206,6 +211,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setNCon(I nCon);
 
 				/**
@@ -215,6 +221,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setWeightArrays();
 
 				/**
@@ -227,6 +234,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_PARMETIS_INVALID_NCON Error: The object has an ncon value of less than 1
 				 * @retval cupcfd::error::E_PARMETIS_INVALID_NPARTS Error: The object has an nParts value of less than 1
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setSubdomainWeightArrays();
 
 				/**
@@ -237,6 +245,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_PARMETIS_INVALID_NCON Error: The object has an ncon value of less than 1
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setVertexImbalanceWeightArrays();
 
 
@@ -252,6 +261,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setNParts(I nParts);
 
 				/**
@@ -269,10 +279,13 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_PARMETIS_INVALID_NPARTS Error: The value of nParts is 1 or less
 				 * @retval cupcfd::error::E_PARMETIS_LIBRARY_ERROR Error: An unexpected error was encountered from the parmetis library
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes partition();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes reset();
 
 				// === Concrete Methods ===

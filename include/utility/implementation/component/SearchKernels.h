@@ -35,6 +35,7 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
 			 */
   			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I* index);
 
  			/**
@@ -52,6 +53,7 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
  			 */
  			template <class I, class T>
+ 			__attribute__((warn_unused_result))
  			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I* index);
 
  		} // namespace kernels

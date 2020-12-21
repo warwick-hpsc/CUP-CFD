@@ -73,6 +73,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @return cupcfd::error::E_SUCCESS Success
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,L> ** source) = 0;
 			};
 		}
