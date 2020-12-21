@@ -128,15 +128,17 @@ namespace cupcfd
 
 				// Test Mesh Source from a File
 				status = source1Config.buildMeshSourceConfig(&sourceConfig);
-				if(status == cupcfd::error::E_SUCCESS) {
-					return sourceConfig;
+				if (status == cupcfd::error::E_CONFIG_OPT_NOT_FOUND) {
+					// This error is ok, try source2Config instead
+				} else {
+					CHECK_ERROR_CODE(status);
+					if(status == cupcfd::error::E_SUCCESS) return sourceConfig;
 				}
 
 				// Test Mesh Source from Structured Generation
 				status = source2Config.buildMeshSourceConfig(&sourceConfig);
-				if(status == cupcfd::error::E_SUCCESS) {
-					return sourceConfig;
-				}
+				CHECK_ERROR_CODE(status);
+				if(status == cupcfd::error::E_SUCCESS) return sourceConfig;
 
 				// If here, not good.
 				MPI_Abort(MPI_COMM_WORLD, status);

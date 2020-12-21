@@ -100,16 +100,16 @@ namespace cupcfd
 				std::string sourceFilePath;
 
 				status = this->getFileFormat(&fileFormat);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
+				if (status == cupcfd::error::E_CONFIG_OPT_NOT_FOUND) {
+					// This error is ok, just return it.
 					return status;
 				}
+				CHECK_ERROR_CODE(status)
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				status = this->getFilePath(sourceFilePath);
 				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				if(status != cupcfd::error::E_SUCCESS) return status;
 
 				*meshSourceConfig = new MeshSourceFileConfig<I,T>(fileFormat, sourceFilePath);
 
