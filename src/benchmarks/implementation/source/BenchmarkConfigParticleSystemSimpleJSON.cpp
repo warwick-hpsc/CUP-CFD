@@ -170,10 +170,7 @@ namespace cupcfd
 				cupcfd::particles::ParticleSystemConfig<cupcfd::particles::ParticleSystemSimple<M,I,T,L>, cupcfd::particles::ParticleEmitterSimple<I,T>, cupcfd::particles::ParticleSimple<I,T>, M,I,T,L> * tmp;
 
 				status = particleSystemConfigJSON.buildParticleSystemConfig(&tmp);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// ToDo: Take a look at templates again, don't really want to have to typecast this....
 				*particleSystemConfig = static_cast<cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> *>(tmp);
@@ -196,34 +193,19 @@ namespace cupcfd
 			cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> * particleSystemConfig;
 
 			status = this->getBenchmarkName(benchmarkName);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getBenchmarkRepetitions(&repetitions);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getNTimesteps(&nTimesteps);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getDtDistributionConfig(&dtDistConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getParticleSystemConfig(&particleSystemConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigParticleSystemSimple<M,I,T,L>(benchmarkName, repetitions, nTimesteps, *dtDistConfig, *particleSystemConfig);
 

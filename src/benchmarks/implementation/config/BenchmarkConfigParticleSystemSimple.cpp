@@ -73,17 +73,11 @@ namespace cupcfd
 
 			// Build the dt Distribution
 			status = this->dtDistConfig->buildDistribution(&dtDist);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Build the Particle System;
 			status = this->particleSystemConfig->buildParticleSystem(&tmp, meshPtr);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr(static_cast<cupcfd::particles::ParticleSystemSimple<M,I,T,L> *>(tmp));
 

@@ -50,7 +50,7 @@ namespace cupcfd
 		 	T * localNodes = (T *) malloc(sizeof(T) * nLocalNodes);
 
 			status = this->getLocalNodes(localNodes, nLocalNodes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			I nRecvNodes;
 			T * recvNodes = nullptr;
@@ -62,23 +62,20 @@ namespace cupcfd
 											&recvNodes, &nRecvNodes, 
 											&recvNodeProcCount, &nRecvNodeProcCount, 
 											rank, *(this->comm));
-			CHECK_ERROR_CODE(status)				   
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)				   
 			
 			// (2) Each rank must send data about the edges it has. This should include in both directions.
 			// It will need two stages, one to gather node1 in the edge, and a second to get node 2 in the edge.
 
 			I nEdges;
 			status = this->connGraph.getEdgeCount(&nEdges);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			T * edgeNode1 = (T *) malloc(sizeof(T) * nEdges);
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
 			
 			status = this->connGraph.getEdges(edgeNode1, nEdges, edgeNode2, nEdges);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			I nRecvEdge1;
 			T * recvEdge1 = nullptr;
@@ -96,15 +93,13 @@ namespace cupcfd
 										   &recvEdge1, &nRecvEdge1, 
 										   &recvEdge1ProcCount, &nRecvEdge1ProcCount, 
 										   rank, *(this->comm));
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 							   
 			status = cupcfd::comm::GatherV(edgeNode2, nEdges, 
 										   &recvEdge2, &nRecvEdge2, 
 										   &recvEdge2ProcCount, &nRecvEdge2ProcCount, 
 										   rank, *(this->comm));								   
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// === Graph Reconstruction ===
 			
@@ -112,7 +107,7 @@ namespace cupcfd
 				// (1) We can now reconstruct the graph by adding the nodes to the serial graph
 				for(I i = 0; i < nRecvNodes; i++) {
 					status = destGraph->addNode(recvNodes[i]);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 				}
 	
 				// (2) Now we can add the edges
@@ -120,7 +115,7 @@ namespace cupcfd
 				// nothing should change.
 				for(I i = 0; i < nRecvEdge1; i++) {
 					status = destGraph->addEdge(recvEdge1[i], recvEdge2[i]);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 				}
 				
 				free(recvNodes);

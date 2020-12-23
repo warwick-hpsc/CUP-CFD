@@ -106,10 +106,7 @@ namespace cupcfd
 			// Get the number of rows
 			I nRows;
 			status = this->getNRows(&nRows);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Error Check: Size of the rowIndices array should be the same as the number of rows
 			if(nRowIndices != nRows) {
@@ -155,10 +152,7 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Labels are zero-based, HDF5 Indexes are base-0
 			properties.addIndex(rowIndex - base);
@@ -220,10 +214,7 @@ namespace cupcfd
 			// Get Matrix Base Index
 			I base;
 			status = this->getMatrixIndicesBase(&base);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// HDF5 Indexes are base-0
 			properties.addIndex(rowIndex - base);

@@ -40,36 +40,29 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		BenchmarkLinearSolver<C,I,T>::~BenchmarkLinearSolver()
-		{
+		BenchmarkLinearSolver<C,I,T>::~BenchmarkLinearSolver() {
 			// Shared Pointer will cleanup after itself as object is destroyed
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::setupBenchmark()
-		{
+		void BenchmarkLinearSolver<C,I,T>::setupBenchmark() {
 			// Nothing to do here currently
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::recordParameters()
-		{
+		void BenchmarkLinearSolver<C,I,T>::recordParameters() {
 
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::runBenchmark()
-		{
-			cupcfd::error::eCodes err;
+		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark() {
+			cupcfd::error::eCodes status;
 
 			// Get the non-zero rows assigned to this rank
 			I * rowIndexes;
 			I nRowIndexes;
-			err = matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
-			if (err != cupcfd::error::E_SUCCESS) {
-				DEBUGGABLE_ERROR;
-				throw( std::string("BenchmarkLinearSolver::runBenchmark(): ERROR: ") + cupcfd::error::eStrings[err]);
-			}
+			status = matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			CHECK_ECODE(status)
 
 			// Start tracking parameters/time for this block
 			this->startBenchmarkBlock(this->benchmarkName);
@@ -77,42 +70,48 @@ namespace cupcfd
 
 			this->recordParameters();
 
-			for(I i = 0; i < this->repetitions; i++)
-			{
+			for(I i = 0; i < this->repetitions; i++) {
 				// Clear Matrix A
 				this->startBenchmarkBlock("ClearMatrixA");
-				this->solverSystemPtr->clearMatrixA();
+				status = this->solverSystemPtr->clearMatrixA();
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("ClearMatrixA");
 
 				// Clear Vector X
 				this->startBenchmarkBlock("ClearVectorX");
-				this->solverSystemPtr->clearVectorX();
+				status = this->solverSystemPtr->clearVectorX();
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("ClearVectorX");
 
 				// Clear Vector B
 				this->startBenchmarkBlock("ClearVectorB");
-				this->solverSystemPtr->clearVectorB();
+				status = this->solverSystemPtr->clearVectorB();
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("ClearVectorB");
 
 				// Set Vector B Values
 				this->startBenchmarkBlock("SetValuesVectorB");
-				this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				status = this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("SetValuesVectorB");
 
 				// Set Vector X Values
 				this->startBenchmarkBlock("SetValuesVectorX");
-				this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				status = this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("SetValuesVectorX");
 
 				// Set Matrix A Values/Build Matrix A (Structures already set inside setup)
 				// Matrix must have same structures as one used during setup
 				this->startBenchmarkBlock("SetValuesMatrixA");
-				this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
+				status = this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("SetValuesMatrixA");
 
 				// Run Linear Solver
 				this->startBenchmarkBlock("Solve");
-				this->solverSystemPtr->solve();
+				status = this->solverSystemPtr->solve();
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("Solve");
 			}
 
@@ -121,6 +120,8 @@ namespace cupcfd
 
 			// Cleanup
 			free(rowIndexes);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

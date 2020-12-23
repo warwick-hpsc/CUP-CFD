@@ -24,18 +24,15 @@ namespace cupcfd
 		{
 			namespace kernels
 			{
-				inline bool isEqual(int val, int target)
-				{
-					if(val == target)
-					{
+				inline bool isEqual(int val, int target) {
+					if(val == target) {
 						return true;
 					}
 
 					return false;
 				}
 
-				inline bool isEqual(float val, float target)
-				{
+				inline bool isEqual(float val, float target) {
 					return val == target;
 				}
 
@@ -44,8 +41,7 @@ namespace cupcfd
 				// 	return val == target;
 				// }
 
-				inline bool isEqual(double val, double target)
-				{
+				inline bool isEqual(double val, double target) {
 					return val == target;
 				}
 
@@ -54,24 +50,20 @@ namespace cupcfd
 				// 	return val == target;
 				// }
 
-				inline double sqrtWr(double val)
-				{
+				inline double sqrtWr(double val) {
 					return sqrt(val);
 				}
 
-				inline float sqrtWr(float val)
-				{
+				inline float sqrtWr(float val) {
 					return sqrtf(val);
 				}
 
 				template <class T>
-				inline int sgn(T v)
-				{
+				inline int sgn(T v) {
 					// Based on: https://helloacm.com/how-to-implement-the-sgn-function-in-c
 					// Ideally would like to do without the branch this will introduce,
 					// but a tolerance check is v. likely needed around zero for floating point
-					if(isEqual(v, (T) 0))
-					{
+					if(isEqual(v, (T) 0)) {
 						return 0;
 					}
 

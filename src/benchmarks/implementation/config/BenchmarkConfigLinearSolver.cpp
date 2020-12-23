@@ -76,10 +76,7 @@ namespace cupcfd
 
 			// Build the Matrix Source
 			status = this->matrixSourceConfig->buildSparseMatrixSource(&matrixSource);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Build the Matrix, distributing the data as established prior
 
@@ -91,25 +88,13 @@ namespace cupcfd
 			I rows, cols, base;
 
 			status = matrixSource->getNRows(&rows);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				delete matrixSource;
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = matrixSource->getNCols(&cols);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				delete matrixSource;
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = matrixSource->getMatrixIndicesBase(&base);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				delete matrixSource;
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Make the new matrix with a base of 0
 			std::shared_ptr<C> matrix = std::make_shared<C>(rows, cols, 0);
@@ -129,13 +114,15 @@ namespace cupcfd
 					T * nnzValues;
 					I nNNZValues;
 
-					matrixSource->getRowColumnIndexes(rowIndex, &columnIndexes, &nColumnIndexes);
-					matrixSource->getRowNNZValues(rowIndex, &nnzValues, &nNNZValues);
+					status = matrixSource->getRowColumnIndexes(rowIndex, &columnIndexes, &nColumnIndexes);
+					CHECK_ECODE(status)
+					status = matrixSource->getRowNNZValues(rowIndex, &nnzValues, &nNNZValues);
+					CHECK_ECODE(status)
 
 					for( I j = 0; j < nColumnIndexes; j++) {
 						// ToDo: Element by Element call is likely v.slow
 						status = matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 					}
 
 					free(columnIndexes);
@@ -146,10 +133,7 @@ namespace cupcfd
 				// All ranks are solving the same matrix independently
 				cupcfd::comm::Communicator solverComm(MPI_COMM_SELF);
 				status = this->linearSolverConfig->buildLinearSolver(&solverSystem, *matrix, solverComm);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 			}
 			else if(this->distType == BENCH_SOLVER_DIST_DISTRIBUTED) {
@@ -181,13 +165,15 @@ namespace cupcfd
 					T * nnzValues;
 					I nNNZValues;
 
-					matrixSource->getRowColumnIndexes(rowIndex, &columnIndexes, &nColumnIndexes);
-					matrixSource->getRowNNZValues(rowIndex, &nnzValues, &nNNZValues);
+					status = matrixSource->getRowColumnIndexes(rowIndex, &columnIndexes, &nColumnIndexes);
+					CHECK_ECODE(status)
+					status = matrixSource->getRowNNZValues(rowIndex, &nnzValues, &nNNZValues);
+					CHECK_ECODE(status)
 
 					for( I j = 0; j < nColumnIndexes; j++) {
 						// ToDo: Element by Element call is likely v.slow
 						status = matrix->setElement(i, columnIndexes[j] - base, nnzValues[j]);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 					}
 
 					free(columnIndexes);
@@ -199,10 +185,7 @@ namespace cupcfd
 				// This requires a parallel solver, and thus a non-serial communicator.
 
 				status = this->linearSolverConfig->buildLinearSolver(&solverSystem, *matrix, solverComm);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 			}
 			else {
 				return cupcfd::error::E_ERROR;
@@ -211,24 +194,18 @@ namespace cupcfd
 			// Make RHS Vector Source
 			cupcfd::data_structures::VectorSource<I,T> * rhsSource;
 			status = this->rhsSourceConfig->buildVectorSource(&rhsSource);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Make Sol Vector Source
 			cupcfd::data_structures::VectorSource<I,T> * solSource;
 			status = this->rhsSourceConfig->buildVectorSource(&solSource);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Get the non-zero rows assigned to this rank
 			I * rowIndexes;
 			I nRowIndexes;
 			status = matrix->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Setup a data array
 			T nData = nRowIndexes;
@@ -236,14 +213,16 @@ namespace cupcfd
 
 			// Populate RHS Vector
 			std::shared_ptr<std::vector<T>> rhsVectorPtr = std::make_shared<std::vector<T>>();
-			rhsSource->getData(data, nData, rowIndexes, nRowIndexes, matrix->baseIndex);
+			status = rhsSource->getData(data, nData, rowIndexes, nRowIndexes, matrix->baseIndex);
+			CHECK_ECODE(status)
 			for(I i = 0; i < nRowIndexes; i++) {
 				rhsVectorPtr->push_back(data[i]);
 			}
 
 			// Populate Sol Vector
 			std::shared_ptr<std::vector<T>> solVectorPtr = std::make_shared<std::vector<T>>();
-			solSource->getData(data, nData, rowIndexes, nRowIndexes, matrix->baseIndex);
+			status = solSource->getData(data, nData, rowIndexes, nRowIndexes, matrix->baseIndex);
+			CHECK_ECODE(status)
 			for(I i = 0; i < nRowIndexes; i++) {
 				solVectorPtr->push_back(data[i]);
 			}

@@ -54,7 +54,7 @@ namespace cupcfd
 
 			// Make a copy of locally owned nodes from the graph
 			status = sourceGraph.getLocalNodes(nodes, nNodes);
-			CHECK_ERROR_CODE(status)
+			HARD_CHECK_ECODE(status)
 
 			// Set the nodes in the partitioner
 			this->setNodeStorage(nodes, nNodes);
@@ -97,8 +97,7 @@ namespace cupcfd
 			this->nNodes = nNodes;
 			this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
 			status = cupcfd::utility::drivers::copy(nodes, nNodes, this->nodes, this->nNodes);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -169,12 +168,10 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = resetNodeStorage();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			status = resetResultStorage();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

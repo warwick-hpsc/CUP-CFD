@@ -95,22 +95,13 @@ namespace cupcfd
 			cupcfd::comm::ExchangePatternConfig * patternConfig;
 
 			status = this->getBenchmarkName(benchmarkName);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getBenchmarkRepetitions(&repetitions);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getExchangePatternConfig(&patternConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigExchange<I,T>(benchmarkName, repetitions, *patternConfig);
 

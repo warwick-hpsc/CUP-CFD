@@ -176,12 +176,8 @@ namespace cupcfd
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes reset();
+				void reset();
 
 				/**
 				 * Deep copy from the source graph to the destination graph, overwriting it's contents
@@ -194,8 +190,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes operator=(DistributedAdjacencyList<I, T>& source);
+				void operator=(DistributedAdjacencyList<I, T>& source);
 
 				/**
 				 * Tests whether the node is known to exist within the portion of the list stored on

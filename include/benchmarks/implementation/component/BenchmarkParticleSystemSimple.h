@@ -62,7 +62,8 @@ namespace cupcfd
 				// === Inherited Overridden Methods ===
 				void setupBenchmark();
 				void recordParameters();
-				void runBenchmark();
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes runBenchmark();
 		};
 	}
 }

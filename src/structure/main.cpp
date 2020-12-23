@@ -137,38 +137,30 @@ int main (int argc, char ** argv)
 	std::ifstream source(configPath, std::ifstream::binary);
 	source >> configData;
 
-	if(configData.isMember("DataTypes"))
-	{
-		if(comm.rank == 0)
-		{
+	if(configData.isMember("DataTypes")) {
+		if(comm.rank == 0) {
 			std::cout << "Reading DataTypes\n";
 		}
 
 		cupcfd::SystemConfigJSON dataTypeJSON(configData["DataTypes"]);
 
 		status = dataTypeJSON.getIntegerDataType(&iData);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
-			if(comm.rank == 0)
-			{
+		if(status != cupcfd::error::E_SUCCESS) {
+			if(comm.rank == 0) {
 				std::cout << "Warning: Could not read Integer Datatype from JSON. Using Default Integer Type of int";
 			}
 		}
 
 		status = dataTypeJSON.getFloatingPointDataType(&fData);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
-			if(comm.rank == 0)
-			{
+		if(status != cupcfd::error::E_SUCCESS) {
+			if(comm.rank == 0) {
 				std::cout << "Warning: Could not read Floating Datatype from JSON. Using Default Integer Type of float";
 			}
 		}
 
 		status = dataTypeJSON.getMeshSpecialisationType(&mData);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
-			if(comm.rank == 0)
-			{
+		if(status != cupcfd::error::E_SUCCESS) {
+			if(comm.rank == 0) {
 				std::cout << "Warning: Could not read Mesh Datatype from JSON. Using Default Mesh Type of CupCfdAoS";
 			}
 		}
@@ -178,8 +170,7 @@ int main (int argc, char ** argv)
 
 	// Downside of CRTP - need to know types at compile time, so we're forced to have multiple branches here.
 	// May figure out a while to do this in a more reusable fashion at another time
-	if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINIAOS)
-	{
+	if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINIAOS) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
 		// Mesh Config Source
 		std::string topLevel[0] = {};
@@ -188,8 +179,7 @@ int main (int argc, char ** argv)
 		// Build Mesh Config
 		cupcfd::geometry::mesh::MeshConfig<int,double,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -200,15 +190,13 @@ int main (int argc, char ** argv)
 		}
 
 		// Build Mesh
-		if(comm.rank == 0)
-		{
+		if(comm.rank == 0) {
 			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdAoSMesh<int, double, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -230,8 +218,7 @@ int main (int argc, char ** argv)
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
 	}
-	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINIAOS)
-	{
+	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINIAOS) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
 		// Mesh Config Source
 		std::string topLevel[0] = {};
@@ -240,8 +227,7 @@ int main (int argc, char ** argv)
 		// Build Mesh Config
 		cupcfd::geometry::mesh::MeshConfig<int,float,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -252,15 +238,13 @@ int main (int argc, char ** argv)
 		}
 
 		// Build Mesh
-		if(comm.rank == 0)
-		{
+		if(comm.rank == 0) {
 			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdAoSMesh<int, float, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -282,8 +266,7 @@ int main (int argc, char ** argv)
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr);
 	}
-	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINISOA)
-	{
+	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
 		// Mesh Config Source
 		std::string topLevel[0] = {};
@@ -292,8 +275,7 @@ int main (int argc, char ** argv)
 		// Build Mesh Config
 		cupcfd::geometry::mesh::MeshConfig<int,double,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -304,15 +286,13 @@ int main (int argc, char ** argv)
 		}
 
 		// Build Mesh
-		if(comm.rank == 0)
-		{
+		if(comm.rank == 0) {
 			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdSoAMesh<int, double, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -334,8 +314,7 @@ int main (int argc, char ** argv)
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
 	}
-	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINISOA)
-	{
+	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
 		// Mesh Config Source
 		std::string topLevel[0] = {};
@@ -344,8 +323,7 @@ int main (int argc, char ** argv)
 		// Build Mesh Config
 		cupcfd::geometry::mesh::MeshConfig<int,float,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
@@ -356,15 +334,13 @@ int main (int argc, char ** argv)
 		}
 
 		// Build Mesh
-		if(comm.rank == 0)
-		{
+		if(comm.rank == 0) {
 			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdSoAMesh<int, float, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
-		if(status != cupcfd::error::E_SUCCESS)
-		{
+		if(status != cupcfd::error::E_SUCCESS) {
 			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
 			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;

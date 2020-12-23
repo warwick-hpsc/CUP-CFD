@@ -40,12 +40,12 @@ namespace cupcfd
 													T * phiCell, I nPhiCell,
 													T * phiBoundary, I nPhiBoundary,
 													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
-													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell)
-		{
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell) {
+			cupcfd::error::eCodes status;
 
 			T facn, facp, fact;
 			// T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
-			T phiFace, delta, vol;
+			T phiFace, vol;
 			I ip, ib, in;
 
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> xac;
@@ -56,27 +56,23 @@ namespace cupcfd
 			// I nCel = mesh.properties.lOCells;
 
 			// Zero Cell Values
-			for (I i = 0; i < nDPhidxoCell; i++)
-			{
+			for (I i = 0; i < nDPhidxoCell; i++) {
 				dPhidxoCell[i].cmp[0] = (T) 0;
 				dPhidxoCell[i].cmp[1] = (T) 0;
 				dPhidxoCell[i].cmp[2] = (T) 0;
 			}
 
 			// Gradient Loop
-			for(I iGrad = 0; iGrad < nGradient; iGrad++)
-			{
+			for(I iGrad = 0; iGrad < nGradient; iGrad++) {
 				// Reset
-				for (I i = 0; i < nDPhidxCell; i++)
-				{
+				for (I i = 0; i < nDPhidxCell; i++) {
 					dPhidxCell[i].cmp[0] = (T) 0;
 					dPhidxCell[i].cmp[1] = (T) 0;
 					dPhidxCell[i].cmp[2] = (T) 0;
 				}
 
 				// Face Loop
-				for(I i = 0; i < nFac; i++)
-				{			
+				for(I i = 0; i < nFac; i++) {			
 					// Get Cell 1 Index
 					ip = mesh.getFaceCell1ID(i);
 
@@ -84,10 +80,10 @@ namespace cupcfd
 					in = mesh.getFaceCell2ID(i);
 
 					bool isBoundary;
-					mesh.getFaceIsBoundary(i, &isBoundary);
+					status = mesh.getFaceIsBoundary(i, &isBoundary);
+					CHECK_ECODE(status)
 
-					if(!isBoundary)
-					{
+					if(!isBoundary) {
 						facn = mesh.getFaceLambda(i);
 						facp = 1.0 - facn;
 
@@ -104,14 +100,12 @@ namespace cupcfd
 
 						corrTmp = mesh.getFaceCenter(i) - xac;
 
-						dPhidxac.dotProduct(corrTmp, &delta);
-						phiFace = phiFace + delta;
+						phiFace += dPhidxac.dotProduct(corrTmp);
 
-						dPhidxCell[ip] = dPhidxCell[ip] + (phiFace * mesh.getFaceNorm(i));
-						dPhidxCell[in] = dPhidxCell[in] + (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[ip] += (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[in] += (phiFace * mesh.getFaceNorm(i));
 					}
-					else
-					{
+					else {
 						ib = mesh.getFaceBoundaryID(i);
 						#ifdef DEBUG
 							if (ib >= nPhiBoundary) {
@@ -120,7 +114,7 @@ namespace cupcfd
 						#endif
 						phiFace = phiBoundary[ib];
 
-						dPhidxCell[ip] = dPhidxCell[ip] + (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[ip] += (phiFace * mesh.getFaceNorm(i));
 					}
 				}
 
@@ -128,16 +122,15 @@ namespace cupcfd
 				// Loop over local cells only? Or ghost cells too?
 				// Since faces can access ghost cells, presume these must be updated
 				// for ghost cells also.
-				for(I i = 0; i < mesh.properties.lTCells; i++)
-				{
-					mesh.getCellVolume(i, &vol);
+				for(I i = 0; i < mesh.properties.lTCells; i++) {
+					status = mesh.getCellVolume(i, &vol);
+					CHECK_ECODE(status)
 					fact = 1.0/vol;
-					dPhidxCell[i] = fact * dPhidxCell[i];
+					dPhidxCell[i] *= fact;
 				}
 
 				// Copy
-				for(I i = 0; i < nDPhidxoCell; i++)
-				{
+				for(I i = 0; i < nDPhidxoCell; i++) {
 					dPhidxoCell[i] = dPhidxCell[i];
 				}
 			}

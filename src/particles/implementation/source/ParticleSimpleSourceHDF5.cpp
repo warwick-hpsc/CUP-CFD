@@ -71,8 +71,7 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Record record("/", "nparticles",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
 			status = access.readData(nParticles);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

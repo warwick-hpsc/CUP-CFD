@@ -98,7 +98,7 @@ namespace cupcfd
 					// === Concrete Methods ===
 
 					/**
-					 * Deep copies the x and y values from a source vector to this vector object
+					 * Deep copies the x and y values from a source vector into this vector object
 					 *
 					 * @param source The source vector to copy from
 					 *
@@ -110,9 +110,9 @@ namespace cupcfd
 					inline void operator=(const EuclideanVector<T,N>& source);
 
 					/**
-					 * Sets the x and y components of the vector to the scalar value
+					 * Sets each component of this vector to the scalar value
 					 *
-					 * @param scalar The value to set all three components to
+					 * @param scalar The value to set each vector component to
 					 *
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
@@ -122,13 +122,61 @@ namespace cupcfd
 					inline void operator=(const T scalar);
 
 					/**
+					 * Element-wise add source vector onto this vector
+					 *
+					 * @param source The source vector to add
+					 *
+					 * @tparam T The data type of the coordinate system
+					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
+					 *
+					 * @return Nothing
+					 */
+					inline void operator+=(const EuclideanVector<T,N>& source);
+
+					/**
+					 * Adds the scalar value to each component of this vector
+					 *
+					 * @param scalar The value to add to all three components
+					 *
+					 * @tparam T The data type of the coordinate system
+					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
+					 *
+					 * @return Nothing
+					 */
+					inline void operator+=(const T scalar);
+
+					/**
+					 * Element-wise multiply source vector with this vector, overwriting this vector
+					 *
+					 * @param source The source vector to multiply with
+					 *
+					 * @tparam T The data type of the coordinate system
+					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
+					 *
+					 * @return Nothing
+					 */
+					inline void operator*=(const EuclideanVector<T,N>& source);
+
+					/**
+					 * Multiply the scalar value with each component of this vector, overwriting this vector
+					 *
+					 * @param scalar The value to multiply with all three components
+					 *
+					 * @tparam T The data type of the coordinate system
+					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
+					 *
+					 * @return Nothing
+					 */
+					inline void operator*=(const T scalar);
+
+					/**
 					 * Tests whether each dimensional component of the two vectors is equal,
 					 * within a small threshold to accounting for floating point.
 					 *
 					 * Note: this only matches on exact values, it does NOT test for colinear vectors,
 					 * parallel vectors, same direction etc etc.
 					 *
-					 * @param cmpVec The vector to compare against
+					 * @param cmpVec This vector to compare against
 					 *
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
@@ -381,8 +429,8 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes dotProduct(const EuclideanVector<T,N>& vec, T * scalar);
+					// __attribute__((warn_unused_result))
+					// cupcfd::error::eCodes dotProduct(const EuclideanVector<T,N>& vec, T * scalar);
 
 					/**
 					 * Compute the dot-product of this vector and another vector
@@ -401,21 +449,6 @@ namespace cupcfd
 					// for integer systems
 					// Can we add an extra template type for this to reduce code repetition?
 
-					/**
-					 * Compute the distance covered by this vector.
-					 * Warning: This varient will very likely encountered a loss of precision.
-					 *
-					 * @param vec1 The vector describing the distances in x, y and z components
-					 * @param length A pointer to the location updated by the function to contain the distance of the vector.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-					 */
-					//cupcfd::error::eCodes length(int * length);
-
 					// ToDo: Could rename this from length to norm
 					/**
 					 * Compute the distance covered by this vector
@@ -425,11 +458,9 @@ namespace cupcfd
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
+					 * @return length
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes length(T * length);
+					double length();
 
 					/**
 					 * Compute the normalised (length 1 in same direction) vector of an input vector.
@@ -438,12 +469,8 @@ namespace cupcfd
 					 *
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes normalise();
+					void normalise();
 
 					/**
 					 * Compute the normalised (length 1 in same direction) vector of an input vector.
@@ -455,12 +482,8 @@ namespace cupcfd
 					 *
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes normalise(cupcfd::geometry::euclidean::EuclideanVector<T,N>& result);
+					void normalise(cupcfd::geometry::euclidean::EuclideanVector<T,N>& result);
 
 
 					/**

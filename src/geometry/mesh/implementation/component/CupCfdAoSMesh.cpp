@@ -104,14 +104,14 @@ namespace cupcfd
 
 					// Add the cell to the connectivity graph
 					status = this->cellConnGraph->addLocalNode(cellLabel);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 				}
 				else {
 					this->properties.lGhCells = this->properties.lGhCells + 1;
 
 					// Add the cell to the connectivity graph
 					status = this->cellConnGraph->addGhostNode(cellLabel);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 				}
 
 				// Store the current 'local ID' - this will ultimately be updated to
@@ -393,9 +393,9 @@ namespace cupcfd
 					if(!isBoundary) {
 						bool foundGhost1, foundGhost2;
 						status = this->cellConnGraph->existsGhostNode(cell1Label, &foundGhost1);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 						status = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel, &foundGhost2);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 
 						if(foundGhost1 && foundGhost2) {
 							return cupcfd::error::E_MESH_INVALID_FACE;
@@ -405,13 +405,13 @@ namespace cupcfd
 					// Check Edge does not already exist in connectivity graph
 					bool found;
 					status = this->cellConnGraph->existsEdge(cell1Label, cell2OrBoundaryLabel, &found);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					if(found) {
 						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
 
 					status = this->cellConnGraph->existsEdge(cell2OrBoundaryLabel, cell1Label, &found);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					if(found) {
 						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
@@ -425,10 +425,7 @@ namespace cupcfd
 					// Add the edge to the cell connectivity graph since not a boundary face
 					// Use the Build Global IDs for the connectivity graph nodes.
 					status = this->cellConnGraph->addUndirectedEdge(cell1Label, cell2OrBoundaryLabel);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) {
-						return status;
-					}
+					CHECK_ECODE(status)
 				}
 
 				// Copy the face lambda
@@ -704,14 +701,14 @@ namespace cupcfd
 					I bID = localToBuildID[faces[i].cell1ID];
 					I graphLocalID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					faces[i].cell1ID = graphLocalID;
 
 					// Get and Update Cell 2 IF this is not a boundary face
 					if(faces[i].cell2ID > -1) {
 						bID = localToBuildID[faces[i].cell2ID];
 						status = this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 						faces[i].cell2ID = graphLocalID;
 					}
 				}
@@ -734,7 +731,7 @@ namespace cupcfd
 
 					// Get Graph Local ID
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(keys[i], &newLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					// Update Map To Point at new Local ID
 					this->cellBuildIDToLocalID[keys[i]] = newLocalID;
@@ -759,7 +756,7 @@ namespace cupcfd
 					I label = localToBuildID[i];
 					I graphLocalID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					this->cellNFaces[graphLocalID] = tmpVec[i];
 				}
 
@@ -777,7 +774,7 @@ namespace cupcfd
 					I label = localToBuildID[i];
 					I graphLocalID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					this->cellNGFaces[graphLocalID] = tmpVec[i];
 				}
 
@@ -795,7 +792,7 @@ namespace cupcfd
 					I label = localToBuildID[i];
 					I graphLocalID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					this->cellNGVertices[graphLocalID] = tmpVec[i];
 				}
 
@@ -812,7 +809,7 @@ namespace cupcfd
 					I label = localToBuildID[i];
 					I graphLocalID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					this->cellNVertices[graphLocalID] = tmpVec[i];
 				}
 
@@ -827,7 +824,7 @@ namespace cupcfd
 					I label = localToBuildID[i];
 					I graphCellID;
 					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphCellID);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					this->cellBuildIDToLocalID[label] = graphCellID;
 				}
 
@@ -844,10 +841,7 @@ namespace cupcfd
 				// this method also a blocking method
 
 				status = this->cellConnGraph->finalize();
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return cupcfd::error::E_ERROR;
-				}
+				CHECK_ECODE(status)
 
 				// Check that every boundary is mapped to a face
 				I iLimit;
@@ -899,10 +893,7 @@ namespace cupcfd
 
 				// Build the exchange pattern for cells
 				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
-				CHECK_ERROR_CODE(status)
-				if (status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage
@@ -945,10 +936,7 @@ namespace cupcfd
 
 				// Build the exchange pattern for cells
 				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
-				CHECK_ERROR_CODE(status)
-				if (status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage

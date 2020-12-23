@@ -156,12 +156,11 @@ namespace cupcfd
 
 			// Make a copy of locally owned nodes from the graph
 			status = graph.getLocalNodes(nodes, nNodes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Set the nodes in the partitioner
 			status = this->setNodeStorage(nodes, nNodes);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Cleanup temporary store
 			free(nodes);

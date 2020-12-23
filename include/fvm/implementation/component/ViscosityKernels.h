@@ -48,7 +48,8 @@ namespace cupcfd
 																T * visEff, I nVisEff);
 
 		template <class M, class I, class T, class L>
-		void calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
+		__attribute__((warn_unused_result))
+		cupcfd::error::eCodes calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh);
 
 		template <class M, class I, class T, class L>
 		__attribute__((warn_unused_result))

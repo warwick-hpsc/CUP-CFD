@@ -35,7 +35,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source, I nele);
+			int merge_sort(T * source, I nele);
 
 
 			/**
@@ -57,7 +57,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
+			int merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
 			 * Evaluate whether an array is sorted in ascending order based on the < and == operators of type T.
@@ -95,7 +95,9 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+			// void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 
 			/**
 			 * Reorder an array: The element at source[i] is moved to source[indexes[i]]

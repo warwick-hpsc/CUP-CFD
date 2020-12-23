@@ -10,20 +10,8 @@
  * Contains the declarations for the MeshSource Class.
  */
 
-#ifndef CUPCFD_GEOMETRY_MESH_SOURCE_INCLUDE_H
-#define CUPCFD_GEOMETRY_MESH_SOURCE_INCLUDE_H
-
-#include <string>
-#include "AdjacencyListCSR.h"
-#include "DistributedAdjacencyList.h"
-#include "Error.h"
-#include "EuclideanPoint.h"
-#include "EuclideanVector.h"
-
-#include "SortDrivers.h"
-#include "StatisticsDrivers.h"
-
-#include <iostream>
+#ifndef CUPCFD_GEOMETRY_MESH_SOURCE_IPP_H
+#define CUPCFD_GEOMETRY_MESH_SOURCE_IPP_H
 
 namespace cupcfd
 {
@@ -60,7 +48,7 @@ namespace cupcfd
 					//     This is found from the sum of the adjacent face count for each cell listed (nFaces)
 					I * nFaces = (I *) malloc(sizeof(I) * cellCount);
 					status = this->getCellNFaces(nFaces, cellCount, sortedCellLabels, nCellLabels);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					I numEdges;
 					cupcfd::utility::drivers::sum(nFaces, cellCount, &numEdges);
@@ -73,7 +61,7 @@ namespace cupcfd
 					I * pos = (I *) malloc(sizeof(I) * (cellCount + 1));
 					I * data = (I *) malloc(sizeof(I) * numEdges);
 					status = this->getCellFaceLabels(pos, cellCount + 1, data, numEdges, sortedCellLabels, nCellLabels);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					// (4) We now need to find which cells are adjacent for the graph.
 					//     To do this, we need the cell1 and cell2 data from the face data,
@@ -88,16 +76,13 @@ namespace cupcfd
 					bool * faceIsBoundary = (bool *) malloc(sizeof(bool) * numEdges);
 
 					status = this->getFaceCell1Labels(faceCell1, numEdges, data, numEdges);
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					status = this->getFaceCell2Labels(faceCell2, numEdges, data, numEdges);
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					status = this->getFaceIsBoundary(faceIsBoundary, numEdges, data, numEdges);
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// (5) Now we can start building the graph
 					// (a) First, we add the nodes (since this is the full dataset, it is just
@@ -108,7 +93,7 @@ namespace cupcfd
 					// Add Local Nodes
 					for(I i = 0; i < cellCount; i++) {
 						status = (*graph)->addLocalNode(sortedCellLabels[i]);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 					}
 
 					// Add Edges
@@ -129,7 +114,7 @@ namespace cupcfd
 							// will add the node as a ghost node.
 							// ToDo: If this changes in the future we will need to revisit this.
 							status = (*graph)->addUndirectedEdge(faceCell1[i], faceCell2[i]);
-							CHECK_ERROR_CODE(status)
+							CHECK_ECODE(status)
 						}
 					}
 
@@ -143,8 +128,7 @@ namespace cupcfd
 
 				// Finalize the Distributed Adjacency Graph so everyone is aware of their neighbours
 				status = (*graph)->finalize();
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -163,8 +147,7 @@ namespace cupcfd
 				I nGCells, nLCells, r;
 
 				status = this->getCellCount(&nGCells);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				// (b) Get the connectivity graph for this 'even' distribution
 				r = nGCells % comm.size;
@@ -197,16 +180,11 @@ namespace cupcfd
 				// Convert these cell indices into cell labels from the source
 				I * cellLabels = (I *) malloc(sizeof(I) * nLCells);
 				status = this->getCellLabels(cellLabels, nLCells, naiveLocalCells, nLCells);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					free(naiveLocalCells);
-					free(cellLabels);
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Build the connectivity graph using the cell allocation built above
 				status = this->buildDistributedAdjacencyList(graph, comm, cellLabels, nLCells);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 
 				free(naiveLocalCells);
 				free(cellLabels);

@@ -27,8 +27,7 @@ namespace cupcfd
 	namespace comm
 	{
 		template <class T>
-		ExchangePattern<T>::ExchangePattern()
-		{
+		ExchangePattern<T>::ExchangePattern() {
 			this->nSProc = 0;
 			this->nSXAdj = 0;
 			this->nSAdjncy = 0;
@@ -45,41 +44,34 @@ namespace cupcfd
 		}
 
 		template <class T>
-		ExchangePattern<T>::~ExchangePattern()
-		{
+		ExchangePattern<T>::~ExchangePattern() {
 			// Cleanup Components
 			// (a) Communicator will clean up itself
 
 			// (b) Maps will clean up themselves
 
 			// (c) Free any allocated arrays
-			if(this->sProc != nullptr)
-			{
+			if(this->sProc != nullptr) {
 				free(this->sProc);
 			}
 
-			if(this->sXAdj != nullptr)
-			{
+			if(this->sXAdj != nullptr) {
 				free(this->sXAdj);
 			}
 
-			if(this->sAdjncy != nullptr)
-			{
+			if(this->sAdjncy != nullptr) {
 				free(this->sAdjncy);
 			}
 
-			if(this->rProc != nullptr)
-			{
+			if(this->rProc != nullptr) {
 				free(this->rProc);
 			}
 
-			if(this->rXAdj != nullptr)
-			{
+			if(this->rXAdj != nullptr) {
 				free(this->rXAdj);
 			}
 
-			if(this->rAdjncy != nullptr)
-			{
+			if(this->rAdjncy != nullptr) {
 				free(this->rAdjncy);
 			}
 		}
@@ -88,8 +80,7 @@ namespace cupcfd
 		cupcfd::error::eCodes ExchangePattern<T>::init(cupcfd::comm::Communicator& comm,
 									  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 									  int * exchangeIDXSend, int nExchangeIDXSend,
-									  int * tRanks, int nTRanks)
-		{
+									  int * tRanks, int nTRanks) {
 			/*
 			 * This init function sets up the exchange data for patterns that are intended to be reused.
 			 * The input comprises of three things:
@@ -103,6 +94,8 @@ namespace cupcfd
 			 * I.e. if exchangeIDXSend = [20, 6], and tRanks[1, 3], then the data with global ID 20 is going to rank 1,
 			 * and the data with global ID 6 is going to rank 3.
 			 */
+
+			cupcfd::error::eCodes status;
 
 			// (1) Store a copy of the mapping of local index to 'exchange' indexes and vice-versa
 			//  The 'exchange' index map be a reuse of mappings from elsewhere - e.g. a connectivity graph, as long
@@ -118,8 +111,7 @@ namespace cupcfd
 			this->comm = comm;
 
 			// Copy and store in maps
-			for(int i = 0; i < nMapLocalToExchangeIDX; i++)
-			{
+			for(int i = 0; i < nMapLocalToExchangeIDX; i++) {
 				this->localToExchange[i] = mapLocalToExchangeIDX[i];
 				this->exchangeToLocal[mapLocalToExchangeIDX[i]] = i;
 			}
@@ -146,21 +138,26 @@ namespace cupcfd
 
 
 			// Copy the input data arrays of the target ranks and the matching exchange index to be sent
-			cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
-			cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
+			status = cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
+			CHECK_ECODE(status)
+			status = cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
+			CHECK_ECODE(status)
 
 			// Sort the copied ranks array.
 			// SortIndexes is an array of the original index positions in matching sorted order - we will use this to reshuffle
 			// copyExchangeIDXSend so that they still match pairwise.
-			cupcfd::utility::drivers::merge_sort_index(copyTRanks, nTRanks, sortIndexes, nTRanks);
+			status = cupcfd::utility::drivers::merge_sort_index(copyTRanks, nTRanks, sortIndexes, nTRanks);
+			CHECK_ECODE(status)
 
 			// Reorder the data elements of copyExchangeIDXSend to be pairwise matching with copyTRanks so we don't lose
 			// the original association
-			cupcfd::utility::drivers::sourceIndexReorder(copyExchangeIDXSend, nCopyExchangeIDXSend, sortIndexes, nTRanks);
+			status = cupcfd::utility::drivers::sourceIndexReorder(copyExchangeIDXSend, nCopyExchangeIDXSend, sortIndexes, nTRanks);
+			CHECK_ECODE(status)
 
 			// === Get array of distinct processes ===
 			// Number of distinct elements - how many ranks total will we be sending to
-			cupcfd::utility::drivers::distinctCount(copyTRanks, nTRanks, &this->nSProc);
+			status = cupcfd::utility::drivers::distinctCount(copyTRanks, nTRanks, &this->nSProc);
+			CHECK_ECODE(status)
 
 			// Storage for distinct processes
 			this->sProc = (int *) malloc(sizeof(int) * this->nSProc);
@@ -173,7 +170,8 @@ namespace cupcfd
 			// this->sProc: An array that contains only the process ranks we will send to, each rank will be unique
 			// dupCount: Track a count of how many times a rank in sProc appeared in the original copyTRanks array. This will
 			// let us know how many elements we are sending to that matching rank.
-			cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount, nDupCount);
+			status = cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount, nDupCount);
+			CHECK_ECODE(status)
 
 			// === Store in pattern as a CSR ===
 			this->nSXAdj = this->nSProc + 1;
@@ -186,11 +184,9 @@ namespace cupcfd
 			this->sXAdj[0] = 0;
 
 			// Loop over each rank to send to
-			for(int i = 0; i < this->nSProc; i++)
-			{
+			for(int i = 0; i < this->nSProc; i++) {
 				// Loop over each ranks data and place into CSR
-				for(int j = 0; j < dupCount[i]; j++)
-				{
+				for(int j = 0; j < dupCount[i]; j++) {
 					// Basically copying the sorted array over since it's already grouped....
 					this->sAdjncy[this->sXAdj[i] + j] = copyExchangeIDXSend[this->sXAdj[i] + j];
 				}
@@ -207,17 +203,16 @@ namespace cupcfd
 			int * sendCount = (int *) malloc(sizeof(int) * comm.size);
 			int * recvCount = (int *) malloc(sizeof(int) * comm.size);
 
-			for(int i = 0; i < comm.size; i++)
-			{
+			for(int i = 0; i < comm.size; i++) {
 				sendCount[i] = 0;
 			}
 
-			for(int i = 0; i < this->nSProc; i++)
-			{
+			for(int i = 0; i < this->nSProc; i++) {
 				sendCount[this->sProc[i]] = this->sXAdj[i+1] - this->sXAdj[i];
 			}
 
-			cupcfd::comm::AllToAll(sendCount, comm.size, recvCount, comm.size, 1, comm);
+			status = cupcfd::comm::AllToAll(sendCount, comm.size, recvCount, comm.size, 1, comm);
+			CHECK_ECODE(status)
 
 			// Now we know how many elements we expect to receive from each process, perform an all-to-all of the 'exchange'
 			// indexes (not local indexes)
@@ -230,10 +225,8 @@ namespace cupcfd
 			// Check for non-zero entries, and store as a process we receive from
 			// First pass to count non-zero entries
 			this->nRProc = 0;
-			for(int i = 0; i < comm.size; i++)
-			{
-				if(recvCount[i] != 0)
-				{
+			for(int i = 0; i < comm.size; i++) {
+				if(recvCount[i] != 0) {
 					this->nRProc = this->nRProc + 1;
 				}
 			}
@@ -247,10 +240,8 @@ namespace cupcfd
 			int ptr = 0;
 			this->rXAdj[0] = 0;
 
-			for(int i = 0; i < comm.size; i++)
-			{
-				if(recvCount[i] != 0)
-				{
+			for(int i = 0; i < comm.size; i++) {
+				if(recvCount[i] != 0) {
 					this->rProc[ptr] = i;
 					this->rXAdj[ptr+1] = this->rXAdj[ptr] + recvCount[i];
 					ptr = ptr + 1;
@@ -260,9 +251,10 @@ namespace cupcfd
 			// Perform the all-to-all to get a copy of all the exchange indexes from various processes, as well as sending
 			// our own that we will communicate during exchanges.
 
-			cupcfd::comm::AllToAll(this->sAdjncy, this->nSAdjncy, sendCount, comm.size,
-											   this->rAdjncy, this->nRAdjncy, recvCount, comm.size,
-											   comm);
+			status = cupcfd::comm::AllToAll(this->sAdjncy, this->nSAdjncy, sendCount, comm.size,
+											this->rAdjncy, this->nRAdjncy, recvCount, comm.size,
+											comm);
+			CHECK_ECODE(status)
 
 			// Error Check: For every exchange index element we are expecting to receive, have we declared a mapping to
 			// a local index on this rank? If not, we do not know where to store it.

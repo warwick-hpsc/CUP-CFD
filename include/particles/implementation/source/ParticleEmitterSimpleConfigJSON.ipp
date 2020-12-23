@@ -218,68 +218,55 @@ namespace cupcfd
 			
 			// Position
 			status = this->getEmitterPosition(pos);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Rate
 			status = this->getRateDistributionConfig(&rate);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Angle XY
 			status = this->getAngleXYDistributionConfig(&angleXY);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Angle Rotation
 			status = this->getAngleRotationDistributionConfig(&angleRotation);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Speed
 			status = this->getSpeedDistributionConfig(&speed);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Acceleration X
 			status = this->getAccelerationXDistributionConfig(&accelerationX);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Acceleration Y
 			status = this->getAccelerationYDistributionConfig(&accelerationY);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Acceleration Z
 			status = this->getAccelerationZDistributionConfig(&accelerationZ);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Jerk X
 			status = this->getJerkXDistributionConfig(&jerkX);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Jerk Y
 			status = this->getJerkYDistributionConfig(&jerkY);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Jerk Z
 			status = this->getJerkZDistributionConfig(&jerkZ);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Decay Rate
 			status = this->getDecayRateDistributionConfig(&decayRate);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Decay Threshold
 			status = this->getDecayThresholdDistributionConfig(&decayThreshold);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			*config = new ParticleEmitterSimpleConfig<I,T>(pos, *rate, *angleXY, *angleRotation, *speed, *accelerationX, *accelerationY, *accelerationZ,
 														   *jerkX, *jerkY, *jerkZ, *decayRate, *decayThreshold);

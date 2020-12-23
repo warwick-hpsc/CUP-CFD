@@ -195,8 +195,7 @@ namespace cupcfd
 				rotateYAxisRadian(angleRotation[i], velocity);
 
 				// Adjust the length of the vector to match the provided speed
-				T length;
-				velocity.length(&length);
+				T length = velocity.length();
 				velocity = (speed[i]/length) * velocity;
 
 				(*particles)[i] = ParticleSimple<I,T>(

@@ -141,6 +141,8 @@ namespace cupcfd
 
             template <class I, class T>
             cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count) {
+            	cupcfd::error::eCodes status;
+
 				bool sorted;
 				T * arrPtr;
 
@@ -153,12 +155,14 @@ namespace cupcfd
 				}
 
 				// (1) Ensure array is sorted
-				cupcfd::utility::drivers::is_sorted(source, nEle, &sorted);
+				status = cupcfd::utility::drivers::is_sorted(source, nEle, &sorted);
+				CHECK_ECODE(status)
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
 				if(!sorted) {
 					arrPtr = (T *) malloc(sizeof(T) * nEle);
-					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEle);
+					status = cupcfd::utility::drivers::merge_sort(source, arrPtr, nEle);
+					CHECK_ECODE(status)
 				}
 				else {
 					arrPtr = source;
@@ -177,6 +181,7 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst) {
+				cupcfd::error::eCodes status;
 				bool sorted;
 				T * arrPtr;
 
@@ -188,12 +193,14 @@ namespace cupcfd
 				}
 
 				// (1) Ensure array is sorted
-				cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
+				status = cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
+				CHECK_ECODE(status)
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
 				if(!sorted) {
 					arrPtr = (T *) malloc(sizeof(T) * nEleSource);
-					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEleSource);
+					status = cupcfd::utility::drivers::merge_sort(source, arrPtr, nEleSource);
+					CHECK_ECODE(status)
 				}
 				else {
 					arrPtr = source;
@@ -201,7 +208,8 @@ namespace cupcfd
 
 				// Error Check: Ensure dst is correct size
 				I nEleDst2;
-				drivers::distinctCount(source, nEleSource, &nEleDst2);
+				status = drivers::distinctCount(source, nEleSource, &nEleDst2);
+				CHECK_ECODE(status)
 				if (nEleDst2 != nEleDst) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
@@ -219,48 +227,60 @@ namespace cupcfd
 
             template <class I, class T>
             cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst) {
+            	cupcfd::error::eCodes status;
+
 				// Determine number of distinct elements
-				drivers::distinctCount(source, nEleSource, nEleDst);
+				status = drivers::distinctCount(source, nEleSource, nEleDst);
+				CHECK_ECODE(status)
 
 				// Allocate the results array
 				*dst = (T *) malloc(sizeof(T) * *nEleDst);
 
 				// Pass work along to driver that performs the same functionas this, but with the results array set up.
-				cupcfd::error::eCodes err = drivers::distinctArray(source, nEleSource, *dst, *nEleDst);
+				status = drivers::distinctArray(source, nEleSource, *dst, *nEleDst);
+				CHECK_ECODE(status)
 
-				return err;
+				return status;
 			}
 
-            template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount) {
+			template <class I, class T>
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T * dst, I nEleDst, I * dupCount, I nEleDupCount) {
+				cupcfd::error::eCodes status;
+
 				bool sorted;
-				T * arrPtr;
+				T * sourceSorted;
 
 				// (1) Ensure array is sorted
-				cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
+				status = cupcfd::utility::drivers::is_sorted(source, nEleSource, &sorted);
+				CHECK_ECODE(status)
 
 				// (2) If not sorted, do a non-destructive sort to get a sorted copy.
 				if(!sorted) {
-					arrPtr = (T *) malloc(sizeof(T) * nEleSource);
-					cupcfd::utility::drivers::merge_sort(source, arrPtr, nEleSource);
+					sourceSorted = (T *) malloc(sizeof(T) * nEleSource);
+					status = cupcfd::utility::drivers::merge_sort(source, sourceSorted, nEleSource);
+					CHECK_ECODE(status)
 				}
 				else {
-					arrPtr = source;
+					sourceSorted = source;
 				}
 
 				// Error Check: Ensure dst is correct size
 				I nEleDst2;
-				drivers::distinctCount(source, nEleSource, &nEleDst2);
+				status = drivers::distinctCount(source, nEleSource, &nEleDst2);
+				CHECK_ECODE(status)
 				if (nEleDst2 != nEleDst) {
+					return cupcfd::error::E_ARRAY_INCORRECT_SIZE;
+				}
+				if (nEleDupCount != nEleDst) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
 
 				// (3) Call the kernel on a sorted array.
-				kernels::distinctArray(arrPtr, dst, dupCount, nEleSource);
+				kernels::distinctArray(sourceSorted, dst, dupCount, nEleSource);
 
 				// Result should now be in dst - cleanup
-				if(arrPtr != source) {
-					free(arrPtr);
+				if(sourceSorted != source) {
+					free(sourceSorted);
 				}
 
 				return cupcfd::error::E_SUCCESS;

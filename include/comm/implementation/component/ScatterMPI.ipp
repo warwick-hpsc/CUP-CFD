@@ -32,9 +32,7 @@ namespace cupcfd
 				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;
@@ -86,9 +84,7 @@ namespace cupcfd
 				int * displs = nullptr;
 				
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;

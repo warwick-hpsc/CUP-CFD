@@ -74,16 +74,10 @@ namespace cupcfd
 			I repetitions;
 
 			status = this->getBenchmarkName(benchmarkName);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getBenchmarkRepetitions(&repetitions);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigKernels<I,T>(benchmarkName, repetitions);
 			return cupcfd::error::E_SUCCESS;

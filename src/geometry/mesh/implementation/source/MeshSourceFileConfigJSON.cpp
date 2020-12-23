@@ -104,12 +104,10 @@ namespace cupcfd
 					// This error is ok, just return it.
 					return status;
 				}
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getFilePath(sourceFilePath);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				*meshSourceConfig = new MeshSourceFileConfig<I,T>(fileFormat, sourceFilePath);
 

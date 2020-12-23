@@ -24,23 +24,19 @@ namespace cupcfd
 		namespace kernels
 		{
 			template <class I, class T>
-			I merge_sort(T * source, I nele)
-			{
+			int merge_sort(T * source, I nele) {
 				T * left;
 				T * right;
 				I i, split, n_l, n_r, left_idx, right_idx;
-				I returnValLeft;
-				I returnValRight;
+				int returnValLeft, returnValRight;
 
 				// Size < 0 : Error case
-				if(nele < 0)
-				{
+				if(nele < 0) {
 					return -1;
 				}
 
 				// Size 0 or 1 : No splitting to be done
-				if(nele <= 1)
-				{
+				if(nele <= 1) {
 					return 0;
 				}
 
@@ -59,19 +55,16 @@ namespace cupcfd
 				left_idx = 0;
 				right_idx = 0;
 
-				for(i = 0; i < nele; i++)
-				{
+				for(i = 0; i < nele; i++) {
 					// Left array is empty, copy from next value in right array
-					if(left_idx >= n_l)
-					{
+					if(left_idx >= n_l) {
 						source[i] = right[right_idx];
 						right_idx = right_idx + 1;
 						continue;
 					}
 
 					// Right array is empty, copy from next value in left array
-					if(right_idx >= n_r)
-					{
+					if(right_idx >= n_r) {
 						source[i] = left[left_idx];
 						left_idx = left_idx + 1;
 						continue;
@@ -79,13 +72,11 @@ namespace cupcfd
 
 					// Copy from either left or right depending on which head of array
 					// is smaller
-					if(left[left_idx] <= right[right_idx])
-					{
+					if(left[left_idx] <= right[right_idx]) {
 						source[i] = left[left_idx];
 						left_idx = left_idx + 1;
 					}
-					else
-					{
+					else {
 						source[i] = right[right_idx];
 						right_idx = right_idx + 1;
 					}
@@ -94,13 +85,11 @@ namespace cupcfd
 				free(left);
 				free(right);
 
-				if(returnValLeft < 0)
-				{
+				if(returnValLeft < 0) {
 					return returnValLeft;
 				}
 
-				if(returnValRight < 0)
-				{
+				if(returnValRight < 0) {
 					return returnValRight;
 				}
 
@@ -108,8 +97,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes)
-			{
+			int merge_sort(T * source,  I nSource, I * indexes, I nIndexes) {
 				if (nIndexes != nSource) {
 					return -1;
 				}
@@ -120,18 +108,15 @@ namespace cupcfd
 				I * rightIndexes;
 
 				I i, split, n_l, n_r, left_idx, right_idx;
-				I returnValLeft;
-				I returnValRight;
+				int returnValLeft, returnValRight;
 
 				// Size < 0 : Error case
-				if(nSource < 0)
-				{
+				if(nSource < 0) {
 					return -1;
 				}
 
 				// Size 0 or 1 : No splitting to be done
-				if(nSource <= 1)
-				{
+				if(nSource <= 1) {
 					return 0;
 				}
 
@@ -162,11 +147,9 @@ namespace cupcfd
 				left_idx = 0;
 				right_idx = 0;
 
-				for(i = 0; i < nSource; i++)
-				{
+				for(i = 0; i < nSource; i++) {
 					// Left array is empty, copy from next value in right array
-					if(left_idx >= n_l)
-					{
+					if(left_idx >= n_l) {
 						source[i] = right[right_idx];
 						indexes[i] = rightIndexes[right_idx];
 						right_idx = right_idx + 1;
@@ -174,8 +157,7 @@ namespace cupcfd
 					}
 
 					// Right array is empty, copy from next value in left array
-					if(right_idx >= n_r)
-					{
+					if(right_idx >= n_r) {
 						source[i] = left[left_idx];
 						indexes[i] = leftIndexes[left_idx];
 						left_idx = left_idx + 1;
@@ -184,14 +166,12 @@ namespace cupcfd
 
 					// Copy from either left or right depending on which head of array
 					// is smaller
-					if(left[left_idx] <= right[right_idx])
-					{
+					if(left[left_idx] <= right[right_idx]) {
 						source[i] = left[left_idx];
 						indexes[i] = leftIndexes[left_idx];
 						left_idx = left_idx + 1;
 					}
-					else
-					{
+					else {
 						source[i] = right[right_idx];
 						indexes[i] = rightIndexes[right_idx];
 						right_idx = right_idx + 1;
@@ -203,13 +183,11 @@ namespace cupcfd
 				free(leftIndexes);
 				free(rightIndexes);
 
-				if(returnValLeft < 0)
-				{
+				if(returnValLeft < 0) {
 					return returnValLeft;
 				}
 
-				if(returnValRight < 0)
-				{
+				if(returnValRight < 0) {
 					return returnValRight;
 				}
 
@@ -217,12 +195,9 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			bool is_sorted(T * source, I nEle)
-			{
-				for(I i = 1; i < nEle; i++)
-				{
-					if(source[i-1] > source[i])
-					{
+			bool is_sorted(T * source, I nEle) {
+				for(I i = 1; i < nEle; i++) {
+					if(source[i-1] > source[i]) {
 						return false;
 					}
 				}
@@ -231,31 +206,31 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes)
-			{
+			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
 				// Considered approach of swapping value into new location, and temporarily storing
 				// unorder value in swapped location - however this breaks later reordering.
 				// Instead, make a temporary array we can copy from..
 
+				cupcfd::error::eCodes status;
+
 				T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
 
-				cupcfd::utility::drivers::copy(source, nEleSource, tmpCpy, nEleSource);
+				status = cupcfd::utility::drivers::copy(source, nEleSource, tmpCpy, nEleSource);
+				CHECK_ECODE(status)
 
-				for(I i=0; i < nEleIndexes; i++)
-				{
+				for(I i=0; i < nEleIndexes; i++) {
 					source[i] = tmpCpy[indexes[i]];
 				}
-
 				free(tmpCpy);
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			void destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes)
-			{
+			void destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
 				T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
 
-				for(I i=0; i < nEleIndexes; i++)
-				{
+				for(I i=0; i < nEleIndexes; i++) {
 					tmpCpy[indexes[i]] = source[i];
 				}
 

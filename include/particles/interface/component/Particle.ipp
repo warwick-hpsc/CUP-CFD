@@ -302,22 +302,14 @@ namespace cupcfd
 			I node = mesh.cellConnGraph->globalToNode[this->cellGlobalID];
 			I localCellID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(node, &localCellID);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getNodeLocalIndex() failed" << std::endl;
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// ****************************************************** //
 			// Identify which face the exiting vector intersects with //
 			// ****************************************************** //
 			I nFaces;
 			status = mesh.getCellNFaces(localCellID, &nFaces);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				std::cout << "ERROR: getCellNFaces() failed" << std::endl;
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Store the local ID of the face we are exiting by
 			I exitFaceID = -1;
@@ -345,8 +337,8 @@ namespace cupcfd
 							I faceVertexID2 = mesh.getFaceVertex(localFaceID2, j2);
 
 							if (faceVertexID1 != faceVertexID2) {
-								T face_edge_length;
-								( mesh.getVertexPos(faceVertexID1) - mesh.getVertexPos(faceVertexID2) ).length(&face_edge_length);
+								T face_edge_length = 
+								( mesh.getVertexPos(faceVertexID1) - mesh.getVertexPos(faceVertexID2) ).length();
 
 								if (max_inter_vertex_distance == T(-1)) {
 									max_inter_vertex_distance = face_edge_length;
@@ -379,11 +371,7 @@ namespace cupcfd
 													intersection, 
 													intersectionOnEdge,
 													timeToIntersect);
-				CHECK_ERROR_CODE(status)
-				if (status != cupcfd::error::E_SUCCESS) {
-					std::cout << "ERROR: calculateFaceIntersection() failed" << std::endl;
-					return status;
-				}
+				CHECK_ECODE(status)
 				if (doesIntersect) {
 					if (timeToIntersect >= T(0)) {
 						intersectionCount++;
@@ -400,13 +388,7 @@ namespace cupcfd
 							continue;
 						}
 
-						T speed;
-						status = this->velocity.length(&speed);
-						CHECK_ERROR_CODE(status)
-						if (status != cupcfd::error::E_SUCCESS) {
-							std::cout << "ERROR: length() failed" << std::endl;
-							return status;
-						}
+						T speed = this->velocity.length();
 						T distance = timeToIntersect * speed;
 
 						exitFaceID = localFaceID;
@@ -532,29 +514,24 @@ namespace cupcfd
 			I cellNode = mesh.cellConnGraph->globalToNode[cellGlobalID];
 			I cellLocalID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			I cellNumFaces;
 			status = mesh.getCellNFaces(cellLocalID, &cellNumFaces);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			I lastCellGlobalID = this->lastCellGlobalID;
 			I lastCellNode = mesh.cellConnGraph->globalToNode[lastCellGlobalID];
 			I lastCellLocalID;
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			I lastCellNumFaces;
 			status = mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			I entryFaceLocalID;
 			bool entryFaceFound = false;
 			T entryFaceDistance = T(0);
-			T speed;
-			this->velocity.length(&speed);
+			T speed = this->velocity.length();
 			for (I fi1=0; fi1<cellNumFaces; fi1++) {
 				I f1 = mesh.getCellFaceID(cellLocalID, fi1);
 				for (I fi2=0; fi2<lastCellNumFaces; fi2++) {
@@ -575,8 +552,7 @@ namespace cupcfd
 															intersection, 
 															intersectionOnEdge,
 															timeToIntersect);
-						CHECK_ERROR_CODE(status)
-						if (status != cupcfd::error::E_SUCCESS) return status;
+						CHECK_ECODE(status)
 						if (doesIntersect) {
 							if (!entryFaceFound) {
 								entryFaceFound = true;

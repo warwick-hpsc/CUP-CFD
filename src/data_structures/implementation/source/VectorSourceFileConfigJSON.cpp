@@ -54,13 +54,11 @@ namespace cupcfd
 
 			// Get the File Path
 			status = this->getFilePath(filePath);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Get the File Format
 			status = this->getFileFormat(&fileFormat);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Build the object
 			*vectorSourceConfig = new VectorSourceFileConfig<I,T>(filePath, fileFormat);

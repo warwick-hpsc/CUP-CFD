@@ -125,7 +125,9 @@ namespace cupcfd
 					/**
 					 * Retrieve and create a dynamically allocated MeshSource Configuration
 					 */
-					MeshSourceConfig<I,T,L> * getMeshSourceConfig();
+					__attribute__((warn_unused_result))
+					// MeshSourceConfig<I,T,L> * getMeshSourceConfig();
+					cupcfd::error::eCodes getMeshSourceConfig(MeshSourceConfig<I,T,L>* config);
 
 					/**
 					 *

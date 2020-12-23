@@ -55,20 +55,11 @@ namespace cupcfd
 			this->aRanges = nullptr;
 
 			status = this->setupVectorX();
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorX() failed"));
-			}
+			HARD_CHECK_ECODE(status)
 			status = this->setupVectorB();
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupVectorB() failed"));
-			}
+			HARD_CHECK_ECODE(status)
 			status = this->setupMatrixA(matrix);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) {
-				throw(std::invalid_argument("LinearSolverPETSc: CONSTRUCTOR: setupMatrixA() failed"));
-			}
+			HARD_CHECK_ECODE(status)
 
 			this->algSolver = new LinearSolverPETScAlgorithm(comm, algorithm, rTol, eTol);
 		}
@@ -312,10 +303,7 @@ namespace cupcfd
 
 			// Since we use a template, typecast 0 to the relevant type
 			status = setValuesVectorX((T) 0);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -326,10 +314,7 @@ namespace cupcfd
 
 			// Since we use a template, typecase 0 to the relevant type
 			status = setValuesVectorB((T) 0);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -340,24 +325,15 @@ namespace cupcfd
 
 			// Reset Vector X
 			status = this->resetVectorX();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Reset Vector B
 			status = this->resetVectorB();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Reset Matrix A
 			status = this->resetMatrixA();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -718,36 +694,21 @@ namespace cupcfd
 
 			// Create the vector X and zero it
 			status = setupVectorX();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->setValuesVectorX(0.0);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Create the vector B and zero it
 			status = setupVectorB();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->setValuesVectorB(0.0);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Create the matrix A, using the input Matrix to define the non-zero positions
 			status = setupMatrixA(matrix);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -773,21 +734,21 @@ namespace cupcfd
 			int * rowIndexes;
 			int nRowIndexes;
 			status = matrix.getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			for(int i = 0; i < nRowIndexes; i++) {
 				// Get the columns ids for the row
 				int * columnIndexes;
 				int nColumnIndexes;
 				status = matrix.getRowColumnIndexes(rowIndexes[i], &columnIndexes, &nColumnIndexes);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 
 				// Get the nnz values for the row
 				T * nnzValues;
 				PetscScalar * petscNNZValues;
 				int nNNZValues;
 				status = matrix.getRowNNZValues(rowIndexes[i], &nnzValues, &nNNZValues);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 
 				// ToDo: Would like to omit this copy, and place data in array directly
 				// Could create new instance of getRowNNZValues, but would have to include PETSc header
@@ -914,10 +875,7 @@ namespace cupcfd
 
 				// This will place the final allgather directly into the results array
 				status = AllGatherV(tmpBuffer, rangeSize, result, nResult, &recvCounts, &nRecvCounts, this->comm);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Cleanup
 				free(indices);
@@ -1044,7 +1002,7 @@ namespace cupcfd
 
 						// Need to add all of the local indices as local nodes in case another node requests them
 						status = graph.addLocalNode(i);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 					}
 
 					// Setup the Ghost Nodes of the Graph
@@ -1054,21 +1012,18 @@ namespace cupcfd
 						if((baseZeroIndex < this->xRanges[this->comm.rank]) || (baseZeroIndex >= this->xRanges[this->comm.rank + 1])) {
 							// Add any row indices that are non-local requested indices as ghost nodes
 							status = graph.addGhostNode(baseZeroIndex);
-							CHECK_ERROR_CODE(status)
+							CHECK_ECODE(status)
 						}
 					}
 
 					// Finalize
 					status = graph.finalize();
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) {
-						return status;
-					}
+					CHECK_ECODE(status)
 
 					// Build exchange pattern
 					cupcfd::comm::ExchangePatternTwoSidedNonBlocking<T> * pattern;
 					status = graph.buildExchangePattern(&pattern);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					// Setup data buffers and global indexes
 					I nDataBuffer = graph.connGraph.nNodes;
@@ -1088,7 +1043,7 @@ namespace cupcfd
 						// (1) Get Node (PETScIndex) at that local index
 						I node;
 						status = graph.connGraph.getLocalIndexNode(i, &node);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 
 						// Is this a Node/PETScIndex that we own/is local
 						if((node >= this->xRanges[this->comm.rank]) && (node < this->xRanges[this->comm.rank + 1])) {
@@ -1118,7 +1073,7 @@ namespace cupcfd
 
 						I localID;
 						status = graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 
 						// This localID is the position of the data i the dataBuffer, copy across
 						(*result)[i] = dataBuffer[localID];
@@ -1226,10 +1181,7 @@ namespace cupcfd
 
 				// This will place the final allgather directly into the results array
 				status = AllGatherV(tmpBuffer, rangeSize, result, nResult, &recvCounts, &nRecvCounts, this->comm);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Cleanup
 				free(indices);
@@ -1356,7 +1308,7 @@ namespace cupcfd
 
 						// Need to add all of the local indices as local nodes in case another node requests them
 						status = graph.addLocalNode(i);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 					}
 
 					// Setup the Ghost Nodes of the Graph
@@ -1366,21 +1318,18 @@ namespace cupcfd
 						if((baseZeroIndex < this->bRanges[this->comm.rank]) || (baseZeroIndex >= this->bRanges[this->comm.rank + 1])) {
 							// Add any row indices that are non-local requested indices as ghost nodes
 							status = graph.addGhostNode(baseZeroIndex);
-							CHECK_ERROR_CODE(status)
+							CHECK_ECODE(status)
 						}
 					}
 
 					// Finalize
 					status = graph.finalize();
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) {
-						return status;
-					}
+					CHECK_ECODE(status)
 
 					// Build exchange pattern
 					cupcfd::comm::ExchangePatternTwoSidedNonBlocking<T> * pattern;
 					status = graph.buildExchangePattern(&pattern);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					// Setup data buffers and global indexes
 					I nDataBuffer = graph.connGraph.nNodes;
@@ -1400,7 +1349,7 @@ namespace cupcfd
 						// (1) Get Node (PETScIndex) at that local index
 						I node;
 						status = graph.connGraph.getLocalIndexNode(i, &node);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 
 						// Is this a Node/PETScIndex that we own/is local
 						if((node >= this->bRanges[this->comm.rank]) && (node < this->bRanges[this->comm.rank + 1])) {
@@ -1430,7 +1379,7 @@ namespace cupcfd
 
 						I localID;
 						status = graph.connGraph.getNodeLocalIndex(baseZeroIndex, &localID);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 
 						// This localID is the position of the data i the dataBuffer, copy across
 						(*result)[i] = dataBuffer[localID];
@@ -1473,24 +1422,21 @@ namespace cupcfd
 
 				// ToDo: Will do row by row for now, but would be more efficient to do in one go
 				status = matrix.getNonZeroRowIndexes(&rows, &nRows);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 
 				for(int i = 0; i < nRows; i++) {
 					// Correct any row offsets for PETSc so it is base 0
 					PetscInt rowIndex = rows[i] - matrix.baseIndex;
 
 					status = matrix.getRowColumnIndexes(rowIndex, &cols, &nCols);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					PetscScalar * vals = (PetscScalar *) malloc(sizeof(PetscScalar) * nCols);
 					MatGetValues(this->a, 1, &rowIndex, nCols, cols, vals);
 
 					for(int j = 0; j < nCols; j++) {
 						// Copy value over to the matrix object
 						status = matrix.setElement(rowIndex, cols[j], vals[j]);
-						CHECK_ERROR_CODE(status)
-						if(status != cupcfd::error::E_SUCCESS) {
-							return status;
-						}
+						CHECK_ECODE(status)
 					}
 					free(cols);
 				}

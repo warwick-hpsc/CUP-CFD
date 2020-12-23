@@ -53,7 +53,7 @@ namespace cupcfd
 
 			// Clear the matrix
 			status = this->clear();
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(rows < 1) {
 				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
@@ -254,12 +254,15 @@ namespace cupcfd
 			// We can pass through this work to a utility function that gets the distinct row indexes in the data store, since
 			// if an entry exists then there is a non-zero value stored for that row.
 
+			cupcfd::error::eCodes status;
+
 			// ToDo: Should return error status of utility function instead - can do this once
 			// error codes are ported across to same enum.
 
 			// This method also allocates the array
 			I tmpSize = this->row.size();
-			cupcfd::utility::drivers::distinctArray(&(this->row[0]), tmpSize, rowIndexes, nRowIndexes);
+			status = cupcfd::utility::drivers::distinctArray(&(this->row[0]), tmpSize, rowIndexes, nRowIndexes);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

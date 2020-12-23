@@ -24,48 +24,38 @@ namespace cupcfd
 		namespace euclidean
 		{
 			template <class T, unsigned int N>
-			EuclideanPoint<T,N>::EuclideanPoint()
-			{
-				for(uint i = 0; i < N; i++)
-				{
+			EuclideanPoint<T,N>::EuclideanPoint() {
+				for(uint i = 0; i < N; i++) {
 					this->cmp[i] = T(0);
 				}
 			}
 
 			template <class T, unsigned int N>
-			EuclideanPoint<T,N>::EuclideanPoint(const EuclideanPoint<T,N> &point)
-			{
-				for(uint i = 0; i < N; i++)
-				{
+			EuclideanPoint<T,N>::EuclideanPoint(const EuclideanPoint<T,N> &point) {
+				for(uint i = 0; i < N; i++) {
 					this->cmp[i] = point.cmp[i];
 				}
 			}
 			
 			template <class T, unsigned int N>
-			inline void EuclideanPoint<T,N>::operator=(const EuclideanPoint<T,N>& source)
-			{
-				for(uint i = 0; i < N; i++)
-				{
+			inline void EuclideanPoint<T,N>::operator=(const EuclideanPoint<T,N>& source) {
+				for(uint i = 0; i < N; i++) {
 					this->cmp[i] = source.cmp[i];
 				}
 			}
 			
 			template <class T, unsigned int N>
-			inline void EuclideanPoint<T,N>::operator=(const T scalar)
-			{
-				for(uint i = 0; i < N; i++)
-				{
+			inline void EuclideanPoint<T,N>::operator=(const T scalar) {
+				for(uint i = 0; i < N; i++) {
 					this->cmp[i] = scalar;
 				}
 			}
 			
 			template <class T, unsigned int N>
-			inline void EuclideanPoint<T,N>::print() const
-			{
+			inline void EuclideanPoint<T,N>::print() const {
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];
-					for(uint i = 1; i < N; i++)
-					{
+					for(uint i = 1; i < N; i++) {
 						std::cout << ", " << this->cmp[i];
 					}
 					std::cout << " ]";
@@ -73,10 +63,8 @@ namespace cupcfd
 			}
 						
 			template <class T, unsigned int N>
-			inline cupcfd::error::eCodes EuclideanPoint<T,N>::getMPIType(MPI_Datatype * dType)
-			{
-				if(!(this->isRegistered()))
-				{
+			inline cupcfd::error::eCodes EuclideanPoint<T,N>::getMPIType(MPI_Datatype * dType) {
+				if(!(this->isRegistered())) {
 					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 			
@@ -86,23 +74,19 @@ namespace cupcfd
 			}
 			
 			template <class T, unsigned int N>
-			inline MPI_Datatype EuclideanPoint<T,N>::getMPIType()
-			{
+			inline MPI_Datatype EuclideanPoint<T,N>::getMPIType() {
 				return EuclideanPoint<T,N>::mpiType;
 			}
 			
 			template <class T, unsigned int N>
-			inline bool EuclideanPoint<T,N>::isRegistered()
-			{
+			inline bool EuclideanPoint<T,N>::isRegistered() {
 				return EuclideanPoint<T,N>::mpiDataTypeReg;
 			}
 			
 			template <class T, unsigned int N>
-			cupcfd::error::eCodes EuclideanPoint<T,N>::registerMPIType()
-			{
+			cupcfd::error::eCodes EuclideanPoint<T,N>::registerMPIType() {
 				// Error Check - Only Register if currently unregistered
-				if(this->isRegistered())
-				{
+				if(this->isRegistered()) {
 					return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 				}
 
@@ -128,33 +112,28 @@ namespace cupcfd
 
 				mpiErr = MPI_Type_create_struct(1, blocklengths, displ, structTypes, &vecType);
 
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecType);
 
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class EuclideanPoint<T,N>), &vecTypeResized);
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
 				mpiErr = MPI_Type_commit(&vecTypeResized);
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
@@ -163,8 +142,7 @@ namespace cupcfd
 
 				// Cleanup - Don't need the unresized type
 				mpiErr = MPI_Type_free(&vecType);
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 
@@ -174,19 +152,16 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>
-			cupcfd::error::eCodes EuclideanPoint<T,N>::deregisterMPIType()
-			{
+			cupcfd::error::eCodes EuclideanPoint<T,N>::deregisterMPIType() {
 				int mpiErr;
 
 				// Error Check - Only Deregister if currently registered
-				if(!this->isRegistered())
-				{
+				if(!this->isRegistered()) {
 					return cupcfd::error::E_MPI_DATATYPE_UNREGISTERED;
 				}
 
 				mpiErr = MPI_Type_free(&(EuclideanPoint<T,N>::mpiType));
-				if(mpiErr != MPI_SUCCESS)
-				{
+				if(mpiErr != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 

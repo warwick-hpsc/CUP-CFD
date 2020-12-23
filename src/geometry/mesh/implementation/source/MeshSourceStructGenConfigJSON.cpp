@@ -254,40 +254,31 @@ namespace cupcfd
 				T sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ;
 
 				status = this->getMeshCellSizeX(&cellX);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshCellSizeY(&cellY);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshCellSizeX(&cellZ);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialXMin(&sMinX);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialXMax(&sMaxX);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialYMin(&sMinY);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialYMax(&sMaxY);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialZMin(&sMinZ);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				status = this->getMeshSpatialZMax(&sMaxZ);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				*meshSourceConfig = new MeshSourceStructGenConfig<I,T>(cellX, cellY, cellZ, sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ);
 

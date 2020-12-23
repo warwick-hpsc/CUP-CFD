@@ -119,9 +119,8 @@ namespace cupcfd
 				// Compute the intersection of the bimedians on opposite sides - this is the centroid
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersectPoint;
 				cupcfd::error::eCodes status = computeVectorRangeIntersection(abBiMedian, cdBiMedian, bcBiMedian, daBiMedian, intersectPoint);
-				CHECK_ERROR_CODE(status);
 				if (status != cupcfd::error::E_SUCCESS) {
-					throw(std::runtime_error("Quadrilateral3D: computeCentroidBiMedianIntersection: computeVectorRangeIntersection() failed"));
+					throw(std::runtime_error("Quadrilateral3D::computeCentroidBiMedianIntersection(): call to computeVectorRangeIntersection() failed. Need to handle/return error code."));
 				}
 				return intersectPoint;
 			}

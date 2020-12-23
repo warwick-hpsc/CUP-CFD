@@ -92,11 +92,11 @@ namespace cupcfd
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
-			CHECK_ERROR_CODE(status)
+			HARD_CHECK_ECODE(status)
 
 			// setSubdomainWeightArrays cannot be set till nCon and nParts set so do so here.
 			status = this->setSubdomainWeightArrays();
-			CHECK_ERROR_CODE(status)
+			HARD_CHECK_ECODE(status)
 
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(sourceGraph);
@@ -106,7 +106,7 @@ namespace cupcfd
 					//       why is it operating on an unfinalized graph?!
 					//       Ignore error for now, as app was running before.
 				} else {
-					CHECK_ERROR_CODE(status)
+					HARD_CHECK_ECODE(status)
 				}
 			}
 
@@ -171,8 +171,7 @@ namespace cupcfd
 			// Reset in case arrays exist - they will need to be recreated/resized
 			// ubvec does not use nparts so no need to reset it.
 			status = this->resetSubdomainWeights();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -187,12 +186,10 @@ namespace cupcfd
 			// Reset in case arrays exist - they will need to be recreated/resized
 
 			status = this->resetSubdomainWeights();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			status = this->resetVertexImbalanceWeights();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -215,8 +212,7 @@ namespace cupcfd
 
 			// (a) Clear any exiting work arrays
 			status = this->resetWorkArrays();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// (b) Setup node data workspace
 			// Allocate suitable space - will be assigning locally owned nodes for this rank from the graph
@@ -226,7 +222,7 @@ namespace cupcfd
 
 			// Make a copy of locally owned nodes from the graph
 			status = distGraph.getLocalNodes(this->nodes, this->nNodes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// (c) Setup xadj indirect node->edges array
 			// Allocate suitable space, should always be one more than there are nodes
@@ -244,7 +240,7 @@ namespace cupcfd
 			for(I i = 0; i < this->nNodes; i++) {
 				I adjCount;
 				status = distGraph.connGraph.getAdjacentNodeCount(this->nodes[i], &adjCount);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 				nEdges = nEdges + adjCount;
 
 				// Set next index along, this should leave the final position being set at one past the final index of adjncy
@@ -268,7 +264,7 @@ namespace cupcfd
 				// Get nodes adjacent to current node
 				T * scratch = (T *) malloc(sizeof(T) * adjCount);
 				status = distGraph.connGraph.getAdjacentNodes(this->nodes[i], scratch, adjCount);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 
 				// Loop over each adjacent node
 				for(I j = 0; j < adjCount; j++) {
@@ -370,8 +366,7 @@ namespace cupcfd
 
 			// Reset the subdomain weights to free memory in case it is already allocated
 			status = this->resetSubdomainWeights();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			this->nTpwgts = this->nCon * this->nParts;
 			this->tpwgts = (real_t *) malloc(sizeof(real_t) * this->nTpwgts);
@@ -395,8 +390,7 @@ namespace cupcfd
 
 			// Reset to free memory in case it is already allocated
 			status = this->resetVertexImbalanceWeights();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			this->nUbvec = this->nCon;
 			this->ubvec = (real_t *) malloc(sizeof(real_t) * this->nUbvec);
@@ -450,8 +444,7 @@ namespace cupcfd
 
 			// Reset the results array since we are about to overwrite it
 			status = this->resetResultStorage();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Error Check 4: Nodes Array Exists
 
@@ -505,28 +498,23 @@ namespace cupcfd
 
 			// === Set NCon Size ===
 			status = this->setNCon(1);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// === Set Partition Size ===
 			status = this->setNParts(nParts);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// setSubdomainWeightArrays cannot be set till nCon and nParts set so do so here.
 			status = this->setSubdomainWeightArrays();
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// === Setup Work Arrays ===
 			status = this->setWorkArrays(graph);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

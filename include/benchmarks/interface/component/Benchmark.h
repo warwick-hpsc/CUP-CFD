@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include "Error.h"
+
 namespace cupcfd
 {
 	namespace benchmark
@@ -95,9 +97,9 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the computation data
 				 *
-				 * @return Nothing
+				 * @return error code
 				 */
-				virtual void runBenchmark() = 0;
+				virtual cupcfd::error::eCodes runBenchmark() = 0;
 		};
 	}
 }

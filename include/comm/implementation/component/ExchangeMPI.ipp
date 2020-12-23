@@ -38,13 +38,9 @@ namespace cupcfd
 				T dummy;
 				MPI_Datatype dType;
 				int offset;
-				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
-				
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				int tag = 78;
 
 				*nRequests = nTRanks * 2;
@@ -85,6 +81,8 @@ namespace cupcfd
 															 int * rRanks, int nRRanks,
 															 MPI_Comm comm,
 															 MPI_Request ** requests, int * nRequests) {
+				cupcfd::error::eCodes status;
+
 				if (nSendCount < nSRanks) {
 					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
@@ -116,13 +114,10 @@ namespace cupcfd
 				int reqPtr;
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
-				
+				CHECK_ECODE(status);
 				int tag = 79;
 
 				*nRequests = 0;
@@ -226,12 +221,9 @@ namespace cupcfd
 				int reqPtr;
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 
 				int tag = 79;
 
@@ -293,9 +285,8 @@ namespace cupcfd
 				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				CHECK_ECODE(status)
 				
 				int tag = 79;
 

@@ -51,8 +51,9 @@ namespace cupcfd
 														// T sigma, T sigma2, T vislam,
 														int ivar, int VarT, T Sigma_T, T Prandtl,
 														int VarTE, T Sigma_k, int VarED, T Sigma_e,
-														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu)
-		{
+														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu) {
+			cupcfd::error::eCodes status;
+
 			cupcfd::geometry::mesh::RType it;
 			I i, ip, in, ib, ir;
 			T facn, facp;
@@ -98,8 +99,7 @@ namespace cupcfd
 			hmax = -Large;
 			htot = 0.0;
 
-			for(i = 0; i < mesh.properties.lFaces; i++)
-			{
+			for(i = 0; i < mesh.properties.lFaces; i++) {
 				#ifndef NDEBUG
 					if (i >= nMassFlux) {
 						return cupcfd::error::E_INVALID_INDEX;
@@ -126,8 +126,7 @@ namespace cupcfd
 
 				bool isBoundary = mesh.getFaceIsBoundary(i);
 
-				if(!isBoundary)
-				{
+				if(!isBoundary) {
 					#ifndef NDEBUG
 						if (ip >= nPhiCell || in >= nPhiCell) {
 							return cupcfd::error::E_INVALID_INDEX;
@@ -143,35 +142,27 @@ namespace cupcfd
 					Visac = VisEff[in] * facn + VisEff[ip] * facp;
 
 
-					if(SolveTurb)
-					{
+					if(SolveTurb) {
 							Visac = Visac - VisLam;
 
-							if(ivar == VarT)
-							{
+							if(ivar == VarT) {
 								Visac = ( VisLam + Visac / Sigma_T )/Prandtl;
 							}
-							else if( ivar == VarTE )
-							{
+							else if( ivar == VarTE ) {
 								Visac = VisLam + Visac / Sigma_k;
 							}
-							else if( ivar == VarED )
-							{
+							else if( ivar == VarED ) {
 								Visac = VisLam + Visac / Sigma_e;
 							}
-							else
-							{
+							else {
 								Visac = ( VisLam + Visac / Sigma_s )/Schmidt;
 							}
 					}
-					else
-					{
-							if( ivar == VarT )
-							{
+					else {
+							if( ivar == VarT ) {
 								Visac  = Visac / Prandtl;
 							}
-							else
-							{
+							else {
 								Visac  = Visac / Schmidt;
 							}
 					}
@@ -221,14 +212,12 @@ namespace cupcfd
 					Su[ip] = Su[ip] - blend + fde1 - fdi;
 					Su[in] = Su[in] + blend - fde1 + fdi;
 
-					T length;
-					Xpn.length(&length);
+					T length = (T)Xpn.length();
 					peclet = MassFlux[i]/ mesh.getFaceArea(i) * length/(Visac + Small);
 					pe0 = fmin(pe0, peclet);
 					pe1 = fmax(pe1, peclet);
 				}
-				else
-				{
+				else {
 					#ifndef NDEBUG
 						if (ip >= nDen) {
 							return cupcfd::error::E_INVALID_INDEX;
@@ -249,23 +238,19 @@ namespace cupcfd
 						}
 					#endif
 
-					if( it == cupcfd::geometry::mesh::RTYPE_INLET)
-					{
+					if( it == cupcfd::geometry::mesh::RTYPE_INLET) {
 
 					dPhidxac = dPhidx[ip];
 					Xac = mesh.getFaceCenter(i);
 
 					// Will Skip User items for Now
-					if( ivar == VarT )
-					{
+					if( ivar == VarT ) {
 						//PhiFace  = Reg(ir)%T;
 					}
-					else if( ivar == VarTE )
-					{
+					else if( ivar == VarTE ) {
 						//PhiFace  = Reg(ir)%k;
 					}
-					else if( ivar == VarED )
-					{
+					else if( ivar == VarED ) {
 						//PhiFace  = Reg(ir)%e
 					}
 					// Skip Other handling for now
@@ -273,43 +258,34 @@ namespace cupcfd
 					//{
 						//PhiFace  = ScReg(ir,(iVar-Nvar))%value
 					//}
-					else
-					{
+					else {
 						// ToDo: Error Case - Need to change handling, doesn't originally set to 0.0
 						PhiFace = T (0);
 					}
 
 					Visac = visEffBoundary[ib];
 
-					if( SolveTurb )
-					{
+					if( SolveTurb ) {
 						Visac = Visac - VisLam;
 
-						if( ivar == VarT )
-						{
+						if( ivar == VarT ) {
 							Visac = ( VisLam + Visac / Sigma_T )/Prandtl;
 						}
-						else if( ivar == VarTE )
-						{
+						else if( ivar == VarTE ) {
 							Visac = VisLam + Visac / Sigma_k;
 						}
-						else if( ivar == VarED )
-						{
+						else if( ivar == VarED ) {
 							Visac = VisLam + Visac / Sigma_e;
 						}
-						else
-						{
+						else {
 							Visac = ( VisLam + Visac / Sigma_s )/Schmidt;
 						}
 					}
-					else
-					{
-						if( ivar == VarT )
-						{
+					else {
+						if( ivar == VarT ) {
 							Visac  = Visac / Prandtl;
 						}
-						else
-						{
+						else {
 							Visac  = Visac / Schmidt;
 						}
 					}
@@ -332,41 +308,32 @@ namespace cupcfd
 					PhiBoundary[ib] = PhiFace;
 
 					}
-					else if( it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-					{
+					else if( it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 						dPhidxac = dPhidx[ip];
 						Xac = mesh.getFaceCenter(i);
 						Visac = VisEff[ip];
 
-						if(SolveTurb)
-						{
+						if(SolveTurb) {
 							Visac = Visac - VisLam;
 
-							if(ivar == VarT)
-							{
+							if(ivar == VarT) {
 								Visac = ( VisLam + Visac / Sigma_T )/Prandtl;
 							}
-							else if( ivar == VarTE )
-							{
+							else if( ivar == VarTE ) {
 								Visac = VisLam + Visac / Sigma_k;
 							}
-							else if( ivar == VarED )
-							{
+							else if( ivar == VarED ) {
 								Visac = VisLam + Visac / Sigma_e;
 							}
-							else
-							{
+							else {
 								Visac = ( VisLam + Visac / Sigma_s )/Schmidt;
 							}
 						}
-						else
-						{
-						if( ivar == VarT )
-						{
+						else {
+						if( ivar == VarT ) {
 							Visac  = Visac / Prandtl;
 						}
-						else
-						{
+						else {
 							Visac  = Visac / Schmidt;
 						}
 						}
@@ -385,34 +352,28 @@ namespace cupcfd
 						Su[ip] = Su[ip]  + fde - fdi;
 						PhiBoundary[ib] = PhiFace;
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP) {
 					ds = mesh.getFaceCenter(i) - mesh.getCellCenter(ip);
 					PhiBoundary[ib] = PhiCell[ip] + dPhidx[ip].dotProduct(ds);
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_WALL)
-					{
-						if(SolveEnthalpy && ivar == VarT)
-						{
+					else if(it == cupcfd::geometry::mesh::RTYPE_WALL) {
+						if(SolveEnthalpy && ivar == VarT) {
 							#ifndef NDEBUG
 								if (ib >= nCpBoundary) {
 									return cupcfd::error::E_INVALID_INDEX;
 								}
 							#endif
 
-							if(mesh.getRegionAdiab(ir))
-							{
+							if(mesh.getRegionAdiab(ir)) {
 								PhiBoundary[ib] = PhiCell[ip];
-								mesh.setBoundaryQ(ib, 0.0);
+								status = mesh.setBoundaryQ(ib, 0.0);
+								CHECK_ECODE(status)
 							}
-							else
-							{
-								if(mesh.getRegionFlux(ir))
-								{
+							else {
+								if(mesh.getRegionFlux(ir)) {
 									PhiFlux = mesh.getRegionT(ir);
 								}
-								else
-								{
+								else {
 									PhiFace = mesh.getRegionT(ir);
 									PhiBoundary[ib] = PhiFace;
 								}
@@ -421,13 +382,11 @@ namespace cupcfd
 								dn     = mesh.getBoundaryDistance(ib);
 								Resist = mesh.getRegionR(ir);
 
-								if(!SolveTurb )
-								{
+								if(!SolveTurb ) {
 									VisFace = VisLam / Prandtl / dn;
 									Hcoef = 1.0/(1.0/VisFace + Resist*CpBoundary[ib]) * mesh.getFaceArea(i);
 								}
-								else
-								{
+								else {
 									#ifndef NDEBUG
 										if (ip >= nTE) {
 											return cupcfd::error::E_INVALID_INDEX;
@@ -439,20 +398,17 @@ namespace cupcfd
 									Tplus = Sigma_T * (mesh.getBoundaryUPlus(ib) + SLres);
 									utau  = Cmu25 * sqrt(TE[ip]);
 
-									if( mesh.getBoundaryYPlus(ib) < mesh.getRegionYLog(ir))
-									{
+									if( mesh.getBoundaryYPlus(ib) < mesh.getRegionYLog(ir)) {
 										VisFace = VisLam / Prandtl / dn;
 										Hcoef   = 1.0/( 1.0/VisFace + Resist*CpBoundary[ib]) * mesh.getFaceArea(i);
 									}
-									else
-									{
+									else {
 										VisFace = Den[ip] * utau/(Tplus + Small);
 										Hcoef   = 1.0/(1.0/VisFace + Resist*CpBoundary[ib]) * mesh.getFaceArea(i);
 									}
 								}
 
-								if(mesh.getRegionFlux(ir))
-								{
+								if(mesh.getRegionFlux(ir)) {
 									PhiFace = PhiCell[ip] + PhiFlux / (Hcoef * CpBoundary[ib]/ mesh.getFaceArea(i));
 									PhiBoundary[ib] = PhiFace;
 								}
@@ -464,22 +420,24 @@ namespace cupcfd
 								T tmpVal;
 
 								tmpVal =  Hcoef * CpBoundary[ib] / mesh.getFaceArea(i);
-								mesh.setBoundaryH(ib, tmpVal);
+								status = mesh.setBoundaryH(ib, tmpVal);
+								CHECK_ECODE(status)
 
 								tmpVal = mesh.getBoundaryH(ib) * Tdif;
-								mesh.setBoundaryQ(ib, tmpVal);
+								status = mesh.setBoundaryQ(ib, tmpVal);
+								CHECK_ECODE(status)
 
 								tmpVal = VisFace * CpBoundary[ib];
-								mesh.setBoundaryH(ib, tmpVal);
+								status = mesh.setBoundaryH(ib, tmpVal);
+								CHECK_ECODE(status)
 
-								mesh.setBoundaryT(ib, PhiFace);
+								status = mesh.setBoundaryT(ib, PhiFace);
+								CHECK_ECODE(status)
 
-								if(mesh.getBoundaryQ(ib) > 0.0)
-								{
+								if(mesh.getBoundaryQ(ib) > 0.0) {
 									QTransferIn = QTransferIn + mesh.getBoundaryQ(ib) * mesh.getFaceArea(i);
 								}
-								else
-								{
+								else {
 									QTransferOut = QTransferOut + mesh.getBoundaryQ(ib) * mesh.getFaceArea(i);
 								}
 
@@ -501,8 +459,7 @@ namespace cupcfd
 						//{
 						//   PhiBoundary[ib] = PhiCell[ip];
 						//}
-						else
-						{
+						else {
 						}
 					}
 				}

@@ -32,34 +32,34 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = this->reset();
-			CHECK_ERROR_CODE(status)
+			DBG_HARD_CHECK_ECODE(status)
 			
 			// Retrieve a list of nodes to add
 			I nNodes;
 			status = source.getNodeCount(&nNodes);
-			CHECK_ERROR_CODE(status)
+			DBG_HARD_CHECK_ECODE(status)
 			
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
 			status = source.getNodes(nodes, nNodes);
-			CHECK_ERROR_CODE(status)
+			DBG_HARD_CHECK_ECODE(status)
 			
 			// Retrieve a list of edges to add
 			I nEdges;
 			status = source.getEdgeCount(&nEdges);
-			CHECK_ERROR_CODE(status)
+			DBG_HARD_CHECK_ECODE(status)
 			
 			T * edgeNode1 = (T *) malloc(sizeof(T) * nEdges);
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
 			status = source.getEdges(edgeNode1, nEdges, edgeNode2, nEdges);
-			CHECK_ERROR_CODE(status)
+			DBG_HARD_CHECK_ECODE(status)
 			
 			for(I i = 0; i < nNodes; i++) {
 				status = this->addNode(nodes[i]);
-				CHECK_ERROR_CODE(status)
+				DBG_HARD_CHECK_ECODE(status)
 			}
 			for(I i = 0; i < nEdges; i++) {
 				status = this->addEdge(edgeNode1[i], edgeNode2[i]);
-				CHECK_ERROR_CODE(status)
+				DBG_HARD_CHECK_ECODE(status)
 			}
 			
 			// Cleanup

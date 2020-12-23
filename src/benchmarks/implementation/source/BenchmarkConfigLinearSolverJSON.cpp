@@ -205,58 +205,37 @@ namespace cupcfd
 			// Get Benchmark Name
 			std::string benchmarkName;
 			status = this->getBenchmarkName(benchmarkName);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Get Repetitions
 			I repetitions;
 			status = this->getBenchmarkRepetitions(&repetitions);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Get Distribution Type
 			BenchSolverDistribution distType;
 			status = this->getBenchSolverDistribution(&distType);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Matrix Source Config
 			cupcfd::data_structures::SparseMatrixSourceConfig<I,T> * matrixSourceConfig;
 			status = this->getSparseMatrixSourceConfig(&matrixSourceConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// RHS Vector Source Config
 			cupcfd::data_structures::VectorSourceConfig<I,T> * rhsSourceConfig;
 			status = this->getRHSVectorSourceConfig(&rhsSourceConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Sol Vector Source Config
 			cupcfd::data_structures::VectorSourceConfig<I,T> * solSourceConfig;
 			status = this->getSolutionVectorSourceConfig(&solSourceConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Linear Solver Config
 			cupcfd::linearsolvers::LinearSolverConfig<C,I,T> * linearSolverConfig;
 			status = this->getLinearSolverConfig(&linearSolverConfig);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) {
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigLinearSolver<C,I,T>(benchmarkName, repetitions, distType, *linearSolverConfig,
 															 *matrixSourceConfig, *rhsSourceConfig, *solSourceConfig);

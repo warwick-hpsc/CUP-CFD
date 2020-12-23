@@ -24,15 +24,12 @@ namespace cupcfd
 		namespace drivers
 		{
 			template <class I, class T>
-			cupcfd::error::eCodes sum(T * source, I nEle, T * result) {
+			void sum(T * source, I nEle, T * result) {
 				if(nEle < 1) {
 					*result = 0;
-					return cupcfd::error::E_SUCCESS;
+					return;
 				}
-
 				*result = kernels::sum(source, nEle);
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>

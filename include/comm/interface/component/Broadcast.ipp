@@ -56,19 +56,23 @@ namespace cupcfd
 		template <class T>
 		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int sourcePID, Communicator& myComm)
 		{
+			cupcfd::error::eCodes status;
+
 			// Obtain the number of expected elements from the source process via a single element broadcast
-			Broadcast(&nBSend, 1, nBRecv, 1, sourcePID, myComm);
+			status = Broadcast(&nBSend, 1, nBRecv, 1, sourcePID, myComm);
+			CHECK_ECODE(status)
 
 			// Allocate the space
 			*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
 
-			cupcfd::error::eCodes err = Broadcast(bSend, nBSend, *bRecv, *nBRecv, sourcePID, myComm);
+			status = Broadcast(bSend, nBSend, *bRecv, *nBRecv, sourcePID, myComm);
+			CHECK_ECODE(status)
 
 			// Cleanup
 			// Note: Recv buffer is not free'd here - left to the caller.
 			// No other cleanup currently
 
-			return err;
+			return cupcfd::error::E_SUCCESS;
 		}
 	} // namespace comm
 } // namespace cupcfd

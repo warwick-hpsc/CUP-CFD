@@ -26,12 +26,9 @@ namespace cupcfd
 			cupcfd::error::eCodes GatherMPI(T * bSend, T * bRecv, int nElePerProcess, int sinkProcess, MPI_Comm comm) {
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				int mpiErr;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 
 				// Each process sends nElePerProcess, and the sink process receieves nElePerProcess
 				// for a single receive from any one process
@@ -47,12 +44,9 @@ namespace cupcfd
 			cupcfd::error::eCodes AllGatherMPI(T * bSend, T * bRecv, int nElePerProcess, MPI_Comm comm) {
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				int mpiErr;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 
 				// Each process sends nElePerProcess, and each process receives nElePerProcess
 				// for a single receive from any one process (nElePerProcess * process count in total)
@@ -68,12 +62,9 @@ namespace cupcfd
 			cupcfd::error::eCodes GatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, int sinkPID, MPI_Comm comm) {
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				int mpiErr;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 
 				int commSize;
 				int commRank;
@@ -119,12 +110,9 @@ namespace cupcfd
 			cupcfd::error::eCodes AllGatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, MPI_Comm comm) {
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				int mpiErr;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 
 				int commSize;
 				int commRank;

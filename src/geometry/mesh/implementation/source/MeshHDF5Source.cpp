@@ -439,8 +439,7 @@ namespace cupcfd
 				bool * isBoundary = (bool *) malloc(sizeof(bool) * nFaceLabels);
 
 				status = getFaceIsBoundary(isBoundary, nFaceLabels, faceLabels, nFaceLabels);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					if(isBoundary[i] == false) {

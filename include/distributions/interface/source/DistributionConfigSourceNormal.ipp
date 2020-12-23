@@ -44,20 +44,16 @@ namespace cupcfd
 			T lBound, uBound, mean, stDev;
 			
 			status = this->getLBound(&lBound);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			status = this->getUBound(&uBound);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 					
 			status = this->getMean(&mean);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			status = this->getStDev(&stDev);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			*distConfig = new DistributionConfigNormal<I,T>(lBound, uBound, mean, stDev);
 			

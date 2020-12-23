@@ -66,8 +66,7 @@ namespace cupcfd
 						
 						// Error out if we have a incorrect ParticleEmitterSimple JSON format
 						status = emitterConfigJSON.buildParticleEmitterConfig(&emitterConfig);
-						CHECK_ERROR_CODE(status)
-						if(status != cupcfd::error::E_SUCCESS) return status;
+						CHECK_ECODE(status)
 						
 						configs.push_back(emitterConfig);
 					}
@@ -89,7 +88,7 @@ namespace cupcfd
 			
 				ParticleSimpleSourceFileConfigJSON<I,T> particleSourceConfigJSON(this->configData["ParticleSourceSimple"]);
 				status = particleSourceConfigJSON.buildParticleSourceConfig(particleSourceConfig);
-				CHECK_ERROR_CODE(status)
+				CHECK_ECODE(status)
 				if(status != cupcfd::error::E_SUCCESS) {
 					std::cout << "ERROR: buildParticleSourceConfig() failed" << std::endl;
 					return status;
@@ -111,8 +110,7 @@ namespace cupcfd
 			// Retrieve the emitter configs specified by the JSON
 			// Required
 			status = this->getParticleEmitterConfigs(emitterConfigs);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Get a particle source (optional)
 			status = getParticleSourceConfig(&particleSourceConfig);

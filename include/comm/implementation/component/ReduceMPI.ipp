@@ -31,11 +31,8 @@ namespace cupcfd
 				
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
 				
 				// Call the Reduce operation
 				int err = MPI_Reduce(bSend, bRecv, nBSend, dType, op, sProcess, comm);
@@ -81,11 +78,8 @@ namespace cupcfd
 
 				T dummy;
 				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
 				
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
 
 				// Call the AllReduce operation
 				int err = MPI_Allreduce(bSend, bRecv, nBSend, dType, op, comm);

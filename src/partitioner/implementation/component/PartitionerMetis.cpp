@@ -83,7 +83,7 @@ namespace cupcfd
 
 			// Convert the distributed graph to a serial graph on the root process
 			status = sourceGraph.buildSerialAdjacencyList(rootGraph, this->workComm.root_rank);
-			CHECK_ERROR_CODE(status)
+			HARD_CHECK_ECODE(status)
 
 			// Setup the internal data structures on the root process
 			// This includes:
@@ -92,7 +92,7 @@ namespace cupcfd
 			if(this->workComm.root) {
 				I nNodes;
 				status = rootGraph->getNodeCount(&nNodes);
-				CHECK_ERROR_CODE(status)
+				HARD_CHECK_ECODE(status)
 
 				//std::shared_ptr<std::array<T,nNodes>> nodes;
 				T * nodes = (T *) malloc(sizeof(T) * nNodes);
@@ -100,7 +100,7 @@ namespace cupcfd
 				// Make a copy of locally owned nodes from the graph and store them in the partitioner
 				// ToDo: Since we use the setter, this adds an unnecessary copy - could operate directly on pointers inside object
 				status = rootGraph->getNodes(nodes, nNodes);
-				CHECK_ERROR_CODE(status)
+				HARD_CHECK_ECODE(status)
 				this->setNodeStorage(nodes, nNodes);
 
 				// Setup the work arrays
@@ -173,7 +173,7 @@ namespace cupcfd
 
 			// Make a copy of locally owned nodes from the graph
 			status = graph.getNodes(this->nodes, this->nNodes);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Make a copy of the graph CSR
 			this->nXAdj = graph.xadj.size();
@@ -331,8 +331,7 @@ namespace cupcfd
 
 			// Base class reset
 			status = this->PartitionerInterface<I,T>::reset();
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Reset Members
 			this->nCon = 0;

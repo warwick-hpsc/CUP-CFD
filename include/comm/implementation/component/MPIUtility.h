@@ -30,56 +30,40 @@ namespace cupcfd
 			 *
 			 * @param dummy A dummy variable. Value does not matter, it merely informs the type for specialised methods.
 			 * @param mpiType A pointer to where the retrieved MPI_Datatype will be stored.
-			 *
-			 * @return An error status indicating the success or failure of the operation
-			 * @retval E_SUCCESS Operation was completed successfully
 			 */
-__attribute__((warn_unused_result))
-			cupcfd::error::eCodes getMPIType(int dummy, MPI_Datatype * mpiType);
+			void getMPIType(int dummy, MPI_Datatype * mpiType);
 
 			/**
 			 * Gets the MPI Datatype for doubles.
 			 *
 			 * @param dummy A dummy variable. Value does not matter, it merely informs the type for specialised methods.
 			 * @param mpiType A pointer to where the retrieved MPI_Datatype will be stored.
-			 *
-			 * @retval E_SUCCESS Operation was completed successfully
 			 */
-			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes getMPIType(double dummy, MPI_Datatype * mpiType);
+			void getMPIType(double dummy, MPI_Datatype * mpiType);
 
 			/**
 			 * Gets the MPI Datatype for float.
 			 *
 			 * @param dummy A dummy variable. Value does not matter, it merely informs the type for specialised methods.
 			 * @param mpiType A pointer to where the retrieved MPI_Datatype will be stored.
-			 *
-			 * @retval E_SUCCESS Operation was completed successfully
 			 */
-			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes getMPIType(float dummy, MPI_Datatype * mpiType);
+			void getMPIType(float dummy, MPI_Datatype * mpiType);
 
 			/**
 			 * Gets the MPI Datatype for longs.
 			 *
 			 * @param dummy A dummy variable. Value does not matter, it merely informs the type for specialised methods.
 			 * @param mpiType A pointer to where the retrieved MPI_Datatype will be stored.
-			 *
-			 * @retval E_SUCCESS Operation was completed successfully
 			 */
-			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes getMPIType(long dummy, MPI_Datatype * mpiType);
+			void getMPIType(long dummy, MPI_Datatype * mpiType);
 
 			/**
 			 * Gets the MPI Datatype for booleans.
 			 *
 			 * @param dummy A dummy variable. Value does not matter, it merely informs the type for specialised methods.
 			 * @param mpiType A pointer to where the retrieved MPI_Datatype will be stored.
-			 *
-			 * @retval E_SUCCESS Operation was completed successfully
 			 */
-			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes getMPIType(bool dummy, MPI_Datatype * mpiType);
+			void getMPIType(bool dummy, MPI_Datatype * mpiType);
 
 			/**
 			 * Gets the MPI Datatype for any object that inherits and implements the

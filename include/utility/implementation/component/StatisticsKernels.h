@@ -73,7 +73,7 @@ namespace cupcfd
 			 * @return The array standard deviation
 			 */
 			template <class I, class T>
-			double stDev(T * source, I nEle);
+			T stDev(T * source, I nEle);
 
 			/**
 			 * Count the number of instances of a particular element in an array - requires
@@ -89,7 +89,7 @@ namespace cupcfd
 			 * @return The number of instances found of target
 			 */
 			template <class I, class T>
-			int count(T * source, I nEle, T target);
+			I count(T * source, I nEle, T target);
 		} // namespace kernels
 	} // namespace utility
 } // namespace cupcfd

@@ -179,6 +179,8 @@ namespace cupcfd
 			// Determine the amount of data we will recieve prior to AllToAll, also accounting for factors such as
 			// ungrouped data.
 
+			cupcfd::error::eCodes status;
+
 			T * localSendBuffer = nullptr;
 			int nLocalSendBuffer = 0;
 			int * localProcessIDs = nullptr;
@@ -206,7 +208,8 @@ namespace cupcfd
 
 			//		Check whether the processID array is sorted
 			bool sorted;
-			cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs, & sorted);
+			status = cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs, &sorted);
+			CHECK_ECODE(status)
 
 			// 		Use original buffers or sort copies depending on is_sorted outcome
 			if(sorted)
@@ -231,11 +234,14 @@ namespace cupcfd
 				localProcessIDs = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 				sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 
-				cupcfd::utility::drivers::copy(sendBuffer, nSendBuffer, localSendBuffer, nLocalSendBuffer);
-				cupcfd::utility::drivers::copy(processIDs, nProcessIDs, localProcessIDs, nLocalProcessIDs);
+				status = cupcfd::utility::drivers::copy(sendBuffer, nSendBuffer, localSendBuffer, nLocalSendBuffer);
+				CHECK_ECODE(status)
+				status = cupcfd::utility::drivers::copy(processIDs, nProcessIDs, localProcessIDs, nLocalProcessIDs);
+				CHECK_ECODE(status)
 
 				// Group the process ids,keeping a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);
+				status = cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);
+				CHECK_ECODE(status)
 
 				// Now we have a sorted order by original index, let us reorder sendBuffer to that order
 				cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
@@ -247,7 +253,8 @@ namespace cupcfd
 			//	   will need this information
 
 			// This driver will allocate memory for the group id/size arrays (but we must free it in this function to avoid leaks)
-			cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize);
+			status = cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize);
+			CHECK_ECODE(status)
 
 			nSendCounts = mpComm.size;
 			nRecvCounts = mpComm.size;
@@ -278,7 +285,8 @@ namespace cupcfd
 			// 	   It is necessary to send out send counts to every process, and receive counts from every process
 			//	   We can do this with a fixed-size chunk AllToAll.
 
-			AllToAll(sendCounts, nSendCounts, recvCounts, nRecvCounts, 1, mpComm);
+			status = AllToAll(sendCounts, nSendCounts, recvCounts, nRecvCounts, 1, mpComm);
+			CHECK_ECODE(status)
 
 			// Total number of received elements
 			cupcfd::utility::drivers::sum(recvCounts, nRecvCounts, nRecvBuffer);

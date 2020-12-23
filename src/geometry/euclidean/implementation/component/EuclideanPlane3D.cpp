@@ -43,20 +43,17 @@ namespace cupcfd
 			}
 
 			template <class T>
-			EuclideanPlane3D<T>::~EuclideanPlane3D()
-			{
+			EuclideanPlane3D<T>::~EuclideanPlane3D() {
 				// Nothing to do currently
 			}
 
 			template <class T>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> EuclideanPlane3D<T>::getNormal()
-			{
+			cupcfd::geometry::euclidean::EuclideanVector<T,3> EuclideanPlane3D<T>::getNormal() {
 				return cupcfd::geometry::euclidean::EuclideanVector<T,3>(this->a, this->b, this->c);
 			}
 
 			template <class T>
-			cupcfd::error::eCodes EuclideanPlane3D<T>::computeScalarPlaneEquation(T * a, T * b, T * c, T * d)
-			{
+			cupcfd::error::eCodes EuclideanPlane3D<T>::computeScalarPlaneEquation(T * a, T * b, T * c, T * d) {
 				// a(x-x0) + b(y - y0) + c(z - z0) = 0, where (x0,y0,z0) is point in the plane and <a,b,c> is the normal vector
 				// =>
 				// ax - ax0 + by - by0 + cz - cz0 = 0
@@ -78,16 +75,14 @@ namespace cupcfd
 			}
 
 			template <class T>
-			bool EuclideanPlane3D<T>::isPointOnPlane(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			bool EuclideanPlane3D<T>::isPointOnPlane(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				T val = (this->a * point.cmp[0]) + (this->b * point.cmp[1]) + (this->c * point.cmp[2]) + this->d;
 
 				return arth::isEqual(val, (T) 0);
 			}
 
 			template <class T>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> EuclideanPlane3D<T>::computeProjectedPoint(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			cupcfd::geometry::euclidean::EuclideanPoint<T,3> EuclideanPlane3D<T>::computeProjectedPoint(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> result;
 
 				// Pick a point on the plane and compute the vector to the point
@@ -110,8 +105,7 @@ namespace cupcfd
 			}
 
 			template <class T>
-			bool EuclideanPlane3D<T>::isVectorParallel(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& vec)
-			{
+			bool EuclideanPlane3D<T>::isVectorParallel(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& vec) {
 				// Vector path is parallel to plane if the dot product of the vector and the plane normal is 0
 				T dotP = this->getNormal().dotProduct(vec);
 
@@ -120,20 +114,17 @@ namespace cupcfd
 
 			template <class T>
 			bool EuclideanPlane3D<T>::isVectorParallelInPlane(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& vec,
-															  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0)
-			{
+															  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0) {
 				// Two components:
 				// (a) Is the vector parallel?
 				// (b) Does the vector line on/inside the plane (check l0)
 
-				if(!this->isVectorParallel(vec))
-				{
+				if(!this->isVectorParallel(vec)) {
 					// Vector is not parallel
 					return false;
 				}
 
-				if(!this->isPointOnPlane(l0))
-				{
+				if(!this->isPointOnPlane(l0)) {
 					// Vector has been found to be parallel, but the vector point does not lie on the plane
 					return false;
 				}
@@ -145,15 +136,13 @@ namespace cupcfd
 			template <class T>
 			cupcfd::error::eCodes EuclideanPlane3D<T>::linePlaneIntersection(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& l,
 																			 	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
-																				  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result)
-			{
+																				  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result) {
 				// https://en.wikipedia.org/wiki/Line-plane_intersection
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = this->getNormal();
 				T dotP = normal.dotProduct(l);
 
 				// Could use isVectorParallel, but don't want to compute dot product twice.
-				if(arth::isEqual(dotP, T(0.0)))
-				{
+				if(arth::isEqual(dotP, T(0.0))) {
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)
 					return cupcfd::error::E_EUC_VEC_PARALLEL;
@@ -172,8 +161,7 @@ namespace cupcfd
 			}
 
 			template <class T>
-			T EuclideanPlane3D<T>::shortestDistance(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p)
-			{
+			T EuclideanPlane3D<T>::shortestDistance(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p) {
 				// https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane
 				// I.e. Compute the distance of this plane to the origin, and the distance of the parallel plane containing
 				// point p to the origin, and determine the difference between the two.
@@ -191,13 +179,11 @@ namespace cupcfd
 				// Compute distance to origin from plane with point p, shares same normal vector/denominator since parallel
 				T pointDisOrigin = pointD / denom;
 
-				if(cupcfd::utility::arithmetic::kernels::sgn(this->d) != cupcfd::utility::arithmetic::kernels::sgn(pointD))
-				{
+				if(cupcfd::utility::arithmetic::kernels::sgn(this->d) != cupcfd::utility::arithmetic::kernels::sgn(pointD)) {
 					// Planes are different sides of the origin, so add the magnitudes of each
 					return std::abs(planeDisOrigin) + std::abs(pointDisOrigin);
 				}
-				else
-				{
+				else {
 					// Planes are same side of origin, so take the magnitude of the difference
 					return std::abs(planeDisOrigin - pointDisOrigin);
 				}
@@ -208,8 +194,7 @@ namespace cupcfd
 			template <class T>
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> EuclideanPlane3D<T>::normal(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p1,
 																							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p2,
-																							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p3)
-			{
+																							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p3) {
 				// Algorithm: https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal
 
 				// U = point 2 - point 1
@@ -229,13 +214,11 @@ namespace cupcfd
 																				  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p0,
 																				  const cupcfd::geometry::euclidean::EuclideanVector<T,3>& l,
 																				  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& l0,
-																				  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result)
-			{
+																				  cupcfd::geometry::euclidean::EuclideanPoint<T,3>& result) {
 				// https://en.wikipedia.org/wiki/Line-plane_intersection
 				T dotP = normal.dotProduct(l);
 
-				if(arth::isEqual(dotP, T(0.0)))
-				{
+				if(arth::isEqual(dotP, T(0.0))) {
 					// Vector is parallel, so 'intersection' concept is invalid
 					// (either no points intersect, or every point on the line intersects if on the plane)
 					return cupcfd::error::E_EUC_VEC_PARALLEL;

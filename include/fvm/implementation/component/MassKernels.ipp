@@ -65,12 +65,10 @@ namespace cupcfd
 													T * viseffCell, I nViseffCell,
 													T * viseffBoundary, I nViseffBoundary,
 													T * tCell, I nTCell,
-													T * tBoundary, I nTBoundary)
-		{
+													T * tBoundary, I nTBoundary) {
 			I ip, in, ib, ir;
 			T facn, facp;
 			T denf;
-			T tmp;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dudxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dvdxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dwdxac;
@@ -94,8 +92,7 @@ namespace cupcfd
 			T dpx, dpy, dpz;
 			T dens;
 
-			for(int i = 0; i < mesh.properties.lFaces; i++)
-			{
+			for(int i = 0; i < mesh.properties.lFaces; i++) {
 				ip = mesh.getFaceCell1ID(i);
 				in = mesh.getFaceCell2ID(i);
 
@@ -106,8 +103,7 @@ namespace cupcfd
 						return cupcfd::error::E_INVALID_INDEX;
 					}
 				#endif
-				if(!isBoundary)
-				{
+				if(!isBoundary) {
 					#ifdef DEBUG
 						if (in >= nDudx || ip >= nDudx) {
 							return cupcfd::error::E_INVALID_INDEX;
@@ -152,14 +148,9 @@ namespace cupcfd
 					xface = mesh.getFaceCenter(i);
 					delta = xface - xac;
 
-					dudxac.dotProduct(delta, &tmp);
-					uFace = uCell[in] * facn + uCell[ip] * facp + tmp;
-
-					dvdxac.dotProduct(delta, &tmp);
-					vFace = vCell[in] * facn + vCell[ip] * facp + tmp;
-
-					dwdxac.dotProduct(delta, &tmp);
-					wFace = wCell[in] * facn + wCell[ip] * facp + tmp;
+					uFace = uCell[in]*facn + uCell[ip]*facp + dudxac.dotProduct(delta);
+					vFace = vCell[in]*facn + vCell[ip]*facp + dvdxac.dotProduct(delta);
+					wFace = wCell[in]*facn + wCell[ip]*facp + dwdxac.dotProduct(delta);
 
 					massFlux[i] = denf * (uFace * mesh.getFaceNorm(i).cmp[0] +
 										vFace * mesh.getFaceNorm(i).cmp[1] +
@@ -172,12 +163,10 @@ namespace cupcfd
 					xnac = mesh.getFaceXnac(i);
 
 					delp = xpac - mesh.getCellCenter(ip);
-					dpdx[ip].dotProduct(delp, &tmp);
-					pip = p[ip] + tmp;
+					pip = p[ip] + dpdx[ip].dotProduct(delp);
 
 					deln = xpac - mesh.getCellCenter(in);
-					dpdx[ip].dotProduct(deln, &tmp);
-					pin = p[in] + tmp;
+					pin = p[in] + dpdx[ip].dotProduct(deln);
 
 					xpn = xnac - xpac;
 					xpn2 = mesh.getCellCenter(in) - mesh.getCellCenter(ip);
@@ -187,8 +176,7 @@ namespace cupcfd
 					apv = apv2 * facn + apv1 * facp;
 
 					factv = mesh.getCellVolume(in) * facn + mesh.getCellVolume(ip) * facp;
-					xpn2.dotProduct(xnorm, &tmp);
-					apv = apv * mesh.getFaceArea(i) * factv/tmp;
+					apv *= mesh.getFaceArea(i) * factv/xpn2.dotProduct(xnorm);
 
 					dpx = (dpdx[in].cmp[0] * facn + dpdx[ip].cmp[0] * facp) * xpn.cmp[0];
 					dpy = (dpdx[in].cmp[1] * facn + dpdx[ip].cmp[1] * facp) * xpn.cmp[1];
@@ -206,8 +194,7 @@ namespace cupcfd
 
 					massFlux[i] = massFlux[i] - fact * ((pin-pip) - dpx - dpy - dpz);
 				}
-				else
-				{
+				else {
 					ip = mesh.getFaceCell1ID(i);
 					ib = mesh.getFaceBoundaryID(i);
 					ir = mesh.getBoundaryRegionID(ib);
@@ -258,8 +245,7 @@ namespace cupcfd
 						}
 					#endif
 
-					if(it == cupcfd::geometry::mesh::RTYPE_INLET)
-					{
+					if(it == cupcfd::geometry::mesh::RTYPE_INLET) {
 						*icinl = *icinl + 1;
 						xac = mesh.getFaceCenter(i);
 
@@ -268,12 +254,10 @@ namespace cupcfd
 						dens = mesh.getRegionDen(ir);
 
 						norm = mesh.getFaceNorm(i);
-						uIn.dotProduct(norm, &tmp);
-						massFlux[i] = dens * tmp;
+						massFlux[i] = dens * uIn.dotProduct(norm);
 						su[ip] = su[ip] - massFlux[i];
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 						*icout = *icout + 1;
 						delta = mesh.getFaceCenter(i) - mesh.getCellCenter(ip);
 						uFace = uCell[ip];
@@ -288,40 +272,33 @@ namespace cupcfd
 											 vFace * norm.cmp[1] +
 											 wFace * norm.cmp[2]);
 
-						if(massFlux[i] < 0.0)
-						{
+						if(massFlux[i] < 0.0) {
 							massFlux[i] = small;
 
-							if(solveTurbEnergy)
-							{
+							if(solveTurbEnergy) {
 								teBoundary[ib] = teCell[ip];
 							}
 
-							if(solveTurbDiss)
-							{
+							if(solveTurbDiss) {
 								edBoundary[ib] = edCell[ip];
 							}
 
-							if(solveVisc)
-							{
+							if(solveVisc) {
 								viseffBoundary[ib] = viseffCell[ip];
 							}
 
-							if(solveEnthalpy)
-							{
+							if(solveEnthalpy) {
 								tBoundary[ib] = tCell[ip];
 							}
 
 							// Skip SolveScalars
 						}
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP) {
 						*icsym = *icsym + 1;
 						massFlux[i] = 0.0;
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_WALL)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_WALL) {
 						*icwal = *icwal + 1;
 						massFlux[i] = 0.0;
 					}
@@ -334,20 +311,17 @@ namespace cupcfd
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 														 T * massFlux, I nMassFlux,
-														 T * flowin)
-		{
+														 T * flowin) {
 			cupcfd::geometry::mesh::RType it;
 			I ib, ir, i;
 
 			*flowin = 0.0;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_INLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_INLET) {
 					i = mesh.getBoundaryFaceID(ib);
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
@@ -365,20 +339,17 @@ namespace cupcfd
 		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop2(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 														 T * massFlux, I nMassFlux,
 														 T * flowRegion, I nFlowRegion,
-														 T * flowout)
-		{
+														 T * flowout) {
 			cupcfd::geometry::mesh::RType it;
 			I ib, ir, i;
 
 			*flowout = 0.0;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 					i = mesh.getBoundaryFaceID(ib);
 					#ifdef DEBUG
 						if (i >= nMassFlux) {
@@ -398,28 +369,27 @@ namespace cupcfd
 
 
 		template <class M, class I, class T, class L>
-		void FluxMassDolfynBoundaryLoop3(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-										 T flowin, T * ratearea)
-		{
+		cupcfd::error::eCodes FluxMassDolfynBoundaryLoop3(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+										 T flowin, T * ratearea) {
 			cupcfd::geometry::mesh::RType it;
 			T areaout;
 			I ib, ir, i;
 
 			areaout = 0.0;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 					i = mesh.getBoundaryFaceID(ib);
 					areaout = areaout + mesh.getFaceArea(i);
 				}
 			}
 
 			*ratearea = -flowin/areaout;
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
@@ -430,8 +400,7 @@ namespace cupcfd
 														 T * wBoundary, I nWBoundary,
 														 T * denBoundary, I nDenBoundary,
 														 T ratearea,
-														 T * flowout)
-		{
+														 T * flowout) {
 			cupcfd::geometry::mesh::RType it;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> xnorm;
 
@@ -441,13 +410,11 @@ namespace cupcfd
 
 			*flowout = 0.0;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 					i = mesh.getBoundaryFaceID(ib);
 
 					#ifdef DEBUG
@@ -496,18 +463,15 @@ namespace cupcfd
 														T * wBoundary, I nWBoundary,
 														T fact, bool solveU, bool solveV, bool solveW,
 														T * flowFact, I nFlowFact,
-														T * flowout2)
-		{
+														T * flowout2) {
 			cupcfd::geometry::mesh::RType it;
 			I ib, ir;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 					I i = mesh.getBoundaryFaceID(ib);
 
 					#ifdef DEBUG
@@ -531,18 +495,15 @@ namespace cupcfd
 					massFlux[i] = massFlux[i] * flowFact[ir];
 					*flowout2 = *flowout2 + massFlux[i];
 
-					if(solveU)
-					{
+					if(solveU) {
 						uBoundary[ib] = uBoundary[ib] * fact;
 					}
 
-					if(solveV)
-					{
+					if(solveV) {
 						vBoundary[ib] = vBoundary[ib] * fact;
 					}
 
-					if(solveW)
-					{
+					if(solveW) {
 						wBoundary[ib] = wBoundary[ib] * fact;
 					}
 
@@ -563,14 +524,12 @@ namespace cupcfd
 		cupcfd::error::eCodes FluxMassDolfynRegionLoop(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 														T * flowFact, I nFlowFact,
 														T * flowRegion, I nFlowRegion,
-														T flowIn)
-		{
+														T flowIn) {
 			cupcfd::geometry::mesh::RType it;
 			T split;
 			I nRegions = mesh.properties.lRegions;
 
-			for(I ir = 0; ir < nRegions; ir++)
-			{
+			for(I ir = 0; ir < nRegions; ir++) {
 				it = mesh.getRegionType(ir);
 
 				#ifdef DEBUG
@@ -582,13 +541,11 @@ namespace cupcfd
 					}
 				#endif
 
-				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 					split = mesh.getRegionSplvl(ir);
 					flowFact[ir] = -(split * flowIn) / flowRegion[ir];
 				}
-				else
-				{
+				else {
 					flowFact[ir] = 0.0;
 				}
 			}

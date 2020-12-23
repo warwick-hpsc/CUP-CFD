@@ -78,7 +78,7 @@ namespace cupcfd
 			bool nodeExists;
 
 			status = this->existsNode(node, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(!nodeExists) {
 				// Generate a new local index
@@ -123,26 +123,20 @@ namespace cupcfd
 			// (1) Check the source node exists
 			nodeExists = false;
 			status = this->existsNode(node, &nodeExists);
-			CHECK_ERROR_CODE(status)
-			if(nodeExists == false) {
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
-			}
+			CHECK_ECODE(status)
+			if(nodeExists == false) return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 
 			// (2) Check the destination node exists
 			nodeExists = false;
 			status = this->existsNode(adjNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
-			if(nodeExists == false) {
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
-			}
+			CHECK_ECODE(status)
+			if(nodeExists == false) return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 
 			// (3) Check that edge doesn't already exist
 			status = this->existsEdge(node, adjNode, &edgeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			// Add if edge doesn't already exist
-			if(edgeExists) {
-				return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
-			}
+			if(edgeExists) return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
 
 			// Retrieve internal indexes for the nodes
 			nodeLocalIDX = this->nodeToIDX[node];
@@ -161,7 +155,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = this->existsNode(srcNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			if(!nodeExists) {
 				*exists = false;
 				// return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -169,7 +163,7 @@ namespace cupcfd
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			if(!nodeExists) {
 				*exists = false;
 				// return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -181,15 +175,15 @@ namespace cupcfd
 			I adjNodeLocalIDX = this->nodeToIDX[dstNode];
 
 			// Search edge list for destination node and return existance (or lack thereof)
-			// status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
-			I edgeIdx;
-			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, &edgeIdx);
-			if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
-				// This error is ok, just means edge not found.
-				*exists = false;
-			} else {
-				CHECK_ERROR_CODE(status)
-			}
+			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
+			// I edgeIdx;
+			// status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, &edgeIdx);
+			// if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+			// 	// This error is ok, just means edge not found.
+			// 	*exists = false;
+			// } else {
+				CHECK_ECODE(status)
+			// }
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -199,11 +193,9 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 			bool exists;
 			status = this->existsNode(node, &exists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
-			if(!exists) {
-				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
-			}
+			if(!exists) return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 
 			I idx = this->nodeToIDX[node];
 			*count = this->adjacencies[idx].size();
@@ -218,12 +210,10 @@ namespace cupcfd
 			// Get the number of adjacent nodes
 			// Error Check: If the node does not exist it will be raised as an error here
 			status = this->getAdjacentNodeCount(node, &count);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Error Check: Check the array is large enough
-			if(count > nAdjNodes) {
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
-			}
+			if(count > nAdjNodes) return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 
 			idx = this->nodeToIDX[node];
 			std::vector<I> adjNodesVec = this->adjacencies[idx];

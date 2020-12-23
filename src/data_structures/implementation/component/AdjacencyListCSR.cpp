@@ -81,7 +81,7 @@ namespace cupcfd
 			bool nodeExists;
 
 			status = this->existsNode(node, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(!nodeExists) {
 				// Generate a new local index
@@ -132,7 +132,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = this->existsNode(srcNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(!nodeExists) {
 				*exists = false;
@@ -140,7 +140,7 @@ namespace cupcfd
 			}
 
 			status = this->existsNode(dstNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(!nodeExists) {
 				*exists = false;
@@ -150,12 +150,12 @@ namespace cupcfd
 			// Get Node Count Adjacent to srcNode
 			I count;
 			status = this->getAdjacentNodeCount(srcNode, &count);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Get Nodes Adjacent to srcNode
 			T * adjNodes = (T *) malloc(sizeof(T) * count);
 			status = this->getAdjacentNodes(srcNode, adjNodes, count);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Search adjacent node list for the node
 			// Alternate: could seach for localIDX of node in adjncy array
@@ -176,7 +176,7 @@ namespace cupcfd
 			// (1) Check the source node exists
 			nodeExists = false;
 			status = this->existsNode(node, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(nodeExists == false) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -185,7 +185,7 @@ namespace cupcfd
 			// (2) Check the destination node exists
 			nodeExists = false;
 			status = this->existsNode(adjNode, &nodeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(nodeExists == false) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -193,7 +193,7 @@ namespace cupcfd
 
 			// (3) Check that edge doesn't already exist
 			status = this->existsEdge(node, adjNode, &edgeExists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Add if edge doesn't already exist
 			if(edgeExists) {
@@ -230,7 +230,7 @@ namespace cupcfd
 			*count = 0;
 
 			status = this->existsNode(node, &exists);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			if(!exists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -250,7 +250,7 @@ namespace cupcfd
 			// Get the number of adjacent nodes
 			// Error Check: If the node does not exist it will be raised as an error here
 			status = this->getAdjacentNodeCount(node, &count);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
 			// Error Check: Check the array is large enough
 			if(count > nAdjNodes) {

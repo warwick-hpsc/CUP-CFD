@@ -77,20 +77,17 @@ namespace cupcfd
 				// (1) Build the mesh source
 				MeshSource<I,T,L> * source;
 				status = this->meshSourceConfig->buildMeshSource(&source);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				// (2) Build a naive connectivity graph
 				cupcfd::data_structures::DistributedAdjacencyList<I,I> * naiveConnGraph;
 				status = source->buildDistributedAdjacencyList(&naiveConnGraph, comm);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 				
 				// (3) Use the partitioner config to build a partitioner
 				cupcfd::partitioner::PartitionerInterface<I,I> * partitioner;
 				status = this->partConfig->buildPartitioner(&partitioner, *naiveConnGraph);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 				
 				// (4) Run the partitioner and store the results
 				//partitioner->initialise(*naiveConnGraph, comm.size);

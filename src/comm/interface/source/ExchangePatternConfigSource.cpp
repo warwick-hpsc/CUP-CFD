@@ -32,8 +32,7 @@ namespace cupcfd
 			// Get the required data from the source
 			ExchangeMethod method;
 			status = this->getExchangeMethod(&method);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Create new object
 			*config = new ExchangePatternConfig(method);

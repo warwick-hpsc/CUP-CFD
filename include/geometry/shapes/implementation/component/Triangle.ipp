@@ -38,11 +38,9 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector<T,N> ac = c - a;
 				cupcfd::geometry::euclidean::EuclideanVector<T,N> bc = c - b;
 
-				T abLength, acLength, bcLength;
-
-				ab.length(&abLength);
-				ac.length(&acLength);
-				bc.length(&bcLength);
+				T abLength = ab.length();
+				T acLength = ac.length();
+				T bcLength = bc.length();
 
 				T s = (abLength + acLength + bcLength) / ((T) 2);
 				return arth::sqrtWr(s * (s - abLength) * (s - bcLength) * (s - acLength));

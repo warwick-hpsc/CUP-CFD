@@ -99,11 +99,7 @@ namespace cupcfd
 
 					status = buildGraph.addNode(label);
 
-					CHECK_ERROR_CODE(status)
-					if(status != cupcfd::error::E_SUCCESS) {
-						// Failed to add a node
-						return status;
-					}
+					CHECK_ECODE(status)
 				}
 
 				// Add Edges

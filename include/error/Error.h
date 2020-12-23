@@ -150,13 +150,31 @@ namespace cupcfd
 	#endif
 #endif
 
-#ifndef CHECK_ERROR_CODE
-	#define STRINGIZE_DETAIL(x) #x
-	#define STRINGIZE(x) STRINGIZE_DETAIL(x)
+
+#define STRINGIZE_DETAIL(x) #x
+#define STRINGIZE(x) STRINGIZE_DETAIL(x)
+// #ifndef LOOP_CHECK_ECODE
+// 	#ifdef DEBUG
+//  		#define LOOP_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+// 	#else
+// 		#define LOOP_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) break; }
+// 	#endif
+// #endif
+#ifndef CHECK_ECODE
 	#ifdef DEBUG
- 		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+ 		#define CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
 	#else
-		#define CHECK_ERROR_CODE(E) { if (E != cupcfd::error::E_SUCCESS) { return E; } }
+		#define CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) return E; }
+	#endif
+#endif
+#ifndef HARD_CHECK_ECODE
+	#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+#endif
+#ifndef DBG_HARD_CHECK_ECODE
+	#ifdef DEBUG
+		#define DBG_HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#else
+		#define DBG_HARD_CHECK_ECODE(E)
 	#endif
 #endif
 

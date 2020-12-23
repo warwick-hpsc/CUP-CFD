@@ -894,6 +894,8 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
+
+				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -908,7 +910,8 @@ namespace cupcfd
 				// Retrieve the Face Data from the mesh for the cell
 				I cellLocalFaceID[5];
 				for(I i = 0; i  < 5; i++) {
-					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					status = this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					CHECK_ECODE(status)
 				}
 				
 				// Get the number of vertices for each face, and determine which are the triangular faces
@@ -1099,6 +1102,8 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
+
+				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1114,7 +1119,8 @@ namespace cupcfd
 				
 				I cellLocalFaceID[5];
 				for(I i = 0; i  < 5; i++) {
-					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					status = this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					CHECK_ECODE(status)
 				}
 				
 				// Get the number of vertices for each face, and determine which
@@ -1251,6 +1257,8 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
+
+				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1266,7 +1274,8 @@ namespace cupcfd
 				
 				I cellLocalFaceID[4];
 				for(I i = 0; i  < 4; i++) {
-					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					status = this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					CHECK_ECODE(status)
 				}
 				
 				// Get the number of vertices for each face, and determine which is the base
@@ -1401,6 +1410,8 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
+
+				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a Hexahedron
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1416,7 +1427,8 @@ namespace cupcfd
 				
 				I cellLocalFaceID[6];
 				for(I i = 0; i  < 6; i++) {
-					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					status = this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+					CHECK_ECODE(status)
 				}
 				
 				// Get the number of vertices for each face, and determine which
@@ -1656,8 +1668,7 @@ namespace cupcfd
 				// Reuse the same communicator as the distributed graph, since all members of the comm associated with this
 				// mesh must participate
 				status = data.buildDistributedAdjacencyList(&partGraph, *(this->cellConnGraph->comm), assignedCellLabels, nAssignedCellLabels);
-				CHECK_ERROR_CODE(status)
-				if (status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				//(b) Get the labels of local + ghost cells for this rank
 				I lCells = partGraph->nLONodes;
@@ -1668,9 +1679,9 @@ namespace cupcfd
 					// (c) Get the labels from the partition graph
 					I * cellLabels = (I *) malloc(sizeof(I) * nCells);
 					status = partGraph->getLocalNodes(cellLabels, lCells);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 					status = partGraph->getGhostNodes(cellLabels + lCells, ghCells);
-					CHECK_ERROR_CODE(status)
+					CHECK_ECODE(status)
 
 					// (d) Get the labels of all faces associated with only *local* cells - faces that are between local-> ghost will be caught in this.
 
@@ -1678,8 +1689,7 @@ namespace cupcfd
 					I nCellFacesSum;
 					I * nCellFaces = (I *) malloc(sizeof(I) * lCells);
 					status = data.getCellNFaces(nCellFaces, lCells, cellLabels, lCells);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// (dii) Summed number of faces per cell - needed for CSR sizes
 					cupcfd::utility::drivers::sum(nCellFaces, lCells, &nCellFacesSum);
@@ -1688,8 +1698,7 @@ namespace cupcfd
 					I * cellFaceLabelInd = (I *) malloc(sizeof(I) * (lCells+1));
 					I * cellFaceLabelData = (I *) malloc(sizeof(I) * nCellFacesSum);
 					status = data.getCellFaceLabels(cellFaceLabelInd, lCells+1, cellFaceLabelData, nCellFacesSum, cellLabels, lCells);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// (div) Remove duplicate face labels from where cells share faces
 					// This leaves a single label per each face that is attached to a local cell
@@ -1701,8 +1710,7 @@ namespace cupcfd
 					// (ei) Reduce down to only faces that are boundaries
 					bool * faceLabelIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(faceLabelIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					int nFaceBoundaries = 0;
 					for(int i = 0; i < nFaceLabelsDistinct; i++) {
@@ -1733,8 +1741,7 @@ namespace cupcfd
 					I nBoundaryLabels = nFaceBoundaries;
 					I * boundaryLabels = (I *) malloc(sizeof(I) * nBoundaryLabels);
 					status = data.getFaceBoundaryLabels(boundaryLabels, nBoundaryLabels, faceWithBoundary, nFaceBoundaries);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// (eiii) Boundary faces should be unique, but as a precaution remove repeats
 					I * boundaryLabelsDistinct;
@@ -1747,8 +1754,7 @@ namespace cupcfd
 					I * faceVerticesCount = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 
 					status = data.getFaceNVertices(faceVerticesCount, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					I faceVerticesCountTotal;
 					cupcfd::utility::drivers::sum(faceVerticesCount, nFaceLabelsDistinct, &faceVerticesCountTotal);
@@ -1757,8 +1763,7 @@ namespace cupcfd
 					I * boundaryVerticesCount = (I *) malloc(sizeof(I) * nBoundaryLabelsDistinct);
 
 					status = data.getFaceNVertices(boundaryVerticesCount, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					I boundaryVerticesCountTotal;
 					cupcfd::utility::drivers::sum(boundaryVerticesCount, nBoundaryLabelsDistinct, &boundaryVerticesCountTotal);
@@ -1773,16 +1778,14 @@ namespace cupcfd
 					status = data.getFaceVerticesLabelsCSR(faceVertLabelCSRInd, nFaceLabelsDistinct+1,
 															  vertLabelData, faceVerticesCountTotal,
 															  faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					I * bndVertLabelCSRInd = (I *) malloc(sizeof(I) * (nBoundaryLabelsDistinct+1));
 
 					status = data.getFaceVerticesLabelsCSR(bndVertLabelCSRInd, nBoundaryLabelsDistinct+1,
 															  vertLabelData + faceVerticesCountTotal, boundaryVerticesCountTotal,
 															  boundaryLabelsDistinct, nBoundaryLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// (fiv) Get distinct vertex labels
 					I * vertexLabelsDistinct;
@@ -1795,8 +1798,7 @@ namespace cupcfd
 					// their numbers are typically far far fewer
 					I nRegions;
 					status = data.getRegionCount(&nRegions);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 					I * regionIndices = (I *) malloc(sizeof(I) * nRegions);
 					I * regionLabels = (I *) malloc(sizeof(I) * nRegions);
 
@@ -1805,8 +1807,7 @@ namespace cupcfd
 					}
 
 					status = data.getRegionLabels(regionLabels, nRegions, regionIndices,nRegions);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 					free(regionIndices);
 					
 					// ====================================
@@ -1824,8 +1825,7 @@ namespace cupcfd
 					//Final Vertices Labels are stored in vertexLabelsDistinct
 					euc::EuclideanPoint<T,3> * pointTmpStore = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nVertexLabelsDistinct);
 					status = data.getVertexCoords(pointTmpStore, nVertexLabelsDistinct, vertexLabelsDistinct, nVertexLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Add Vertices to Mesh
 					for(I i = 0; i < nVertexLabelsDistinct; i++) {
@@ -1851,8 +1851,7 @@ namespace cupcfd
 					I nBoundaryRegionLabels = nBoundaryLabelsDistinct;
 					I * boundaryRegionLabels = (I *) malloc(sizeof(I) * nBoundaryRegionLabels);
 					status = data.getBoundaryRegionLabels(boundaryRegionLabels, nBoundaryRegionLabels, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Vertices Labels
 					// Can reuse previous read starting at vertLabelData[faceVerticesCountTotal]
@@ -1860,8 +1859,7 @@ namespace cupcfd
 					// Boundary Distance
 					T * bDistance = (T *) malloc(sizeof(T) * nBoundaryLabelsDistinct);
 					status = data.getBoundaryDistance(bDistance, nBoundaryLabelsDistinct, boundaryLabelsDistinct, nBoundaryLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Add Boundaries to Mesh
 					for(I i = 0; i < nBoundaryLabelsDistinct; i++) {
@@ -1884,13 +1882,11 @@ namespace cupcfd
 
 					// Read Cell Center
 					status = data.getCellCenter(pointTmpStore, nCells, cellLabels, nCells);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Read Cell Volume
 					status = data.getCellVolume(cellVol, nCells, cellLabels, nCells);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Add Cells to Mesh
 					// Local Cells
@@ -1913,15 +1909,13 @@ namespace cupcfd
 					// For boundary and non-boundary faces
 					I * fCell1Labels = (I *) malloc(sizeof(I) * nFaceLabelsDistinct);
 					status = data.getFaceCell1Labels(fCell1Labels, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Cell 2 Labels
 					// For non-boundary faces only
 					I * fCell2Labels = (I *) malloc(sizeof(I) * nFaceWithoutBoundary);
 					status = data.getFaceCell2Labels(fCell2Labels, nFaceWithoutBoundary, faceWithoutBoundary, nFaceWithoutBoundary);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Vertex Labels
 					// Reuse previously read values
@@ -1930,38 +1924,32 @@ namespace cupcfd
 					// Boundary faces only
 					I * fBndLabels = (I *) malloc(sizeof(I) * nFaceBoundaries);
 					status = data.getFaceBoundaryLabels(fBndLabels, nFaceBoundaries, faceWithBoundary, nFaceBoundaries);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Is Boundary
 					bool * fIsBoundary = (bool *) malloc(sizeof(bool) * nFaceLabelsDistinct);
 					status = data.getFaceIsBoundary(fIsBoundary, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Face Lambda
 					T * fLambda = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceLambda(fLambda, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Face Area
 					T * fArea = (T *) malloc(sizeof(T) * nFaceLabelsDistinct);
 					status = data.getFaceArea(fArea, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Face Center
 					euc::EuclideanPoint<T,3> * fCenter = (euc::EuclideanPoint<T,3> *) malloc(sizeof(euc::EuclideanPoint<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceCenter(fCenter, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Face Normal
 					euc::EuclideanVector<T,3> * fNorm = (euc::EuclideanVector<T,3> *) malloc(sizeof(euc::EuclideanVector<T,3>) * nFaceLabelsDistinct);
 					status = data.getFaceNormal(fNorm, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					// Add Face Data
 					ptr = 0;
@@ -2000,8 +1988,7 @@ namespace cupcfd
 
 						status = this->addFace(faceLabelsDistinct[i], fCell1Labels[i], fCell2OrBoundLabel, fIsBoundary[i], fLambda[i], fNorm[i],
 												  vertLabelData + vertDataPtr, rangeSize, fCenter[i], xpac, xnac, rlencos, fArea[i]);
-						CHECK_ERROR_CODE(status)
-						if (status != cupcfd::error::E_SUCCESS) return status;
+						CHECK_ECODE(status)
 					}
 
 					// =================================
@@ -2049,8 +2036,7 @@ namespace cupcfd
 				// data is also propagated to any ghost cells that are unable to compute it locally (e.g. due to insufficient face data)
 
 				status = this->finalize();
-				CHECK_ERROR_CODE(status)
-				if (status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				// Cleanup any temporary structures/space outside of the mesh
 				delete partGraph;
@@ -2095,25 +2081,29 @@ namespace cupcfd
 					
 					if(pType == cupcfd::geometry::shapes::POLYHEDRON_TETRAHEDRON) {
 						cupcfd::geometry::shapes::Tetrahedron<T> * shape1;
-						this->buildPolyhedron(i, &shape1);
+						status = this->buildPolyhedron(i, &shape1);
+						CHECK_ECODE(status)
 						inside = shape1->isPointInside(point);
 						delete shape1;
 					}
 					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_QUADPYRAMID) {
 						cupcfd::geometry::shapes::QuadPyramid<T> * shape2;
-						this->buildPolyhedron(i, &shape2);
+						status = this->buildPolyhedron(i, &shape2);
+						CHECK_ECODE(status)
 						inside = shape2->isPointInside(point);
 						delete shape2;
 					}
 					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_TRIPRISM) {
 						cupcfd::geometry::shapes::TriPrism<T> * shape3;
-						this->buildPolyhedron(i, &shape3);
+						status = this->buildPolyhedron(i, &shape3);
+						CHECK_ECODE(status)
 						inside = shape3->isPointInside(point);
 						delete shape3;
 					}
 					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_HEXAHEDRON) {
 						cupcfd::geometry::shapes::Hexahedron<T> * shape4;
-						this->buildPolyhedron(i, &shape4);																
+						status = this->buildPolyhedron(i, &shape4);																
+						CHECK_ECODE(status)
 						inside = shape4->isPointInside(point);						
 						delete shape4;
 					}
@@ -2134,7 +2124,7 @@ namespace cupcfd
 						// Get the Node for the localID
 						L node;
 						status = this->cellConnGraph->connGraph.getLocalIndexNode(i, &node);
-						CHECK_ERROR_CODE(status)
+						CHECK_ECODE(status)
 						*globalCellID = this->cellConnGraph->nodeToGlobal[node];
 	
 						// Exit Loop by exiting function

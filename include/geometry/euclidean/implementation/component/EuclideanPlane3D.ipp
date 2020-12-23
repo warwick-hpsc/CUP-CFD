@@ -20,8 +20,7 @@ namespace cupcfd
 		namespace euclidean
 		{
 			template <class T>
-			inline void EuclideanPlane3D<T>::operator=(const EuclideanPlane3D<T>& plane)
-			{
+			inline void EuclideanPlane3D<T>::operator=(const EuclideanPlane3D<T>& plane) {
 				this->p1 = plane.p1;
 				this->p2 = plane.p2;
 				this->p3 = plane.p3;

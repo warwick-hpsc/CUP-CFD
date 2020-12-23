@@ -511,10 +511,7 @@ namespace cupcfd
 				bool * isBoundary = (bool *) malloc(sizeof(bool) * nFaceLabels);
 
 				status = getFaceIsBoundary(isBoundary, nFaceLabels, faceLabels, nFaceLabels);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					if(isBoundary[i] == false) {
@@ -1207,19 +1204,11 @@ namespace cupcfd
 				I * faceLabels = (I *) malloc(sizeof(I) * nBoundaryLabels);
 
 				status = this->getBoundaryFaceLabels(faceLabels, nBoundaryLabels, boundaryLabels, nBoundaryLabels);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					free(faceLabels);
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Use the Face->Vertex Lookup method
 				status = this->getFaceVerticesLabelsCSR(csrIndices, nCsrIndices, csrData, nCsrData,  faceLabels, nBoundaryLabels);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) {
-					free(faceLabels);
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				free(faceLabels);
 

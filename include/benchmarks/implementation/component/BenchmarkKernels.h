@@ -111,7 +111,8 @@ namespace cupcfd
 
 				void recordParameters();
 
-				void runBenchmark();
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes runBenchmark();
 		};
 	}
 }

@@ -41,8 +41,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 			T fixedValue;
 			status = this->getFixedValue(&fixedValue);
-			CHECK_ERROR_CODE(status)
-			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			*distConfig = new DistributionConfigFixed<I,T>(fixedValue);
 			return cupcfd::error::E_SUCCESS;

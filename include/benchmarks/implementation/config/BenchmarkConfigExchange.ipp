@@ -32,8 +32,7 @@ namespace cupcfd
 			cupcfd::comm::ExchangePattern<T> * pattern;
 			
 			status = this->patternConfig.buildExchangePattern(&pattern, graph);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			// Shared pointer will take responsibility for cleaning up the pattern pointer.
 			std::shared_ptr<cupcfd::comm::ExchangePattern<T>> patternPtr(pattern);

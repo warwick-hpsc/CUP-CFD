@@ -26,7 +26,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::reduceMPISum(bSend, nBSend, bRecv, nBRecv, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -37,7 +37,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 		
 			status = cupcfd::comm::mpi::reduceMPIProduct(bSend, nBSend, bRecv, nBRecv, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -48,7 +48,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::reduceMPIMin(bSend, nBSend, bRecv, nBRecv, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -59,7 +59,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::reduceMPIMax(bSend, nBSend, bRecv, nBRecv, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -70,7 +70,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::allReduceMPISum(bSend, nBSend, bRecv, nBRecv, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -81,7 +81,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::allReduceMPIProduct(bSend, nBSend, bRecv, nBRecv, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -92,7 +92,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::allReduceMPIMin(bSend, nBSend, bRecv, nBRecv, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 
@@ -103,7 +103,7 @@ namespace cupcfd
 			// ToDo: Error Checks - E.g. Null Ptrs, Sizes
 			
 			status = cupcfd::comm::mpi::allReduceMPIMax(bSend, nBSend, bRecv, nBRecv, mpComm.comm);
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 			return status;
 		}
 	} // namespace comm

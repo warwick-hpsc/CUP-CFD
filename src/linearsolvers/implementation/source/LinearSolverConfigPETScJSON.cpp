@@ -122,16 +122,13 @@ namespace cupcfd
 			T eTol, rTol;
 
 			status = this->getPETScAlgorithm(&solverAlg);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			status = this->getETol(&eTol);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			status = this->getRTol(&rTol);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			*linearSolverConfig = new LinearSolverConfigPETSc<C,I,T>(solverAlg, eTol, rTol);
 

@@ -109,8 +109,7 @@ namespace cupcfd
 					ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> * emitter;
 					status = this->emitterConfigs[i]->buildParticleEmitter(&emitter, this->numParticleSourcesOrEmitters+1);
 					this->numParticleSourcesOrEmitters++;
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 
 					emitter->localCellID = localCellID;
 					emitter->globalCellID = globalCellID;
@@ -122,8 +121,7 @@ namespace cupcfd
 					// when we really want very concrete types for e.g. adding Particles.
 					// We could do away with the interface as one approach, resolving the issue....
 					status = (*system)->addParticleEmitter( *(static_cast<ParticleEmitterSimple<I,T> *>(emitter)));
-					CHECK_ERROR_CODE(status)
-					if (status != cupcfd::error::E_SUCCESS) return status;
+					CHECK_ECODE(status)
 				
 					delete emitter;
 				}
@@ -140,16 +138,14 @@ namespace cupcfd
 
 				status = this->particleSourceConfig->buildParticleSource(&particleSource, this->numParticleSourcesOrEmitters+1);
 				this->numParticleSourcesOrEmitters++;
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 				
 				// Retrieve Particle Data From Source
 				I nIndexes;
 				I nParticles;
 				
 				status = particleSource->getNParticles(&nIndexes);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 				
 				I * indexes = (I *) malloc(sizeof(I) * nIndexes);
 				
@@ -159,8 +155,7 @@ namespace cupcfd
 				
 				Particle<ParticleSimple<I,T>,I,T> ** particles;
 				status = particleSource->getParticles(&particles, &nParticles, indexes, nIndexes, 0);
-				CHECK_ERROR_CODE(status)
-				if(status != cupcfd::error::E_SUCCESS) return status;
+				CHECK_ECODE(status)
 
 				// Add particles to the system, but only if they exist on this ranks mesh partition
 				for(I i = 0; i < nParticles; i++) {
@@ -191,8 +186,7 @@ namespace cupcfd
 						allocatedParticle.inflightPos = p.pos;
 						status = (*system)->addParticle(allocatedParticle);
 
-						CHECK_ERROR_CODE(status)
-						if(status != cupcfd::error::E_SUCCESS) return status;
+						CHECK_ECODE(status)
 					}
 				}
 				

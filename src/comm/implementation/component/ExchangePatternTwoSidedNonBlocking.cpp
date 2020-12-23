@@ -40,35 +40,28 @@ namespace cupcfd
 		}
 
 		template <class T>
-		ExchangePatternTwoSidedNonBlocking<T>::~ExchangePatternTwoSidedNonBlocking()
-		{
-			if(this->requests != nullptr)
-			{
+		ExchangePatternTwoSidedNonBlocking<T>::~ExchangePatternTwoSidedNonBlocking() {
+			if(this->requests != nullptr) {
 				free(this->requests);
 			}
 
-			if(this->statuses != nullptr)
-			{
+			if(this->statuses != nullptr) {
 				free(this->statuses);
 			}
 
-			if(this->sendBuffer != nullptr)
-			{
+			if(this->sendBuffer != nullptr) {
 				free(this->sendBuffer);
 			}
 
-			if(this->recvBuffer != nullptr)
-			{
+			if(this->recvBuffer != nullptr) {
 				free(this->recvBuffer);
 			}
 
-			if(this->sendCounts != nullptr)
-			{
+			if(this->sendCounts != nullptr) {
 				free(this->sendCounts);
 			}
 
-			if(this->recvCounts != nullptr)
-			{
+			if(this->recvCounts != nullptr) {
 				free(this->recvCounts);
 			}
 		}
@@ -77,13 +70,15 @@ namespace cupcfd
 		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::init(cupcfd::comm::Communicator& comm,
 				  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 				  int * exchangeIDXSend, int nExchangeIDXSend,
-				  int * tRanks, int nTRanks)
-		{
+				  int * tRanks, int nTRanks) {
+			cupcfd::error::eCodes status;
+			
 			// Call the parent init function - it should not have been called by the constructor (else
 			//it will get called twice)
-			this->ExchangePattern<T>::init(comm, mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
-											 exchangeIDXSend, nExchangeIDXSend,
-											 tRanks, nTRanks);
+			status = this->ExchangePattern<T>::init(comm, mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
+											exchangeIDXSend, nExchangeIDXSend,
+											tRanks, nTRanks);
+			CHECK_ECODE(status)
 
 			// On top of the base initialisation, which sets up the exchange pattern,
 			// we need to set aside space for the two-sided non-blocking data, such as requests.
@@ -113,8 +108,7 @@ namespace cupcfd
 			this->nSendCounts = this->nSProc;
 			this->sendCounts = (int *) malloc(sizeof(int) * this->nSendCounts);
 
-			for(int i = 0; i < this->nSendCounts; i++)
-			{
+			for(int i = 0; i < this->nSendCounts; i++) {
 				this->sendCounts[i] = this->sXAdj[i+1] - this->sXAdj[i];
 			}
 
@@ -124,8 +118,7 @@ namespace cupcfd
 			this->nRecvCounts = this->nRProc;
 			this->recvCounts = (int *) malloc(sizeof(int) * this->nRecvCounts);
 
-			for(int i = 0; i < this->nRecvCounts; i++)
-			{
+			for(int i = 0; i < this->nRecvCounts; i++) {
 				this->recvCounts[i] = this->rXAdj[i+1] - this->rXAdj[i];
 			}
 
@@ -133,13 +126,11 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::packSendBuffer(T * data, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::packSendBuffer(T * data, int nData) {
 			// The data is already grouped by process and in rank order in the pattern CSR data.
 			// We can just translate the exchange IDs to elements from the data array
 
-			for(int i = 0; i < this->nSAdjncy; i++)
-			{
+			for(int i = 0; i < this->nSAdjncy; i++) {
 				int exchangeID = this->sAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
@@ -156,14 +147,12 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData) {
 			// Data received should be grouped by process in the recv buffer
 			// It should already be ordered in the recv buffer as per the CSR for the pattern,
 			// so we can transfer across by converting the indexes
 
-			for(int i = 0; i < this->nRecvBuffer; i++)
-			{
+			for(int i = 0; i < this->nRecvBuffer; i++) {
 				int exchangeID = this->rAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
@@ -180,32 +169,38 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData) {
+			cupcfd::error::eCodes status;
+
 			// Pack the buffer
-			this->packSendBuffer(sourceData, nData);
+			status = this->packSendBuffer(sourceData, nData);
+			CHECK_ECODE(status)
 
 			// Start the exchange
-			cupcfd::comm::mpi::ExchangeVMPIIsendIrecv(this->sendBuffer, this->nSendBuffer,
-														   this->sendCounts, this->nSendCounts,
-														   this->recvBuffer, this->nRecvBuffer,
-														   this->recvCounts, this->nRecvCounts,
-														   this->sProc, this->nSProc,
-														   this->rProc, this->nRProc,
-														   this->comm.comm,
-														   this->requests, this->nRequests);
+			status = cupcfd::comm::mpi::ExchangeVMPIIsendIrecv(this->sendBuffer, this->nSendBuffer,
+																this->sendCounts, this->nSendCounts,
+																this->recvBuffer, this->nRecvBuffer,
+																this->recvCounts, this->nRecvCounts,
+																this->sProc, this->nSProc,
+																this->rProc, this->nRProc,
+																this->comm.comm,
+																this->requests, this->nRequests);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternTwoSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData) {
+			cupcfd::error::eCodes status;
+
 			// Complete any remaining data exchange
-			cupcfd::comm::mpi::WaitallMPI(this->requests, this->nRequests);
+			status = cupcfd::comm::mpi::WaitallMPI(this->requests, this->nRequests);
+			CHECK_ECODE(status)
 
 			// Unpack the buffer
-			this->unpackRecvBuffer(sinkData, nData);
+			status = this->unpackRecvBuffer(sinkData, nData);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

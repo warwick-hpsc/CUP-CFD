@@ -87,8 +87,9 @@ namespace cupcfd
 
 				// === Overloaded Inherited Methods ===
 
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes getValues(T * values, I nValues);
+				// __attribute__((warn_unused_result))
+				// cupcfd::error::eCodes getValues(T * values, I nValues);
+				void getValues(T * values, I nValues);
 
 				DistributionNormal<I,T> * clone();
 

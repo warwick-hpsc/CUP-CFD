@@ -30,8 +30,7 @@ namespace cupcfd
 			// Override the null comm
 			int err = MPI_Comm_dup(MPI_COMM_SELF, &(this->comm));
 
-			if(err != MPI_SUCCESS)
-			{
+			if(err != MPI_SUCCESS) {
 				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor\n";
 			}
 		}
@@ -42,8 +41,7 @@ namespace cupcfd
 			// Duplicate the communicator
 			int err = MPI_Comm_dup(mpiComm, &(this->comm));
 
-			if(err != MPI_SUCCESS)
-			{
+			if(err != MPI_SUCCESS) {
 				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor\n";
 			}
 
@@ -55,8 +53,7 @@ namespace cupcfd
 			this->root_rank = 0;
 
 			// Determine if this process is root
-			if(this->rank == this->root_rank)
-			{
+			if(this->rank == this->root_rank) {
 				this->root = true;
 			}
 			else
@@ -72,8 +69,7 @@ namespace cupcfd
 			*this = comm;
 		}
 
-		Communicator::~Communicator()
-		{
+		Communicator::~Communicator() {
 			// === Cleanup ===
 
 			// Stored MPI Comms are all duplicated from other MPI Communicators.
@@ -81,8 +77,7 @@ namespace cupcfd
 			MPI_Comm_free(&(this->comm));
 		}
 
-		Communicator * Communicator::clone()
-		{
+		Communicator * Communicator::clone() {
 			return new Communicator(*this);
 		}
 

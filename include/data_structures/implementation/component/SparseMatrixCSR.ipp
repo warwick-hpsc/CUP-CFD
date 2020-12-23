@@ -93,15 +93,10 @@ namespace cupcfd
 
 			// Clear the matrix
 			status = this->clear();
-			CHECK_ERROR_CODE(status)
+			CHECK_ECODE(status)
 
-			if(rows < 1) {
-				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
-			}
-
-			if(columns < 1) {
-				return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
-			}
+			if(rows < 1) return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
+			if(columns < 1) return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
 
 			// Resize the existing vectors to 0 (vector can resize when adding later....)
 			this->A.resize(0);

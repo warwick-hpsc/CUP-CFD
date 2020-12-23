@@ -37,25 +37,20 @@ namespace cupcfd
 		}
 
 		template <class T>
-		ExchangePatternOneSidedNonBlocking<T>::~ExchangePatternOneSidedNonBlocking()
-		{
-			if(this->sendBuffer != nullptr)
-			{
+		ExchangePatternOneSidedNonBlocking<T>::~ExchangePatternOneSidedNonBlocking() {
+			if(this->sendBuffer != nullptr) {
 				free(this->sendBuffer);
 			}
 
-			if(this->sendCounts != nullptr)
-			{
+			if(this->sendCounts != nullptr) {
 				free(this->sendCounts);
 			}
 
-			if(this->recvCounts != nullptr)
-			{
+			if(this->recvCounts != nullptr) {
 				free(this->recvCounts);
 			}
 
-			if(this->targetDispls != nullptr)
-			{
+			if(this->targetDispls != nullptr) {
 				free(this->targetDispls);
 			}
 		}
@@ -64,13 +59,15 @@ namespace cupcfd
 		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::init(cupcfd::comm::Communicator& comm,
 				  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 				  int * exchangeIDXSend, int nExchangeIDXSend,
-				  int * tRanks, int nTRanks)
-		{
+				  int * tRanks, int nTRanks) {
+			cupcfd::error::eCodes status;
+
 			// Call the parent init function - it should not have been called by the constructor (else
 			//it will get called twice)
-			this->ExchangePattern<T>::init(comm, mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
-											 exchangeIDXSend, nExchangeIDXSend,
-											 tRanks, nTRanks);
+			status = this->ExchangePattern<T>::init(comm, mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
+													exchangeIDXSend, nExchangeIDXSend,
+													tRanks, nTRanks);
+			CHECK_ECODE(status)
 
 			// Setup the send buffer
 			// Size is dependent upon how much data we are sending across all processes
@@ -82,8 +79,7 @@ namespace cupcfd
 			this->nSendCounts = this->nSProc;
 			this->sendCounts = (int *) malloc(sizeof(int) * this->nSendCounts);
 
-			for(int i = 0; i < this->nSendCounts; i++)
-			{
+			for(int i = 0; i < this->nSendCounts; i++) {
 				this->sendCounts[i] = this->sXAdj[i+1] - this->sXAdj[i];
 			}
 
@@ -91,8 +87,7 @@ namespace cupcfd
 			this->nRecvCounts = this->nRProc;
 			this->recvCounts = (int *) malloc(sizeof(int) * this->nRecvCounts);
 
-			for(int i = 0; i < this->nRecvCounts; i++)
-			{
+			for(int i = 0; i < this->nRecvCounts; i++) {
 				this->recvCounts[i] = this->rXAdj[i+1] - this->rXAdj[i];
 			}
 
@@ -143,8 +138,7 @@ namespace cupcfd
 			// This rank should now have in the tmpBuffer displacement values from every process it sends to.
 			// Copy these over to the displacement array
 			// We should have received one entry for every process we send to.
-			for(int i = 0; i < this->nSProc; i++)
-			{
+			for(int i = 0; i < this->nSProc; i++) {
 				this->targetDispls[i] = tmpBuffer[i];
 			}
 
@@ -162,15 +156,13 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::packSendBuffer(T * data, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::packSendBuffer(T * data, int nData) {
 			// Pack from the data array into a send buffer
 
 			// The data is already grouped by process and in rank order in the pattern CSR data.
 			// We can just translate the exchange IDs to elements from the data array
 
-			for(int i = 0; i < this->nSAdjncy; i++)
-			{
+			for(int i = 0; i < this->nSAdjncy; i++) {
 				int exchangeID = this->sAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
@@ -187,16 +179,14 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::unpackRecvBuffer(T * data, int nData) {
 			// Unpack from window into the data array
 
 			// Data received should be grouped by process in the recv buffer
 			// It should already be ordered in the recv buffer as per the CSR for the pattern,
 			// so we can transfer across by converting the indexes
 
-			for(int i = 0; i < this->nWinData; i++)
-			{
+			for(int i = 0; i < this->nWinData; i++) {
 				int exchangeID = this->rAdjncy[i];
 				int localID = this->exchangeToLocal[exchangeID];
 
@@ -213,8 +203,7 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData) {
 			// Pack the send buffer
 			this->packSendBuffer(sourceData, nData);
 
@@ -229,8 +218,7 @@ namespace cupcfd
 			MPI_Win_start(this->sendGroup, 0, this->win);
 
 			// Call all MPI_Puts for this process to send within this epoch
-			for(int i = 0; i < this->nSProc; i++)
-			{
+			for(int i = 0; i < this->nSProc; i++) {
 				// Send Data Location in buffer
 				// = start of buffer + offset given by CSR for entry 'i'
 				T * sendData = this->sendBuffer + this->sXAdj[i];
@@ -255,8 +243,7 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData)
-		{
+		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData) {
 			// End this epoch for data retrieval.
 			// Avoid use of Win_fence due to collective nature
 			// MPI_Win_fence(MPI_MODE_NOPUT, this->win);

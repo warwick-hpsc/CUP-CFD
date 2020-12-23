@@ -40,8 +40,7 @@ namespace cupcfd
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::GatherMPI(bSend, bRecv, nElePerProcess, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -64,8 +63,7 @@ namespace cupcfd
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::AllGatherMPI(bSend, bRecv, nElePerProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -84,8 +82,7 @@ namespace cupcfd
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::GatherVMPI(bSend, nBSend, bRecv, bRecvCounts, sinkProcess, mpComm.comm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -132,14 +129,12 @@ namespace cupcfd
 			// Gather on the send buffer sizes (single-element fixed-size gather)
 			// Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
 			status = Gather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			if(mpComm.rank == sinkPID) {
 				// Get the total element count
-				status = cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
-				CHECK_ERROR_CODE(status)
+				cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
 
 				// Allocate memory for the array
 				*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
@@ -148,8 +143,7 @@ namespace cupcfd
 			// Setup complete, pass final gather work onto next driver
 			// status = GatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, sinkPID, mpComm);
 			status = GatherV(bSend, nBSend, *bRecv, *bRecvCounts, sinkPID, mpComm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -163,8 +157,7 @@ namespace cupcfd
 		
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::AllGatherVMPI(bSend, nBSend, bRecv, bRecvCounts, mpComm.comm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}	
@@ -211,22 +204,18 @@ namespace cupcfd
 			// Gather on the send buffer sizes (single-element fixed-size gather)
 			// AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
 			status = AllGather(&nBSend, *bRecvCounts, *nBRecvCounts, 1, mpComm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			// Get the total element count
-			status = cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
 
 			// Allocate memory for the array
 			*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
 			
 			// Setup complete, pass final allgather work onto next driver
 			status = AllGatherV(bSend, nBSend, *bRecv, *bRecvCounts, mpComm);
-			CHECK_ERROR_CODE(status)
-			if(status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}
