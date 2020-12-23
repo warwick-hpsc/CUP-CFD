@@ -131,8 +131,9 @@ namespace cupcfd
 
 			// Note: this all-to-all only stores received elements, ordered by rank.
 			// If we do not communicate with a rank (sProc), we will have no data for it.
-			cupcfd::comm::AllToAll(this->rXAdj, this->nRXAdj - 1, this->rProc, this->nRProc,
-										&tmpBuffer, &nTmpBuffer, comm);
+			status = cupcfd::comm::AllToAll(this->rXAdj, this->nRXAdj - 1, this->rProc, this->nRProc,
+											&tmpBuffer, &nTmpBuffer, comm);
+			CHECK_ECODE(status)
 
 
 			// This rank should now have in the tmpBuffer displacement values from every process it sends to.
@@ -204,8 +205,11 @@ namespace cupcfd
 
 		template <class T>
 		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData) {
+			cupcfd::error::eCodes status;
+
 			// Pack the send buffer
-			this->packSendBuffer(sourceData, nData);
+			status = this->packSendBuffer(sourceData, nData);
+			CHECK_ECODE(status)
 
 			// Start Epochs for Send/Recv of data
 			// MPI_Win_fence is also an option, but since it is a collective across
@@ -245,6 +249,8 @@ namespace cupcfd
 		template <class T>
 		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStop(T * sinkData, int nData) {
 			// End this epoch for data retrieval.
+			cupcfd::error::eCodes status;
+
 			// Avoid use of Win_fence due to collective nature
 			// MPI_Win_fence(MPI_MODE_NOPUT, this->win);
 
@@ -252,7 +258,8 @@ namespace cupcfd
 			MPI_Win_wait(this->win);
 
 			// Unpack the recv buffer/window
-			this->unpackRecvBuffer(sinkData, nData);
+			status = this->unpackRecvBuffer(sinkData, nData);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

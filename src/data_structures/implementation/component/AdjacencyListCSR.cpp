@@ -160,7 +160,8 @@ namespace cupcfd
 			// Search adjacent node list for the node
 			// Alternate: could seach for localIDX of node in adjncy array
 			// Would avoid need for comparison operators on custom nodes.
-			cupcfd::utility::drivers::linearSearch(adjNodes, count, dstNode, exists);
+			status = cupcfd::utility::drivers::linearSearch(adjNodes, count, dstNode, exists);
+			CHECK_ECODE(status)
 
 			free(adjNodes);
 

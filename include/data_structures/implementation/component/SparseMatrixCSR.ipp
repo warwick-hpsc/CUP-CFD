@@ -308,6 +308,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
+			cupcfd::error::eCodes status;
+
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
@@ -323,7 +325,8 @@ namespace cupcfd
 			*columnIndexes = (I *) malloc(sizeof(I) * (*nColumnIndexes));
 
 			// Copy to the array
-			cupcfd::utility::drivers::copy(&(this->JA[start]), nEle, *columnIndexes, (*nColumnIndexes));
+			status = cupcfd::utility::drivers::copy(&(this->JA[start]), nEle, *columnIndexes, (*nColumnIndexes));
+			CHECK_ECODE(status)
 
 			// ToDo: Should check error status here...
 
@@ -333,6 +336,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues) {
+			cupcfd::error::eCodes status;
+
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
@@ -348,7 +353,8 @@ namespace cupcfd
 			*nnzValues = (T *) malloc(sizeof(T) * (*nNNZValues));
 
 			// Copy to the array
-			cupcfd::utility::drivers::copy(&(this->A[start]), nEle, *nnzValues, (*nNNZValues));
+			status = cupcfd::utility::drivers::copy(&(this->A[start]), nEle, *nnzValues, (*nNNZValues));
+			CHECK_ECODE(status)
 
 			// ToDo: Should check error status here...
 

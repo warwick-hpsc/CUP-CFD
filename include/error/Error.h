@@ -177,5 +177,12 @@ namespace cupcfd
 		#define DBG_HARD_CHECK_ECODE(E)
 	#endif
 #endif
+#ifndef DBG_SAFE_VECTOR_LOOKUP
+	#ifdef DEBUG
+		#define DBG_SAFE_VECTOR_LOOKUP(V, I) ( (V).at((I)) )
+	#else
+		#define DBG_SAFE_VECTOR_LOOKUP(V, I) ( (V)[(I)] )
+	#endif
+#endif
 
 #endif

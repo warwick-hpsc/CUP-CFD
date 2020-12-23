@@ -137,7 +137,8 @@ namespace cupcfd
 			this->globalToNode = source.globalToNode;
 
 			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
+			status = cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
+			HARD_CHECK_ECODE(status)
 		}
 
 		template <class I, class T>
@@ -376,10 +377,12 @@ namespace cupcfd
 			// =========================================================================================================
 
 			// (3a) Allreduce on number of local ghost cells
-			cupcfd::comm::allReduceAdd(&(this->nLGhNodes), 1, &(this->nGGhNodes), 1, *(this->comm));
+			status = cupcfd::comm::allReduceAdd(&(this->nLGhNodes), 1, &(this->nGGhNodes), 1, *(this->comm));
+			CHECK_ECODE(status)
 
 			// (3b) Allreduce on number of owned cells to total number of owned cells (assuming everything is correct)
-			cupcfd::comm::allReduceAdd(&(this->nLONodes), 1, &(this->nGNodes), 1, *(this->comm));
+			status = cupcfd::comm::allReduceAdd(&(this->nLONodes), 1, &(this->nGNodes), 1, *(this->comm));
+			CHECK_ECODE(status)
 
 			// =========================================================================================================
 			// (4) Verification/Data Gathering Stage
@@ -484,7 +487,8 @@ namespace cupcfd
 				//		   with custom operator)
 				T * intersect;
 				I nIntersect;
-				cupcfd::utility::drivers::intersectArray(localNodes, this->nLONodes, recvGhostData, nRecvGhostData, &intersect, &nIntersect);
+				status = cupcfd::utility::drivers::intersectArray(localNodes, this->nLONodes, recvGhostData, nRecvGhostData, &intersect, &nIntersect);
+				CHECK_ECODE(status)
 
 				// (b)/(c) Gather the results from each process - i.e. the cells that each process has identified from the ghost cell list as ones they 'own'
 				// ToDo: This could possibly be made more efficient by only communicating bits (1/0) for if a cell is owned - but then each process would have to communicate
@@ -499,7 +503,8 @@ namespace cupcfd
 				I nCountOwned = 0;
 
 				// Communicate the nodes which we own that have been requested as a ghost node by the root process
-				cupcfd::comm::GatherV(intersect, nIntersect, &ownership, &nOwnership, &countOwned, &nCountOwned, i, *(this->comm));
+				status = cupcfd::comm::GatherV(intersect, nIntersect, &ownership, &nOwnership, &countOwned, &nCountOwned, i, *(this->comm));
+				CHECK_ECODE(status)
 
 				// Also communicate the global IDs for the nodes that we own that have been requested as a ghost node by the root process
 				// Build array of globalIDs
@@ -512,7 +517,8 @@ namespace cupcfd
 				}
 
 				// Can reuse countOwned, since the values should be the same as identified in the previous gatherV.
-				cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, countOwned, i, *(this->comm));
+				status = cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, countOwned, i, *(this->comm));
+				CHECK_ECODE(status)
 
 				// While we're here, make a note of the globalIDs requested from this process for the sink process i.
 				// We'll need this information later to send data during exchanges
@@ -582,7 +588,8 @@ namespace cupcfd
 
 						I tmpSize = neighbourRanksTmp.size();
 
-						cupcfd::utility::drivers::distinctArray(&neighbourRanksTmp[0], tmpSize, &distinctRanks, &nDistinctRanks);
+						status = cupcfd::utility::drivers::distinctArray(&neighbourRanksTmp[0], tmpSize, &distinctRanks, &nDistinctRanks);
+						CHECK_ECODE(status)
 
 						for(I k = 0; k < nDistinctRanks; k++) {
 							this->neighbourRanks.push_back(distinctRanks[k]);
@@ -591,7 +598,8 @@ namespace cupcfd
 						free(distinctRanks);
 
 						// Sort the rank order
-						cupcfd::utility::drivers::merge_sort(&(this->neighbourRanks[0]), this->neighbourRanks.size());
+						status = cupcfd::utility::drivers::merge_sort(&(this->neighbourRanks[0]), this->neighbourRanks.size());
+						CHECK_ECODE(status)
 					}
 
 					// Can also assigned global IDs
@@ -660,14 +668,17 @@ namespace cupcfd
 
 			// Now group the global IDs by neighbour rank, by sorting the ranks and then reordering the ghostGIDs
 			I * indexes = (I *) malloc(sizeof(I) * this->nLGhNodes);
-			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
-			cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
+			status = cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
+			CHECK_ECODE(status)
+			status = cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
+			CHECK_ECODE(status)
 
 			// Loop over neighbour ranks, this should already have been sorted
 			I ptr = 0;
 			I j = 0;
 
-			for(I i = 0; i < this->neighbourRanks.size(); i++) {
+			I numNeighbourRanks = cupcfd::utility::drivers::safeConvertSizeT<I>(this->neighbourRanks.size());
+			for(I i = 0; i < numNeighbourRanks; i++) {
 				this->recvRank.push_back(this->neighbourRanks[i]);
 				this->recvGlobalIDsXAdj.push_back(ptr);
 
@@ -682,17 +693,21 @@ namespace cupcfd
 			this->recvGlobalIDsXAdj.push_back(j);
 
 			// Sort the ghost global ids within their groups
-			for(I i = 0; i < this->recvGlobalIDsXAdj.size()-1; i++) {
+			I numRecvGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->recvGlobalIDsXAdj.size());
+			for(I i = 0; i < numRecvGlobalIDsXAdj-1; i++) {
 				I start = this->recvGlobalIDsXAdj[i];
 				I count = this->recvGlobalIDsXAdj[i+1] - this->recvGlobalIDsXAdj[i];
-				cupcfd::utility::drivers::merge_sort(&(this->recvGlobalIDsAdjncy[start]), count);
+				status = cupcfd::utility::drivers::merge_sort(&(this->recvGlobalIDsAdjncy[start]), count);
+				CHECK_ECODE(status)
 			}
 
 			// Sort the send global ids within their groups
-			for(I i = 0; i < this->sendGlobalIDsXAdj.size()-1; i++) {
+			I numSendGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->sendGlobalIDsXAdj.size());
+			for(I i = 0; i < numSendGlobalIDsXAdj-1; i++) {
 				I start = this->sendGlobalIDsXAdj[i];
 				I count = this->sendGlobalIDsXAdj[i+1] - this->sendGlobalIDsXAdj[i];
-				cupcfd::utility::drivers::merge_sort(&(this->sendGlobalIDsAdjncy[start]), count);
+				status = cupcfd::utility::drivers::merge_sort(&(this->sendGlobalIDsAdjncy[start]), count);
+				CHECK_ECODE(status)
 			}
 
 			free(ghosts);

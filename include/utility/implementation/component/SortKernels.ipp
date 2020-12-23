@@ -227,16 +227,21 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			void destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+				cupcfd::error::eCodes status;
+				
 				T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
 
 				for(I i=0; i < nEleIndexes; i++) {
 					tmpCpy[indexes[i]] = source[i];
 				}
 
-				cupcfd::utility::drivers::copy(tmpCpy, nEleSource, source, nEleSource);
+				status = cupcfd::utility::drivers::copy(tmpCpy, nEleSource, source, nEleSource);
+				CHECK_ECODE(status)
 
 				free(tmpCpy);
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 		} // namespace kernels

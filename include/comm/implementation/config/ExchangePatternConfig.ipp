@@ -22,39 +22,34 @@ namespace cupcfd
 {
 	namespace comm
 	{
-		inline ExchangeMethod ExchangePatternConfig::getExchangeMethod()
-		{
+		inline ExchangeMethod ExchangePatternConfig::getExchangeMethod() {
 			return this->method;
 		}	
 		
-		inline void ExchangePatternConfig::setExchangeMethod(ExchangeMethod method)
-		{
+		inline void ExchangePatternConfig::setExchangeMethod(ExchangeMethod method) {
 			this->method = method;
 		}
 		
-		inline void ExchangePatternConfig::operator=(const ExchangePatternConfig& source)
-		{
+		inline void ExchangePatternConfig::operator=(const ExchangePatternConfig& source) {
 			this->method = source.method;
 		}
 		
-		inline ExchangePatternConfig * ExchangePatternConfig::clone()
-		{
+		inline ExchangePatternConfig * ExchangePatternConfig::clone() {
 			return new ExchangePatternConfig(*this);
 		}
 		
 		template <class I, class T, class N>
 		cupcfd::error::eCodes ExchangePatternConfig::buildExchangePattern(ExchangePattern<T> ** pattern, 
-																			   cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph)
-		{
+																			cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph) {
+			cupcfd::error::eCodes status;
+
 			// Create a pattern of an appropriate type.
 			ExchangeMethod method = this->getExchangeMethod();
 
-			if(method == EXCHANGE_NONBLOCKING_ONE_SIDED)
-			{
+			if(method == EXCHANGE_NONBLOCKING_ONE_SIDED) {
 				*pattern = new ExchangePatternOneSidedNonBlocking<T>();
 			}
-			else if(method == EXCHANGE_NONBLOCKING_TWO_SIDED)
-			{
+			else if(method == EXCHANGE_NONBLOCKING_TWO_SIDED) {
 				*pattern = new ExchangePatternTwoSidedNonBlocking<T>();
 			}
 
@@ -73,8 +68,7 @@ namespace cupcfd
 			I * mapLocalToExchangeIDX = (I *) malloc(sizeof(I) * nMapLocalToExchangeIDX);
 
 
-			for(I i = 0; i < nMapLocalToExchangeIDX; i++)
-			{
+			for(I i = 0; i < nMapLocalToExchangeIDX; i++) {
 				I localID = i;
 				I globalID = graph.nodeToGlobal[graph.connGraph.IDXToNode[localID]];
 				mapLocalToExchangeIDX[i] = globalID;
@@ -92,19 +86,18 @@ namespace cupcfd
 
 			I iLimit;
 			iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.sendGlobalIDsXAdj.size());
-			for (I i = 0; i < iLimit; i++)
-			{
-				for(I j = 0; j < graph.sendGlobalIDsXAdj[i+1] - graph.sendGlobalIDsXAdj[i]; j++)
-				{
+			for (I i = 0; i < iLimit; i++) {
+				for(I j = 0; j < graph.sendGlobalIDsXAdj[i+1] - graph.sendGlobalIDsXAdj[i]; j++) {
 					tRanks[graph.sendGlobalIDsXAdj[i] + j] = graph.sendRank[i];
 				}
 			}
 
 
-			(*pattern)->init(*(graph.comm),
-						 mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
-						 &(graph.sendGlobalIDsAdjncy[0]), graph.sendGlobalIDsAdjncy.size(),
-						 tRanks, nTRanks);
+			status = (*pattern)->init(*(graph.comm),
+								mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
+								&(graph.sendGlobalIDsAdjncy[0]), graph.sendGlobalIDsAdjncy.size(),
+								tRanks, nTRanks);
+			CHECK_ECODE(status)
 
 			free(mapLocalToExchangeIDX);
 			free(tRanks);

@@ -61,40 +61,52 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNNZ(I * nnz) {
+			cupcfd::error::eCodes status;
+
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nnz",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(nnz);
+			status = access.readData(nnz);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNRows(I * nRows) {
+			cupcfd::error::eCodes status;
+
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "nrows",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(nRows);
+			status = access.readData(nRows);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getNCols(I * nCols) {
+			cupcfd::error::eCodes status;
+
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "ncols",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(nCols);
+			status = access.readData(nCols);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes SparseMatrixSourceHDF5<I, T>::getMatrixIndicesBase(I * indicesBase) {
+			cupcfd::error::eCodes status;
+
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "base",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(indicesBase);
+			status = access.readData(indicesBase);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -121,7 +133,8 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
 
 			// Read Data
-			access.readData(rowRanges);
+			status = access.readData(rowRanges);
+			CHECK_ECODE(status)
 
 			// Compute the sizes from the range difference
 			for(I index = 0; index < nRows; index++) {
@@ -155,11 +168,14 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Labels are zero-based, HDF5 Indexes are base-0
-			properties.addIndex(rowIndex - base);
-			properties.addIndex((rowIndex + 1) - base);
+			status = properties.addIndex(rowIndex - base);
+			CHECK_ECODE(status)
+			status = properties.addIndex((rowIndex + 1) - base);
+			CHECK_ECODE(status)
 
 			// Get the range
-			access.readData(rowRange, properties);
+			status = access.readData(rowRange, properties);
+			CHECK_ECODE(status)
 			*nColumnIndexes = rowRange[1] - rowRange[0];
 
 			// Setup the data store array
@@ -181,12 +197,14 @@ namespace cupcfd
 
 				for(I i = 0; i < *nColumnIndexes; i++) {
 					// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
-					properties2.addIndex(rowRange[0] + i);
+					status = properties2.addIndex(rowRange[0] + i);
+					CHECK_ECODE(status)
 				}
 
 				// Read the column data
 				if(*nColumnIndexes > 0) {
-					access2.readData(*columnIndexes, properties2);
+					status = access2.readData(*columnIndexes, properties2);
+					CHECK_ECODE(status)
 				}
 			}
 
@@ -217,11 +235,14 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// HDF5 Indexes are base-0
-			properties.addIndex(rowIndex - base);
-			properties.addIndex((rowIndex + 1) - base);
+			status = properties.addIndex(rowIndex - base);
+			CHECK_ECODE(status)
+			status = properties.addIndex((rowIndex + 1) - base);
+			CHECK_ECODE(status)
 
 			// Get the range
-			access.readData(rowRange, properties);
+			status = access.readData(rowRange, properties);
+			CHECK_ECODE(status)
 			*nNNZValues = rowRange[1] - rowRange[0];
 
 			// Setup the data store array
@@ -234,12 +255,14 @@ namespace cupcfd
 
 			for(I i = 0; i < *nNNZValues; i++) {
 				// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
-				properties2.addIndex(rowRange[0] + i);
+				status = properties2.addIndex(rowRange[0] + i);
+				CHECK_ECODE(status)
 			}
 
 			// Read the column data
 			if(*nNNZValues > 0) {
-				access2.readData(*nnzValues, properties2);
+				status = access2.readData(*nnzValues, properties2);
+				CHECK_ECODE(status)
 			}
 
 			return cupcfd::error::E_SUCCESS;

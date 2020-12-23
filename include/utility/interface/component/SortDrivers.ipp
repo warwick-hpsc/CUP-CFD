@@ -87,23 +87,21 @@ namespace cupcfd
 
 			// Detected whether an array is sorted
 			template <class I, class T>
-			cupcfd::error::eCodes is_sorted(T * source, I nEle, bool * result) {
-				// Size Error Check
+			bool is_sorted(T * source, I nEle) {
 				if(nEle < 0) {
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+					return true;
 				}
 
 				// ToDo: Could use inbuilt C++ is_sorted method instead
-				*result = kernels::is_sorted(source, nEle);
-
-				return cupcfd::error::E_SUCCESS;
+				return kernels::is_sorted(source, nEle);
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+				cupcfd::error::eCodes status;
+
 				// ToDo: Error checks before and after
 
-				cupcfd::error::eCodes status;
 				status = kernels::sourceIndexReorder(source, nEleSource, indexes, nEleIndexes);
 				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
@@ -111,11 +109,12 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+				cupcfd::error::eCodes status;
+
 				// ToDo: Error checks before and after
 
-				cupcfd::error::eCodes status;
 				status = kernels::destIndexReorder(source, nEleSource, indexes, nEleIndexes);
-				void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 

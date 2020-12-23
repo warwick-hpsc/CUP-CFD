@@ -108,8 +108,7 @@ namespace cupcfd
 			 * (i.e. < 0)
 			 */
 			template <class I, class T>
-			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes is_sorted(T * source, I nEle, bool * result);
+			bool is_sorted(T * source, I nEle);
 
 			/**
 			 * Reorder an array: The element at source[i] is replaced by the value at source[indexes[i]]

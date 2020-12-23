@@ -366,8 +366,7 @@ namespace cupcfd
 
 							if(mesh.getRegionAdiab(ir)) {
 								PhiBoundary[ib] = PhiCell[ip];
-								status = mesh.setBoundaryQ(ib, 0.0);
-								CHECK_ECODE(status)
+								mesh.setBoundaryQ(ib, 0.0);
 							}
 							else {
 								if(mesh.getRegionFlux(ir)) {
@@ -420,19 +419,15 @@ namespace cupcfd
 								T tmpVal;
 
 								tmpVal =  Hcoef * CpBoundary[ib] / mesh.getFaceArea(i);
-								status = mesh.setBoundaryH(ib, tmpVal);
-								CHECK_ECODE(status)
+								mesh.setBoundaryH(ib, tmpVal);
 
 								tmpVal = mesh.getBoundaryH(ib) * Tdif;
-								status = mesh.setBoundaryQ(ib, tmpVal);
-								CHECK_ECODE(status)
+								mesh.setBoundaryQ(ib, tmpVal);
 
 								tmpVal = VisFace * CpBoundary[ib];
-								status = mesh.setBoundaryH(ib, tmpVal);
-								CHECK_ECODE(status)
+								mesh.setBoundaryH(ib, tmpVal);
 
-								status = mesh.setBoundaryT(ib, PhiFace);
-								CHECK_ECODE(status)
+								mesh.setBoundaryT(ib, PhiFace);
 
 								if(mesh.getBoundaryQ(ib) > 0.0) {
 									QTransferIn = QTransferIn + mesh.getBoundaryQ(ib) * mesh.getFaceArea(i);

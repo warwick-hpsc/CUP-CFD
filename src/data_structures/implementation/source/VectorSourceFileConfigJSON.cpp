@@ -31,8 +31,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		VectorSourceFileConfigJSON<I,T>::~VectorSourceFileConfigJSON()
-		{
+		VectorSourceFileConfigJSON<I,T>::~VectorSourceFileConfigJSON() {
 
 		}
 

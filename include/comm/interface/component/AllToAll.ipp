@@ -28,8 +28,7 @@ namespace cupcfd
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 										   T * recvBuffer, int nRecvBuffer,
 										   int chunkSize,
-										   cupcfd::comm::Communicator& mpComm)
-		{
+										   cupcfd::comm::Communicator& mpComm) {
 			#ifdef DEBUG
 				// Error Check 1: Is the send buffer a suitable size?
 				if(nSendBuffer < (mpComm.size * chunkSize)) {
@@ -54,8 +53,7 @@ namespace cupcfd
 		template <class T>
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer, int * sendCounts, int nSendCounts,
 											T * recvBuffer, int nRecvBuffer, int * recvCounts, int nRecvCounts,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === Pass through to suitable communicator library ===
 
 			#ifdef DEBUG
@@ -102,8 +100,7 @@ namespace cupcfd
 											T * recvBuffer, int nRecvBuffer,
 											int * recvCounts, int nRecvCounts,
 											int * rDispls, int nRDispls,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === Pass through to suitable communicator library ===
 
 			#ifdef DEBUG
@@ -172,8 +169,7 @@ namespace cupcfd
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * processIDs, int nProcessIDs,
 											T ** recvBuffer, int * nRecvBuffer,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === AllToAllV with unknown recv counts ===
 			// In this method, we know the data we wish to send, but we do not know how much data we will recieve.
 			// Determine the amount of data we will recieve prior to AllToAll, also accounting for factors such as
@@ -207,13 +203,10 @@ namespace cupcfd
 			//		moving a driver function to MPIUtility for determining message sizes.
 
 			//		Check whether the processID array is sorted
-			bool sorted;
-			status = cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs, &sorted);
-			CHECK_ECODE(status)
+			bool sorted = cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs);
 
 			// 		Use original buffers or sort copies depending on is_sorted outcome
-			if(sorted)
-			{
+			if(sorted) {
 				// Set pointers to use the original arrays, since we don't need to modify them
 				localSendBuffer = sendBuffer;
 				nLocalSendBuffer = nSendBuffer;
@@ -244,7 +237,8 @@ namespace cupcfd
 				CHECK_ECODE(status)
 
 				// Now we have a sorted order by original index, let us reorder sendBuffer to that order
-				cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
+				status = cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
+				CHECK_ECODE(status)
 
 				free(sortIndexes);
 			}
@@ -262,20 +256,17 @@ namespace cupcfd
 			sendCounts = (int *) malloc(sizeof(int) * nSendCounts);
 			recvCounts = (int *) malloc(sizeof(int) * nRecvCounts);
 
-			for(int i = 0; i < nSendCounts; i++)
-			{
+			for(int i = 0; i < nSendCounts; i++) {
 				sendCounts[i] = 0;
 			}
 
-			for(int i = 0; i < nRecvCounts; i++)
-			{
+			for(int i = 0; i < nRecvCounts; i++) {
 				recvCounts[i] = 0;
 			}
 
 			// For those process IDs that were listed, set their counts to what was previously calculated.
 			// Those that were not in pSend will remain at the default of 0.
-			for(int i = 0; i < nGroupID; i++)
-			{
+			for(int i = 0; i < nGroupID; i++) {
 				sendCounts[groupID[i]] = groupSize[i];
 			}
 
@@ -296,41 +287,36 @@ namespace cupcfd
 
 			// (d) Perform the communication - we will use AllToAllV
 
-			AllToAll(localSendBuffer, nLocalSendBuffer,
-					 sendCounts, nSendCounts,
-					 *recvBuffer, *nRecvBuffer,
-					 recvCounts, nRecvCounts,
-					 mpComm);
+			status = AllToAll(localSendBuffer, nLocalSendBuffer,
+							sendCounts, nSendCounts,
+							*recvBuffer, *nRecvBuffer,
+							recvCounts, nRecvCounts,
+							mpComm);
+			CHECK_ECODE(status)
 
 			// (e) Cleanup
 			// Only free pointers if they were allocated memory (i.e. different address to method input buffers)
-			if(localSendBuffer != nullptr && localSendBuffer != sendBuffer)
-			{
+			if(localSendBuffer != nullptr && localSendBuffer != sendBuffer) {
 				free(localSendBuffer);
 			}
 
-			if(localProcessIDs != nullptr && localProcessIDs != processIDs)
-			{
+			if(localProcessIDs != nullptr && localProcessIDs != processIDs) {
 				free(localProcessIDs);
 			}
 
-			if(groupID != nullptr)
-			{
+			if(groupID != nullptr) {
 				free(groupID);
 			}
 
-			if(groupSize != nullptr)
-			{
+			if(groupSize != nullptr) {
 				free(groupSize);
 			}
 
-			if(sendCounts != nullptr)
-			{
+			if(sendCounts != nullptr) {
 				free(sendCounts);
 			}
 
-			if(recvCounts != nullptr)
-			{
+			if(recvCounts != nullptr) {
 				free(recvCounts);
 			}
 

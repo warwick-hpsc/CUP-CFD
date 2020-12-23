@@ -53,28 +53,37 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getAttribute(std::string attrName, int * out) {
+				cupcfd::error::eCodes status;
+
 				// This format stores its attributes at the root level
 				cupcfd::io::hdf5::HDF5Record record("/",attrName,true);
 				cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-				access.readData(out);
+				status = access.readData(out);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getAttribute(std::string attrName, float * out) {
+				cupcfd::error::eCodes status;
+
 				// This format stores its attributes at the root level
 				cupcfd::io::hdf5::HDF5Record record("/",attrName,true);
 				cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-				access.readData(out);
+				status = access.readData(out);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getAttribute(std::string attrName, double * out) {
+				cupcfd::error::eCodes status;
+
 				// This format stores its attributes at the root level
 				cupcfd::io::hdf5::HDF5Record record("/",attrName,true);
 				cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-				access.readData(out);
+				status = access.readData(out);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
@@ -152,37 +161,49 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellCount(I * cellCount) {
-				this->getAttribute("ncel", cellCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("ncel", cellCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCount(I * faceCount) {
-				this->getAttribute("nfac", faceCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("nfac", faceCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryCount(I * boundaryCount) {
-				this->getAttribute("nbnd", boundaryCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("nbnd", boundaryCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getRegionCount(I * regionCount) {
-				this->getAttribute("nreg", regionCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("nreg", regionCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getVertexCount(I * vertexCount) {
-				this->getAttribute("nvrt", vertexCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("nvrt", vertexCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getMaxFaceCount(I * maxFaceCount) {
-				this->getAttribute("maxfaces", maxFaceCount);
+				cupcfd::error::eCodes status;
+				status = this->getAttribute("maxfaces", maxFaceCount);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 

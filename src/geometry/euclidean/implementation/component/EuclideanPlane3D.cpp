@@ -53,7 +53,7 @@ namespace cupcfd
 			}
 
 			template <class T>
-			cupcfd::error::eCodes EuclideanPlane3D<T>::computeScalarPlaneEquation(T * a, T * b, T * c, T * d) {
+			void EuclideanPlane3D<T>::computeScalarPlaneEquation(T * a, T * b, T * c, T * d) {
 				// a(x-x0) + b(y - y0) + c(z - z0) = 0, where (x0,y0,z0) is point in the plane and <a,b,c> is the normal vector
 				// =>
 				// ax - ax0 + by - by0 + cz - cz0 = 0
@@ -70,8 +70,6 @@ namespace cupcfd
 				*b = norm.cmp[1];
 				*c = norm.cmp[2];
 				*d = 0 - rhs;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class T>

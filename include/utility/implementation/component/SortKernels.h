@@ -95,7 +95,6 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			// void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 
@@ -119,7 +118,8 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 		} // namespace kernels
 	} // namespace utility
 } // namespace cupcfd

@@ -45,7 +45,7 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionFixed<I,T>::getValues(T * values, I nValues) {
+		void DistributionFixed<I,T>::getValues(T * values, I nValues) {
 			for(I i = 0; i < nValues; i++) {
 				values[i] = this->fixedValue;
 			}

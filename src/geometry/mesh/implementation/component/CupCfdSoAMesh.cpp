@@ -112,12 +112,15 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::addCell(L cellLabel, bool isLocal) {
+				cupcfd::error::eCodes status;
+
 				// Create empty center, vol for now
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> center(T(0), T(0), T(0));
 				T vol = T(0);
 
 				// Pass to more descriptive function
-				this->addCell(cellLabel, center, vol, isLocal);
+				status = this->addCell(cellLabel, center, vol, isLocal);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
@@ -484,7 +487,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::reset() {
+			void CupCfdSoAMesh<I,T,L>::reset() {
 				// Reset Data Stores
 				this->boundaryFaceID.clear();
 				this->boundaryVertexID.clear();
@@ -544,8 +547,6 @@ namespace cupcfd
 
 				// Reset to unfinalised
 				this->finalized = false;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
@@ -866,15 +867,19 @@ namespace cupcfd
 
 				// Important - This should be done before Cell->Face Mapping and Cell->NVertices Mapping
 				// to ensure that the correct indexes are used for those functions
-				this->updateCellLocalIndexes();
+				status = this->updateCellLocalIndexes();
+				CHECK_ECODE(status)
 
-				this->updateCellFaceMap();
+				status = this->updateCellFaceMap();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NVertices so Ghost Cells have the correct values
-				this->exchangeCellGlobalNVertices();
+				status = this->exchangeCellGlobalNVertices();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NFace counts so Ghost Cells have the correct values
-				this->exchangeCellGlobalNFaces();
+				status = this->exchangeCellGlobalNFaces();
+				CHECK_ECODE(status)
 
 				// Update status
 				this->finalized = true;

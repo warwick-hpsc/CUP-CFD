@@ -42,7 +42,8 @@ namespace cupcfd
 				if(cellCount > 0) {
 					// Let us ensure that the cells are added in a sorted order
 					I * sortedCellLabels = (I *) malloc(sizeof(I) * nCellLabels);
-					cupcfd::utility::drivers::merge_sort(cellLabels, sortedCellLabels, nCellLabels);
+					status = cupcfd::utility::drivers::merge_sort(cellLabels, sortedCellLabels, nCellLabels);
+					CHECK_ECODE(status)
 
 					// (2) To get the face indexes, we need to know the number of adjacent faces
 					//     This is found from the sum of the adjacent face count for each cell listed (nFaces)

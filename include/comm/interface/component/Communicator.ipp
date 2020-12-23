@@ -20,22 +20,19 @@ namespace cupcfd
 {
 	namespace comm
 	{
-		inline void Communicator::operator=(Communicator& source)
-		{		
+		inline void Communicator::operator=(Communicator& source) {		
 			int err;
 			
 			// Free this value if it is currently not initialised
 			// (e.g. during a clone operation)
-			if(this->comm != MPI_COMM_NULL)
-			{
+			if(this->comm != MPI_COMM_NULL) {
 				MPI_Comm_free(&(this->comm));
 			} 
 			
 			// Create a Duplicate Communicator
 			err = MPI_Comm_dup(source.comm, &(this->comm));
 
-			if(err != MPI_SUCCESS)
-			{
+			if(err != MPI_SUCCESS) {
 				std::cout << "Warning: Error Duplicating MPIComm\n";
 			}
 			

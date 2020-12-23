@@ -80,8 +80,7 @@ namespace cupcfd
 					in = mesh.getFaceCell2ID(i);
 
 					bool isBoundary;
-					status = mesh.getFaceIsBoundary(i, &isBoundary);
-					CHECK_ECODE(status)
+					mesh.getFaceIsBoundary(i, &isBoundary);
 
 					if(!isBoundary) {
 						facn = mesh.getFaceLambda(i);
@@ -123,8 +122,7 @@ namespace cupcfd
 				// Since faces can access ghost cells, presume these must be updated
 				// for ghost cells also.
 				for(I i = 0; i < mesh.properties.lTCells; i++) {
-					status = mesh.getCellVolume(i, &vol);
-					CHECK_ECODE(status)
+					mesh.getCellVolume(i, &vol);
 					fact = 1.0/vol;
 					dPhidxCell[i] *= fact;
 				}

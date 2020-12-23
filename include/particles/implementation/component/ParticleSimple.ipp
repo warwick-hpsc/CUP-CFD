@@ -175,8 +175,7 @@ namespace cupcfd
             // Error Check: The local face ID should be face accessible from the current cellGlobalID set for the particle
 			bool localFaceAccessible = false;
 			I nFaces = 0;
-			status = mesh.getCellNFaces(fromCellLocalID, &nFaces);
-			CHECK_ECODE(status)
+			mesh.getCellNFaces(fromCellLocalID, &nFaces);
 			if (status != cupcfd::error::E_SUCCESS || nFaces==0) {
 				return status;
 			}

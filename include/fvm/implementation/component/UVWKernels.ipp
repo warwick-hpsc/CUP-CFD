@@ -174,8 +174,7 @@
 					fvce = massFlux[i] * vFace;
 					fwce = massFlux[i] * wFace;
 
-					status = mesh.getFaceNorm(i, norm);
-					CHECK_ECODE(status)
+					mesh.getFaceNorm(i, norm);
 					sx = norm.cmp[0];
 					sy = norm.cmp[1];
 					sz = norm.cmp[2];
@@ -486,15 +485,13 @@
 							dn = mesh.getBoundaryDistance(ib);
 							tauNT = visac * ut/dn;
 							force = tauNT * mesh.getFaceArea(i);
-							status = mesh.setBoundaryShear(ib, force);
-							CHECK_ECODE(status)
+							mesh.setBoundaryShear(ib, force);
 						}
 						else {
 							force.cmp[0] = 0.0;
 							force.cmp[1] = 0.0;
 							force.cmp[2] = 0.0;
-							status = mesh.setBoundaryShear(ib, force);
-							CHECK_ECODE(status)
+							mesh.setBoundaryShear(ib, force);
 						}
 
 						// Assume not initialisation?
@@ -525,8 +522,7 @@
 			I ir;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> zero((T) 0, (T) 0, (T) 0);
 			for(ir = 0; ir < mesh.properties.lRegions; ir++) {
-				status = mesh.setRegionForceTangent(ir, zero);
-				CHECK_ECODE(status)
+				mesh.setRegionForceTangent(ir, zero);
 			}
 
 			return cupcfd::error::E_SUCCESS;
@@ -548,8 +544,7 @@
 
 				if(it == cupcfd::geometry::mesh::RTYPE_WALL) {
 					tmp = mesh.getRegionForceTangent(ir) + mesh.getBoundaryShear(ib);
-					status = mesh.setRegionForceTangent(ir, tmp);
-					CHECK_ECODE(status)
+					mesh.setRegionForceTangent(ir, tmp);
 				}
 			}
 			return cupcfd::error::E_SUCCESS;

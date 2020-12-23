@@ -308,8 +308,7 @@ namespace cupcfd
 			// Identify which face the exiting vector intersects with //
 			// ****************************************************** //
 			I nFaces;
-			status = mesh.getCellNFaces(localCellID, &nFaces);
-			CHECK_ECODE(status)
+			mesh.getCellNFaces(localCellID, &nFaces);
 
 			// Store the local ID of the face we are exiting by
 			I exitFaceID = -1;
@@ -516,8 +515,7 @@ namespace cupcfd
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellNode, &cellLocalID);
 			CHECK_ECODE(status)
 			I cellNumFaces;
-			status = mesh.getCellNFaces(cellLocalID, &cellNumFaces);
-			CHECK_ECODE(status)
+			mesh.getCellNFaces(cellLocalID, &cellNumFaces);
 
 			I lastCellGlobalID = this->lastCellGlobalID;
 			I lastCellNode = mesh.cellConnGraph->globalToNode[lastCellGlobalID];
@@ -525,8 +523,7 @@ namespace cupcfd
 			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(lastCellNode, &lastCellLocalID);
 			CHECK_ECODE(status)
 			I lastCellNumFaces;
-			status = mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
-			CHECK_ECODE(status)
+			mesh.getCellNFaces(lastCellLocalID, &lastCellNumFaces);
 
 			I entryFaceLocalID;
 			bool entryFaceFound = false;

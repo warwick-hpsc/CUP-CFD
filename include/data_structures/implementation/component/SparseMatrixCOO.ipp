@@ -272,6 +272,8 @@ namespace cupcfd
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
+			cupcfd::error::eCodes status;
+
 			I startIndex = -1;
 			I stopIndex = -1;
 			I i;
@@ -305,7 +307,8 @@ namespace cupcfd
 			*columnIndexes = (I *) malloc(sizeof(I) * *nColumnIndexes);
 
 			// Copy the column indexes across
-			cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
+			status = cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
+			CHECK_ECODE(status)
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;
@@ -316,6 +319,8 @@ namespace cupcfd
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
+			cupcfd::error::eCodes status;
+
 			I startIndex = -1;
 			I stopIndex = -1;
 			I i;
@@ -349,7 +354,8 @@ namespace cupcfd
 			*nnzValues = (T *) malloc(sizeof(T) * *nNNZValues);
 
 			// Copy the column indexes across
-			cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
+			status = cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
+			CHECK_ECODE(status)
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;

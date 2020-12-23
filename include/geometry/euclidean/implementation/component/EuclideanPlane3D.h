@@ -344,8 +344,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes computeScalarPlaneEquation(T * a, T * b, T * c, T * d);
+					void computeScalarPlaneEquation(T * a, T * b, T * c, T * d);
 
 
 					/**

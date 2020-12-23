@@ -125,12 +125,16 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addCell(L cellLabel, bool isLocal) {
+				cupcfd::error::eCodes status;
+
 				// Create empty center, vol for now
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> center(T(0), T(0), T(0));
 				T vol = T(0);
 
 				// Pass to more descriptive function
-				this->addCell(cellLabel, center, vol, isLocal);
+				status = this->addCell(cellLabel, center, vol, isLocal);
+				CHECK_ECODE(status)
+
 				return cupcfd::error::E_SUCCESS;
 			}
 
@@ -170,22 +174,22 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addRegion(L regionLabel,
-																		  RType type,
-																		  bool std,
-																		  bool flux,
-																		  bool adiab,
-																		  T ylog,
-																		  T elog,
-																		  T density,
-																		  T turbKE,
-																		  T turbDiss,
-																		  T splvl,
-																		  T den,
-																		  T r,
-																		  T t,
-																		  cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
-																		  cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
-																		  std::string& regionName) {
+																	RType type,
+																	bool std,
+																	bool flux,
+																	bool adiab,
+																	T ylog,
+																	T elog,
+																	T density,
+																	T turbKE,
+																	T turbDiss,
+																	T splvl,
+																	T den,
+																	T r,
+																	T t,
+																	cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
+																	cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
+																	std::string& regionName) {
 				// Can only add if not finalized
 				if(this->finalized == true) {
 					return cupcfd::error::E_FINALIZED;
@@ -521,7 +525,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::reset() {
+			void CupCfdAoSMesh<I,T,L>::reset() {
 				// Reset Data Stores
 				this->boundaries.clear();
 				this->cells.clear();
@@ -541,12 +545,12 @@ namespace cupcfd
 
 				// Reset to unfinalised
 				this->finalized = false;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::updateCellFaceMap() {
+				cupcfd::error::eCodes status;
+				
 				// Reset in case it was in use
 				this->cellFaceMapCSRXAdj.clear();
 				this->cellFaceMapCSRAdj.clear();
@@ -614,7 +618,8 @@ namespace cupcfd
 					I rangeStart = this->cellFaceMapCSRXAdj[i];
 					I rangeSize = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
 
-					cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					status = cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					CHECK_ECODE(status)
 				}
 
 				// Now that the cell -> face map is complete, let us compute the number of locally stored
@@ -654,7 +659,8 @@ namespace cupcfd
 					I nVertices = vertexIDs.size();
 
 					// Store number of distinct vertices local IDs stored for this cell on this rank
-					cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					status = cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					CHECK_ECODE(status)
 
 					// Set the global amount to the same as the local amount - for local cells this is the same,
 					// for ghost cells this will be incorrect and should be overridden by an exchange function
@@ -860,19 +866,23 @@ namespace cupcfd
 
 				// Important - This should be done before Cell->Face Mapping and Cell->NVertices Mapping
 				// to ensure that the correct indexes are used for those functions
-				this->updateCellLocalIndexes();
+				status = this->updateCellLocalIndexes();
+				CHECK_ECODE(status)
 
 				// Most data is stored in AoS structures already. However, we need to update
 				// the Cell -> Face Mapping as it is stored in a separate CSR and is not updated
 				// by any of the add/set functions due to the performance overheads of doing it
 				// element by element (constant inserts, reindexing)
-				this->updateCellFaceMap();
+				status = this->updateCellFaceMap();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NVertices so Ghost Cells have the correct values
-				this->exchangeCellGlobalNVertices();
+				status = this->exchangeCellGlobalNVertices();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NFace counts so Ghost Cells have the correct values
-				this->exchangeCellGlobalNFaces();
+				status = this->exchangeCellGlobalNFaces();
+				CHECK_ECODE(status)
 
 				// Update status
 				this->finalized = true;
@@ -908,8 +918,10 @@ namespace cupcfd
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nVertices, nCells);
-				exchangePattern->exchangeStop(nVertices, nCells);
+				status = exchangePattern->exchangeStart(nVertices, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nVertices, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
 				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {
@@ -951,8 +963,10 @@ namespace cupcfd
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nFaces, nCells);
-				exchangePattern->exchangeStop(nFaces, nCells);
+				status = exchangePattern->exchangeStart(nFaces, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nFaces, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
 				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {

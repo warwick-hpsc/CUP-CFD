@@ -44,27 +44,23 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		SparseMatrixSourceMeshGenConfigJSON<I,T>::~SparseMatrixSourceMeshGenConfigJSON()
-		{
+		SparseMatrixSourceMeshGenConfigJSON<I,T>::~SparseMatrixSourceMeshGenConfigJSON() {
 
 		}
 
 		template <class I, class T>
-		void SparseMatrixSourceMeshGenConfigJSON<I,T>::operator=(const SparseMatrixSourceMeshGenConfigJSON<I,T>& source)
-		{
+		void SparseMatrixSourceMeshGenConfigJSON<I,T>::operator=(const SparseMatrixSourceMeshGenConfigJSON<I,T>& source) {
 			this->topLevel = source.topLevel;
 			this->configData = source.configData;
 		}
 
 		template <class I, class T>
-		SparseMatrixSourceMeshGenConfigJSON<I,T> * SparseMatrixSourceMeshGenConfigJSON<I,T>::clone()
-		{
+		SparseMatrixSourceMeshGenConfigJSON<I,T> * SparseMatrixSourceMeshGenConfigJSON<I,T>::clone() {
 			return new SparseMatrixSourceMeshGenConfigJSON(*this);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig __attribute__((unused)))
-		{
+		cupcfd::error::eCodes SparseMatrixSourceMeshGenConfigJSON<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig __attribute__((unused))) {
 			// ToDo
 			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}

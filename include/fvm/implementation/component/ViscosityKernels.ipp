@@ -100,12 +100,10 @@ namespace cupcfd
 						i = i + 1;
 					}
 
-					status = mesh.setRegionYLog(ir, yplus);
-					CHECK_ECODE(status)
+					mesh.setRegionYLog(ir, yplus);
 				}
 				else if(mesh.getRegionType(ir) == cupcfd::geometry::mesh::RTYPE_WALL && !(mesh.getRegionStd(ir))) {
-					status = mesh.setRegionYLog(ir, 0.0);
-					CHECK_ECODE(status)
+					mesh.setRegionYLog(ir, 0.0);
 				}
 			}
 
@@ -193,8 +191,7 @@ namespace cupcfd
 
 					utau = cmu25 * sqrt(turb);
 					yplus = dist * utau * den[ip] / (visLam + small);
-					status = mesh.setBoundaryYPlus(ib, yplus);
-					CHECK_ECODE(status)
+					mesh.setBoundaryYPlus(ib, yplus);
 
 					if(mesh.getRegionStd(ir)) {
 						if(yplus < mesh.getRegionYLog(ir)) {
@@ -214,8 +211,7 @@ namespace cupcfd
 							uplus = log(tmp)/kappa;
 						}
 
-						status = mesh.setBoundaryUPlus(ib, uplus);
-						CHECK_ECODE(status)
+						mesh.setBoundaryUPlus(ib, uplus);
 						yplusMin = std::min(yplusMin, yplus);
 						yplusMax = std::max(yplusMax, yplus);
 						visEffBoundary[ib] = std::max(T(1.0), yplus/uplus) * visLam;
@@ -225,8 +221,7 @@ namespace cupcfd
 						z0 = 0.1;
 
 						uplus = log((dist-d0)/z0)/kappa;
-						status = mesh.setBoundaryUPlus(ib, uplus);
-						CHECK_ECODE(status)
+						mesh.setBoundaryUPlus(ib, uplus);
 						visEffBoundary[ib] = std::max(T(1.0), yplus/uplus) * visLam;
 
 						// These were originally used a print statement that is now removed
