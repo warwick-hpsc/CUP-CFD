@@ -72,8 +72,7 @@ namespace cupcfd
 			cupcfd::particles::ParticleSystem<cupcfd::particles::ParticleSystemSimple<M, I, T, L>, cupcfd::particles::ParticleEmitterSimple<I,T>, cupcfd::particles::ParticleSimple<I,T>, M, I, T, L> * tmp;
 
 			// Build the dt Distribution
-			status = this->dtDistConfig->buildDistribution(&dtDist);
-			CHECK_ECODE(status)
+			this->dtDistConfig->buildDistribution(&dtDist);
 
 			// Build the Particle System;
 			status = this->particleSystemConfig->buildParticleSystem(&tmp, meshPtr);

@@ -31,22 +31,17 @@ namespace cupcfd
 
 			cupcfd::error::eCodes status;
 
-			status = this->reset();
-			DBG_HARD_CHECK_ECODE(status)
+			this->reset();
 			
 			// Retrieve a list of nodes to add
-			I nNodes;
-			status = source.getNodeCount(&nNodes);
-			DBG_HARD_CHECK_ECODE(status)
+			I nNodes = source.getNodeCount();
 			
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
 			status = source.getNodes(nodes, nNodes);
 			DBG_HARD_CHECK_ECODE(status)
 			
 			// Retrieve a list of edges to add
-			I nEdges;
-			status = source.getEdgeCount(&nEdges);
-			DBG_HARD_CHECK_ECODE(status)
+			I nEdges = source.getEdgeCount();
 			
 			T * edgeNode1 = (T *) malloc(sizeof(T) * nEdges);
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);

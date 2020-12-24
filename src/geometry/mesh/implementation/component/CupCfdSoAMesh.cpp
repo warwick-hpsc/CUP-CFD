@@ -362,12 +362,8 @@ namespace cupcfd
 					// We only accept faces between local->local, or local->ghost cells
 					// Since this graph shouldn't be finalised yet, the data will be stored in the build graph
 					if(!isBoundary) {
-						bool foundGhost1, foundGhost2;
-						status = this->cellConnGraph->existsGhostNode(cell1Label, &foundGhost1);
-						CHECK_ECODE(status)
-						status = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel, &foundGhost2);
-						CHECK_ECODE(status)
-
+						bool foundGhost1 = this->cellConnGraph->existsGhostNode(cell1Label);
+						bool foundGhost2 = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel);
 						if(foundGhost1 && foundGhost2) {
 							return cupcfd::error::E_MESH_INVALID_FACE;
 						}
@@ -551,6 +547,8 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::updateCellFaceMap() {
+				cupcfd::error::eCodes status;
+				
 				// Reset in case it was in use
 				this->cellFaceMapCSRXAdj.clear();
 				this->cellFaceMapCSRAdj.clear();
@@ -618,7 +616,8 @@ namespace cupcfd
 					I rangeStart = this->cellFaceMapCSRXAdj[i];
 					I rangeSize = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
 
-					cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					status = cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					CHECK_ECODE(status)
 				}
 
 				// Now that the cell -> face map is complete, let us compute the number of locally stored
@@ -657,7 +656,8 @@ namespace cupcfd
 					I nVertices = vertexIDs.size();
 
 					// Store number of distinct vertices local IDs stored for this cell on this rank
-					cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					status = cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					CHECK_ECODE(status)
 
 					// Set the global amount to the same as the local amount - for local cells this is the same,
 					// for ghost cells this will be incorrect and should be overridden by an exchange function
@@ -915,8 +915,10 @@ namespace cupcfd
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nVertices, nCells);
-				exchangePattern->exchangeStop(nVertices, nCells);
+				status = exchangePattern->exchangeStart(nVertices, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nVertices, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
 				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {
@@ -958,8 +960,10 @@ namespace cupcfd
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nFaces, nCells);
-				exchangePattern->exchangeStop(nFaces, nCells);
+				status = exchangePattern->exchangeStart(nFaces, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nFaces, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
 				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {

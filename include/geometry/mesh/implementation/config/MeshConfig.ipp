@@ -91,7 +91,8 @@ namespace cupcfd
 				
 				// (4) Run the partitioner and store the results
 				//partitioner->initialise(*naiveConnGraph, comm.size);
-				partitioner->partition();
+				status = partitioner->partition();
+				CHECK_ECODE(status)
 
 				// I * assignedCellLabels;
 				I * assignedCellLabels = NULL;
@@ -99,14 +100,17 @@ namespace cupcfd
 
 				// ToDo: The use of comm inside the partitioner for this alongside the nparts
 				// above needs some tidying up....
-				partitioner->assignRankNodes(&assignedCellLabels, &nAssignedCellLabels);
+				status = partitioner->assignRankNodes(&assignedCellLabels, &nAssignedCellLabels);
+				CHECK_ECODE(status)
 
 				// (5) Create the Mesh using the MeshSource and the assigned labels
 				// Create the Mesh Object based on the template type M
 				// This should inherit from UnstructuredMeshInterface so the type constraint is satisfied
 				*mesh = new M(comm);
-				(*mesh)->addData(*source, assignedCellLabels, nAssignedCellLabels);
-				(*mesh)->finalize();
+				status = (*mesh)->addData(*source, assignedCellLabels, nAssignedCellLabels);
+				CHECK_ECODE(status)
+				status = (*mesh)->finalize();
+				CHECK_ECODE(status)
 				
 				// Cleanup
 				delete naiveConnGraph;

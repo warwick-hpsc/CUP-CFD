@@ -52,8 +52,6 @@ namespace cupcfd
 														int ivar, int VarT, T Sigma_T, T Prandtl,
 														int VarTE, T Sigma_k, int VarED, T Sigma_e,
 														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu) {
-			cupcfd::error::eCodes status;
-
 			cupcfd::geometry::mesh::RType it;
 			I i, ip, in, ib, ir;
 			T facn, facp;

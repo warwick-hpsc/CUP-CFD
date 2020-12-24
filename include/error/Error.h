@@ -168,7 +168,11 @@ namespace cupcfd
 	#endif
 #endif
 #ifndef HARD_CHECK_ECODE
-	#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#ifdef DEBUG
+		#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#else
+		#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg("ERROR = "); msg+=cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#endif
 #endif
 #ifndef DBG_HARD_CHECK_ECODE
 	#ifdef DEBUG
@@ -177,6 +181,14 @@ namespace cupcfd
 		#define DBG_HARD_CHECK_ECODE(E)
 	#endif
 #endif
+#ifndef DBG_PRINT_BAD_ECODE
+	#ifdef DEBUG
+		#define DBG_PRINT_BAD_ECODE(E) if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; std::cout << msg << std::endl; }
+	#else
+		#define DBG_PRINT_BAD_ECODE(E)
+	#endif
+#endif
+
 #ifndef DBG_SAFE_VECTOR_LOOKUP
 	#ifdef DEBUG
 		#define DBG_SAFE_VECTOR_LOOKUP(V, I) ( (V).at((I)) )

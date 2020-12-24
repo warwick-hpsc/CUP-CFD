@@ -97,8 +97,6 @@ namespace cupcfd
 			// (d) Any Maps
 			// (e) Any Arrays
 
-			cupcfd::error::eCodes status;
-
 			// ToDo: Error Check: They must not be the same object
 
 			// Reset the destination graph
@@ -136,63 +134,33 @@ namespace cupcfd
 			this->nodeToGlobal = source.nodeToGlobal;
 			this->globalToNode = source.globalToNode;
 
-			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			status = cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
-			HARD_CHECK_ECODE(status)
+			// this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
+			// status = cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
+			// HARD_CHECK_ECODE(status)
+			this->processNodeCounts = cupcfd::utility::drivers::duplicate(source.processNodeCounts, source.comm->size);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsLocalNode( T node, bool * found) {
-			*found = false;
-
+		bool DistributedAdjacencyList<I, T>::existsLocalNode( T node) {
 			auto find = this->nodeDistType.find(node);
-			if(find == this->nodeDistType.end()) {
-				// Did not find the node, but function ran to completion.
-				return cupcfd::error::E_SUCCESS;
+			if (find != this->nodeDistType.end() && find->second == cupcfd::data_structures::LOCAL) {
+				return true;
 			}
-			else {
-				if(find->second == cupcfd::data_structures::LOCAL) {
-					*found = true;
-				}
-			}
-
-			return cupcfd::error::E_SUCCESS;
+			return false;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsGhostNode(T node, bool * found) {
-			*found = false;
-
+		bool DistributedAdjacencyList<I, T>::existsGhostNode(T node) {
 			auto find = this->nodeDistType.find(node);
-			if(find == this->nodeDistType.end()) {
-				// Did not find the node, but function ran to completion.
-				return cupcfd::error::E_SUCCESS;
+			if (find != this->nodeDistType.end() && find->second == cupcfd::data_structures::GHOST) {
+				return true;
 			}
-			else {
-				if(find->second == cupcfd::data_structures::GHOST) {
-					*found = true;
-				}
-			}
-
-			return cupcfd::error::E_SUCCESS;
+			return false;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsNode(T node, bool * found) {
-			cupcfd::error::eCodes status;
-			*found = false;
-
-			status = this->existsLocalNode(node, found);
-			CHECK_ECODE(status)
-			if((*found)) {
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			status = this->existsGhostNode(node, found);
-			CHECK_ECODE(status)
-
-			// There are no more types to search through, so 'found' is the final correct value, whatever that might be.
-			return cupcfd::error::E_SUCCESS;
+		bool DistributedAdjacencyList<I, T>::existsNode(T node) {
+			return this->existsLocalNode(node) || this->existsGhostNode(node);
 		}
 
 		template <class I, class T>
@@ -204,11 +172,9 @@ namespace cupcfd
 			// Check node does not exist already as a local node.
 
 			cupcfd::error::eCodes status;
-			bool found;
 
 			// Check node does not exist already.
-			status = this->existsNode(node, &found);
-			CHECK_ECODE(status)
+			bool found = this->existsNode(node);
 			if(found) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
@@ -235,11 +201,9 @@ namespace cupcfd
 			// Check node does not exist already as a local node.
 
 			cupcfd::error::eCodes status;
-			bool found;
 
 			// Check node does not exist already.
-			status = this->existsNode(node, &found);
-			CHECK_ECODE(status)
+			bool found = this->existsNode(node);
 			if(found) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
@@ -270,21 +234,17 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsEdge(T src, T dst, bool * found) {
 			cupcfd::error::eCodes status;
-			bool srcExists = false;
-			bool dstExists = false;
-
 			// ToDo: Is it safe to use buildgraph here???
 			// This might be cleared after finalize!
+
 			// Check that the source node exists
-			status = this->buildGraph.existsNode(src, &srcExists);
-			CHECK_ECODE(status)
+			bool srcExists = this->buildGraph.existsNode(src);
 			if(!srcExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Check that the destination node exists
-			status = this->buildGraph.existsNode(dst, &dstExists);
-			CHECK_ECODE(status)
+			bool dstExists = this->buildGraph.existsNode(dst);
 			if(!dstExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -305,15 +265,11 @@ namespace cupcfd
 			}
 
 			cupcfd::error::eCodes status;
-			bool srcExists;
-			bool dstExists;
 
 			// Behaviour for this function is to add a node as a ghost node if it is missing, rather
 			// than to return an error code
-			status = this->existsNode(src, &srcExists);
-			CHECK_ECODE(status)
-			status = this->existsNode(dst, &dstExists);
-			CHECK_ECODE(status)
+			bool srcExists = this->existsNode(src);
+			bool dstExists = this->existsNode(dst);
 
 			// ToDo: Currently add node as ghost node if missing, but is an error code preferable?
 			if(!srcExists) {

@@ -168,10 +168,8 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Labels are zero-based, HDF5 Indexes are base-0
-			status = properties.addIndex(rowIndex - base);
-			CHECK_ECODE(status)
-			status = properties.addIndex((rowIndex + 1) - base);
-			CHECK_ECODE(status)
+			properties.addIndex(rowIndex - base);
+			properties.addIndex((rowIndex + 1) - base);
 
 			// Get the range
 			status = access.readData(rowRange, properties);
@@ -197,8 +195,7 @@ namespace cupcfd
 
 				for(I i = 0; i < *nColumnIndexes; i++) {
 					// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
-					status = properties2.addIndex(rowRange[0] + i);
-					CHECK_ECODE(status)
+					properties2.addIndex(rowRange[0] + i);
 				}
 
 				// Read the column data
@@ -235,10 +232,8 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// HDF5 Indexes are base-0
-			status = properties.addIndex(rowIndex - base);
-			CHECK_ECODE(status)
-			status = properties.addIndex((rowIndex + 1) - base);
-			CHECK_ECODE(status)
+			properties.addIndex(rowIndex - base);
+			properties.addIndex((rowIndex + 1) - base);
 
 			// Get the range
 			status = access.readData(rowRange, properties);
@@ -255,8 +250,7 @@ namespace cupcfd
 
 			for(I i = 0; i < *nNNZValues; i++) {
 				// The indexes from rowrange are HDF5 indexes, so no need to remove the base.
-				status = properties2.addIndex(rowRange[0] + i);
-				CHECK_ECODE(status)
+				properties2.addIndex(rowRange[0] + i);
 			}
 
 			// Read the column data

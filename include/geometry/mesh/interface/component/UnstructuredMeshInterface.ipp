@@ -894,8 +894,6 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
-
-				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1101,8 +1099,6 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
-
-				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1255,8 +1251,6 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
-
-				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1407,8 +1401,6 @@ namespace cupcfd
 				// would be far more efficient if we control the ordering so that it is just known
 				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
 				// This is complex, prone to error and inefficient otherwise
-
-				cupcfd::error::eCodes status;
 				
 				// Error Check: Check that the provided cell ID is actually a Hexahedron
 				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
@@ -1700,7 +1692,8 @@ namespace cupcfd
 					// This leaves a single label per each face that is attached to a local cell
 					I * faceLabelsDistinct;
 					I nFaceLabelsDistinct;
-					cupcfd::utility::drivers::distinctArray(cellFaceLabelData, nCellFacesSum, &faceLabelsDistinct, &nFaceLabelsDistinct);
+					status = cupcfd::utility::drivers::distinctArray(cellFaceLabelData, nCellFacesSum, &faceLabelsDistinct, &nFaceLabelsDistinct);
+					CHECK_ECODE(status)
 
 					// (e) Get the labels of any boundaries associated with these faces
 					// (ei) Reduce down to only faces that are boundaries
@@ -1711,7 +1704,7 @@ namespace cupcfd
 					int nFaceBoundaries = 0;
 					for(int i = 0; i < nFaceLabelsDistinct; i++) {
 						if(faceLabelIsBoundary[i] == true) {
-							nFaceBoundaries = nFaceBoundaries + 1;
+							nFaceBoundaries++;
 						}
 					}
 					
@@ -1729,7 +1722,7 @@ namespace cupcfd
 						}
 						else {
 							faceWithoutBoundary[ptr2] = faceLabelsDistinct[i];
-							ptr2 = ptr2 + 1;
+							ptr2++;
 						}
 					}
 					
@@ -1742,7 +1735,8 @@ namespace cupcfd
 					// (eiii) Boundary faces should be unique, but as a precaution remove repeats
 					I * boundaryLabelsDistinct;
 					I nBoundaryLabelsDistinct;
-					cupcfd::utility::drivers::distinctArray(boundaryLabels, nBoundaryLabels, &boundaryLabelsDistinct, &nBoundaryLabelsDistinct);
+					status = cupcfd::utility::drivers::distinctArray(boundaryLabels, nBoundaryLabels, &boundaryLabelsDistinct, &nBoundaryLabelsDistinct);
+					CHECK_ECODE(status)
 
 					// (f) Get the distinct labels of any vertexes associated with the retrieved faces and boundaries
 
@@ -1786,8 +1780,9 @@ namespace cupcfd
 					// (fiv) Get distinct vertex labels
 					I * vertexLabelsDistinct;
 					I nVertexLabelsDistinct;
-					cupcfd::utility::drivers::distinctArray(vertLabelData, faceVerticesCountTotal + boundaryVerticesCountTotal,
-																 &vertexLabelsDistinct, &nVertexLabelsDistinct);
+					status = cupcfd::utility::drivers::distinctArray(vertLabelData, faceVerticesCountTotal + boundaryVerticesCountTotal,
+																	&vertexLabelsDistinct, &nVertexLabelsDistinct);
+					CHECK_ECODE(status)
 
 					// (f) Get the labels of any regions associated with the boundaries
 					//  Since we're loading all regions, just make an label list of 0->regionCount-1 since we'll just read all since
@@ -1825,7 +1820,8 @@ namespace cupcfd
 
 					// Add Vertices to Mesh
 					for(I i = 0; i < nVertexLabelsDistinct; i++) {
-						this->addVertex(vertexLabelsDistinct[i], pointTmpStore[i]);
+						status = this->addVertex(vertexLabelsDistinct[i], pointTmpStore[i]);
+						CHECK_ECODE(status)
 					}
 
 					free(pointTmpStore);
@@ -1837,7 +1833,8 @@ namespace cupcfd
 					for(I i = 0; i < nRegions; i++) {
 						// ToDo: Fix the region name
 						std::string name = "Default";
-						this->addRegion(regionLabels[i], name);
+						status = this->addRegion(regionLabels[i], name);
+						CHECK_ECODE(status)
 					}
 					
 					// === Read Boundary Data ===
@@ -1865,7 +1862,8 @@ namespace cupcfd
 						I vertDataPtr = faceVerticesCountTotal + bndVertLabelCSRInd[i];
 						I rangeSize = bndVertLabelCSRInd[i+1] - bndVertLabelCSRInd[i];
 
-						this->addBoundary(bLabel, rLabel, vertLabelData + vertDataPtr, rangeSize, bDistance[i]);
+						status = this->addBoundary(bLabel, rLabel, vertLabelData + vertDataPtr, rangeSize, bDistance[i]);
+						CHECK_ECODE(status)
 					}
 
 					free(bDistance);
@@ -1887,12 +1885,14 @@ namespace cupcfd
 					// Add Cells to Mesh
 					// Local Cells
 					for(I i = 0; i < lCells; i++) {
-						this->addCell(cellLabels[i], pointTmpStore[i], cellVol[i], true);
+						status = this->addCell(cellLabels[i], pointTmpStore[i], cellVol[i], true);
+						CHECK_ECODE(status)
 					}
 
 					// Ghost Cells
 					for(I i = lCells; i < (lCells + ghCells); i++) {
-						this->addCell(cellLabels[i], pointTmpStore[i], cellVol[i], false);
+						status = this->addCell(cellLabels[i], pointTmpStore[i], cellVol[i], false);
+						CHECK_ECODE(status)
 					}
 
 					free(pointTmpStore);
@@ -1979,7 +1979,7 @@ namespace cupcfd
 							}
 
 							fCell2OrBoundLabel = fCell2Labels[ptr2];
-							ptr2 = ptr2 + 1;
+							ptr2++;
 						}
 
 						status = this->addFace(faceLabelsDistinct[i], fCell1Labels[i], fCell2OrBoundLabel, fIsBoundary[i], fLambda[i], fNorm[i],

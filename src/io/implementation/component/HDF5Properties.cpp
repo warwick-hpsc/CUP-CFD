@@ -19,8 +19,7 @@ namespace cupcfd
 	{
 		namespace hdf5
 		{
-			HDF5Properties::HDF5Properties(HDF5Access& access)
-			{
+			HDF5Properties::HDF5Properties(HDF5Access& access) {
 				// hid_t hdf5_type;
 				// H5T_class_t hdf5_type_class;
 				// size_t hdf5_type_size;
@@ -53,8 +52,7 @@ namespace cupcfd
 
 				// Store appropriately in the HDF5Properties Object for access
 				this->ndim = ndims;
-				for(int i=0; i<ndims; i++)
-				{
+				for(int i=0; i<ndims; i++) {
 					this->dim.push_back(dims[i]);
 				}
 
@@ -62,78 +60,61 @@ namespace cupcfd
 				this->memspaceID = H5S_ALL;
 			}
 
-			HDF5Properties::~HDF5Properties()
-			{
+			HDF5Properties::~HDF5Properties() {
 
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x)
-			{
+			void HDF5Properties::addIndex(unsigned long long x) {
 				this->idx.push_back(x);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x,
-						  	  	  	  	  unsigned long long y)
-			{
+			void HDF5Properties::addIndex(unsigned long long x,
+						  	  	  	  	  unsigned long long y) {
 				this->idx.push_back(x);
 				this->idx.push_back(y);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x,
+			void HDF5Properties::addIndex(unsigned long long x,
 										  unsigned long long y,
-										  unsigned long long z)
-			{
+										  unsigned long long z) {
 				this->idx.push_back(x);
 				this->idx.push_back(y);
 				this->idx.push_back(z);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x,
+			void HDF5Properties::addIndex(unsigned long long x,
 						  	  	  	  	  unsigned long long y,
 										  unsigned long long z,
-										  unsigned long long u)
-			{
+										  unsigned long long u) {
 				this->idx.push_back(x);
 				this->idx.push_back(y);
 				this->idx.push_back(z);
 				this->idx.push_back(u);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x,
+			void HDF5Properties::addIndex(unsigned long long x,
 						  	  	  	  	  unsigned long long y,
 										  unsigned long long z,
 										  unsigned long long u,
-										  unsigned long long v)
-			{
+										  unsigned long long v) {
 				this->idx.push_back(x);
 				this->idx.push_back(y);
 				this->idx.push_back(z);
 				this->idx.push_back(u);
 				this->idx.push_back(v);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Properties::addIndex(unsigned long long x,
+			void HDF5Properties::addIndex(unsigned long long x,
 						  	  	  	  	  unsigned long long y,
 										  unsigned long long z,
 										  unsigned long long u,
 										  unsigned long long v,
-										  unsigned long long w)
-			{
+										  unsigned long long w) {
 				this->idx.push_back(x);
 				this->idx.push_back(y);
 				this->idx.push_back(z);
@@ -141,8 +122,6 @@ namespace cupcfd
 				this->idx.push_back(v);
 				this->idx.push_back(w);
 				this->nidx = this->nidx + 1;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 		}

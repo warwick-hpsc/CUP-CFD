@@ -131,17 +131,19 @@ namespace cupcfd
 			// Scratch space setup
 			int * sortIndexes = (int *) malloc(sizeof(int) * nTRanks);
 
-			int * copyTRanks = (int *)  malloc(sizeof(int) * nTRanks);
 
 			int nCopyExchangeIDXSend = nExchangeIDXSend;
-			int * copyExchangeIDXSend = (int *)  malloc(sizeof(int) * nExchangeIDXSend);
 
 
 			// Copy the input data arrays of the target ranks and the matching exchange index to be sent
-			status = cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
-			CHECK_ECODE(status)
-			status = cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
-			CHECK_ECODE(status)
+			// int * copyTRanks = (int *)  malloc(sizeof(int) * nTRanks);
+			// status = cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
+			// CHECK_ECODE(status)
+			// int * copyExchangeIDXSend = (int *)  malloc(sizeof(int) * nExchangeIDXSend);
+			// status = cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
+			// CHECK_ECODE(status)
+			int* copyTRanks = cupcfd::utility::drivers::duplicate(tRanks, nTRanks);
+			int* copyExchangeIDXSend = cupcfd::utility::drivers::duplicate(exchangeIDXSend, nExchangeIDXSend);
 
 			// Sort the copied ranks array.
 			// SortIndexes is an array of the original index positions in matching sorted order - we will use this to reshuffle

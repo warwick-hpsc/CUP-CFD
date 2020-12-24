@@ -59,8 +59,6 @@
 													T * au, I nAu,
 													T * av, I nAv,
 													T * aw, I nAw) {
-			cupcfd::error::eCodes status;
-
 			// T pe0 = 9999.0;
 			// T pe1 = -9999.0;
 			// T totalForce = 0.0;
@@ -517,21 +515,17 @@
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes FluxUVWDolfynRegionLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
-			cupcfd::error::eCodes status;
+		void FluxUVWDolfynRegionLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			I ir;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> zero((T) 0, (T) 0, (T) 0);
 			for(ir = 0; ir < mesh.properties.lRegions; ir++) {
 				mesh.setRegionForceTangent(ir, zero);
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes FluxUVWDolfynBndsLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
-			cupcfd::error::eCodes status;
+		void FluxUVWDolfynBndsLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			I ib, ir;
 			cupcfd::geometry::mesh::RType it;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> shear;
@@ -547,7 +541,6 @@
 					mesh.setRegionForceTangent(ir, tmp);
 				}
 			}
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

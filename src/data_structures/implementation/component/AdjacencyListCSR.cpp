@@ -55,7 +55,7 @@ namespace cupcfd
 		// === CRTP Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I,T>::reset() {
+		void AdjacencyListCSR<I,T>::reset() {
 			this->nNodes = 0;
 			this->nEdges = 0;
 
@@ -71,17 +71,11 @@ namespace cupcfd
 			// Reset Maps to Empty Objects
 			this->nodeToIDX = std::map<T,I>();
 			this->IDXToNode = std::map<I,T>();
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addNode(T node) {
-			cupcfd::error::eCodes status;
-			bool nodeExists;
-
-			status = this->existsNode(node, &nodeExists);
-			CHECK_ECODE(status)
+			bool nodeExists = this->existsNode(node);
 
 			if(!nodeExists) {
 				// Generate a new local index
@@ -115,33 +109,25 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsNode(T node, bool * exists) {
+		bool AdjacencyListCSR<I, T>::existsNode(T node) {
 			if(this->nodeToIDX.find(node) != this->nodeToIDX.end()) {
-				*exists = true;
+				return true;
+			} else {
+				return false;
 			}
-			else {
-				*exists = false;
-			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsEdge(T srcNode, T dstNode, bool * exists) {
-			bool nodeExists;
 			cupcfd::error::eCodes status;
 
-			status = this->existsNode(srcNode, &nodeExists);
-			CHECK_ECODE(status)
-
+			bool nodeExists = this->existsNode(srcNode);
 			if(!nodeExists) {
 				*exists = false;
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
-			status = this->existsNode(dstNode, &nodeExists);
-			CHECK_ECODE(status)
-
+			nodeExists = this->existsNode(dstNode);
 			if(!nodeExists) {
 				*exists = false;
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
@@ -175,20 +161,14 @@ namespace cupcfd
 			bool nodeExists, edgeExists;
 
 			// (1) Check the source node exists
-			nodeExists = false;
-			status = this->existsNode(node, &nodeExists);
-			CHECK_ECODE(status)
-
-			if(nodeExists == false) {
+			nodeExists = this->existsNode(node);
+			if(!nodeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (2) Check the destination node exists
-			nodeExists = false;
-			status = this->existsNode(adjNode, &nodeExists);
-			CHECK_ECODE(status)
-
-			if(nodeExists == false) {
+			nodeExists = this->existsNode(adjNode);
+			if(!nodeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
@@ -225,13 +205,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes AdjacencyListCSR<I, T>::getAdjacentNodeCount(T node, I * count) {
-			cupcfd::error::eCodes status;
-
-			bool exists;
+			bool exists = this->existsNode(node);
 			*count = 0;
-
-			status = this->existsNode(node, &exists);
-			CHECK_ECODE(status)
 
 			if(!exists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;

@@ -90,9 +90,7 @@ namespace cupcfd
 			// (a) The node storage
 			// (b) The work storage
 			if(this->workComm.root) {
-				I nNodes;
-				status = rootGraph->getNodeCount(&nNodes);
-				HARD_CHECK_ECODE(status)
+				I nNodes = rootGraph->getNodeCount();
 
 				//std::shared_ptr<std::array<T,nNodes>> nodes;
 				T * nodes = (T *) malloc(sizeof(T) * nNodes);
@@ -104,7 +102,8 @@ namespace cupcfd
 				this->setNodeStorage(nodes, nNodes);
 
 				// Setup the work arrays
-				this->setWorkArrays(*rootGraph);
+				status = this->setWorkArrays(*rootGraph);
+				HARD_CHECK_ECODE(status)
 
 				// Cleanup temporary store
 				free(nodes);
@@ -121,7 +120,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::resetWorkArrays() {
+		void PartitionerMetis<I,T>::resetWorkArrays() {
 			// Free allocated arrays
 			if(this->xadj != nullptr) {
 				free(this->xadj);
@@ -140,16 +139,12 @@ namespace cupcfd
 
 			// No nodes currently in work arrays
 			this->nNodes = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::setNCon(I nCon) {
+		void PartitionerMetis<I,T>::setNCon(I nCon) {
 			// Set the number of weights that each vertex has (also number of balance constraints)
 			this->nCon = nCon;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
@@ -205,6 +200,8 @@ namespace cupcfd
 														 I * nNodes) {
 			// === Notify all processes in the comm if no results are available ===
 
+			cupcfd::error::eCodes status;
+
 			// bool hasResults = true;
 			// if(this->workComm.root)
 			// {
@@ -222,14 +219,15 @@ namespace cupcfd
 
 			// === Distribute the results ===
 			// This scatter function will not only distribute the results, but handle the grouping by partition
-			cupcfd::comm::Scatter(this->nodes,
-									this->nNodes,
-									rankNodes,
-									nNodes,
-									this->result,
-									this->nResult,
-									this->workComm,
-									this->workComm.root_rank);
+			status = cupcfd::comm::Scatter(this->nodes,
+											this->nNodes,
+											rankNodes,
+											nNodes,
+											this->result,
+											this->nResult,
+											this->workComm,
+											this->workComm.root_rank);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -326,12 +324,9 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::reset() {
-			cupcfd::error::eCodes status;
-
+		void PartitionerMetis<I,T>::reset() {
 			// Base class reset
-			status = this->PartitionerInterface<I,T>::reset();
-			CHECK_ECODE(status)
+			this->PartitionerInterface<I,T>::reset();
 
 			// Reset Members
 			this->nCon = 0;
@@ -340,7 +335,7 @@ namespace cupcfd
 			this->numflag = 0;
 
 			// Reset Work Arrays
-			return this->resetWorkArrays();
+			this->resetWorkArrays();
 		}
 
 	}

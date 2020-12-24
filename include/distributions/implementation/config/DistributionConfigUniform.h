@@ -111,8 +111,7 @@ namespace cupcfd
 
 				void operator=(const DistributionConfigUniform<I,T>& source);
 				DistributionConfigUniform<I,T> * clone();
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes buildDistribution(Distribution<I,T> ** dist);
+				void buildDistribution(Distribution<I,T> ** dist);
 		};
 	}
 }

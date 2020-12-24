@@ -50,20 +50,17 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		T DistributionConfigFixed<I,T>::getFixedValue()
-		{
+		T DistributionConfigFixed<I,T>::getFixedValue() {
 			return this->fixedValue;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigFixed<I,T>::setFixedValue(T fixedValue)
-		{
+		void DistributionConfigFixed<I,T>::setFixedValue(T fixedValue) {
 			this->fixedValue = fixedValue;
 		}
 	
 		template <class I, class T>
-		void DistributionConfigFixed<I,T>::operator=(const DistributionConfigFixed<I,T>& source)
-		{
+		void DistributionConfigFixed<I,T>::operator=(const DistributionConfigFixed<I,T>& source) {
 			// Call Base
 			DistributionConfig<I,T>::operator=(source);
 			
@@ -71,16 +68,13 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigFixed<I,T> * DistributionConfigFixed<I,T>::clone()
-		{
+		DistributionConfigFixed<I,T> * DistributionConfigFixed<I,T>::clone() {
 			return new DistributionConfigFixed(*this);
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigFixed<I,T>::buildDistribution(Distribution<I,T> ** dist)
-		{
+		void DistributionConfigFixed<I,T>::buildDistribution(Distribution<I,T> ** dist) {
 			*dist = new DistributionFixed<I,T>(this->fixedValue);
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

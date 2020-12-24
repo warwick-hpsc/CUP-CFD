@@ -21,20 +21,27 @@ namespace cupcfd
 		 rTol(rTol),
 		 eTol(eTol)
 		{
+			cupcfd::error::eCodes status;
+
 			// Create the initial 'empty' KSP object
 			KSPCreate(comm.comm, &this->petscSolver);
 			KSPSetTolerances(this->petscSolver, rTol, eTol, PETSC_DEFAULT, PETSC_DEFAULT);
 
-			switch(this->alg)
-			{
-				case PETSC_KSP_CMDLINE:	setupPETScCommandLine();
-										break;
+			switch(this->alg) {
+				case PETSC_KSP_CMDLINE:
+					status = setupPETScCommandLine();
+					HARD_CHECK_ECODE(status)
+					break;
 
-				case PETSC_KSP_CGAMG:	setupPETScCGAMG();
-										break;
+				case PETSC_KSP_CGAMG:
+					status = setupPETScCGAMG();
+					HARD_CHECK_ECODE(status)
+					break;
 
-				default:				setupPETScCommandLine();
-										break;
+				default:
+					status = setupPETScCommandLine();
+					HARD_CHECK_ECODE(status)
+					break;
 			}
 		}
 

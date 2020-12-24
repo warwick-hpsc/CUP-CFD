@@ -45,6 +45,18 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
+			T* duplicate(T * src, I nSrc) {
+				if (nSrc == I(0)) {
+					return NULL;
+				}
+
+				int byteSize = sizeof(T);
+				T* dst = (T*)malloc(byteSize * nSrc);
+				memcpy((void*)dst, (void*)src, byteSize * nSrc);
+				return dst;
+			}
+
+			template <class I, class T>
 			cupcfd::error::eCodes zero(T * source, I nEle) {
 				// Typecast 0 to appropriate datatype
 				memset(source, (T) 0, nEle * sizeof(T));
@@ -321,8 +333,9 @@ namespace cupcfd
 				T * source2Ptr;
 
 				if(!source1Sorted) {
-					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
-					cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
+					// source1Ptr = (T *) malloc(sizeof(T) * nSource1);
+					// cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
+					source1Ptr = cupcfd::utility::drivers::duplicate(source1, nSource1);
 					cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
 				}
 				else {
@@ -330,8 +343,9 @@ namespace cupcfd
 				}
 
 				if(!source2Sorted) {
-					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
-					cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
+					// source2Ptr = (T *) malloc(sizeof(T) * nSource2);
+					// cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
+					source2Ptr = cupcfd::utility::drivers::duplicate(source2, nSource2);
 					cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
 				}
 				else {
@@ -495,9 +509,10 @@ namespace cupcfd
 				sorted1 = cupcfd::utility::drivers::is_sorted(source1, nSource1);
 
 				if(!sorted1) {
-					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
-					status = cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
-					CHECK_ECODE(status)
+					// source1Ptr = (T *) malloc(sizeof(T) * nSource1);
+					// status = cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
+					// CHECK_ECODE(status)
+					source1Ptr = cupcfd::utility::drivers::duplicate(source1, nSource1);
 					status = cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
 					CHECK_ECODE(status)
 				}
@@ -508,9 +523,10 @@ namespace cupcfd
 				// Kernel requires sorted arrays. Check if source2 is sorted.
 				sorted2 = cupcfd::utility::drivers::is_sorted(source2, nSource2);
 				if(!sorted2) {
-					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
-					status = cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
-					CHECK_ECODE(status)
+					// source2Ptr = (T *) malloc(sizeof(T) * nSource2);
+					// status = cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
+					// CHECK_ECODE(status)
+					source2Ptr = cupcfd::utility::drivers::duplicate(source2, nSource2);
 					status = cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
 					CHECK_ECODE(status)
 				}

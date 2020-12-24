@@ -124,16 +124,12 @@ namespace cupcfd
 				/**
 				 * Get the number of nodes stored in this adjacency list.
 				 *
-				 * @param nNodes A pointer to the location to be updated with the number of nodes
+				 * @return Number of nodes
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes getNodeCount(I * nNodes);
+				I getNodeCount();
 
 				/**
 				 * Get a copy of all nodes stored in this adjacency list.
@@ -156,16 +152,12 @@ namespace cupcfd
 				 * Get the number of directed edges stored in this adjacency list.
 				 * Note: undirected edges count as two edges in this context, one for either direction
 				 *
-				 * @param nEdges A pointer to the location to be updated with the number of edges
+				 * @return Number of edges
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes getEdgeCount(I * nEdges);
+				I getEdgeCount();
 
 				/**
 				 * Get a copy of all edges stored in this adjacency list. This informations is
@@ -199,12 +191,8 @@ namespace cupcfd
 
 				/**
 				 * Reset the adjacency list to an empty state
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes reset();
+				void reset();
 
 				/**
 				 * Add a node to this AdjacencyList. By default it will have no edges.
@@ -225,17 +213,14 @@ namespace cupcfd
 				 * Check whether a node already exists in the data structure
 				 *
 				 * @param node The node data to search for
-				 * @param exists A pointer to the location where the result of this function will be written. Set to true if
-				 * the node exists, or false if it does not
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
+				 * @return True if node exists
 				 */
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes existsNode(T node, bool * exists);
+				bool existsNode(T node);
 
 				/**
 				 * Add a directed edge to the adjacency list between two nodes from node to adjNode.

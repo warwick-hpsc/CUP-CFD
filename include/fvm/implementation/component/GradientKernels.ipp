@@ -41,8 +41,6 @@ namespace cupcfd
 													T * phiBoundary, I nPhiBoundary,
 													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
 													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell) {
-			cupcfd::error::eCodes status;
-
 			T facn, facp, fact;
 			// T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
 			T phiFace, vol;

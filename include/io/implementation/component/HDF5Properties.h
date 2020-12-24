@@ -45,53 +45,47 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x);
+					void addIndex(unsigned long long x);
 
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x,
-													unsigned long long y);
+					void addIndex(unsigned long long x,
+									unsigned long long y);
 
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x,
-													unsigned long long y,
-													unsigned long long z);
+					void addIndex(unsigned long long x,
+									unsigned long long y,
+									unsigned long long z);
 
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x,
-													unsigned long long y,
-													unsigned long long z,
-													unsigned long long u);
+					void addIndex(unsigned long long x,
+									unsigned long long y,
+									unsigned long long z,
+									unsigned long long u);
 
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x,
-													unsigned long long y,
-													unsigned long long z,
-													unsigned long long u,
-													unsigned long long v);
+					void addIndex(unsigned long long x,
+									unsigned long long y,
+									unsigned long long z,
+									unsigned long long u,
+									unsigned long long v);
 
 					/**
 					 *
 					 */
-					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes addIndex(unsigned long long x,
-													unsigned long long y,
-													unsigned long long z,
-													unsigned long long u,
-													unsigned long long v,
-													unsigned long long w);
+					void addIndex(unsigned long long x,
+									unsigned long long y,
+									unsigned long long z,
+									unsigned long long u,
+									unsigned long long v,
+									unsigned long long w);
 			};
 		}
 	}

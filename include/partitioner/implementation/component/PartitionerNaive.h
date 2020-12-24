@@ -79,8 +79,8 @@ namespace cupcfd
 				~PartitionerNaive();
 
 				// === Inherited Overrides ===
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes reset();
+				// __attribute__((warn_unused_result))
+				// cupcfd::error::eCodes reset();
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes partition();
 				__attribute__((warn_unused_result))

@@ -81,14 +81,13 @@ namespace cupcfd
 
 				// === CRTP Methods ===
 
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes reset();
+				void reset();
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addNode(T node);
 
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes existsNode(T node, bool * exists);
+				bool existsNode(T node);
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes addEdge(T node, T adjNode);

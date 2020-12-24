@@ -343,10 +343,12 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorX() {
+			cupcfd::error::eCodes status;
 			PetscErrorCode err;
 
 			// Reset any current vectors
-			this->resetVectorX();
+			status = this->resetVectorX();
+			CHECK_ECODE(status)
 
 			if(this->comm.size == 1) {
 				// === Comm Size is set to 1 - Serial Linear Solver ===
@@ -952,7 +954,8 @@ namespace cupcfd
 					}
 				}
 
-				cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
+				status = cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
+				CHECK_ECODE(status)
 
 				if(nTotalOffNodeCount == 0) {
 					// All indices are local across all processes, so no need for futher comms
@@ -1059,8 +1062,10 @@ namespace cupcfd
 					}
 
 					// Perform the data exchange
-					pattern->exchangeStart(dataBuffer, nDataBuffer);
-					pattern->exchangeStop(dataBuffer, nDataBuffer);
+					status = pattern->exchangeStart(dataBuffer, nDataBuffer);
+					CHECK_ECODE(status)
+					status = pattern->exchangeStop(dataBuffer, nDataBuffer);
+					CHECK_ECODE(status)
 
 					// Copy data from dataBuffer to result
 					*nResult = nIndexes;
@@ -1258,7 +1263,8 @@ namespace cupcfd
 					}
 				}
 
-				cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
+				status = cupcfd::comm::allReduceAdd(&nOffNodeCount, 1, &nTotalOffNodeCount, 1, this->comm);
+				CHECK_ECODE(status)
 
 				if(nTotalOffNodeCount == 0) {
 					// All indices are local across all processes, so no need for futher comms
@@ -1365,8 +1371,10 @@ namespace cupcfd
 					}
 
 					// Perform the data exchange
-					pattern->exchangeStart(dataBuffer, nDataBuffer);
-					pattern->exchangeStop(dataBuffer, nDataBuffer);
+					status = pattern->exchangeStart(dataBuffer, nDataBuffer);
+					CHECK_ECODE(status)
+					status = pattern->exchangeStop(dataBuffer, nDataBuffer);
+					CHECK_ECODE(status)
 
 					// Copy data from dataBuffer to result
 					*nResult = nIndexes;
@@ -1455,7 +1463,8 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::solve() {
-			this->algSolver->solve(&a, &b, &x);
+			cupcfd::error::eCodes status = this->algSolver->solve(&a, &b, &x);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

@@ -78,6 +78,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleSimpleSourceHDF5<I,T>::getParticles(Particle<ParticleSimple<I,T>,I,T> *** particleData, I * nParticles, I * indexes, I nIndexes, I indexBase) {
+			cupcfd::error::eCodes status;
+			
 			// ToDo: Don't really like that this is a m*n function where m and n could both get large.
 			// We could store the rank, but if the decomposition changes (e.g. different number of processes) between runs, it invalidates
 			// the ranks and possibly the global cell IDs if the decomposition changes from the partitioner.
@@ -124,24 +126,24 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Properties propertiesDecayRate(accessDecayRate);
 
 			for(I i = 0; i < nIndexes; i++) {
-				propertiesPosX.addIndex(indexes[i] - indexBase, 0);
-				propertiesPosY.addIndex(indexes[i] - indexBase, 1);
-				propertiesPosZ.addIndex(indexes[i] - indexBase, 2);
+				propertiesPosX.addIndex(indexes[i]-indexBase, 0);
+				propertiesPosY.addIndex(indexes[i]-indexBase, 1);
+				propertiesPosZ.addIndex(indexes[i]-indexBase, 2);
 
-				propertiesVelX.addIndex(indexes[i] - indexBase, 0);
-				propertiesVelY.addIndex(indexes[i] - indexBase, 1);
-				propertiesVelZ.addIndex(indexes[i] - indexBase, 2);
+				propertiesVelX.addIndex(indexes[i]-indexBase, 0);
+				propertiesVelY.addIndex(indexes[i]-indexBase, 1);
+				propertiesVelZ.addIndex(indexes[i]-indexBase, 2);
 
-				propertiesAccelX.addIndex(indexes[i] - indexBase, 0);
-				propertiesAccelY.addIndex(indexes[i] - indexBase, 1);
-				propertiesAccelZ.addIndex(indexes[i] - indexBase, 2);
+				propertiesAccelX.addIndex(indexes[i]-indexBase, 0);
+				propertiesAccelY.addIndex(indexes[i]-indexBase, 1);
+				propertiesAccelZ.addIndex(indexes[i]-indexBase, 2);
 
-				propertiesJerkX.addIndex(indexes[i] - indexBase, 0);
-				propertiesJerkY.addIndex(indexes[i] - indexBase, 1);
-				propertiesJerkZ.addIndex(indexes[i] - indexBase, 2);
+				propertiesJerkX.addIndex(indexes[i]-indexBase, 0);
+				propertiesJerkY.addIndex(indexes[i]-indexBase, 1);
+				propertiesJerkZ.addIndex(indexes[i]-indexBase, 2);
 
-				propertiesDecayLevel.addIndex(indexes[i] - indexBase);
-				propertiesDecayRate.addIndex(indexes[i] - indexBase);
+				propertiesDecayLevel.addIndex(indexes[i]-indexBase);
+				propertiesDecayRate.addIndex(indexes[i]-indexBase);
 			}
 
 			// Read in particle positional data
@@ -165,24 +167,38 @@ namespace cupcfd
 			T * decayRate = (T *) malloc(sizeof(T) * nIndexes);
 
 			// Read Data
-			accessPos.readData(posX, propertiesPosX);
-			accessPos.readData(posY, propertiesPosY);
-			accessPos.readData(posZ, propertiesPosZ);
+			status = accessPos.readData(posX, propertiesPosX);
+			CHECK_ECODE(status)
+			status = accessPos.readData(posY, propertiesPosY);
+			CHECK_ECODE(status)
+			status = accessPos.readData(posZ, propertiesPosZ);
+			CHECK_ECODE(status)
 
-			accessVel.readData(velX, propertiesVelX);
-			accessVel.readData(velY, propertiesVelY);
-			accessVel.readData(velZ, propertiesVelZ);
+			status = accessVel.readData(velX, propertiesVelX);
+			CHECK_ECODE(status)
+			status = accessVel.readData(velY, propertiesVelY);
+			CHECK_ECODE(status)
+			status = accessVel.readData(velZ, propertiesVelZ);
+			CHECK_ECODE(status)
 
-			accessAccel.readData(accelX, propertiesAccelX);
-			accessAccel.readData(accelY, propertiesAccelY);
-			accessAccel.readData(accelZ, propertiesAccelZ);
+			status = accessAccel.readData(accelX, propertiesAccelX);
+			CHECK_ECODE(status)
+			status = accessAccel.readData(accelY, propertiesAccelY);
+			CHECK_ECODE(status)
+			status = accessAccel.readData(accelZ, propertiesAccelZ);
+			CHECK_ECODE(status)
 
-			accessJerk.readData(jerkX, propertiesJerkX);
-			accessJerk.readData(jerkY, propertiesJerkY);
-			accessJerk.readData(jerkZ, propertiesJerkZ);
+			status = accessJerk.readData(jerkX, propertiesJerkX);
+			CHECK_ECODE(status)
+			status = accessJerk.readData(jerkY, propertiesJerkY);
+			CHECK_ECODE(status)
+			status = accessJerk.readData(jerkZ, propertiesJerkZ);
+			CHECK_ECODE(status)
 
-			accessDecayLevel.readData(decayLevel, propertiesDecayLevel);
-			accessDecayRate.readData(decayRate, propertiesDecayRate);
+			status = accessDecayLevel.readData(decayLevel, propertiesDecayLevel);
+			CHECK_ECODE(status)
+			status = accessDecayRate.readData(decayRate, propertiesDecayRate);
+			CHECK_ECODE(status)
 
 			*nParticles = nIndexes;
 

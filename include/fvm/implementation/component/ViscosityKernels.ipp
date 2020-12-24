@@ -80,9 +80,7 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
-			cupcfd::error::eCodes status;
-
+		void calculateViscosityDolfynRegionLoop(T kappa, cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			I ir;
 			T yplus;
 			T yplustmp;
@@ -106,8 +104,6 @@ namespace cupcfd
 					mesh.setRegionYLog(ir, 0.0);
 				}
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
@@ -117,8 +113,6 @@ namespace cupcfd
 																	T * den, I nDen,
 																	T * visEffCell, I nVisEffCell,
 																	T * visEffBoundary, I nVisEffBoundary) {
-			cupcfd::error::eCodes status;
-			
 			T cmu = tmcmu;
 			T cmu25 = pow(cmu, 0.25);
 			// T visURF = 1.0;

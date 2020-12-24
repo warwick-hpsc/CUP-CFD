@@ -29,7 +29,6 @@ namespace cupcfd
 				MPI_Datatype dTypeSend;
 				MPI_Datatype dTypeRecv;
 				int err;
-				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
 				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
@@ -79,7 +78,6 @@ namespace cupcfd
 				T dummy;
 				MPI_Datatype dTypeSend;
 				MPI_Datatype dTypeRecv;
-				cupcfd::error::eCodes status;
 				
 				int * displs = nullptr;
 				

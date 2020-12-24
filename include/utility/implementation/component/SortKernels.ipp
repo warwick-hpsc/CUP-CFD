@@ -211,12 +211,15 @@ namespace cupcfd
 				// unorder value in swapped location - however this breaks later reordering.
 				// Instead, make a temporary array we can copy from..
 
-				cupcfd::error::eCodes status;
+				if (nEleSource != nEleIndexes) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
-				T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
-
-				status = cupcfd::utility::drivers::copy(source, nEleSource, tmpCpy, nEleSource);
-				CHECK_ECODE(status)
+				// cupcfd::error::eCodes status;
+				// T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
+				// status = cupcfd::utility::drivers::copy(source, nEleSource, tmpCpy, nEleSource);
+				// CHECK_ECODE(status)
+				T* tmpCpy = cupcfd::utility::drivers::duplicate(source, nEleSource);
 
 				for(I i=0; i < nEleIndexes; i++) {
 					source[i] = tmpCpy[indexes[i]];
@@ -230,8 +233,11 @@ namespace cupcfd
 			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
 				cupcfd::error::eCodes status;
 				
+				if (nEleSource != nEleIndexes) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				
 				T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
-
 				for(I i=0; i < nEleIndexes; i++) {
 					tmpCpy[indexes[i]] = source[i];
 				}

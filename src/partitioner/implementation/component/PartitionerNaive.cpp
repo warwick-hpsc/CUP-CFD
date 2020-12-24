@@ -47,13 +47,13 @@ namespace cupcfd
 			// Nothing to do in this subclass.
 		}
 
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::reset() {
-			// Nothing to reset beyond the base class components
-			this->PartitionerInterface<I,T>::reset();
+		// template <class I, class T>
+		// cupcfd::error::eCodes PartitionerNaive<I,T>::reset() {
+		// 	// Nothing to reset beyond the base class components
+		// 	this->PartitionerInterface<I,T>::reset();
 
-			return cupcfd::error::E_SUCCESS;
-		}
+		// 	return cupcfd::error::E_SUCCESS;
+		// }
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerNaive<I,T>::partition() {
@@ -64,6 +64,8 @@ namespace cupcfd
 			// store for transformed data.
 
 			// This naturally means that it does not account for any edge data (hence naive!)
+
+			cupcfd::error::eCodes status;
 
 			// Error Check: Check that nParts is set
 			if(this->getNParts() == 0) {
@@ -77,7 +79,8 @@ namespace cupcfd
 
 			// AllGather - Get the number of nodes on each rank
 			I * rankNNodes = (I *) malloc(sizeof(I) * this->workComm.size);
-			cupcfd::comm::AllGather(&this->nNodes, rankNNodes, this->workComm.size, 1, this->workComm);
+			status = cupcfd::comm::AllGather(&this->nNodes, rankNNodes, this->workComm.size, 1, this->workComm);
+			CHECK_ECODE(status)
 
 			// Since this is naive, doesn't really matter *which* nodes we are assigned - they don't have to be sequential
 			// As such, just compute the assigned partition based on which range it falls into
@@ -159,8 +162,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Set the nodes in the partitioner
-			status = this->setNodeStorage(nodes, nNodes);
-			CHECK_ECODE(status)
+			this->setNodeStorage(nodes, nNodes);
 
 			// Cleanup temporary store
 			free(nodes);

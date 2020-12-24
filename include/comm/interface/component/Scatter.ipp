@@ -72,24 +72,29 @@ namespace cupcfd
 
 			// (1) We need to sort/group the send buffer by destination process on the root process
 			if(mpComm.rank == sProcess) {
-				// First we can make copies of bSend and pSend so it is non-destructive
-				bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
-				pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
 				sortIndexes = (int *) malloc(sizeof(int) * nElePSend);
 
-				cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
-				cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
+				// First we can make copies of bSend and pSend so it is non-destructive
+				// bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
+				// pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
+				// cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
+				// cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
+				bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
+				pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
+				status = cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
+				CHECK_ECODE(status)
 
 				// Now we have a sorted order by original index, let us reorder bSendCpy to that order (pSendCpy already sorted by now)
-				cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);
+				status = cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);
+				CHECK_ECODE(status)
 
 				// Now we have a copy of the send buffer and the processes each index is going to, grouped by sorted process id.
 				// Compute the size of each of these groups.
 				// This driver will also allocate the pointer space for us (but we must free it in this function to avoid leaks)
-				cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize);
+				status = cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize);
+				CHECK_ECODE(status)
 
 				// Now we need to build an array of how many elements are to be sent to each process. Not all processes are
 				// guaranteed to be in the pSend list, so we need to diff the arrays to find out which are missing (and set

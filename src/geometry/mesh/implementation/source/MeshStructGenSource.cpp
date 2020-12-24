@@ -276,14 +276,19 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getCellVolume(T * cellVol, I nCellVol, I * cellLabels, I nCellLabels) {
+				cupcfd::error::eCodes status;
+
 				// Could do this via retrieving cell faces, vertices etc. However, since this is structured we can
 				// just do the calculation directly on a hexahedron volume
 
-				if (nCellVol != nCellLabels) {}
+				if (nCellVol != nCellLabels) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
 				euc::EuclideanPoint<T,3> * centers = (euc::EuclideanPoint<T,3> *)malloc(sizeof(euc::EuclideanPoint<T,3>) * nCellLabels);
 
-				this->getCellCenter(centers, nCellLabels, cellLabels, nCellLabels);
+				status = this->getCellCenter(centers, nCellLabels, cellLabels, nCellLabels);
+				CHECK_ECODE(status)
 
 				T dX = this->dSx/2;
 				T dY = this->dSy/2;
@@ -809,6 +814,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceLambda(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				if (nFaceLambda != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
@@ -817,7 +824,8 @@ namespace cupcfd
 
 				bool * isBoundary = (bool *) malloc(sizeof(bool) * nFaceLabels);
 
-				this->getFaceIsBoundary(isBoundary, nFaceLabels, faceLabels, nFaceLabels);
+				status = this->getFaceIsBoundary(isBoundary, nFaceLabels, faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					if(isBoundary[i]) {
@@ -834,6 +842,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceArea(T * faceArea, I nFaceArea, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				if (nFaceArea != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
@@ -841,18 +851,20 @@ namespace cupcfd
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
 				I * csrIndices = (I*) malloc(sizeof(I) * nFaceLabels + 1);
 				I * csrData = (I*) malloc(sizeof(I) * nFaceLabels * 4);
-				this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				status = this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				// Get the vertex points for each label
 				euc::EuclideanPoint<T,3> * vertexPos = (euc::EuclideanPoint<T,3> *)malloc(sizeof(euc::EuclideanPoint<T,3>) * nFaceLabels * 4);
-				this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				status = this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				CHECK_ECODE(status)
 
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {
 					faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[i],
-																								   vertexPos[i]+1,
-																								   vertexPos[i]+2,
-																								   vertexPos[i]+3);
+																									vertexPos[i]+1,
+																									vertexPos[i]+2,
+																									vertexPos[i]+3);
 				}
 
 				free(csrIndices);
@@ -864,6 +876,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceNormal(euc::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				if (nFaceNormal != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
@@ -879,16 +893,20 @@ namespace cupcfd
 
 				// Compute Face Normal - Should Face Outwards From Cell 1
 				// Get Cell 1 ID
-				this->getFaceCell1Labels(cell1Labels, nFaceLabels, faceLabels, nFaceLabels);
+				status = this->getFaceCell1Labels(cell1Labels, nFaceLabels, faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				// Get Cell Center
-				this->getCellCenter(cellCenters, nFaceLabels, cell1Labels, nFaceLabels);
+				status = this->getCellCenter(cellCenters, nFaceLabels, cell1Labels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
-				this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				status = this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				// Get the vertex points for each label
-				this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				status = this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					// Determine the direction of the face vertices. We know each subsequent vertex
@@ -918,6 +936,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshStructGenSource<I,T>::getFaceCenter(euc::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				if (nFaceCenter != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
@@ -925,11 +945,13 @@ namespace cupcfd
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
 				I * csrIndices = (I*) malloc(sizeof(I) * nFaceLabels + 1);
 				I * csrData = (I*) malloc(sizeof(I) * nFaceLabels * 4);
-				this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				status = this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				// Get the vertex points for each label
 				euc::EuclideanPoint<T,3> * vertexPos = (euc::EuclideanPoint<T,3> *)malloc(sizeof(euc::EuclideanPoint<T,3>) * nFaceLabels * 4);
-				this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				status = this->getVertexCoords(vertexPos, nFaceLabels * 4, csrData, nFaceLabels * 4);
+				CHECK_ECODE(status)
 
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {

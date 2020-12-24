@@ -125,7 +125,7 @@ namespace cupcfd
 				MeshSourceFileConfigJSON<I,T> source1Config(this->configFilePath, &(meshSourceTopLevels[0]), meshSourceTopLevels.size());
 				MeshSourceStructGenConfigJSON<I,T> source2Config(this->configFilePath, &(meshSourceTopLevels[0]), meshSourceTopLevels.size());
 
-				MeshSourceConfig<I,T,L> * sourceConfig;
+				// MeshSourceConfig<I,T,L> * sourceConfig;
 
 				// Test Mesh Source from a File
 				// status = source1Config.buildMeshSourceConfig(&sourceConfig);

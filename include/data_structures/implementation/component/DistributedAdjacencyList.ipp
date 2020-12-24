@@ -67,9 +67,7 @@ namespace cupcfd
 			// (2) Each rank must send data about the edges it has. This should include in both directions.
 			// It will need two stages, one to gather node1 in the edge, and a second to get node 2 in the edge.
 
-			I nEdges;
-			status = this->connGraph.getEdgeCount(&nEdges);
-			CHECK_ECODE(status)
+			I nEdges = this->connGraph.getEdgeCount();
 			
 			T * edgeNode1 = (T *) malloc(sizeof(T) * nEdges);
 			T * edgeNode2 = (T *) malloc(sizeof(T) * nEdges);
@@ -139,6 +137,8 @@ namespace cupcfd
 		template <class I, class T>
 		template <class D>
 		cupcfd::error::eCodes DistributedAdjacencyList<I,T>::buildExchangePattern(cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>** pattern) {
+			cupcfd::error::eCodes status;
+			
 			*pattern = new cupcfd::comm::ExchangePatternTwoSidedNonBlocking<D>();
 
 			// Items needed to initialise the exchange pattern
@@ -179,10 +179,11 @@ namespace cupcfd
 			}
 
 
-			(*pattern)->init(*(this->comm),
-							 mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
-							 &(this->sendGlobalIDsAdjncy[0]), this->sendGlobalIDsAdjncy.size(),
-							 tRanks, nTRanks);
+			status = (*pattern)->init(*(this->comm),
+								mapLocalToExchangeIDX, nMapLocalToExchangeIDX,
+								&(this->sendGlobalIDsAdjncy[0]), this->sendGlobalIDsAdjncy.size(),
+								tRanks, nTRanks);
+			CHECK_ECODE(status)
 
 			free(mapLocalToExchangeIDX);
 			free(tRanks);

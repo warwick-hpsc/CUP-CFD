@@ -197,9 +197,7 @@ namespace cupcfd
 			// Update the Target Rank if we are crossing into a ghost cell
 			
 			T node = mesh.cellConnGraph->globalToNode[this->cellGlobalID];
-			bool isGhost;
-			status = mesh.cellConnGraph->existsGhostNode(node, &isGhost);
-			CHECK_ECODE(status)
+			bool isGhost = mesh.cellConnGraph->existsGhostNode(node);
 			
 			// Check it exists as a ghost node
 			if(isGhost) {

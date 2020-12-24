@@ -87,17 +87,14 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes FluxUVWDolfynFaceLoop1Benchmark();
 
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes FluxUVWDolfynRegionLoop1Benchmark();
+				void FluxUVWDolfynRegionLoop1Benchmark();
 
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes FluxUVWDolfynBndsLoop1Benchmark();
+				void FluxUVWDolfynBndsLoop1Benchmark();
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynCellLoop1Benchmark();
 
-				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes calculateViscosityDolfynRegionLoopBenchmark();
+				void calculateViscosityDolfynRegionLoopBenchmark();
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes calculateViscosityDolfynBoundaryLoopBenchmark();

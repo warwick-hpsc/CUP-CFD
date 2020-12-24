@@ -41,6 +41,21 @@ namespace cupcfd
 			cupcfd::error::eCodes copy(T * src, I nSrc, T * dst, I nDst);
 
 			/**
+			 * Array duplicate: create a duplicate of src, store in dst
+			 *
+			 * @param src The source array to duplicate
+			 * @param nSrc Number of elements in the src array/number of elements copied
+			 *
+		 	 * @tparam I The type of the indexing scheme
+			 * @tparam T The type of the stored array data
+			 *
+			 * @return Pointer to duplicated array
+			 */
+			template <class I, class T>
+			__attribute__((warn_unused_result))
+			T* duplicate(T * src, I nSrc);
+
+			/**
 			 * Fill an array with zeroes
 			 *
 			 * @param source The array to zero.

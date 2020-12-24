@@ -93,7 +93,8 @@ namespace cupcfd
 						}
 						else {
 							// Run Benchmark
-							fvmBench->runBenchmark();
+							status = fvmBench->runBenchmark();
+							CHECK_ECODE(status);
 							delete(fvmBench);
 						}
 
@@ -123,7 +124,8 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Exchange Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							exchangeBench->runBenchmark();
+							status = exchangeBench->runBenchmark();
+							CHECK_ECODE(status)
 							delete(exchangeBench);
 						}
 
@@ -154,7 +156,8 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Linear Solver Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							linearSolverBench->runBenchmark();
+							status = linearSolverBench->runBenchmark();
+							CHECK_ECODE(status)
 							delete(linearSolverBench);
 						}
 
@@ -186,7 +189,8 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Simple Particle Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							benchmarkParticleSystem->runBenchmark();
+							status = benchmarkParticleSystem->runBenchmark();
+							CHECK_ECODE(status)
 							delete(benchmarkParticleSystem);
 						}
 

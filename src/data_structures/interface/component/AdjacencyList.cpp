@@ -42,13 +42,7 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getNodeLocalIndex(T node, I * idx) {
-			cupcfd::error::eCodes status;
-			bool exists;
-
-			// Error Check - Does the node exist
-			status = this->existsNode(node, &exists);
-			CHECK_ECODE(status)
-
+			bool exists = this->existsNode(node);
 			if(!exists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -68,20 +62,15 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes AdjacencyList<C,I,T>::getNodeCount(I * nNodes) {
-			*nNodes = this->nNodes;
-
-			return cupcfd::error::E_SUCCESS;
+		I AdjacencyList<C,I,T>::getNodeCount() {
+			return this->nNodes;
 		}
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes AdjacencyList<C,I,T>::getNodes(T * nodes, I nNodes) {
 			// Error check on size of nodes array
 
-			I nodeCount;
-			cupcfd::error::eCodes status;
-			status = this->getNodeCount(&nodeCount);
-			CHECK_ECODE(status)
+			I nodeCount = this->getNodeCount();
 
 			if(nNodes < nodeCount) {
 				// The destination array does not have elements to hold all of the node data
@@ -98,10 +87,8 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes AdjacencyList<C,I,T>::getEdgeCount(I * nEdges) {
-			*nEdges = this->nEdges;
-
-			return cupcfd::error::E_SUCCESS;
+		I AdjacencyList<C,I,T>::getEdgeCount() {
+			return this->nEdges;
 		}
 
 		template <class C, class I, class T>
@@ -109,13 +96,8 @@ namespace cupcfd
 																 T * nodes2, I nNodes2) {
 			cupcfd::error::eCodes status;
 
-			I nNodes;
-			status = this->getNodeCount(&nNodes);
-			CHECK_ECODE(status)
-
-			I nEdges;
-			status = this->getEdgeCount(&nEdges);
-			CHECK_ECODE(status)
+			I nNodes = this->getNodeCount();
+			I nEdges = this->getEdgeCount();
 
 			// Error Check - Are the results arrays sufficiently large?
 			if(nNodes1 < nEdges) {
@@ -160,8 +142,8 @@ namespace cupcfd
 		// === CRTP Methods ===
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes AdjacencyList<C,I,T>::reset() {
-			return static_cast<C*>(this)->reset();
+		void AdjacencyList<C,I,T>::reset() {
+			static_cast<C*>(this)->reset();
 		}
 
 		template <class C, class I, class T>
@@ -170,8 +152,8 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes AdjacencyList<C,I,T>::existsNode(T node, bool * exists) {
-			return static_cast<C*>(this)->existsNode(node, exists);
+		bool AdjacencyList<C,I,T>::existsNode(T node) {
+			return static_cast<C*>(this)->existsNode(node);
 		}
 
 		template <class C, class I, class T>

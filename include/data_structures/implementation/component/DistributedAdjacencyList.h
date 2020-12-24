@@ -197,34 +197,26 @@ namespace cupcfd
 				 * this process, and that it exists as a locally owned node.
 				 *
 				 * @param node The node to search for
-				 * @param found A pointer to the location updated with the result,
-				 * true if the node is found and it is a locally owned node, otherwise false
+				 * @return True if node exists
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes existsLocalNode( T node, bool * found);
+				bool existsLocalNode( T node);
 
 				/**
 				 * Tests whether the node is known to exist within the portion of the list stored on
 				 * this process, and that it exists as a ghost (not locally owned) node.
 				 *
 				 * @param node The node to search for
-				 * @param found A pointer to the location updated with the result,
-				 * true if the node is found and it is a ghost node, otherwise false
+				 * @return True if node exists
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes existsGhostNode(T node, bool * found);
+				bool existsGhostNode(T node);
 
 				/**
 				 * Tests where the node exists within the portion of the list stored on this process, irrespective of what type it is.
@@ -240,7 +232,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes existsNode(T node, bool * found);
+				bool existsNode(T node);
 
 				/**
 				 * Add a node to the distributed list and register it as a locally owned node -

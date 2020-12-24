@@ -93,17 +93,14 @@ namespace cupcfd
 				status = this->FluxUVWDolfynFaceLoop1Benchmark();
 				CHECK_ECODE(status)
 
-				status = this->FluxUVWDolfynRegionLoop1Benchmark();
-				CHECK_ECODE(status)
+				this->FluxUVWDolfynRegionLoop1Benchmark();
 
-				status = this->FluxUVWDolfynBndsLoop1Benchmark();
-				CHECK_ECODE(status)
+				this->FluxUVWDolfynBndsLoop1Benchmark();
 
 				status = this->calculateViscosityDolfynCellLoop1Benchmark();
 				CHECK_ECODE(status)
 
-				status = this->calculateViscosityDolfynRegionLoopBenchmark();
-				CHECK_ECODE(status)
+				this->calculateViscosityDolfynRegionLoopBenchmark();
 
 				status = this->calculateViscosityDolfynBoundaryLoopBenchmark();
 				CHECK_ECODE(status)
@@ -884,9 +881,7 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkKernels<M,I,T,L>::FluxUVWDolfynRegionLoop1Benchmark() {
-			cupcfd::error::eCodes status;
-			
+		void BenchmarkKernels<M,I,T,L>::FluxUVWDolfynRegionLoop1Benchmark() {
 			I nCells = meshPtr->properties.lTCells;
 			I nOwnedCells = meshPtr->properties.lOCells;
 			I nGhostCells = meshPtr->properties.lGhCells;
@@ -907,19 +902,14 @@ namespace cupcfd
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
-			status = cupcfd::fvm::FluxUVWDolfynRegionLoop1(*(meshPtr));
-			CHECK_ECODE(status)
+			cupcfd::fvm::FluxUVWDolfynRegionLoop1(*(meshPtr));
 
 			// Stop Timer
 			TreeTimerExitBlock("FluxUVWDolfynRegionLoop1Benchmark");
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkKernels<M,I,T,L>::FluxUVWDolfynBndsLoop1Benchmark() {
-			cupcfd::error::eCodes status;
-			
+		void BenchmarkKernels<M,I,T,L>::FluxUVWDolfynBndsLoop1Benchmark() {
 			I nCells = meshPtr->properties.lTCells;
 			I nOwnedCells = meshPtr->properties.lOCells;
 			I nGhostCells = meshPtr->properties.lGhCells;
@@ -940,13 +930,10 @@ namespace cupcfd
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
-			status = cupcfd::fvm::FluxUVWDolfynBndsLoop1(*(meshPtr));
-			CHECK_ECODE(status)
+			cupcfd::fvm::FluxUVWDolfynBndsLoop1(*(meshPtr));
 
 			// Stop Timer
 			TreeTimerExitBlock("FluxUVWDolfynBndsLoop1Benchmark");
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
@@ -1011,9 +998,7 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkKernels<M,I,T,L>::calculateViscosityDolfynRegionLoopBenchmark() {
-			cupcfd::error::eCodes status;
-			
+		void BenchmarkKernels<M,I,T,L>::calculateViscosityDolfynRegionLoopBenchmark() {
 			I nCells = meshPtr->properties.lTCells;
 			I nOwnedCells = meshPtr->properties.lOCells;
 			I nGhostCells = meshPtr->properties.lGhCells;
@@ -1036,13 +1021,10 @@ namespace cupcfd
 
 			// ToDo: Should add a configuration option to repeat the kernel X times per timing
 			// to reduce impact of overheads at small cell/face counts
-			status = cupcfd::fvm::calculateViscosityDolfynRegionLoop(kappa, *(this->meshPtr));
-			CHECK_ECODE(status)
+			cupcfd::fvm::calculateViscosityDolfynRegionLoop(kappa, *(this->meshPtr));
 
 			// Stop Timer
 			TreeTimerExitBlock("calculateViscosityDolfynRegionLoopBenchmark");
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>

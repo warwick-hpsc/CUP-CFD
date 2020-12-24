@@ -216,6 +216,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellNFaces(I * nFaces, I nNFaces, I * cellLabels, I nCellLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nNFaces != nCellLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -235,13 +237,16 @@ namespace cupcfd
 					properties.addIndex(cellLabels[i] - 1);
 				}
 
-				access.readData(nFaces, properties);
+				status = access.readData(nFaces, properties);
+				CHECK_ECODE(status)
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellVolume(T * cellVol, I nCellVol, I * cellLabels, I nCellLabels) {
+				cupcfd::error::eCodes status;
+
 				// Size Check
 				if (nCellVol != nCellLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -258,13 +263,16 @@ namespace cupcfd
 					properties.addIndex(cellLabels[i] - 1);
 				}
 
-				access.readData(cellVol, properties);
+				status = access.readData(cellVol, properties);
+				CHECK_ECODE(status)
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels) {
+				cupcfd::error::eCodes status;
+
 				// Size Check
 				if (nCellCenter != nCellLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -290,9 +298,12 @@ namespace cupcfd
 				T * destY = (T *) malloc(sizeof(T) * nCellLabels);
 				T * destZ = (T *) malloc(sizeof(T) * nCellLabels);
 
-				access.readData(destX, propertiesX);
-				access.readData(destY, propertiesY);
-				access.readData(destZ, propertiesZ);
+				status = access.readData(destX, propertiesX);
+				CHECK_ECODE(status)
+				status = access.readData(destY, propertiesY);
+				CHECK_ECODE(status)
+				status = access.readData(destZ, propertiesZ);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nCellLabels; i++) {
 					cellCenter[i].cmp[0] = destX[i];
@@ -309,6 +320,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, I * cellLabels, I nCellLabels) {
+				cupcfd::error::eCodes status;
+
 				// Check Size of Arrays are suitable
 				if (nCsrIndices != (nCellLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -319,10 +332,12 @@ namespace cupcfd
 				// ================================================================
 				// Max Faces
 				I maxFaceCount;
-				this->getMaxFaceCount(&maxFaceCount);
+				status = this->getMaxFaceCount(&maxFaceCount);
+				CHECK_ECODE(status)
 
 				I * nFaces = (I *) malloc(sizeof(I) * nCellLabels);
-				this->getCellNFaces(nFaces, nCellLabels, cellLabels, nCellLabels);
+				status = this->getCellNFaces(nFaces, nCellLabels, cellLabels, nCellLabels);
+				CHECK_ECODE(status)
 
 				I nFacesTotal = 0;
 				for(I i=0; i<nCellLabels; i++) {
@@ -347,7 +362,8 @@ namespace cupcfd
 					}
 				}
 
-				access.readData(cellFaceIndexes, properties);
+				status = access.readData(cellFaceIndexes, properties);
+				CHECK_ECODE(status)
 
 				// Set this to -value for index 0, so we don't have to extract the first loop.
 				I ptr = 0;
@@ -379,6 +395,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceIsBoundary(bool * isBoundary, I nIsBoundary, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				// Size Check
 				if (nIsBoundary != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -399,7 +417,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(cell2Data, properties);
+				status = access.readData(cell2Data, properties);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					isBoundary[i] = (cell2Data[i] == 0);
@@ -412,6 +431,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceNVertices(I * nVertices, I nNVertices, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+
 				// Error Check: Size Check
 				if (nNVertices != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -431,7 +452,8 @@ namespace cupcfd
 				}
 
 				I * vert4 = (I *) malloc(sizeof(I) * nFaceLabels);
-				access.readData(vert4, propertiesVert);
+				status = access.readData(vert4, propertiesVert);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					// this format treats a stored value of 0 as 'No Label/No Vertex'
@@ -481,7 +503,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(faceBoundaryLabels, properties);
+				status = access.readData(faceBoundaryLabels, properties);
+				CHECK_ECODE(status)
 
 				// HDF5	Interface Error Check
 
@@ -490,6 +513,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceCell1Labels != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -506,7 +531,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(faceCell1Labels, properties);
+				status = access.readData(faceCell1Labels, properties);
+				CHECK_ECODE(status)
 
 				// HDF5	Interface Error Check
 
@@ -515,6 +541,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceCell2Labels != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -532,7 +560,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(faceCell2Labels, properties);
+				status = access.readData(faceCell2Labels, properties);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					// ToDo: Would like to not return -1 at all, but raise an error instead...
@@ -551,6 +580,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceArea(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceLambda != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -567,7 +598,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(faceLambda, properties);
+				status = access.readData(faceLambda, properties);
+				CHECK_ECODE(status)
 
 				// HDF5	Interface Error Check
 
@@ -576,6 +608,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceLambda(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceLambda != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -592,7 +626,8 @@ namespace cupcfd
 					properties.addIndex(faceLabels[i] - 1);
 				}
 
-				access.readData(faceLambda, properties);
+				status = access.readData(faceLambda, properties);
+				CHECK_ECODE(status)
 
 				// HDF5	Interface Error Check
 
@@ -601,6 +636,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceNormal != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -627,9 +664,12 @@ namespace cupcfd
 				T * destY = (T *) malloc(sizeof(T) * nFaceLabels);
 				T * destZ = (T *) malloc(sizeof(T) * nFaceLabels);
 
-				access.readData(destX, propertiesX);
-				access.readData(destY, propertiesY);
-				access.readData(destZ, propertiesZ);
+				status = access.readData(destX, propertiesX);
+				CHECK_ECODE(status)
+				status = access.readData(destY, propertiesY);
+				CHECK_ECODE(status)
+				status = access.readData(destZ, propertiesZ);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					faceNormal[i].cmp[0] = destX[i];
@@ -646,6 +686,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nFaceCenter != nFaceLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -672,9 +714,12 @@ namespace cupcfd
 				T * destY = (T *) malloc(sizeof(T) * nFaceLabels);
 				T * destZ = (T *) malloc(sizeof(T) * nFaceLabels);
 
-				access.readData(destX, propertiesX);
-				access.readData(destY, propertiesY);
-				access.readData(destZ, propertiesZ);
+				status = access.readData(destX, propertiesX);
+				CHECK_ECODE(status)
+				status = access.readData(destY, propertiesY);
+				CHECK_ECODE(status)
+				status = access.readData(destZ, propertiesZ);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaceLabels; i++) {
 					faceCenter[i].cmp[0] = destX[i];
@@ -691,6 +736,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels) {
+				cupcfd::error::eCodes status;
+				
 				if (nCsrIndices != (nFaceLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 				}
@@ -698,7 +745,8 @@ namespace cupcfd
 				// ToDo: This can be faster: Using these function as they are currently written will reload the same data more than once.
 				I nFaces = nFaceLabels;
 				I * nFaceVertexCount = (I *) malloc(sizeof(I) * nFaces);
-				this->getFaceNVertices(nFaceVertexCount, nFaces, faceLabels, nFaceLabels);
+				status = this->getFaceNVertices(nFaceVertexCount, nFaces, faceLabels, nFaceLabels);
+				CHECK_ECODE(status)
 
 				I nVerticesTotal = 0;
 				for(I i = 0; i < nFaces; i++) {
@@ -747,10 +795,14 @@ namespace cupcfd
 					propertiesVert4.addIndex(faceLabels[i] - 1, 3);
 				}
 
-				access.readData(vert1, propertiesVert1);
-				access.readData(vert2, propertiesVert2);
-				access.readData(vert3, propertiesVert3);
-				access.readData(vert4, propertiesVert4);
+				status = access.readData(vert1, propertiesVert1);
+				CHECK_ECODE(status)
+				status = access.readData(vert2, propertiesVert2);
+				CHECK_ECODE(status)
+				status = access.readData(vert3, propertiesVert3);
+				CHECK_ECODE(status)
+				status = access.readData(vert4, propertiesVert4);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nFaces; i++) {
 					I rangeStart = csrIndices[i];
@@ -781,6 +833,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nVertCoords != nVertexLabels) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -807,9 +861,12 @@ namespace cupcfd
 				T * destY = (T *) malloc(sizeof(T) * nVertexLabels);
 				T * destZ = (T *) malloc(sizeof(T) * nVertexLabels);
 
-				access.readData(destX, propertiesX);
-				access.readData(destY, propertiesY);
-				access.readData(destZ, propertiesZ);
+				status = access.readData(destX, propertiesX);
+				CHECK_ECODE(status)
+				status = access.readData(destY, propertiesY);
+				CHECK_ECODE(status)
+				status = access.readData(destZ, propertiesZ);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nVertCoords; i++) {
 					vertCoords[i].cmp[0] = destX[i];
@@ -826,6 +883,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, I * boundaryLabels, I nBoundaryLabels) {
+				cupcfd::error::eCodes status;
+				
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryLabels != nBoundaryFaceLabels) {
@@ -843,7 +902,8 @@ namespace cupcfd
 						properties.addIndex(boundaryLabels[i] - 1);
 					}
 
-					access.readData(boundaryFaceLabels, properties);
+					status = access.readData(boundaryFaceLabels, properties);
+					CHECK_ECODE(status)
 
 					// HDF5	Interface Error Check
 				}
@@ -853,6 +913,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryNVertices(I * nVertices, I nNVertices, I * boundaryLabels, I nBoundaryLabels) {
+				cupcfd::error::eCodes status;
+				
 				// ToDo: We could just read vert4 and ignore the rest....
 
 				// Data not stored directly in file, need to read in 4 vertices and count
@@ -874,7 +936,8 @@ namespace cupcfd
 					propertiesVert.addIndex(boundaryLabels[i] - 1, 3);
 				}
 
-				access.readData(vert4, propertiesVert);
+				status = access.readData(vert4, propertiesVert);
+				CHECK_ECODE(status)
 
 				// Only the presence or lack of vertex 4 matters
 				for(I i = 0; i < nBoundaryLabels; i++) {
@@ -892,6 +955,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryRegionLabels(I * boundaryRegionLabels, I nBoundaryRegionLabels, I * boundaryLabels, I nBoundaryLabels) {
+				cupcfd::error::eCodes status;
+				
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryRegionLabels != nBoundaryLabels) {
@@ -909,7 +974,8 @@ namespace cupcfd
 						properties.addIndex(boundaryLabels[i] - 1);
 					}
 
-					access.readData(boundaryRegionLabels, properties);
+					status = access.readData(boundaryRegionLabels, properties);
+					CHECK_ECODE(status)
 
 					// HDF5	Interface Error Check
 				}
@@ -919,6 +985,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * boundaryLabels, I nBoundaryLabels) {
+				cupcfd::error::eCodes status;
+				
 				// Size Check
 				if (nCsrIndices != (nBoundaryLabels+1)) {
 					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
@@ -928,7 +996,8 @@ namespace cupcfd
 				I nBoundaries = nBoundaryLabels;
 
 				I * nBoundaryVertexCount = (I *) malloc(sizeof(I) * nBoundaries);
-				this->getBoundaryNVertices(nBoundaryVertexCount, nBoundaries, boundaryLabels, nBoundaryLabels);
+				status = this->getBoundaryNVertices(nBoundaryVertexCount, nBoundaries, boundaryLabels, nBoundaryLabels);
+				CHECK_ECODE(status)
 
 				I nVerticesTotal = 0;
 				for(I i = 0; i < nBoundaries; i++) {
@@ -978,10 +1047,14 @@ namespace cupcfd
 					propertiesVert4.addIndex(boundaryLabels[i] - 1, 3);
 				}
 
-				access.readData(vert1, propertiesVert1);
-				access.readData(vert2, propertiesVert2);
-				access.readData(vert3, propertiesVert3);
-				access.readData(vert4, propertiesVert4);
+				status = access.readData(vert1, propertiesVert1);
+				CHECK_ECODE(status)
+				status = access.readData(vert2, propertiesVert2);
+				CHECK_ECODE(status)
+				status = access.readData(vert3, propertiesVert3);
+				CHECK_ECODE(status)
+				status = access.readData(vert4, propertiesVert4);
+				CHECK_ECODE(status)
 
 				for(I i = 0; i < nBoundaries; i++) {
 					I rangeStart = csrIndices[i];
@@ -1012,6 +1085,8 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes MeshHDF5Source<I,T>::getBoundaryDistance(T * boundaryDistance, I nBoundaryDistance, I * boundaryLabels, I nBoundaryLabels) {
+				cupcfd::error::eCodes status;
+				
 				if(nBoundaryLabels > 0) {
 					// Size Check
 					if (nBoundaryDistance != nBoundaryLabels) {
@@ -1029,7 +1104,8 @@ namespace cupcfd
 						properties.addIndex(boundaryLabels[i] - 1);
 					}
 
-					access.readData(boundaryDistance, properties);
+					status = access.readData(boundaryDistance, properties);
+					CHECK_ECODE(status)
 
 					// HDF5	Interface Error Check
 				}

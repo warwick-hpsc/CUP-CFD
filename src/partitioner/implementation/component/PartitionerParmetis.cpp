@@ -134,7 +134,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetWorkArrays() {
+		void PartitionerParmetis<I,T>::resetWorkArrays() {
 			// Free allocated arrays
 			if(this->xadj != nullptr) {
 				free(this->xadj);
@@ -157,41 +157,27 @@ namespace cupcfd
 
 			this->vtxdist = nullptr;
 			this->nVtxdist = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNParts(I nParts) {
-			cupcfd::error::eCodes status;
-
+		void PartitionerParmetis<I,T>::setNParts(I nParts) {
 			// Set the sub-domain value
 			this->nParts = nParts;
 
 			// Reset in case arrays exist - they will need to be recreated/resized
 			// ubvec does not use nparts so no need to reset it.
-			status = this->resetSubdomainWeights();
-			CHECK_ECODE(status)
-
-			return cupcfd::error::E_SUCCESS;
+			this->resetSubdomainWeights();
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::setNCon(I nCon) {
-			cupcfd::error::eCodes status;
-
+		void PartitionerParmetis<I,T>::setNCon(I nCon) {
 			// Set the number of weights that each vertex has (also number of balance constraints)
 			this->nCon = nCon;
 
 			// Reset in case arrays exist - they will need to be recreated/resized
 
-			status = this->resetSubdomainWeights();
-			CHECK_ECODE(status)
-
-			status = this->resetVertexImbalanceWeights();
-			CHECK_ECODE(status)
-
-			return cupcfd::error::E_SUCCESS;
+			this->resetSubdomainWeights();
+			this->resetVertexImbalanceWeights();
 		}
 
 		template <class I, class T>
@@ -211,8 +197,7 @@ namespace cupcfd
 			}
 
 			// (a) Clear any exiting work arrays
-			status = this->resetWorkArrays();
-			CHECK_ECODE(status)
+			this->resetWorkArrays();
 
 			// (b) Setup node data workspace
 			// Allocate suitable space - will be assigning locally owned nodes for this rank from the graph
@@ -294,7 +279,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexEdgeWeights() {
+		void PartitionerParmetis<I,T>::resetVertexEdgeWeights() {
 			if(this->vwgt != nullptr) {
 				free(this->vwgt);
 			}
@@ -312,32 +297,26 @@ namespace cupcfd
 			// Set to 0 to indicate neither vertex or edges are weighted
 			// ToDo: Reviewing later - I declared this as local - not used??
 			// idx_t wgtflag = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetSubdomainWeights() {
+		void PartitionerParmetis<I,T>::resetSubdomainWeights() {
 			if(this->tpwgts == nullptr) {
 				free(this->tpwgts);
 			}
 
 			this->tpwgts = nullptr;
 			this->nTpwgts = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::resetVertexImbalanceWeights() {
+		void PartitionerParmetis<I,T>::resetVertexImbalanceWeights() {
 			if(this->ubvec == nullptr) {
 				free(this->ubvec);
 			}
 
 			this->ubvec = nullptr;
 			this->nUbvec = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
@@ -349,8 +328,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerParmetis<I,T>::setSubdomainWeightArrays() {
-			cupcfd::error::eCodes status;
-
 			// Error Check 1: Check nCon has been set
 			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
@@ -365,12 +342,10 @@ namespace cupcfd
 			}
 
 			// Reset the subdomain weights to free memory in case it is already allocated
-			status = this->resetSubdomainWeights();
-			CHECK_ECODE(status)
+			this->resetSubdomainWeights();
 
 			this->nTpwgts = this->nCon * this->nParts;
 			this->tpwgts = (real_t *) malloc(sizeof(real_t) * this->nTpwgts);
-
 			for(I i = 0; i < this->nTpwgts; i++) {
 				this->tpwgts[i] = 1.0/this->nParts;
 			}
@@ -380,8 +355,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerParmetis<I,T>::setVertexImbalanceWeightArrays() {
-			cupcfd::error::eCodes status;
-
 			// Error Check 1: Check nCon has been set
 			if(this->nCon < 1) {
 				// Error Case - Cannot allocate suitably sized array
@@ -389,12 +362,10 @@ namespace cupcfd
 			}
 
 			// Reset to free memory in case it is already allocated
-			status = this->resetVertexImbalanceWeights();
-			CHECK_ECODE(status)
+			this->resetVertexImbalanceWeights();
 
 			this->nUbvec = this->nCon;
 			this->ubvec = (real_t *) malloc(sizeof(real_t) * this->nUbvec);
-
 			for(I i = 0; i < this->nUbvec; i++) {
 				this->ubvec[i] = 1.05;
 			}
@@ -404,8 +375,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerParmetis<I,T>::partition() {
-			cupcfd::error::eCodes status;
-
 			// === Input Error Checks ===
 			// Error Check 1 - Work arrays all exist
 			if(this->xadj == nullptr) {
@@ -443,8 +412,7 @@ namespace cupcfd
 			// ToDo: Does this need to be the case? Parmetis may work with 1 process - check
 
 			// Reset the results array since we are about to overwrite it
-			status = this->resetResultStorage();
-			CHECK_ECODE(status)
+			this->resetResultStorage();
 
 			// Error Check 4: Nodes Array Exists
 
@@ -497,12 +465,10 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			// === Set NCon Size ===
-			status = this->setNCon(1);
-			CHECK_ECODE(status)
+			this->setNCon(1);
 
 			// === Set Partition Size ===
-			status = this->setNParts(nParts);
-			CHECK_ECODE(status)
+			this->setNParts(nParts);
 
 			// === Set VertexImbalanceWeightArray ===
 			status = this->setVertexImbalanceWeightArrays();
@@ -520,7 +486,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerParmetis<I,T>::reset() {
+		void PartitionerParmetis<I,T>::reset() {
 			// Base class reset
 			this->PartitionerInterface<I,T>::reset();
 
@@ -532,8 +498,6 @@ namespace cupcfd
 			this->resetVertexEdgeWeights();
 			this->resetSubdomainWeights();
 			this->resetVertexImbalanceWeights();
-
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

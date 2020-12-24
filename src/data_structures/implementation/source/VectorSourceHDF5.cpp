@@ -76,8 +76,7 @@ namespace cupcfd
 
 			// Compute the sizes from the range difference
 			for(I pos = 0; pos < nIndexes; pos++) {
-				status = properties.addIndex(indexes[pos] - indexBase);
-				CHECK_ECODE(status)
+				properties.addIndex(indexes[pos] - indexBase);
 			}
 
 			// Read Data

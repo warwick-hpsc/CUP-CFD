@@ -395,12 +395,8 @@ namespace cupcfd
 					// We only accept faces between local->local, or local->ghost cells
 					// Since this graph shouldn't be finalised yet, the data will be stored in the build graph
 					if(!isBoundary) {
-						bool foundGhost1, foundGhost2;
-						status = this->cellConnGraph->existsGhostNode(cell1Label, &foundGhost1);
-						CHECK_ECODE(status)
-						status = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel, &foundGhost2);
-						CHECK_ECODE(status)
-
+						bool foundGhost1 = this->cellConnGraph->existsGhostNode(cell1Label);
+						bool foundGhost2 = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel);
 						if(foundGhost1 && foundGhost2) {
 							return cupcfd::error::E_MESH_INVALID_FACE;
 						}
