@@ -88,6 +88,7 @@ int main (int argc, char ** argv)
 	// setup the interface via inheritance its difficult to do so
 	cupcfd::geometry::euclidean::EuclideanPoint<double, 3> point;
 	status = point.registerMPIType();
+	CHECK_ECODE(status)
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanPoint' class failed" << std::endl;
 		TreeTimerFinalize();
@@ -98,6 +99,7 @@ int main (int argc, char ** argv)
 
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> vector;
 	status = vector.registerMPIType();
+	CHECK_ECODE(status)
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'EuclideanVector' class failed" << std::endl;
 		TreeTimerFinalize();
@@ -108,6 +110,7 @@ int main (int argc, char ** argv)
 
 	cupcfd::particles::ParticleSimple<int, double> particle;
 	status = particle.registerMPIType();
+	CHECK_ECODE(status)
 	if (status != cupcfd::error::E_SUCCESS) {
 		std::cout << "MPI registration of 'ParticleSimple' class failed" << std::endl;
 		TreeTimerFinalize();
@@ -366,7 +369,7 @@ int main (int argc, char ** argv)
 	// Deregister the Custom MPI Types
 	status = particle.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
-		std::cout << "MPI registration of 'ParticleSimple' class failed" << std::endl;
+		std::cout << "MPI de-registration of 'ParticleSimple' class failed" << std::endl;
 		TreeTimerFinalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
@@ -374,7 +377,7 @@ int main (int argc, char ** argv)
 	}
 	status = point.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
-		std::cout << "MPI registration of 'EuclideanPoint' class failed" << std::endl;
+		std::cout << "MPI de-registration of 'EuclideanPoint' class failed" << std::endl;
 		TreeTimerFinalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);
@@ -382,7 +385,7 @@ int main (int argc, char ** argv)
 	}
 	status = vector.deregisterMPIType();
 	if (status != cupcfd::error::E_SUCCESS) {
-		std::cout << "MPI registration of 'EuclideanVector' class failed" << std::endl;
+		std::cout << "MPI de-registration of 'EuclideanVector' class failed" << std::endl;
 		TreeTimerFinalize();
 		PetscFinalize();
 		MPI_Abort(MPI_COMM_WORLD, status);

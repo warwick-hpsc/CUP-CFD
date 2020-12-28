@@ -57,7 +57,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~ParticleSimpleSourceHDF5();
+				~ParticleSimpleSourceHDF5();
 
 				// === Concrete Methods ===
 

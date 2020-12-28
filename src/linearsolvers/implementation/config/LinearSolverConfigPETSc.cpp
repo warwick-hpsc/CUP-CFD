@@ -26,8 +26,8 @@ namespace cupcfd
 		LinearSolverConfigPETSc<C,I,T>::LinearSolverConfigPETSc(PETScAlgorithm solverAlg, T eTol, T rTol)
 		: LinearSolverConfig<C,I,T>(),
 		  solverAlg(solverAlg),
-		  eTol(eTol),
-		  rTol(rTol)
+		  rTol(rTol),
+		  eTol(eTol)
 		{
 
 		}

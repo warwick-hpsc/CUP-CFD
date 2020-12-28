@@ -459,7 +459,6 @@ namespace cupcfd
 
 				__attribute__((warn_unused_result))
 				virtual inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
-				virtual inline MPI_Datatype getMPIType();
 				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes registerMPIType();
 				__attribute__((warn_unused_result))
@@ -508,12 +507,12 @@ namespace cupcfd
 				I cellGlobalID;
 
 				/**
-				 * Global ID of cell that particle was in before current
+				 * Global ID of cell that particle was in before current. Used for debugging/verifying particle movement
 				 **/
 				I lastCellGlobalID;
 
 				/**
-				 * Global ID of cell that particle was in before last
+				 * Global ID of cell that particle was in before last. Used for debugging/verifying particle movement
 				 **/
 				I lastLastCellGlobalID;
 

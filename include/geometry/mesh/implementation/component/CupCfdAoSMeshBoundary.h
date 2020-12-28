@@ -106,7 +106,7 @@ namespace cupcfd
 					 * @tparam I The type of the indexing scheme (integer based)
 					 * @tparam T The type of the stored array data
 					 */
-					virtual ~CupCfdAoSMeshBoundary();
+					~CupCfdAoSMeshBoundary();
 
 					// === Concrete Methods ===
 

@@ -78,7 +78,7 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Cleans up internally allocated buffers/arrays.
 				 */
-				virtual ~ExchangePatternTwoSidedNonBlocking();
+				~ExchangePatternTwoSidedNonBlocking();
 
 				// Inherited Methods
 				__attribute__((warn_unused_result))

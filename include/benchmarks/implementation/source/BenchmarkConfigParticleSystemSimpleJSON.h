@@ -56,7 +56,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~BenchmarkConfigParticleSystemSimpleJSON();
+				~BenchmarkConfigParticleSystemSimpleJSON();
 
 				// === Concrete Methods ===
 

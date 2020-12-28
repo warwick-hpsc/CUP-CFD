@@ -73,7 +73,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~BenchmarkConfigKernelsJSON();
+				~BenchmarkConfigKernelsJSON();
 
 				// === Concrete Methods ===
 

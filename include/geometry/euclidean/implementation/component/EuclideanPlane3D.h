@@ -75,7 +75,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor
 					 */
-					virtual ~EuclideanPlane3D();
+					~EuclideanPlane3D();
 
 					// === Concrete Methods ===
 

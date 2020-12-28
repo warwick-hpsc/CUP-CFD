@@ -555,8 +555,6 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
 
-					inline MPI_Datatype getMPIType();
-
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes registerMPIType();
 

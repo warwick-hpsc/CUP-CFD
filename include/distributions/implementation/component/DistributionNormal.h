@@ -81,14 +81,12 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~DistributionNormal();
+				~DistributionNormal();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				// __attribute__((warn_unused_result))
-				// cupcfd::error::eCodes getValues(T * values, I nValues);
 				void getValues(T * values, I nValues);
 
 				DistributionNormal<I,T> * clone();

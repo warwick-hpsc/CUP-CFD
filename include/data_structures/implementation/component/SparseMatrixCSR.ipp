@@ -308,6 +308,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
+			cupcfd::error::eCodes status;
+
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
@@ -320,17 +322,19 @@ namespace cupcfd
 
 			// Allocate the array
 			*nColumnIndexes = nEle;
-			// *columnIndexes = (I *) malloc(sizeof(I) * (*nColumnIndexes));
-			// // Copy to the array
-			// status = cupcfd::utility::drivers::copy(&(this->JA[start]), nEle, *columnIndexes, (*nColumnIndexes));
-			// CHECK_ECODE(status)
-			*columnIndexes = cupcfd::utility::drivers::duplicate(&(this->JA[start]), nEle);
+			*columnIndexes = (I *) malloc(sizeof(I) * (*nColumnIndexes));
+			// Copy to the array
+			status = cupcfd::utility::drivers::copy(&(this->JA[start]), nEle, *columnIndexes, (*nColumnIndexes));
+			CHECK_ECODE(status)
+			// *columnIndexes = cupcfd::utility::drivers::duplicate(&(this->JA[start]), nEle);
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues) {
+			cupcfd::error::eCodes status;
+			
 			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
@@ -343,11 +347,11 @@ namespace cupcfd
 
 			// Allocate the array
 			*nNNZValues = nEle;
-			// *nnzValues = (T *) malloc(sizeof(T) * (*nNNZValues));
-			// // Copy to the array
-			// status = cupcfd::utility::drivers::copy(&(this->A[start]), nEle, *nnzValues, (*nNNZValues));
-			// CHECK_ECODE(status)
-			*nnzValues = cupcfd::utility::drivers::duplicate(&(this->A[start]), nEle);
+			*nnzValues = (T *) malloc(sizeof(T) * (*nNNZValues));
+			// Copy to the array
+			status = cupcfd::utility::drivers::copy(&(this->A[start]), nEle, *nnzValues, (*nNNZValues));
+			CHECK_ECODE(status)
+			// *nnzValues = cupcfd::utility::drivers::duplicate(&(this->A[start]), nEle);
 
 			// ToDo: Should check error status here...
 

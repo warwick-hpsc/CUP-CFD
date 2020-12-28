@@ -25,13 +25,11 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes ScatterMPI(T * bufferSend, int nSend, T * bufferRecv, int nRecv, int sourcePID, MPI_Comm comm) {
-				T dummy;
 				MPI_Datatype dTypeSend;
 				MPI_Datatype dTypeRecv;
 				int err;
-
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
+				cupcfd::comm::mpi::getMPIType(bufferSend[0], &dTypeSend);
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;
@@ -75,14 +73,13 @@ namespace cupcfd
 					}
 				}
 
-				T dummy;
 				MPI_Datatype dTypeSend;
 				MPI_Datatype dTypeRecv;
 				
 				int * displs = nullptr;
 				
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
+				cupcfd::comm::mpi::getMPIType(bufferSend[0], &dTypeSend);
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;

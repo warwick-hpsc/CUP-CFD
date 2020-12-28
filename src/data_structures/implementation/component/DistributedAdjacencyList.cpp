@@ -378,7 +378,7 @@ namespace cupcfd
 
 			// this will only be freed on reset/deconstructor
 			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			status = cupcfd::comm::Gather(&(this->nLONodes), this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
+			status = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
 			CHECK_ECODE(status)
 			status = cupcfd::comm::Broadcast(this->processNodeCounts, this->comm->size, 0, *(this->comm));
 			CHECK_ECODE(status)
@@ -473,7 +473,7 @@ namespace cupcfd
 				}
 
 				// Can reuse countOwned, since the values should be the same as identified in the previous gatherV.
-				status = cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, countOwned, i, *(this->comm));
+				status = cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, this->nLGhNodes, countOwned, nCountOwned, i, *(this->comm));
 				CHECK_ECODE(status)
 
 				// While we're here, make a note of the globalIDs requested from this process for the sink process i.
@@ -688,8 +688,10 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::sortNodesByLocal() {
-			if (this->finalized) {
-				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			if (!this->finalized) {
+				// I suppose nothing technically wrong with sorting a unfinalized graph, but 
+				// why would a developer want to sort an unfinalized graph?
+				return cupcfd::error::eCodes::E_DISTGRAPH_UNFINALIZED;
 			}
 
 			// Kernels may wish to only loop over local nodes. We wish to maintain index parity with any data arrays

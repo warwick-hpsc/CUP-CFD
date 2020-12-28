@@ -35,13 +35,17 @@ namespace cupcfd
 											    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
 											    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d)
 			{
-				this->nVertices = 4;
-				this->nEdges = 4;
+				this->numVertices = 4;
+				this->numEdges = 4;
 
 				this->vertices[0] = a;
 				this->vertices[1] = b;
 				this->vertices[2] = c;
 				this->vertices[3] = d;
+
+				this->area = this->computeArea();
+				this->normal = this->computeNormal();
+				this->centroid = this->computeCentroid();
 			}
 
 			template <class T>
@@ -59,10 +63,9 @@ namespace cupcfd
 			// === Overloaded Inherited Methods ===
 			
 			template <class T>
-			inline void Quadrilateral3D<T>::operator=(const Quadrilateral3D<T>& source)
-			{
-				this->nVertices = source.nVertices;
-				this->nEdges = source.nEdges;
+			inline void Quadrilateral3D<T>::operator=(const Quadrilateral3D<T>& source) {
+				this->numVertices = source.numVertices;
+				this->numEdges = source.numEdges;
 				this->vertices[0] = source.vertices[0];
 				this->vertices[1] = source.vertices[1];
 				this->vertices[2] = source.vertices[2];
@@ -70,8 +73,7 @@ namespace cupcfd
 			}
 			
 			template <class T>
-			Quadrilateral3D<T> * Quadrilateral3D<T>::clone()
-			{
+			Quadrilateral3D<T> * Quadrilateral3D<T>::clone() {
 				return new Quadrilateral3D(*this);
 			}
 
@@ -81,26 +83,26 @@ namespace cupcfd
 			T Quadrilateral3D<T>::triangularAreaSum(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
 												    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
 													const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-													const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d)
-			{
+													const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d) {
 				// Decompose the Quadrilateral into Non-Overlapping Triangles
 				Triangle3D<T> tri1 = Triangle3D<T>(a, b, c);
 				Triangle3D<T> tri2 = Triangle3D<T>(a, d, c);
 
 				// Compute the area of each triangle and sum them
-				T area = tri1.computeArea();
-				area = area + tri2.computeArea();
+				// T area = tri1.computeArea();
+				// area = area + tri2.computeArea();
+				T area = tri1.area;
+				area = area + tri2.area;
 
 				return area;
 			}
 
 			template <class T>
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Quadrilateral3D<T>::computeCentroidBiMedianIntersection(
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d)
-			{
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d) {
 				// https://en.wikipedia.org/wiki/Quadrilateral#Bimedians
 				// ToDo: Possible alternate function: Is just taking the arithmetic mean of each component a viable option?
 				// Would be much cheaper
@@ -120,7 +122,8 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> intersectPoint;
 				cupcfd::error::eCodes status = computeVectorRangeIntersection(abBiMedian, cdBiMedian, bcBiMedian, daBiMedian, intersectPoint);
 				if (status != cupcfd::error::E_SUCCESS) {
-					throw(std::runtime_error("Quadrilateral3D::computeCentroidBiMedianIntersection(): call to computeVectorRangeIntersection() failed. Need to handle/return error code."));
+					HARD_CHECK_ECODE(status)
+					// throw(std::runtime_error("Quadrilateral3D::computeCentroidBiMedianIntersection(): call to computeVectorRangeIntersection() failed. Need to handle/return error code."));
 				}
 				return intersectPoint;
 			}
@@ -130,26 +133,22 @@ namespace cupcfd
 														     	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
 															 	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
 															 	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d,
-															 	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p)
-			{
+															 	  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p) {
 				// Does the point lie on the same plane as the Quadrilateral Points?
 				// This assumes that d is coplanar with a,b,c
 				cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(a,b,c);
 				
-				if(!(plane.isPointOnPlane(p)))
-				{
+				if(!(plane.isPointOnPlane(p))) {
 					return false;
 				}
 				
 				// Does the point equal one of the points - if so it counts as inside
-				if(p == a || p == b || p == c || p == d)
-				{
+				if(p == a || p == b || p == c || p == d) {
 					return true;
 				}
 				
 				// If the point lies on one of the edges it counts as inside
-				if(isPointOnLine(a, b, p) || isPointOnLine(b, c, p) || isPointOnLine(c, d, p) || isPointOnLine(a, d, p))
-				{
+				if(isPointOnLine(a, b, p) || isPointOnLine(b, c, p) || isPointOnLine(c, d, p) || isPointOnLine(a, d, p)) {
 					return true;
 				}
 				
@@ -167,8 +166,7 @@ namespace cupcfd
 				cdIntersect = cupcfd::geometry::euclidean::isVectorRangeIntersection(p, centroid, c, d);
 				adIntersect = cupcfd::geometry::euclidean::isVectorRangeIntersection(p, centroid, a, d);
 				
-				if(abIntersect || bcIntersect || cdIntersect || adIntersect)
-				{
+				if(abIntersect || bcIntersect || cdIntersect || adIntersect) {
 					// One of the edges was intersected, so must be outside
 					return false;
 				}
@@ -195,29 +193,25 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class T>
-			inline bool Quadrilateral3D<T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool Quadrilateral3D<T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				// Pass through to the static method
 				return Quadrilateral3D<T>::isPointInsideCentroid(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3], point);
 			}
 
 			template <class T>
-			T Quadrilateral3D<T>::computeArea()
-			{
+			T Quadrilateral3D<T>::computeArea() {
 				// Pass through to the static method
 				return this->triangularAreaSum(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
 			}
 			
 			template <class T>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> Quadrilateral3D<T>::computeNormal()
-			{
+			cupcfd::geometry::euclidean::EuclideanVector<T,3> Quadrilateral3D<T>::computeNormal() {
 				// Pass through to the static method
 				return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::normal(this->vertices[0], this->vertices[1], this->vertices[2]);
 			}
 			
 			template <class T>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Quadrilateral3D<T>::computeCentroid()
-			{
+			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Quadrilateral3D<T>::computeCentroid() {
 				// Pass through to the static method
 				return Quadrilateral3D<T>::computeCentroidBiMedianIntersection(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
 			}

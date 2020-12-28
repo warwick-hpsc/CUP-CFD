@@ -69,7 +69,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~PartitionerMetisConfigSourceJSON();
+				~PartitionerMetisConfigSourceJSON();
 
 				// === Concrete Methods ===
 

@@ -76,7 +76,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor
 					 */
-					virtual ~MeshConfig();
+					~MeshConfig();
 
 					// === Concrete Methods ===
 

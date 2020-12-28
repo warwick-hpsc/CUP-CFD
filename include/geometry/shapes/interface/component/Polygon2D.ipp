@@ -21,39 +21,32 @@ namespace cupcfd
 		namespace shapes
 		{
 			template <class P, class T>
-			Polygon2D<P,T>::Polygon2D()
-			{
-				this->nVertices = 0;
-				this->nEdges = 0;
+			Polygon2D<P,T>::Polygon2D() {
+				this->numVertices = 0;
+				this->numEdges = 0;
 			}
 			
 			template <class P, class T>
-			Polygon2D<P,T>::~Polygon2D()
-			{
-			
+			Polygon2D<P,T>::~Polygon2D() {
 			}
 			
 			template <class P, class T>
-			inline int Polygon2D<P,T>::getNVertices()
-			{
-				return this->nVertices;
+			inline int Polygon2D<P,T>::getNumVertices() {
+				return this->numVertices;
 			}
 			
 			template <class P, class T>
-			inline int Polygon2D<P,T>::getNEdges()
-			{
-				return this->nEdges;
+			inline int Polygon2D<P,T>::getNumEdges() {
+				return this->numEdges;
 			}
 			
 			template <class P, class T>
-			bool Polygon2D<P,T>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point)
-			{
+			bool Polygon2D<P,T>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point) {
 				return static_cast<P*>(this)->isPointInside(point);
 			}
 			
 			template <class P, class T>
-			T Polygon2D<P,T>::computeArea()
-			{
+			T Polygon2D<P,T>::computeArea() {
 				return static_cast<P*>(this)->computeArea();
 			}
 		}

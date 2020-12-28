@@ -68,7 +68,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */
-					virtual ~MeshSourceStructGenConfigJSON();
+					~MeshSourceStructGenConfigJSON();
 
 					// === Concrete Methods ===
 
@@ -84,7 +84,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshSourceStructGenConfigJSON<I,T>& source);
+					void operator=(MeshSourceStructGenConfigJSON<I,T>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.

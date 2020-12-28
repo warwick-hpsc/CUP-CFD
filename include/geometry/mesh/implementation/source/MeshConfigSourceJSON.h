@@ -85,7 +85,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */
-					virtual ~MeshConfigSourceJSON();
+					~MeshConfigSourceJSON();
 
 					// === Concrete Methods ===
 
@@ -101,7 +101,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshConfigSourceJSON<I,T,L>& source);
+					void operator=(MeshConfigSourceJSON<I,T,L>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.
@@ -127,7 +127,7 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					// MeshSourceConfig<I,T,L> * getMeshSourceConfig();
-					cupcfd::error::eCodes getMeshSourceConfig(MeshSourceConfig<I,T,L>* config);
+					cupcfd::error::eCodes getMeshSourceConfig(MeshSourceConfig<I,T,L>** config);
 
 					/**
 					 *

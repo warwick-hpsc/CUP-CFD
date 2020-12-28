@@ -93,6 +93,7 @@ namespace cupcfd
 					 */
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
+				protected:
 					/**
 					 * Compute the volume of the pyramid
 					 *
@@ -111,7 +112,7 @@ namespace cupcfd
 					 *
 					 * @return The computed centroid
 					 */
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

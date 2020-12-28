@@ -73,7 +73,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Currently does nothing.
 				 */
-				virtual ~DistributionConfigNormal();
+				~DistributionConfigNormal();
 
 				// === Concrete Methods ===
 

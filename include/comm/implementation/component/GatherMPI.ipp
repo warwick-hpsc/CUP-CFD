@@ -24,11 +24,9 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes GatherMPI(T * bSend, T * bRecv, int nElePerProcess, int sinkProcess, MPI_Comm comm) {
-				T dummy;
 				MPI_Datatype dType;
 				int mpiErr;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 
 				// Each process sends nElePerProcess, and the sink process receieves nElePerProcess
 				// for a single receive from any one process
@@ -42,11 +40,9 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes AllGatherMPI(T * bSend, T * bRecv, int nElePerProcess, MPI_Comm comm) {
-				T dummy;
 				MPI_Datatype dType;
 				int mpiErr;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 
 				// Each process sends nElePerProcess, and each process receives nElePerProcess
 				// for a single receive from any one process (nElePerProcess * process count in total)
@@ -60,11 +56,9 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes GatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, int sinkPID, MPI_Comm comm) {
-				T dummy;
 				MPI_Datatype dType;
 				int mpiErr;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 
 				int commSize;
 				int commRank;
@@ -108,11 +102,9 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes AllGatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, MPI_Comm comm) {
-				T dummy;
 				MPI_Datatype dType;
 				int mpiErr;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 
 				int commSize;
 				int commRank;

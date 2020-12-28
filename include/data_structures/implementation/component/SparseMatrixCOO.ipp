@@ -110,8 +110,7 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			I valSize;
-			valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
 			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -200,8 +199,7 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			I valSize;
-			valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
 			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -269,6 +267,8 @@ namespace cupcfd
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
+			cupcfd::error::eCodes status;
+			
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
@@ -277,8 +277,7 @@ namespace cupcfd
 			I stopIndex = -1;
 			I i;
 
-			I valSize;
-			valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
 			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -301,12 +300,12 @@ namespace cupcfd
 			}
 
 			*nColumnIndexes = (stopIndex - startIndex) + 1;
-			// // Allocate the space
-			// *columnIndexes = (I *) malloc(sizeof(I) * *nColumnIndexes);
-			// // Copy the column indexes across
-			// status = cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
-			// CHECK_ECODE(status)
-			*columnIndexes = cupcfd::utility::drivers::duplicate(&(this->col[startIndex]), *nColumnIndexes);
+			// Allocate the space
+			*columnIndexes = (I *) malloc(sizeof(I) * *nColumnIndexes);
+			// Copy the column indexes across
+			status = cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
+			CHECK_ECODE(status)
+			// *columnIndexes = cupcfd::utility::drivers::duplicate(&(this->col[startIndex]), *nColumnIndexes);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;
@@ -318,12 +317,13 @@ namespace cupcfd
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
 
+			cupcfd::error::eCodes status;
+
 			I startIndex = -1;
 			I stopIndex = -1;
 			I i;
 
-			I valSize;
-			valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
 			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
@@ -346,12 +346,12 @@ namespace cupcfd
 			}
 
 			*nNNZValues = (stopIndex - startIndex) + 1;
-			// // Allocate the space
-			// *nnzValues = (T *) malloc(sizeof(T) * *nNNZValues);
-			// // Copy the column indexes across
-			// status = cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
-			// CHECK_ECODE(status)
-			*nnzValues = cupcfd::utility::drivers::duplicate(&(this->val[startIndex]), *nNNZValues);
+			// Allocate the space
+			*nnzValues = (T *) malloc(sizeof(T) * *nNNZValues);
+			// Copy the column indexes across
+			status = cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
+			CHECK_ECODE(status)
+			// *nnzValues = cupcfd::utility::drivers::duplicate(&(this->val[startIndex]), *nNNZValues);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;

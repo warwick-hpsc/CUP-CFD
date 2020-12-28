@@ -78,13 +78,6 @@ namespace cupcfd
 					virtual cupcfd::error::eCodes getMPIType(MPI_Datatype * dType) = 0;
 
 					/**
-					 * Return the MPI Datatype for the custom registered datatype
-					 *
-					 * @return The MPI DataType for the class
-					 */
-					virtual MPI_Datatype getMPIType() = 0;
-
-					/**
 					 * Register the custom MPI Datatype needed for the exchange of the current structure.
 					 * This should update the state of the datatype to registered for this class.
 					 *

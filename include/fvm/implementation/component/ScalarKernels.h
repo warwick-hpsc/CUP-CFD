@@ -60,7 +60,8 @@ namespace cupcfd
 														T * RFace, I nRFace,
 														cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidx, int ndPhidx,
 														bool SolveTurb, bool SolveEnthalpy,
-														// T sigma, T sigma2, T vislam,
+														// T sigma, T sigma2, 
+														T vislam,
 														int ivar, int VarT, T Sigma_T, T Prandtl,
 														int VarTE, T Sigma_k, int VarED, T Sigma_e,
 														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu);

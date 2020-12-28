@@ -96,18 +96,23 @@ namespace cupcfd
 				}
 				
 				// Find a non zero component
-				int index;
+				uint index;
+				bool found = false;
 				for(uint i = 0; i < N; i++) {
 					if(!(arth::isEqual(this->cmp[i], (T) 0))) {
 						index = i;
+						found = true;
 						break;
 					}
+				}
+				if (!found) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR)
 				}
 				
 				// Now the non-zero component is known, subtract that part from the result and set it back to 'unknown' coefficient,
 				// then solve so that the component * its coefficient cancels out the rest to give a sum of zero.
 				// I.e. sum + coefficient * cmp[index] == 0
-				sum = sum - this->cmp[index];
+				sum -= this->cmp[index];
 				
 				T coefficient = (sum * T(-1)) / this->cmp[index];
 				
@@ -382,10 +387,10 @@ namespace cupcfd
 			*/
 			
 			
-						template <class T>
+			template <class T>
 			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-											 	  	  	  	  	  	  	  	 const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4,
-																			 EuclideanPoint<T,3>& intersectPoint) {		
+											 	  	  	  	  	  	  	const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4,
+																		EuclideanPoint<T,3>& intersectPoint) {		
 				// ToDo: Do we want an extra Error Code for Colinear setups (since callee might want to change
 				// behaviour of their code if it is)
 				// Alternate: Add a separate function for testing for colinear
@@ -434,6 +439,7 @@ namespace cupcfd
 						return cupcfd::error::E_SUCCESS;
 					}
 					else {
+						std::cout << "ERROR: isIntersect is false" << std::endl;
 						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
@@ -713,6 +719,8 @@ namespace cupcfd
 				
 				// First Check: Make sure it's parallel
 				if(!(x1p.isParallel(x1x2))) {
+					std::cout << "ERROR: isPointOnLine(): parallel check failed" << std::endl;
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR)
 					return false;
 				}
 				
@@ -721,11 +729,16 @@ namespace cupcfd
 				// Search for first non-zero value to compute the scalar
 				// Since we know it's parallel, they sohuld be non-zero for both
 				T scalar;
+				bool scalarFound = false;
 				for(uint i = 0; i < 3; i++) {
 					if(!(arth::isEqual(x1p.cmp[i], T(0)))) {
 						scalar = x1p.cmp[i] / x1x2.cmp[i];
+						scalarFound = true;
 						break;
 					}
+				}
+				if (!scalarFound) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR)
 				}
 				
 				if(scalar < 0) {
@@ -741,6 +754,7 @@ namespace cupcfd
 				// Check the length of the x1p vector is less so it must fit on the range
 				// of the line
 				if(x1p_length > x1x2_length) {
+					std::cout << "ERROR: isPointOnLine(): point not on line (within endpoints)" << std::endl;
 					return false;
 				}
 				
@@ -771,11 +785,6 @@ namespace cupcfd
 				*dType = EuclideanVector<T,N>::mpiType;
 
 				return cupcfd::error::E_SUCCESS;
-			}
-			
-			template <class T, unsigned int N>
-			inline MPI_Datatype EuclideanVector<T,N>::getMPIType() {
-				return EuclideanVector<T,N>::mpiType;
 			}
 			
 			template <class T, unsigned int N>

@@ -235,8 +235,7 @@ namespace cupcfd
 				// that are passed through.
 				// Get MPI DataType
 				MPI_Datatype dType;
-				T dummy;
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(sourceData[0], &dType);
 
 				MPI_Put(sendData, sendCount, dType,
 						this->sProc[i], this->targetDispls[i], sendCount, dType,

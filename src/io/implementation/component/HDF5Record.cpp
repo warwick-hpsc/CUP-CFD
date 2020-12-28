@@ -57,12 +57,10 @@ namespace cupcfd
 			}
 
 			cupcfd::error::eCodes HDF5Record::closeGroup(HDF5Access& access) {
-				hid_t err;
-
+				hid_t err = 0;
 				if(access.groupID < 0) {
 					throw( std::invalid_argument("HDF5Record: closeGroup: Invalid groupID - must be greater than zero."));
 				}
-
 				err = H5Gclose(access.groupID);
 				if(err < 0) {
 					throw( std::invalid_argument("HDF5Record: closeGroup: HDF5 unable to close group with ID " + std::to_string(access.groupID)));
@@ -106,8 +104,7 @@ namespace cupcfd
 			}
 
 			cupcfd::error::eCodes HDF5Record::closeDataSet(HDF5Access& access) {
-				hid_t err;
-
+				hid_t err = 0;
 				if(access.datasetID > 0) {
 					err = H5Dclose(access.datasetID);
 				}
@@ -119,32 +116,32 @@ namespace cupcfd
 			}
 
 			cupcfd::error::eCodes HDF5Record::openDataSpace(HDF5Access& access) {
-				hid_t dataspaceID;
+				hid_t dataspaceID = -1;
 
-				if(this->attr == false) {
-					// Opening a Dataspace for a Dataset
-					if(access.datasetID > 0) {
-						dataspaceID = H5Dget_space(access.datasetID);
-						if (dataspaceID < 0) {
-							throw(std::invalid_argument("HDF5Record: openDataSpace: H5Dget_space() failed"));
-						}
+				if(this->attr) {
+					if(access.attrID <= 0) {
+						throw(std::invalid_argument("HDF5Record: openDataSpace: invalid access.attrID value"));
+					}
+					dataspaceID = H5Aget_space(access.attrID);
+					if (dataspaceID < 0) {
+						throw(std::invalid_argument("HDF5Record: openDataSpace: H5Aget_space() failed"));
 					}
 				} else {
-					if(access.attrID > 0) {
-						dataspaceID = H5Aget_space(access.attrID);
-						if (dataspaceID < 0) {
-							throw(std::invalid_argument("HDF5Record: openDataSpace: H5Aget_space() failed"));
-						}
+					// Opening a Dataspace for a Dataset
+					if(access.datasetID <= 0) {
+						throw(std::invalid_argument("HDF5Record: openDataSpace: invalid access.datasetID value"));
+					}
+					dataspaceID = H5Dget_space(access.datasetID);
+					if (dataspaceID < 0) {
+						throw(std::invalid_argument("HDF5Record: openDataSpace: H5Dget_space() failed"));
 					}
 				}
-
 				access.dataspaceID = dataspaceID;
-
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			cupcfd::error::eCodes HDF5Record::closeDataSpace(HDF5Access& access) {
-				hid_t err;
+				hid_t err = 0;
 
 				if(access.dataspaceID > 0) {
 					err = H5Sclose(access.dataspaceID);
@@ -183,7 +180,7 @@ namespace cupcfd
 			}
 
 			cupcfd::error::eCodes HDF5Record::closeAttribute(HDF5Access& access) {
-				hid_t err;
+				hid_t err = 0;
 
 				if(access.attrID > 0) {
 					err = H5Aclose(access.attrID);

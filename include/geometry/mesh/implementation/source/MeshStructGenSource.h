@@ -108,7 +108,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~MeshStructGenSource();
+					~MeshStructGenSource();
 
 					// === Concrete Methods ===
 

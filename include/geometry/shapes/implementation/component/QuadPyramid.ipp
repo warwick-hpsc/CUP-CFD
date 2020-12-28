@@ -27,15 +27,15 @@ namespace cupcfd
 										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& fr,
 										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& bl,
 										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& br)
-			:Pyramid<Quadrilateral3D<T>,T>(apex, Quadrilateral3D<T>(fl, fr, br, bl))
+			: Pyramid<Quadrilateral3D<T>,T>(apex, Quadrilateral3D<T>(fl, fr, br, bl))
 			{
 				// Note in the initialiser list that we define the base in anti-clockwise order
 				// when viewed from the outside/clockwise order when viewed from inside the polyhedron.
 				// This is so normals for the base when using the vertices in order point outwards.
 				
-				this->nEdges = 8;
-				this->nVertices = 5;
-				this->nFaces = 5;
+				this->numEdges = 8;
+				this->numVertices = 5;
+				this->numFaces = 5;
 			}
 			
 			template <class T>
@@ -49,35 +49,30 @@ namespace cupcfd
 			// === Concrete Methods ===
 			
 			template <class T>
-			inline bool QuadPyramid<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{							
+			inline bool QuadPyramid<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {							
 				// ToDo: This can likely be condensed to a generic polygon method, using a getEdge method	  
 				
 				bool tests[8];
-				tests[0] = isPointOnLine(this->apex, this->base.vertices[0], point);
-				tests[1] = isPointOnLine(this->apex, this->base.vertices[1], point);
-				tests[2] = isPointOnLine(this->apex, this->base.vertices[2], point);
-				tests[3] = isPointOnLine(this->apex, this->base.vertices[3], point);
+				tests[0] = isPointOnLine(this->apex,             this->base.vertices[0], point);
+				tests[1] = isPointOnLine(this->apex,             this->base.vertices[1], point);
+				tests[2] = isPointOnLine(this->apex,             this->base.vertices[2], point);
+				tests[3] = isPointOnLine(this->apex,             this->base.vertices[3], point);
 				tests[4] = isPointOnLine(this->base.vertices[0], this->base.vertices[1], point);
 				tests[5] = isPointOnLine(this->base.vertices[1], this->base.vertices[2], point);
 				tests[6] = isPointOnLine(this->base.vertices[2], this->base.vertices[3], point);
 				tests[7] = isPointOnLine(this->base.vertices[3], this->base.vertices[0], point);
 				
 				// Test if the point lies on each edge
-				for(int i = 0; i < 8; i++)
-				{
-					if(tests[i])
-					{
+				for(int i = 0; i < 8; i++) {
+					if(tests[i]) {
 						return true;
 					}
 				}
-				
 				return false;
 			}
 			
 			template <class T>
-			inline bool QuadPyramid<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool QuadPyramid<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				return (this->apex == point) || (this->base.vertices[0] == point) || (this->base.vertices[1] == point) || 
 					   (this->base.vertices[2] == point) || (this->base.vertices[3] == point);
 			}

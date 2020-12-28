@@ -297,7 +297,7 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount) {
+            cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount, I * nEleDupCount) {
             	cupcfd::error::eCodes status;
 
 				// Determine number of distinct elements
@@ -308,10 +308,11 @@ namespace cupcfd
 				*dst = (T *) malloc(sizeof(T) * *nEleDst);
 
 				// Allocate the count array
-				*dupCount = (I *) malloc(sizeof(I) * *nEleDst);
+				*nEleDupCount = *nEleDst;
+				*dupCount = (I *) malloc(sizeof(I) * *nEleDupCount);
 
 				// Pass work along to driver that performs the same functionas this, but with the results array set up.
-				status = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount, *nEleDst);
+				status = drivers::distinctArray(source, nEleSource, *dst, *nEleDst, *dupCount, *nEleDupCount);
 				CHECK_ECODE(status)
 
 				// Responsibility for freeing the dst and dupCount arrays is left to the caller, since they contain the results.

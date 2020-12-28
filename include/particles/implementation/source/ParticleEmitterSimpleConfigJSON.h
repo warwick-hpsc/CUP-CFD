@@ -61,7 +61,7 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
-				virtual ~ParticleEmitterSimpleConfigJSON();
+				~ParticleEmitterSimpleConfigJSON();
 
 				// === Concrete Methods ===
 
@@ -77,7 +77,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(ParticleEmitterSimpleConfigJSON<I,T>& source);
+				void operator=(ParticleEmitterSimpleConfigJSON<I,T>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.

@@ -202,7 +202,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~CupCfdSoAMesh();
+					~CupCfdSoAMesh();
 
 					// === Concrete Methods ===
 					void reset();

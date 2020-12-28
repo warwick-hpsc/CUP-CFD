@@ -105,7 +105,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~LinearSolverPETSc();
+				~LinearSolverPETSc();
 
 				// === Overloaded Inherited Methods ===
 				__attribute__((warn_unused_result))

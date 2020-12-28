@@ -380,7 +380,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getFaceID(L faceLabel, I * faceID) {
-				return static_cast<M*>(this)->getFaceID(faceLabel, faceID);
+				static_cast<M*>(this)->getFaceID(faceLabel, faceID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -390,7 +390,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryFaceID(I boundaryID, I * faceID) {
-				return static_cast<M*>(this)->getBoundaryFaceID(boundaryID, faceID);
+				static_cast<M*>(this)->getBoundaryFaceID(boundaryID, faceID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -400,7 +400,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID) {
-				return static_cast<M*>(this)->getBoundaryVertex(boundaryID, boundaryVertexID, vertexID);
+				static_cast<M*>(this)->getBoundaryVertex(boundaryID, boundaryVertexID, vertexID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -410,7 +410,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryDistance(I boundaryID, T * distance) {
-				return static_cast<M*>(this)->getBoundaryDistance(boundaryID, distance);
+				static_cast<M*>(this)->getBoundaryDistance(boundaryID, distance);
 			}
 
 			template <class M, class I, class T, class L>
@@ -420,7 +420,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryYPlus(I boundaryID, T * yPlus) {
-				return static_cast<M*>(this)->getBoundaryYPlus(boundaryID, yPlus);
+				static_cast<M*>(this)->getBoundaryYPlus(boundaryID, yPlus);
 			}
 
 			template <class M, class I, class T, class L>
@@ -430,7 +430,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryUPlus(I boundaryID, T * uPlus) {
-				return static_cast<M*>(this)->getBoundaryUPlus(boundaryID, uPlus);
+				static_cast<M*>(this)->getBoundaryUPlus(boundaryID, uPlus);
 			}
 
 			template <class M, class I, class T, class L>
@@ -440,7 +440,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryRegionID(I boundaryID, I * regionID) {
-				return static_cast<M*>(this)->getBoundaryRegion(boundaryID, regionID);
+				static_cast<M*>(this)->getBoundaryRegion(boundaryID, regionID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -450,7 +450,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
-				return static_cast<M*>(this)->getBoundaryShear(boundaryID, shear);
+				static_cast<M*>(this)->getBoundaryShear(boundaryID, shear);
 			}
 
 			template <class M, class I, class T, class L>
@@ -460,7 +460,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryQ(I boundaryID, T * q) {
-				return static_cast<M*>(this)->getBoundaryQ(boundaryID, q);
+				static_cast<M*>(this)->getBoundaryQ(boundaryID, q);
 			}
 
 			template <class M, class I, class T, class L>
@@ -470,7 +470,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryH(I boundaryID, T * h) {
-				return static_cast<M*>(this)->getBoundaryH(boundaryID, h);
+				static_cast<M*>(this)->getBoundaryH(boundaryID, h);
 			}
 
 			template <class M, class I, class T, class L>
@@ -480,7 +480,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryT(I boundaryID, T * t) {
-				return static_cast<M*>(this)->getBoundaryT(boundaryID, t);
+				static_cast<M*>(this)->getBoundaryT(boundaryID, t);
 			}
 
 			template <class M, class I, class T, class L>
@@ -490,52 +490,52 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryFaceID(I boundaryID, I faceID) {
-				return static_cast<M*>(this)->setBoundaryFaceID(boundaryID, faceID);
+				static_cast<M*>(this)->setBoundaryFaceID(boundaryID, faceID);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID) {
-				return static_cast<M*>(this)->setBoundaryVertex(boundaryID, boundaryVertexID, vertexID);
+				static_cast<M*>(this)->setBoundaryVertex(boundaryID, boundaryVertexID, vertexID);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryDistance(I boundaryID, T distance) {
-				return static_cast<M*>(this)->setBoundaryDistance(boundaryID, distance);
+				static_cast<M*>(this)->setBoundaryDistance(boundaryID, distance);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryYPlus(I boundaryID, T yPlus) {
-				return static_cast<M*>(this)->setBoundaryYPlus(boundaryID, yPlus);
+				static_cast<M*>(this)->setBoundaryYPlus(boundaryID, yPlus);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryUPlus(I boundaryID, T uPlus) {
-				return static_cast<M*>(this)->setBoundaryUPlus(boundaryID, uPlus);
+				static_cast<M*>(this)->setBoundaryUPlus(boundaryID, uPlus);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryRegionID(I boundaryID, I regionID) {
-				return static_cast<M*>(this)->setBoundaryRegionID(boundaryID, regionID);
+				static_cast<M*>(this)->setBoundaryRegionID(boundaryID, regionID);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
-				return static_cast<M*>(this)->setBoundaryShear(boundaryID, shear);
+				static_cast<M*>(this)->setBoundaryShear(boundaryID, shear);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryQ(I boundaryID, T q) {
-				return static_cast<M*>(this)->setBoundaryQ(boundaryID, q);
+				static_cast<M*>(this)->setBoundaryQ(boundaryID, q);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryH(I boundaryID, T h) {
-				return static_cast<M*>(this)->setBoundaryH(boundaryID, h);
+				static_cast<M*>(this)->setBoundaryH(boundaryID, h);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryT(I boundaryID, T t) {
-				return static_cast<M*>(this)->setBoundaryT(boundaryID, t);
+				static_cast<M*>(this)->setBoundaryT(boundaryID, t);
 			}
 
 			template <class M, class I, class T, class L>
@@ -557,7 +557,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryID(L boundaryLabel, I * boundaryID) {
-				return static_cast<M*>(this)->getBoundaryID(boundaryLabel, boundaryID);
+				static_cast<M*>(this)->getBoundaryID(boundaryLabel, boundaryID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -567,7 +567,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionType(I regionID, RType * type) {
-				return static_cast<M*>(this)->getRegionType(regionID, type);
+				static_cast<M*>(this)->getRegionType(regionID, type);
 			}
 
 			template <class M, class I, class T, class L>
@@ -577,7 +577,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionStd(I regionID, bool * std) {
-				return static_cast<M*>(this)->getRegionStd(regionID, std);
+				static_cast<M*>(this)->getRegionStd(regionID, std);
 			}
 
 			template <class M, class I, class T, class L>
@@ -587,7 +587,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionYLog(I regionID, T * yLog) {
-				return static_cast<M*>(this)->getRegionYLog(regionID, yLog);
+				static_cast<M*>(this)->getRegionYLog(regionID, yLog);
 			}
 			
 			template <class M, class I, class T, class L>
@@ -597,7 +597,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionELog(I regionID, T * eLog) {
-				return static_cast<M*>(this)->getRegionELog(regionID, eLog);
+				static_cast<M*>(this)->getRegionELog(regionID, eLog);
 			}
 
 			template <class M, class I, class T, class L>
@@ -607,7 +607,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionDensity(I regionID, T * density) {
-				return static_cast<M*>(this)->getRegionDensity(regionID, density);
+				static_cast<M*>(this)->getRegionDensity(regionID, density);
 			}
 
 			template <class M, class I, class T, class L>
@@ -617,7 +617,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionTurbKE(I regionID, T * turbKE) {
-				return static_cast<M*>(this)->getRegionTurbKE(regionID, turbKE);
+				static_cast<M*>(this)->getRegionTurbKE(regionID, turbKE);
 			}
 
 			template <class M, class I, class T, class L>
@@ -627,7 +627,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionTurbDiss(I regionID, T * turbDiss) {
-				return static_cast<M*>(this)->getRegionTurbDiss(regionID, turbDiss);
+				static_cast<M*>(this)->getRegionTurbDiss(regionID, turbDiss);
 			}
 			
 			template <class M, class I, class T, class L>
@@ -637,7 +637,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionSplvl(I regionID, T * splvl) {
-				return static_cast<M*>(this)->getRegionSplvl(regionID, splvl);
+				static_cast<M*>(this)->getRegionSplvl(regionID, splvl);
 			}
 
 			template <class M, class I, class T, class L>
@@ -647,7 +647,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionDen(I regionID, T * den) {
-				return static_cast<M*>(this)->getRegionDen(regionID, den);
+				static_cast<M*>(this)->getRegionDen(regionID, den);
 			}
 
 			template <class M, class I, class T, class L>
@@ -657,7 +657,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
-				return static_cast<M*>(this)->getRegionForceTangent(regionID, forceTangent);
+				static_cast<M*>(this)->getRegionForceTangent(regionID, forceTangent);
 			}
 
 			template <class M, class I, class T, class L>
@@ -667,7 +667,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
-				return static_cast<M*>(this)->getRegionUVW(regionID, uvw);
+				static_cast<M*>(this)->getRegionUVW(regionID, uvw);
 			}
 
 			template <class M, class I, class T, class L>
@@ -677,7 +677,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionName(I regionID, std::string& regionName) {
-				return static_cast<M*>(this)->getRegionName(regionID, regionName);
+				static_cast<M*>(this)->getRegionName(regionID, regionName);
 			}
 
 			template <class M, class I, class T, class L>
@@ -687,7 +687,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionFlux(I regionID, bool * flux) {
-				return static_cast<M*>(this)->getRegionFlux(regionID, flux);
+				static_cast<M*>(this)->getRegionFlux(regionID, flux);
 			}
 
 			template <class M, class I, class T, class L>
@@ -697,7 +697,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionAdiab(I regionID, bool * adiab) {
-				return static_cast<M*>(this)->getRegionAdiab(regionID, adiab);
+				static_cast<M*>(this)->getRegionAdiab(regionID, adiab);
 			}
 
 			template <class M, class I, class T, class L>
@@ -707,7 +707,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionR(I regionID, T * r) {
-				return static_cast<M*>(this)->getRegionR(regionID, r);
+				static_cast<M*>(this)->getRegionR(regionID, r);
 			}
 
 			template <class M, class I, class T, class L>
@@ -717,7 +717,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionT(I regionID, T * t) {
-				return static_cast<M*>(this)->getRegionT(regionID, t);
+				static_cast<M*>(this)->getRegionT(regionID, t);
 			}
 
 			template <class M, class I, class T, class L>
@@ -727,82 +727,82 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionType(I regionID, RType type) {
-				return static_cast<M*>(this)->setRegionType(regionID, type);
+				static_cast<M*>(this)->setRegionType(regionID, type);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionStd(I regionID, bool std) {
-				return static_cast<M*>(this)->setRegionStd(regionID, std);
+				static_cast<M*>(this)->setRegionStd(regionID, std);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionYLog(I regionID, T yLog) {
-				return static_cast<M*>(this)->setRegionYLog(regionID, yLog);
+				static_cast<M*>(this)->setRegionYLog(regionID, yLog);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionELog(I regionID, T eLog) {
-				return static_cast<M*>(this)->setRegionELog(regionID, eLog);
+				static_cast<M*>(this)->setRegionELog(regionID, eLog);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionDensity(I regionID, T density) {
-				return static_cast<M*>(this)->setRegionDensity(regionID, density);
+				static_cast<M*>(this)->setRegionDensity(regionID, density);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionTurbKE(I regionID, T turbKE) {
-				return static_cast<M*>(this)->setRegionTurbKE(regionID, turbKE);
+				static_cast<M*>(this)->setRegionTurbKE(regionID, turbKE);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionTurbDiss(I regionID, T turbDiss) {
-				return static_cast<M*>(this)->setRegionTurbDiss(regionID, turbDiss);
+				static_cast<M*>(this)->setRegionTurbDiss(regionID, turbDiss);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionSplvl(I regionID, T splvl) {
-				return static_cast<M*>(this)->setRegionSplvl(regionID, splvl);
+				static_cast<M*>(this)->setRegionSplvl(regionID, splvl);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionDen(I regionID, T den) {
-				return static_cast<M*>(this)->setRegionDen(regionID, den);
+				static_cast<M*>(this)->setRegionDen(regionID, den);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
-				return static_cast<M*>(this)->setRegionForceTangent(regionID, forceTangent);
+				static_cast<M*>(this)->setRegionForceTangent(regionID, forceTangent);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
-				return static_cast<M*>(this)->setRegionUVW(regionID, uvw);
+				static_cast<M*>(this)->setRegionUVW(regionID, uvw);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionName(I regionID, std::string& regionName) {
-				return static_cast<M*>(this)->setRegionName(regionID, regionName);
+				static_cast<M*>(this)->setRegionName(regionID, regionName);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionFlux(I regionID, bool flux) {
-				return static_cast<M*>(this)->setRegionFlux(regionID, flux);
+				static_cast<M*>(this)->setRegionFlux(regionID, flux);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionAdiab(I regionID, bool adiab) {
-				return static_cast<M*>(this)->setRegionAdiab(regionID, adiab);
+				static_cast<M*>(this)->setRegionAdiab(regionID, adiab);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionR(I regionID, T r) {
-				return static_cast<M*>(this)->setRegionR(regionID, r);
+				static_cast<M*>(this)->setRegionR(regionID, r);
 			}
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setRegionT(I regionID, T t) {
-				return static_cast<M*>(this)->setRegionT(regionID, t);
+				static_cast<M*>(this)->setRegionT(regionID, t);
 			}
 
 			template <class M, class I, class T, class L>
@@ -837,7 +837,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getRegionID(L regionLabel, I * regionID) {
-				return static_cast<M*>(this)->getRegionID(regionLabel, regionID);
+				static_cast<M*>(this)->getRegionID(regionLabel, regionID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -847,7 +847,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
-				return static_cast<M*>(this)->getVertexPos(vertexID, pos);
+				static_cast<M*>(this)->getVertexPos(vertexID, pos);
 			}
 
 			template <class M, class I, class T, class L>
@@ -857,7 +857,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::setVertexPos(I vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
-				return static_cast<M*>(this)->setVertexPos(vertexLabel, pos);
+				static_cast<M*>(this)->setVertexPos(vertexLabel, pos);
 			}
 
 			template <class M, class I, class T, class L>
@@ -867,7 +867,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getVertexID(L vertexLabel, I * vertexID) {
-				return static_cast<M*>(this)->getVertexID(vertexLabel, vertexID);
+				static_cast<M*>(this)->getVertexID(vertexLabel, vertexID);
 			}
 
 			template <class M, class I, class T, class L>
@@ -927,7 +927,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				uint nVertDup = 18; // (3+3+4+4+4)
+				const I nVertDup = 18; // (3+3+4+4+4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -947,6 +947,7 @@ namespace cupcfd
 				std::vector<I> edge2;
 				I tmpEdge1;
 				I tmpEdge2;
+				I numEdge1;
 				bool found;
 				// Loop over faces
 				ptr = 0;
@@ -960,7 +961,8 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < (I)edge1.size(); k++) {
+						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+						for(I k = 0; k < numEdge1; k++) {
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 								found = true;
 							}
@@ -977,7 +979,8 @@ namespace cupcfd
 					ptr++;
 					
 					found = false;
-					for(I k = 0; k < (I)edge1.size(); k++) {
+					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+					for(I k = 0; k < numEdge1; k++) {
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 							found = true;
 						}
@@ -1019,7 +1022,8 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> centerFace1 = center - triFaceAPos;
 				
 				cupcfd::geometry::shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
+				// cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
+				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.normal;
 				
 				T face1Dot = normalFace1.dotProduct(centerFace1);
 								
@@ -1040,7 +1044,7 @@ namespace cupcfd
 				// Now we have defined the labels of our 'top' face, find the adjoining vertices on the bottom face
 				// and we have our polyhedron labels
 				// There is probably a cheaper way of doing this but should be small enough to just do a search
-				for(I i = 0; i < (I)(nVertDup/2); i++) {
+				for(I i = 0; i < (nVertDup/2); i++) {
 					if(edge1[i] == tf) {
 						if(edge2[i] != tlb && edge2[i] != trb) {
 							bf = edge2[i];
@@ -1134,7 +1138,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				uint nVertDup = 16; // (3 + 3 + 3 + 3 + 4)
+				const I nVertDup = 16; // (3 + 3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1154,6 +1158,7 @@ namespace cupcfd
 				std::vector<I> edge2;
 				I tmpEdge1;
 				I tmpEdge2;
+				I numEdge1;
 				bool found;
 				// Loop over faces
 				ptr = 0;
@@ -1167,7 +1172,8 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < (I)edge1.size(); k++) {
+						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+						for(I k = 0; k < numEdge1; k++) {
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 								found = true;
 							}
@@ -1183,7 +1189,8 @@ namespace cupcfd
 					tmpEdge2 = faceVertexIDs[(ptr - faceNVertices[i]) + 1];
 					ptr++;
 					found = false;
-					for(I k = 0; k < (I)edge1.size(); k++) {
+					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+					for(I k = 0; k < numEdge1; k++) {
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 							found = true;
 						}
@@ -1194,7 +1201,8 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != (nVertDup/2)) {
+				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+				if(numEdge1 != (nVertDup/2)) {
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
 				
@@ -1214,11 +1222,16 @@ namespace cupcfd
 				basePos[3] = this->getVertexPos(baseFaceD);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < (I)nVertDup; i++) {
+				found = false;
+				for(I i = 0; i < nVertDup; i++) {
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD) {
 						apex = faceVertexIDs[i];
+						found = true;
 						break;
 					}
+				}
+				if (!found) {
+					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
 				}
 				
 				// Vector from Apex to base must go through internal of shape
@@ -1273,7 +1286,7 @@ namespace cupcfd
 				
 				I faceNVertices[4];
 				I baseID;
-				uint ptr = 0;
+				I ptr = 0;
 				for(I i = 0; i  < 4; i++) {
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
 				}
@@ -1282,7 +1295,7 @@ namespace cupcfd
 				baseID = cellLocalFaceID[0];
 				
 				// Number of vertices including duplicates
-				uint nVertDup = 13; // (3 + 3 + 3 + 4)
+				const I nVertDup = 13; // (3 + 3 + 3 + 4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1303,6 +1316,7 @@ namespace cupcfd
 				
 				I tmpEdge1;
 				I tmpEdge2;
+				I numEdge1;
 				bool found;
 				
 				// Loop over faces
@@ -1317,7 +1331,8 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < (I)edge1.size(); k++) {
+						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+						for(I k = 0; k < numEdge1; k++) {
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 								found = true;
 							}
@@ -1334,7 +1349,8 @@ namespace cupcfd
 					ptr++;
 					
 					found = false;
-					for(I k = 0; k < (I)edge1.size(); k++) {
+					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+					for(I k = 0; k < numEdge1; k++) {
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 							found = true;
 						}
@@ -1346,7 +1362,8 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != (nVertDup/2)) {
+				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+				if(numEdge1 != (nVertDup/2)) {
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
 				
@@ -1364,11 +1381,16 @@ namespace cupcfd
 				basePos[2] = this->getVertexPos(baseFaceC);
 				
 				// Set the apex point - must be the last remaining point
-				for(I i = 0; i < (I)nVertDup; i++) {
+				found = false;
+				for(I i = 0; i < nVertDup; i++) {
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC) {
 						apex = faceVertexIDs[i];
+						found = true;
 						break;
 					}
+				}
+				if (!found) {
+					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
 				}
 				
 				// Vector from Apex to base must go through internal of shape
@@ -1436,7 +1458,7 @@ namespace cupcfd
 				}
 				
 				// Number of vertices including duplicates
-				uint nVertDup = 24; // (6*4)
+				const I nVertDup = 24; // (6*4)
 				
 				// Get the vertex IDs for each face
 				I faceVertexIDs[nVertDup];
@@ -1456,6 +1478,7 @@ namespace cupcfd
 				std::vector<I> edge2;
 				I tmpEdge1;
 				I tmpEdge2;
+				I numEdge1;
 				bool found;
 				// Loop over faces
 				ptr = 0;
@@ -1469,7 +1492,8 @@ namespace cupcfd
 
 						// Search 
 						found = false;
-						for(I k = 0; k < (I)edge1.size(); k++) {
+						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+						for(I k = 0; k < numEdge1; k++) {
 							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 								found = true;
 							}
@@ -1485,7 +1509,8 @@ namespace cupcfd
 					tmpEdge2 = faceVertexIDs[(ptr - faceNVertices[i]) + 1];
 					ptr++;
 					found = false;
-					for(I k = 0; k < (I)edge1.size(); k++) {
+					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+					for(I k = 0; k < numEdge1; k++) {
 						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
 							found = true;
 						}
@@ -1496,7 +1521,8 @@ namespace cupcfd
 					}
 				}
 				
-				if(edge1.size() != (nVertDup/2)) {
+				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+				if(numEdge1 != (nVertDup/2)) {
 					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
 				}
 				
@@ -1516,12 +1542,17 @@ namespace cupcfd
 				
 				// Find a vertex on the opposite face
 				I oppVertexID;
-				for(I i = 0; i < (I)nVertDup; i++) {
+				found = false;
+				for(I i = 0; i < nVertDup; i++) {
 					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD) {
 						oppVertexID = faceVertexIDs[i];
+						found = true;
 						break;
 					}
-				} 
+				}
+				if (!found) {
+					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
+				}
 				
 				// A vector from the opposite face to a point on the base face either traverses along an edge or goes through the hexahedron
 				// Test the ordering of the base face
@@ -1548,8 +1579,8 @@ namespace cupcfd
 				
 				// Since this is a hexahedron, if we just find the non-base face vertex joined to each of the base vertices,
 				// we will know the labels for the opposite face
-				
-				for(I i = 0; i < (I)edge1.size(); i++) {
+				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
+				for(I i = 0; i < numEdge1; i++) {
 					// === blf ===
 					if(edge1[i] == blf) {
 						// ToDo: We could probably do this is a nicer way/more compressed code

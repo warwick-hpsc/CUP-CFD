@@ -32,13 +32,9 @@ namespace cupcfd
 				// MPI Error Status
 				int err;
 
-				// Create a dummy variable of type T so we can select the correct
-				// specialisation of getMPIType
-				T dummy;
-
 				// Retrieve the MPI Datatype for T
 				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(sendbuf[0], &dType);
 
 				// MPI Call
 				err = MPI_Alltoall(sendbuf, sendcount, dType,
@@ -81,7 +77,7 @@ namespace cupcfd
 				status = AllToAllVMPI(sendbuf, sendcounts, sdispls,
 								   recvbuf, recvcounts, rdispls,
 								   comm);
-				CHECK_ECODE(status)			   
+				CHECK_ECODE(status)
 				
 				// Cleanup
 				free(sdispls);
@@ -95,11 +91,9 @@ namespace cupcfd
 												   T * recvbuf, int *recvcounts, int *rdispls,
 												   MPI_Comm comm) {
 				int err;
-				T dummy;
 				MPI_Datatype dType;
-				
 				// Retrieve the MPI Datatype for T
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(sendbuf[0], &dType);
 
 				err = MPI_Alltoallv(sendbuf, sendcounts, sdispls, dType,
 							  recvbuf, recvcounts, rdispls, dType,

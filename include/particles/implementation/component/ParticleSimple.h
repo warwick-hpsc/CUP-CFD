@@ -141,7 +141,7 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 */
-				virtual ~ParticleSimple();
+				~ParticleSimple();
 
 				// === Concrete Methods ===
 
@@ -436,9 +436,6 @@ namespace cupcfd
 
 				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
-
-				__attribute__((warn_unused_result))
-				inline MPI_Datatype getMPIType();
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes registerMPIType();

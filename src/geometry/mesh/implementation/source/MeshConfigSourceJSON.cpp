@@ -113,7 +113,7 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			// MeshSourceConfig<I,T,L> * MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig() {
-			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig(MeshSourceConfig<I,T,L>* config) {
+			cupcfd::error::eCodes MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig(MeshSourceConfig<I,T,L>** config) {
 				// Determine and build the correct MeshSourceConfig type
 				// MeshSource Config stored under "MeshSource" in the Mesh JSON
 
@@ -129,25 +129,23 @@ namespace cupcfd
 
 				// Test Mesh Source from a File
 				// status = source1Config.buildMeshSourceConfig(&sourceConfig);
-				status = source1Config.buildMeshSourceConfig(&config);
+				status = source1Config.buildMeshSourceConfig(config);
 				if (status == cupcfd::error::E_CONFIG_OPT_NOT_FOUND) {
 					// This error is ok, try source2Config instead
 				} else {
 					CHECK_ECODE(status);
 					if(status == cupcfd::error::E_SUCCESS) {
 						// return sourceConfig;
-						// *config = sourceConfig;
 						return cupcfd::error::E_SUCCESS;
 					}
 				}
 
 				// Test Mesh Source from Structured Generation
 				// status = source2Config.buildMeshSourceConfig(&sourceConfig);
-				status = source2Config.buildMeshSourceConfig(&config);
+				status = source2Config.buildMeshSourceConfig(config);
 				CHECK_ECODE(status);
 				if(status == cupcfd::error::E_SUCCESS) {
 					// return sourceConfig;
-					// *config = sourceConfig;
 					return cupcfd::error::E_SUCCESS;
 				}
 
@@ -168,7 +166,7 @@ namespace cupcfd
 
 				// MeshSourceConfig<I,T,L> * sourceConfig = this->getMeshSourceConfig();
 				MeshSourceConfig<I,T,L> * sourceConfig;
-				status = this->getMeshSourceConfig(sourceConfig);
+				status = this->getMeshSourceConfig(&sourceConfig);
 				CHECK_ECODE(status)
 
 				*config = new MeshConfig<I,T,L>(*partConfig, *sourceConfig);

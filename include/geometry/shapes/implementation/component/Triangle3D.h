@@ -80,9 +80,9 @@ namespace cupcfd
 					 *
 					 * @return The point at the center of the three points
 					 */
-					static inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-																								 	    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-																										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
+					// static inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+					// 																		 	    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+					// 																				const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
 
 					/**
 					 * Test whether a point is inside by tracing a vector from the point to the centroid.
@@ -101,10 +101,10 @@ namespace cupcfd
 					 * @retval true The point is inside or on an edge/vertex
 					 * @retval false The point is not inside the polygon
 					 */
-					static inline bool isPointInsideCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-														     const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
+					// static inline bool isPointInsideCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+					// 									     const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+					// 										 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+					// 										 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
 					// === Concrete Methods ===
 
@@ -130,9 +130,10 @@ namespace cupcfd
                                                 const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
 												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
 												T& timeToIntersect, 
-												bool onEdge,
+												bool* onEdge,
 												bool verbose) const;
 
+				protected:
 					/**
 					 * Compute the area of the Triangle
 					 *

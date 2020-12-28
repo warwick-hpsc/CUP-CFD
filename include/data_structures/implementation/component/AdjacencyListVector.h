@@ -59,7 +59,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Cleans up any internal dynamically allocated structures.
 				 */
-				virtual ~AdjacencyListVector();
+				~AdjacencyListVector();
 
 				// === Concrete Methods ===
 

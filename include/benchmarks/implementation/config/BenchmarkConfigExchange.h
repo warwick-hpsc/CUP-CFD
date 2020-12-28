@@ -58,13 +58,13 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual ~BenchmarkConfigExchange();
+				~BenchmarkConfigExchange();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				virtual void operator=(const BenchmarkConfigExchange<I,T>& source);
+				void operator=(const BenchmarkConfigExchange<I,T>& source);
 				BenchmarkConfigExchange<I,T> * clone();
 
 				template <class N>

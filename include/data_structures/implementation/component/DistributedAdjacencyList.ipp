@@ -62,7 +62,7 @@ namespace cupcfd
 											&recvNodes, &nRecvNodes, 
 											&recvNodeProcCount, &nRecvNodeProcCount, 
 											rank, *(this->comm));
-			CHECK_ECODE(status)				   
+			CHECK_ECODE(status)
 			
 			// (2) Each rank must send data about the edges it has. This should include in both directions.
 			// It will need two stages, one to gather node1 in the edge, and a second to get node 2 in the edge.
@@ -171,8 +171,8 @@ namespace cupcfd
 			I nTRanks = this->sendGlobalIDsAdjncy.size();
 			I * tRanks = (I *) malloc(sizeof(I) * nTRanks);
 
-			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(this->sendGlobalIDsXAdj.size());
-			for(I i = 0; i < size; i++) {
+			I numSendGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->sendGlobalIDsXAdj.size());
+			for(I i = 0; i < numSendGlobalIDsXAdj; i++) {
 				for(I j = 0; j < this->sendGlobalIDsXAdj[i+1] - this->sendGlobalIDsXAdj[i]; j++) {
 					tRanks[this->sendGlobalIDsXAdj[i] + j] = this->sendRank[i];
 				}

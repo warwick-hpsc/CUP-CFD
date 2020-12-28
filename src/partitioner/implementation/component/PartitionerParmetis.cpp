@@ -21,14 +21,14 @@ namespace cupcfd
 		template <class I, class T>
 		PartitionerParmetis<I,T>::PartitionerParmetis(cupcfd::comm::Communicator& workComm)
 		: PartitionerInterface<I,T>(workComm),
-		  nTpwgts(0),
-		  nXAdj(0),
-		  nAdjncy(0),
-		  nVtxdist(0),
+		  nCon(0),
 		  nVwgt(0),
 		  nAdjwgt(0),
 		  nUbvec(0),
-		  nCon(0)
+		  nTpwgts(0),
+		  nXAdj(0),
+		  nAdjncy(0),
+		  nVtxdist(0)
 		{
 			// This is a precaution, since if the pointers are undetermined they may not be null
 			// (which would cause issues with free)
@@ -52,23 +52,23 @@ namespace cupcfd
 
 		template <class I, class T>
 		PartitionerParmetis<I,T>::PartitionerParmetis(cupcfd::data_structures::DistributedAdjacencyList<I,T>& sourceGraph, int nParts, int nCon)
-		: xadj(nullptr),
-		  adjncy(nullptr),
-		  vtxdist(nullptr),
-		  vwgt(nullptr),
-		  adjwgt(nullptr),
-		  tpwgts(nullptr),
-		  ubvec(nullptr),
-		  nTpwgts(0),
-		  nXAdj(0),
-		  nAdjncy(0),
-		  nVtxdist(0),
-		  nVwgt(0),
-		  nAdjwgt(0),
-		  nUbvec(0),
-		  nCon(nCon),
+		: PartitionerInterface<I,T>(sourceGraph, nParts), 
 		  numflag(0),
-		  PartitionerInterface<I,T>(sourceGraph, nParts)
+		  nCon(nCon),
+		  vwgt(nullptr),
+		  nVwgt(0),
+		  adjwgt(nullptr),
+		  nAdjwgt(0),
+		  ubvec(nullptr),
+		  nUbvec(0),
+		  tpwgts(nullptr),
+		  nTpwgts(0),
+		  xadj(nullptr),
+		  nXAdj(0),
+		  adjncy(nullptr),
+		  nAdjncy(0),
+		  vtxdist(nullptr),
+		  nVtxdist(0)
 		{
 			cupcfd::error::eCodes status;
 

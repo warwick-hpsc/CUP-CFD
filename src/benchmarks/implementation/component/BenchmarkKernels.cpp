@@ -678,7 +678,7 @@ namespace cupcfd
 			bool SolveEnthalpy = false;
 			// T sigma = 1.0;
 			// T sigma2 = 1.2;
-			// T vislam = 1.3;
+			T vislam = 0.001;
 			int ivar = 1;
 			int VarT = 2;
 			T Sigma_T = 1.4;
@@ -721,7 +721,8 @@ namespace cupcfd
 														RFace, nFaces * 2,
 														dPhidx, nCells,
 														SolveTurb, SolveEnthalpy,
-														// sigma, sigma2, vislam,
+														// sigma, sigma2, 
+														vislam,
 														ivar, VarT, Sigma_T, Prandtl,
 														VarTE, Sigma_k, VarED, Sigma_e,
 														Sigma_s, Schmidt, GammaBlend, 

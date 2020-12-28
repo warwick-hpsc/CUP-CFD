@@ -77,7 +77,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Cleanup any dynamically allocated memory.
 				 */
-				virtual ~ExchangePatternConfig();
+				~ExchangePatternConfig();
 
 				// === Concrete Methods ===
 

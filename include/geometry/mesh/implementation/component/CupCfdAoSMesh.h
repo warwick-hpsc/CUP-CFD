@@ -166,7 +166,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~CupCfdAoSMesh();
+					~CupCfdAoSMesh();
 
 					// === Concrete Methods ===
 					void reset();

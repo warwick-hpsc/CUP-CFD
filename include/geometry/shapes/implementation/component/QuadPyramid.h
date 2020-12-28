@@ -61,7 +61,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					virtual ~QuadPyramid();
+					~QuadPyramid();
 
 					// === Static Methods ===
 

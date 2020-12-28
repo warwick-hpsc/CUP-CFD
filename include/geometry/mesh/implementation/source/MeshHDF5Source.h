@@ -53,7 +53,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~MeshHDF5Source();
+					~MeshHDF5Source();
 
 					// === Concrete Methods ===
 

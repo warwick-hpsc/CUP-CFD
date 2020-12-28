@@ -40,22 +40,15 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					/** Number of vertices **/
-					int nVertices;
-
-					/** Number of edges **/
-					int nEdges;
+					int numVertices;
+					int numEdges;
+					T area;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,2> centroid;
 
 					// === Constructors/Deconstructors ===
 
-					/**
-					 *
-					 */
 					Polygon2D();
 
-					/**
-					 *
-					 */
 					~Polygon2D();
 
 					// === Concrete Methods ===
@@ -69,7 +62,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices this Polygon2D has
 					 */
-					inline int getNVertices();
+					inline int getNumVertices();
 
 					/**
 					 * Get the number of edges in this Polygon2D
@@ -80,7 +73,7 @@ namespace cupcfd
 					 *
 					 * @return The number of edges this Polygon2D has
 					 */
-					inline int getNEdges();
+					inline int getNumEdges();
 
 					/**
 					 * Determine whether the provided point is inside the Polygon2D.

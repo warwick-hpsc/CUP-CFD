@@ -59,7 +59,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					virtual ~Tetrahedron();
+					~Tetrahedron();
 
 					// === Static Methods ===
 
@@ -94,6 +94,16 @@ namespace cupcfd
 					 * @retval false The point is not on an edge of the polyhedron
 					 */
 					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+
+				protected:
+					/**
+					 * Compute the centroid
+					 *
+					 * @tparam T Datatype of the geometry
+					 *
+					 * @return The computed centroid
+					 */
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

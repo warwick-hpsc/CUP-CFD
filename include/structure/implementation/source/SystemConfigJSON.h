@@ -61,7 +61,7 @@ namespace cupcfd
 			 */
 			SystemConfigJSON(Json::Value& parseJSON);
 
-			virtual ~SystemConfigJSON();
+			~SystemConfigJSON();
 
 			// === Concrete Methods ===
 

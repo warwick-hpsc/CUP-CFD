@@ -86,7 +86,7 @@ namespace cupcfd
 					 * Deconstructor:
 					 * Cleans up any open accessors, records etc.
 					 */
-					virtual ~HDF5Access();
+					~HDF5Access();
 
 					/**
 					 * Open the HDF5 file tracked by this object.

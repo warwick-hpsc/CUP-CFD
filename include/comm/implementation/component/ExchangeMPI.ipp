@@ -35,12 +35,11 @@ namespace cupcfd
 				}
 
 				int err;
-				T dummy;
-				MPI_Datatype dType;
 				int offset;
 
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				MPI_Datatype dType;
+				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
 				int tag = 78;
 
 				*nRequests = nTRanks * 2;
@@ -74,13 +73,13 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes ExchangeVMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 int * sendCount, int nSendCount,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * recvCount, int nRecvCount,
-															 int * sRanks, int nSRanks,
-															 int * rRanks, int nRRanks,
-															 MPI_Comm comm,
-															 MPI_Request ** requests, int * nRequests) {
+														int * sendCount, int nSendCount,
+														T * recvBuffer, int nRecvBuffer,
+														int * recvCount, int nRecvCount,
+														int * sRanks, int nSRanks,
+														int * rRanks, int nRRanks,
+														MPI_Comm comm,
+														MPI_Request ** requests, int * nRequests) {
 				cupcfd::error::eCodes status;
 
 				if (nSendCount < nSRanks) {
@@ -112,24 +111,23 @@ namespace cupcfd
 				int err;
 				int offset;
 				int reqPtr;
-				T dummy;
-				MPI_Datatype dType;
 
 				// Get the datatype based on the type of the dummy variable
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				CHECK_ECODE(status);
+				MPI_Datatype dType;
+				status = cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
+				CHECK_ECODE(status)
 				int tag = 79;
 
 				*nRequests = 0;
 				for(int i = 0; i < nRRanks; i++) {
 					if(recvCount[i] > 0) {
-						(*nRequests)++;
+						*nRequests = *nRequests + 1;
 					}
 				}
 				
 				for(int i = 0; i < nSRanks; i++) {
 					if(sendCount[i] > 0) {
-						(*nRequests)++;
+						*nRequests = *nRequests + 1;
 					}
 				}
 
@@ -219,11 +217,10 @@ namespace cupcfd
 				int err;
 				int offset;
 				int reqPtr;
-				T dummy;
-				MPI_Datatype dType;
 
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				MPI_Datatype dType;
+				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
 
 				int tag = 79;
 
@@ -280,12 +277,11 @@ namespace cupcfd
 				int offset;
 				int reqPtr;
 
-				T dummy;
 				MPI_Datatype dType;
 				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
 				CHECK_ECODE(status)
 				
 				int tag = 79;

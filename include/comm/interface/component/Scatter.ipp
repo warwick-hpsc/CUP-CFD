@@ -31,7 +31,6 @@ namespace cupcfd
 			
 			// This function is essentially a wrapper for an underlying comms operation - currently this is MPI only.
 			
-			// ToDo: Error Checks
 			if (nEleBSend != chunkSize*mpComm.size) {
 				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 			}
@@ -61,26 +60,28 @@ namespace cupcfd
 		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T ** bRecv, int * nEleBRecv, int * pSend, int nElePSend, cupcfd::comm::Communicator& mpComm, int sProcess) {
 			cupcfd::error::eCodes status;
 		
-			int * sendCount;
-			T * bSendCpy;
-			int * pSendCpy;
-			int * sortIndexes;
-			int * groupID;
-			int * groupSize;
-			int nGroup;
-			// int nGroupSize;
+			int * sendCount = NULL;
+			T * bSendCpy = NULL;
+			int * pSendCpy = NULL;
+			int * sortIndexes = NULL;
+			int * groupID = NULL;
+			int * groupSize = NULL;
+			int nGroup = -1;
+			int nGroupSize = -1;
 
 			// (1) We need to sort/group the send buffer by destination process on the root process
 			if(mpComm.rank == sProcess) {
 				sortIndexes = (int *) malloc(sizeof(int) * nElePSend);
 
 				// First we can make copies of bSend and pSend so it is non-destructive
-				// bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
-				// pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
-				// cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
-				// cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
-				bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
-				pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
+				bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
+				pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
+				status = cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
+				CHECK_ECODE(status)
+				status = cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
+				CHECK_ECODE(status)
+				// bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
+				// pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
 				status = cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
@@ -93,7 +94,7 @@ namespace cupcfd
 				// Now we have a copy of the send buffer and the processes each index is going to, grouped by sorted process id.
 				// Compute the size of each of these groups.
 				// This driver will also allocate the pointer space for us (but we must free it in this function to avoid leaks)
-				status = cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize);
+				status = cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize, &nGroupSize);
 				CHECK_ECODE(status)
 
 				// Now we need to build an array of how many elements are to be sent to each process. Not all processes are

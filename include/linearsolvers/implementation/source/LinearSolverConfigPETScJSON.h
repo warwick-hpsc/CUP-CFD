@@ -76,7 +76,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~LinearSolverConfigPETScJSON();
+				~LinearSolverConfigPETScJSON();
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getPETScAlgorithm(PETScAlgorithm * solverAlg);

@@ -74,7 +74,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~CupCfdAoSMeshVertex();
+					~CupCfdAoSMeshVertex();
 
 					// === Concrete Methods ===
 

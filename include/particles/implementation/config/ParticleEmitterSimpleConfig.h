@@ -76,7 +76,7 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
-				virtual ~ParticleEmitterSimpleConfig();
+				~ParticleEmitterSimpleConfig();
 
 				// === Concrete Methods ===
 
@@ -92,7 +92,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(const ParticleEmitterSimpleConfig<I,T>& source);
+				void operator=(const ParticleEmitterSimpleConfig<I,T>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -104,13 +104,13 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
-				virtual ParticleEmitterSimpleConfig<I,T> * clone();
+				ParticleEmitterSimpleConfig<I,T> * clone();
 
 				/**
 				 *
 				 */
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter, int emitterId);
+				cupcfd::error::eCodes buildParticleEmitter(ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>,I,T> ** emitter, int emitterId);
 		};
 	}
 }

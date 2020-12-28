@@ -91,7 +91,7 @@ namespace cupcfd
 					 * @tparam T The data type of the coordinate system
 					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
-					virtual ~EuclideanVector();
+					~EuclideanVector();
 
 					// === Static Methods ===
 
@@ -516,8 +516,6 @@ namespace cupcfd
 
 					__attribute__((warn_unused_result))
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
-
-					inline MPI_Datatype getMPIType();
 
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes registerMPIType();

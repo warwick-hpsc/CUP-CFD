@@ -22,22 +22,22 @@ namespace cupcfd
 
 		template <class I, class T>
 		PartitionerInterface<I,T>::PartitionerInterface(cupcfd::comm::Communicator& workComm)
-		:nParts(0),
-		 nResult(0),
-		 nNodes(0),
-		 nodes(nullptr),
-		 result(nullptr)
+		: nodes(nullptr),
+		  nNodes(0),
+		  result(nullptr),
+		  nResult(0),
+		  nParts(0)
 		{
 			this->workComm = workComm;
 		}
 
 		template <class I, class T>
 		PartitionerInterface<I,T>::PartitionerInterface(cupcfd::data_structures::DistributedAdjacencyList<I,T>& sourceGraph, int nParts)
-		:nParts(0),
-		 nResult(0),
-		 nNodes(0),
-		 nodes(nullptr),
-		 result(nullptr)
+		: nodes(nullptr),
+		  nNodes(0),
+		  result(nullptr),
+		  nResult(0),
+		  nParts(0)
 		{
 			cupcfd::error::eCodes status;
 

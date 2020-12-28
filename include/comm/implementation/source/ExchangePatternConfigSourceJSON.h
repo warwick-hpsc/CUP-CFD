@@ -66,7 +66,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~ExchangePatternConfigSourceJSON();
+				~ExchangePatternConfigSourceJSON();
 
 				// === Inherited Overloaded Methods ===
 				__attribute__((warn_unused_result))

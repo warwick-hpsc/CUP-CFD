@@ -92,11 +92,7 @@ namespace cupcfd
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blb,
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb);
 
-					/**
-					 *
-					 */
 					~Hexahedron();
-
 
 					// === Static Methods ===
 
@@ -112,9 +108,7 @@ namespace cupcfd
 					 * @tparam T The type of the spatial domain
 					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
-					 * @return Return whether the point exists inside this polyhedron
-					 * @retval true The point is inside the polyhedron
-					 * @retval false The point is outside the polyhedron
+					 * @return Return true if the point exists inside this polyhedron
 					 */
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
@@ -127,9 +121,7 @@ namespace cupcfd
 					 * @tparam T The type of the spatial domain
 					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
@@ -142,12 +134,11 @@ namespace cupcfd
 					 * @tparam T The type of the spatial domain
 					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
+				protected:
 					/**
 					 * Compute the volume of this polyhedron
 					 *

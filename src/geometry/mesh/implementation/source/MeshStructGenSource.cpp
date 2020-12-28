@@ -35,10 +35,10 @@ namespace cupcfd
 			 nY(nY),
 			 nZ(nZ),
 			 sMinX(sMinX),
-			 sMaxX(sMaxX),
 			 sMinY(sMinY),
-			 sMaxY(sMaxY),
 			 sMinZ(sMinZ),
+			 sMaxX(sMaxX),
+			 sMaxY(sMaxY),
 			 sMaxZ(sMaxZ)
 			{
 				// Compute Spatial Division
@@ -305,7 +305,8 @@ namespace cupcfd
 					euc::EuclideanPoint<T,3> brb = centers[i] + euc::EuclideanPoint<T,3>(dX, -dY, -dZ);
 
 					cupcfd::geometry::shapes::Hexahedron<T> cellShape(tlf, trf, blf, brf, tlb, trb, blb, brb);
-					cellVol[i] = cellShape.computeVolume();
+					// cellVol[i] = cellShape.computeVolume();
+					cellVol[i] = cellShape.volume;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -956,7 +957,8 @@ namespace cupcfd
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {
 					cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[i], vertexPos[i]+1, vertexPos[i]+2, vertexPos[i]+3);
-					faceCenter[i] = shape.computeCentroid();
+					// faceCenter[i] = shape.computeCentroid();
+					faceCenter[i] = shape.centroid;
 				}
 
 				free(csrIndices);
@@ -1238,10 +1240,14 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryDistance(T * boundaryDistance __attribute__((unused)), I nBoundaryDistance __attribute__((unused)), I * boundaryLabels __attribute__((unused)), I nBoundaryLabels __attribute__((unused)))
+			cupcfd::error::eCodes MeshStructGenSource<I,T>::getBoundaryDistance(T * boundaryDistance, I nBoundaryDistance, I * boundaryLabels __attribute__((unused)), I nBoundaryLabels __attribute__((unused)))
 			{
-				// Don't have a value for this currently.
-				return cupcfd::error::E_SOURCE_MISSING;
+				// ToDo: once more region types are added (e.g. for 'wall'), can replace loop with sensible distances.
+				//       Until then, just zero the distances array.
+				for (I i=0; i<nBoundaryDistance; i++) {
+					boundaryDistance[i] = T(0.0);
+				}
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>

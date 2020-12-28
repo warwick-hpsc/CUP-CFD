@@ -23,10 +23,10 @@ namespace cupcfd
 		template <class I, class T>
 		DistributionNormal<I,T>::DistributionNormal(T mean, T stdev, T lbound, T ubound)
 		: Distribution<I,T>(),
-		 mean(mean),
-		 stdev(stdev),
 		 lbound(lbound),
-		 ubound(ubound)
+		 ubound(ubound),
+		 mean(mean),
+		 stdev(stdev)
 		{
 			if (lbound > mean) {
 				throw(std::runtime_error("DistributionNormal constructor: lbound must not exceed mean"));
@@ -47,10 +47,10 @@ namespace cupcfd
 		template <class I, class T>
 		DistributionNormal<I,T>::DistributionNormal(DistributionNormal<I,T>& source)
 		{
-			this->mean = source.mean;
-			this->stdev = source.stdev;
 			this->lbound = source.lbound;
 			this->ubound = source.ubound;
+			this->mean = source.mean;
+			this->stdev = source.stdev;
 		}
 
 		template <class I, class T>

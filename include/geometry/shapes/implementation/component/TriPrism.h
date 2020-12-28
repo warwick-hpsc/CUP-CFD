@@ -73,7 +73,7 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					virtual ~TriPrism();
+					~TriPrism();
 
 					// === Static Methods ===
 

@@ -62,14 +62,12 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~DistributionFixed();
+				~DistributionFixed();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				// __attribute__((warn_unused_result))
-				// cupcfd::error::eCodes getValues(T * values, I nValues);
 				void getValues(T * values, I nValues);
 
 				DistributionFixed<I,T> * clone();

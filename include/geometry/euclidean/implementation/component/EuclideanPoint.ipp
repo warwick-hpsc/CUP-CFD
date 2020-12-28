@@ -74,15 +74,15 @@ namespace cupcfd
 			}
 			
 			template <class T, unsigned int N>
-			inline MPI_Datatype EuclideanPoint<T,N>::getMPIType() {
-				return EuclideanPoint<T,N>::mpiType;
-			}
-			
-			template <class T, unsigned int N>
 			inline bool EuclideanPoint<T,N>::isRegistered() {
 				return EuclideanPoint<T,N>::mpiDataTypeReg;
 			}
-			
+
+			template<typename T, typename U> constexpr size_t offsetOf(U T::*member)
+			{
+			    return (char*)&((T*)nullptr->*member) - (char*)nullptr;
+			}
+
 			template <class T, unsigned int N>
 			cupcfd::error::eCodes EuclideanPoint<T,N>::registerMPIType() {
 				// Error Check - Only Register if currently unregistered
@@ -104,8 +104,7 @@ namespace cupcfd
 				cupcfd::comm::mpi::getMPIType(this->cmp[0], &componentType);
 				structTypes[0] = componentType;
 
-				// displ[0] = (MPI_Aint) offsetof(class EuclideanPoint, cmp);
-				displ[0] = (MPI_Aint) ( (char*)&(this->cmp) - (char*)this );
+				displ[0] = (MPI_Aint) offsetOf(&EuclideanPoint::cmp);
 
 				MPI_Datatype vecType;
 				MPI_Datatype vecTypeResized;

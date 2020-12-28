@@ -49,10 +49,10 @@ namespace cupcfd
 		template <class I, class T>
 		PartitionerMetis<I,T>::PartitionerMetis(cupcfd::data_structures::DistributedAdjacencyList<I,T>& sourceGraph, int nParts, int nCon)
 		: PartitionerInterface<I,T>(*(sourceGraph.comm)),
+		  numflag(0),
 		  xadj(nullptr),
 		  adjncy(nullptr),
-		  nCon(0),
-		  numflag(0)
+		  nCon(0)
 		{
 			cupcfd::error::eCodes status;
 

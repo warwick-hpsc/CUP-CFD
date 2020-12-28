@@ -125,7 +125,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~CupCfdAoSMeshRegion();
+					~CupCfdAoSMeshRegion();
 
 					// === Concrete Methods ===
 

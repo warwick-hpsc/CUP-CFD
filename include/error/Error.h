@@ -50,6 +50,7 @@ namespace cupcfd
 			E_GEOMETRY_NO_VALID_CELL,
 			E_GEOMETRY_ON_EDGE,
 			E_GEOMETRY_ON_VERTEX,
+			E_GEOMETRY_LOGIC_ERROR,
 			E_ARRAY_SUCCESS,
 			E_ARRAY_SIZE_UNDERSIZED,
 			E_ARRAY_SIZE_MISMATCH,
@@ -153,13 +154,6 @@ namespace cupcfd
 
 #define STRINGIZE_DETAIL(x) #x
 #define STRINGIZE(x) STRINGIZE_DETAIL(x)
-// #ifndef LOOP_CHECK_ECODE
-// 	#ifdef DEBUG
-//  		#define LOOP_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
-// 	#else
-// 		#define LOOP_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) break; }
-// 	#endif
-// #endif
 #ifndef CHECK_ECODE
 	#ifdef DEBUG
  		#define CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }

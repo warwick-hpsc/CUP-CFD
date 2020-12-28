@@ -189,10 +189,10 @@ namespace cupcfd
 					 * @return The computed centroid position
 					 */
 					static cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroidBiMedianIntersection(
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-																 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d);
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+																const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d);
 
 					/**
 					 * Test whether a point is inside by tracing a vector from the point to the centroid.
@@ -217,10 +217,10 @@ namespace cupcfd
 					 * @retval false The point is not inside the Quadrilateral
 					 */
 					static inline bool isPointInsideCentroid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-														     const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
-															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d,
-															 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
+														    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
+															const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c,
+															const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& d,
+															const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
 					// === Concrete Methods ===
 
@@ -237,6 +237,7 @@ namespace cupcfd
 					 */
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
+				protected:
 					/**
 					 * Compute the area of the Quadrilateral
 					 *

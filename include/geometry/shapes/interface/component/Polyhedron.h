@@ -33,7 +33,7 @@ namespace cupcfd
 			 * @tparam T The type of the spatial domain
 			 */
 
-			enum PolyhedronType
+			enum PolyhedronType 
 			{
 				POLYHEDRON_TETRAHEDRON,
 				POLYHEDRON_QUADPYRAMID,
@@ -43,34 +43,25 @@ namespace cupcfd
 			};
 
 			// For now, we will hard code all Polyhedrons to be 3D (not interested in 4D and above, cannot be 2D)
+			// ... what? A polyhedron is 3D by definition.
 			template <class P, class T>
 			class Polyhedron
 			{
 				public:
 					// === Members ===
 
-					/** Number of edges in polyhedron **/
-					int nEdges;
+					int numEdges;
+					int numVertices;
+					int numFaces;
 
-					/** Number of vertices in polyhedron **/
-					int nVertices;
-
-					/** Number of faces in the polyhedron **/
-					int nFaces;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
+					T volume;
 
 					// === Constructors/Deconstructors ===
 
-					/**
-					 * Default Constructor
-					 */
 					Polyhedron();
 
-					/**
-					 * Deconstructor
-					 */
 					~Polyhedron();
-
-					// === Static Methods ===
 
 					// === Concrete Methods ===
 
@@ -82,7 +73,7 @@ namespace cupcfd
 					 *
 					 * @return The number of edges.
 					 */
-					inline int getNEdges();
+					inline int getNumEdges();
 
 					/**
 					 * Get the number of vertices in this polyhedron.
@@ -92,7 +83,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices.
 					 */
-					inline int getNVertices();
+					inline int getNumVertices();
 
 					// === Interface Methods ===
 
@@ -103,9 +94,7 @@ namespace cupcfd
 					 * @tparam P The implementation type of the polygon
 					 * @tparam T The type of the spatial domain
 					 *
-					 * @return Return whether the point exists inside this polyhedron
-					 * @retval true The point is inside the polyhedron
-					 * @retval false The point is outside the polyhedron
+					 * @return Return true if point exists inside this polyhedron
 					 */
 					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
@@ -117,7 +106,7 @@ namespace cupcfd
 					 *
 					 * @return The computed volume
 					 */
-					inline T computeVolume();
+					// inline T computeVolume();
 			};
 
 			// These methods are equivalent to static, but we'll place them here since they're generic

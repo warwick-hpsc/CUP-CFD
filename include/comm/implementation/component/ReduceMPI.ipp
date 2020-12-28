@@ -29,10 +29,8 @@ namespace cupcfd
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 				
-				T dummy;
 				MPI_Datatype dType;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 				
 				// Call the Reduce operation
 				int err = MPI_Reduce(bSend, bRecv, nBSend, dType, op, sProcess, comm);
@@ -76,10 +74,8 @@ namespace cupcfd
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
-				T dummy;
 				MPI_Datatype dType;
-				
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);	// Retrieve the MPI Datatype for T.
+				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
 
 				// Call the AllReduce operation
 				int err = MPI_Allreduce(bSend, bRecv, nBSend, dType, op, comm);

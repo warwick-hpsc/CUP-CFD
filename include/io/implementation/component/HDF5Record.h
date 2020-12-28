@@ -39,7 +39,7 @@ namespace cupcfd
 					// Constructors/Deconstructors
 					HDF5Record(std::string groupName, std::string dataName, bool attr);
 					HDF5Record(std::string dataName, bool attr);
-					virtual ~HDF5Record();
+					~HDF5Record();
 
 					/**
 					 *

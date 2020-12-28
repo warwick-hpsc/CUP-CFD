@@ -284,24 +284,18 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		inline MPI_Datatype ParticleSimple<I,T>::getMPIType() {
-			return ParticleSimple<I,T>::mpiType;
-		}
-		
-		template <class I, class T>
 		inline bool ParticleSimple<I,T>::isRegistered() {
 			return ParticleSimple<I,T>::mpiDataTypeReg;
 		}
 		
 		template <class I, class T>
 		cupcfd::error::eCodes ParticleSimple<I,T>::registerMPIType() {
-			cupcfd::error::eCodes status;
-
 			// Error Check - Only Register if currently unregistered
 			if(this->isRegistered()) {
 				return cupcfd::error::E_MPI_DATATYPE_REGISTERED;
 			}
 
+			cupcfd::error::eCodes status;
 			int mpiErr;
 
 			const int nb = 14;
@@ -429,29 +423,32 @@ namespace cupcfd
 			MPI_Datatype vecTypeResized;
 
 			mpiErr = MPI_Type_create_struct(nb, blocklengths, displ, structTypes, &vecType);
-
 			if(mpiErr != MPI_SUCCESS) {
+				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecType);
-
 			if(mpiErr != MPI_SUCCESS) {
+				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class ParticleSimple<I,T>), &vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
+				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
+				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
+				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 

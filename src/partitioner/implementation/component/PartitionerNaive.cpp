@@ -79,7 +79,7 @@ namespace cupcfd
 
 			// AllGather - Get the number of nodes on each rank
 			I * rankNNodes = (I *) malloc(sizeof(I) * this->workComm.size);
-			status = cupcfd::comm::AllGather(&this->nNodes, rankNNodes, this->workComm.size, 1, this->workComm);
+			status = cupcfd::comm::AllGather(&this->nNodes, 1, rankNNodes, this->workComm.size, 1, this->workComm);
 			CHECK_ECODE(status)
 
 			// Since this is naive, doesn't really matter *which* nodes we are assigned - they don't have to be sequential

@@ -26,15 +26,15 @@ namespace cupcfd
 			template <class P, class T>
 			Pyramid<P,T>::Pyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex,
 								  const P& base)
-			:apex(apex), base(base)
+			: apex(apex), base(base)
 			{
-
+				this->centroid = this->computeCentroid();
+				this->volume = this->computeVolume();
 			}
 
 			template <class P, class T>
 			Pyramid<P,T>::~Pyramid()
 			{
-
 			}
 
 			// === Static Methods ===
@@ -43,8 +43,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class P, class T>
-			inline bool Pyramid<P,T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool Pyramid<P,T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				// ToDo: This algorithm could be moved up to a more general level in Polyhedron.
 				// However, we would need to either (a) find a way to export the vertices (overhead of extra copies)
 				// or (b) store a general vertex member list (such as an array) at the Polyhedron level - however
@@ -78,22 +77,19 @@ namespace cupcfd
 				pointVector = base.vertices[0] - point;
 				
 				// Test if exactly on base plane and inside base
-				if(this->base.isPointInside(point))
-				{
+				if(this->base.isPointInside(point)) {
 					return true;
 				}
 				
 				dotProd = pointVector.dotProduct(basePlane.getNormal());
-				if(dotProd < 0)
-				{
+				if(dotProd < 0) {
 					// Negative means different directions - i.e. the normal vector pointing out is not the same the same direction
 					// as the point vector pointing in. Therefore point not in shape
 					return false;
 				}
 					
 				// (2) Test against other faces
-				for(int i = 0; i < this->base.nVertices; i++)
-				{
+				for(int i = 0; i < this->base.numVertices; i++) {
 					// ToDo: This is presuming that all type 'P' base objects have a vertices data structure
 					// Could make it so Polygon3D has a pointer to a vertices array, and then leave the 
 					// storage implementation to the subclasses and updating the pointer to it.
@@ -101,17 +97,16 @@ namespace cupcfd
 					// Construct a plane using anticlockwise ordering when viewed from outside/ Clockwise from inside (assuming face is coplanar)
 					// This is done presuming the base vertices are already in anticlockwise order when viewed from outside/clockwise from inside
 					// so we just need to traverse them in the correct order from the apex point.
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T> facePlane(this->apex, base.vertices[(i+1)%this->base.nVertices], base.vertices[i]);
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T> facePlane(this->apex, base.vertices[(i+1)%this->base.numVertices], base.vertices[i]);
 					
-					cupcfd::geometry::shapes::Triangle3D<T> face(this->apex, base.vertices[(i+1)%this->base.nVertices], base.vertices[i]);
+					cupcfd::geometry::shapes::Triangle3D<T> face(this->apex, base.vertices[(i+1)%this->base.numVertices], base.vertices[i]);
 					
 					// (2a) Create a vector to the first point on the face
 					pointVector = base.vertices[i] - point;
 					
 					// (2b) Are we on a face? If so this counts as inside, but the vector will be perpendicular
 					// to the normal/parallel to the plane
-					if(face.isPointInside(point))
-					{
+					if(face.isPointInside(point)) {
 						return true;
 					}
 					
@@ -119,8 +114,7 @@ namespace cupcfd
 					// If not, this point is not inside the polyhedron
 					dotProd = pointVector.dotProduct(facePlane.getNormal());
 
-					if(dotProd < 0)
-					{
+					if(dotProd < 0) {
 						// Negative means different directions - i.e. the normal vector pointing out is not the same the same direction
 						// as the point vector pointing in. Therefore point not in shape
 						return false;
@@ -132,12 +126,12 @@ namespace cupcfd
 			}
 
 			template <class P, class T>
-			T Pyramid<P,T>::computeVolume()
-			{
+			T Pyramid<P,T>::computeVolume() {
 				// === Volume = 1/3 Base Area * Height ===
 				
 				// (1) Compute Area of Base
-				T area = base.computeArea();
+				// T area = base.computeArea();
+				T area = base.area;
 				
 				// (2) Compute Height as shortest distance from base plane
 				cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
@@ -148,12 +142,12 @@ namespace cupcfd
 			}
 			
 			template <class P, class T>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Pyramid<P,T>::computeCentroid()
-			{
+			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Pyramid<P,T>::computeCentroid() {
 				// https://en.wikipedia.org/wiki/Centroid/#Of_a_cone_or_pyramid
 				// Centroid = 1/4 the distance from the base centroid to the apex
 				
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> baseCentroid = this->base.computeCentroid();
+				// cupcfd::geometry::euclidean::EuclideanPoint<T,3> baseCentroid = this->base.computeCentroid();
+				cupcfd::geometry::euclidean::EuclideanPoint<T,3> baseCentroid = this->base.centroid;
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> baseCentroidToApex = this->apex - baseCentroid;
 		
 				return baseCentroid + (T(0.25) * baseCentroidToApex);

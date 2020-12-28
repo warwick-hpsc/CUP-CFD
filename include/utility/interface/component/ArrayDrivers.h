@@ -84,8 +84,6 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			// __attribute__((warn_unused_result))
-			// cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count);
 			void uniqueCount(T * source, I nSourceEle, I * count);
 
 			/**
@@ -257,7 +255,7 @@ namespace cupcfd
 			*/
 			template <class I, class T>
 			__attribute__((warn_unused_result))
-			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount);
+			cupcfd::error::eCodes distinctArray(T * source, I nEleSource, T ** dst, I * nEleDst, I ** dupCount, I * nEleDupCount);
 
 			/**
 			 * Computes the number of elements that appear in source1, but not in source 2, aka a count of a set minus (A - B).
@@ -276,8 +274,6 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			// __attribute__((warn_unused_result))
-			// cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count);
 			void minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count);
 
 			/**

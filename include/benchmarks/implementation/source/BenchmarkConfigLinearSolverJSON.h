@@ -117,7 +117,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~BenchmarkConfigLinearSolverJSON();
+				~BenchmarkConfigLinearSolverJSON();
 
 				// === Concrete Methods ===
 

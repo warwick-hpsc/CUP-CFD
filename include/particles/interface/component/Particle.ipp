@@ -25,14 +25,17 @@ namespace cupcfd
 		template <class P, class I, class T>
 		Particle<P, I, T>::Particle()
 		:CustomMPIType(),
+		 velocity(T(0.0)),
+		 pos(),
+		 inflightPos(),
+		 travelDt(T(0.0)),
 		 particleID(-1),
-		 cellGlobalID(-1),
-		 cellEntryFaceLocalID(-1),
-		 lastCellGlobalID(-1),
-		 lastLastCellGlobalID(-1),
 		 rank(-1),
 		 lastRank(-1),
-		 travelDt(T(0))
+		 cellGlobalID(-1),
+		 lastCellGlobalID(-1),
+		 lastLastCellGlobalID(-1),
+		 cellEntryFaceLocalID(-1)
 		{
 		
 		}
@@ -46,14 +49,14 @@ namespace cupcfd
 		 velocity(velocity),
 		 pos(pos),
 		 inflightPos(pos),
+		 travelDt(travelDt),
 		 particleID(id),
-		 cellGlobalID(cellGlobalID),
-		 cellEntryFaceLocalID(-1),
-		 lastCellGlobalID(-1),
-		 lastLastCellGlobalID(-1),
 		 rank(rank),
 		 lastRank(-1),
-		 travelDt(travelDt)
+		 cellGlobalID(cellGlobalID),
+		 lastCellGlobalID(-1),
+		 lastLastCellGlobalID(-1),
+		 cellEntryFaceLocalID(-1)
 		{
 		
 		}
@@ -244,7 +247,7 @@ namespace cupcfd
 				bool doesIntersectTriangleOnEdge;
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triIntersection;
 				T timeToIntersectTriangle;
-				doesIntersectTriangle = shape.calculateIntersection(v0, velocity, triIntersection, timeToIntersectTriangle, doesIntersectTriangleOnEdge, verbose);
+				doesIntersectTriangle = shape.calculateIntersection(v0, velocity, triIntersection, timeToIntersectTriangle, &doesIntersectTriangleOnEdge, verbose);
 				
 				if (doesIntersectTriangle) {
 					if (doesIntersect) {
@@ -581,11 +584,6 @@ namespace cupcfd
 		template <class P, class I, class T>
 		inline cupcfd::error::eCodes Particle<P, I, T>::getMPIType(MPI_Datatype * dType) {
 			return static_cast<P*>(this)->getMPIType(dType);
-		}
-		
-		template <class P, class I, class T>
-		inline MPI_Datatype Particle<P, I, T>::getMPIType() {
-			return static_cast<P*>(this)->getMPIType();
 		}
 		
 		template <class P, class I, class T>

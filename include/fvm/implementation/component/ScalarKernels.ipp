@@ -48,7 +48,8 @@ namespace cupcfd
 														T * RFace, I nRFace,
 														cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidx, int ndPhidx,
 														bool SolveTurb, bool SolveEnthalpy,
-														// T sigma, T sigma2, T vislam,
+														// T sigma, T sigma2, 
+														T vislam,
 														int ivar, int VarT, T Sigma_T, T Prandtl,
 														int VarTE, T Sigma_k, int VarED, T Sigma_e,
 														T Sigma_s, T Schmidt, T GammaBlend, T Small, T Large, T TMCmu) {
@@ -58,7 +59,7 @@ namespace cupcfd
 
 			// T Phiac;
 			T Visac;
-			T VisLam;
+			T VisLam = vislam;
 			T PhiFlux;
 			T VisFace;
 			// T fce, fci, fdi, fde1, fde2, d1, fde, f;
@@ -295,7 +296,7 @@ namespace cupcfd
 					fde = Visac * dPhidxac.dotProduct(norm);
 
 					fce = MassFlux[i] * PhiFace;
-					fde = fde;
+					// fde = fde; Original Dolfyn code has this assignment. Odd.
 
 					fci = fmin( MassFlux[i] , 0.0 ) * PhiFace + fmax(MassFlux[i], 0.0) * PhiCell[ip];
 					fdi = VisFace * dPhidxac.dotProduct(Xpn);

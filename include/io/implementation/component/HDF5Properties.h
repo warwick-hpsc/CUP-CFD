@@ -40,7 +40,7 @@ namespace cupcfd
 					hid_t memspaceID;		// Active Memory Space
 
 					HDF5Properties(HDF5Access& access);
-					virtual ~HDF5Properties();
+					~HDF5Properties();
 
 					/**
 					 *

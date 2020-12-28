@@ -84,24 +84,24 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Clears up any allocated buffers/arrays
 				 */
-				virtual ~ExchangePatternOneSidedNonBlocking();
+				~ExchangePatternOneSidedNonBlocking();
 
 				// Other Methods
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
+				cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
 						  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 						  int * exchangeIDXSend, int nExchangeIDXSend,
 						  int * tRanks, int nTRanks);
 
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes packSendBuffer(T * data, int nData);
+				cupcfd::error::eCodes packSendBuffer(T * data, int nData);
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData);
+				cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData);
 
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes exchangeStart(T * sourceData, int nData);
+				cupcfd::error::eCodes exchangeStart(T * sourceData, int nData);
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes exchangeStop(T * sinkData, int nData);
+				cupcfd::error::eCodes exchangeStop(T * sinkData, int nData);
 		};
 	}
 }

@@ -57,7 +57,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual ~BenchmarkConfigKernels();
+				~BenchmarkConfigKernels();
 
 				// === Concrete Methods ===
 

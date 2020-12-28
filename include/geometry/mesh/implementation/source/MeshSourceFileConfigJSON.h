@@ -82,7 +82,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */
-					virtual ~MeshSourceFileConfigJSON();
+					~MeshSourceFileConfigJSON();
 
 					// === Concrete Methods ===
 
@@ -98,7 +98,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshSourceFileConfigJSON<I,T>& source);
+					void operator=(MeshSourceFileConfigJSON<I,T>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.

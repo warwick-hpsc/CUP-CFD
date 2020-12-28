@@ -84,9 +84,8 @@ namespace cupcfd
 			I nTRanks = graph.sendGlobalIDsAdjncy.size();
 			I * tRanks = (I *) malloc(sizeof(I) * nTRanks);
 
-			I iLimit;
-			iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.sendGlobalIDsXAdj.size());
-			for (I i = 0; i < iLimit; i++) {
+			I numSendGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.sendGlobalIDsXAdj.size());
+			for (I i = 0; i < numSendGlobalIDsXAdj; i++) {
 				for(I j = 0; j < graph.sendGlobalIDsXAdj[i+1] - graph.sendGlobalIDsXAdj[i]; j++) {
 					tRanks[graph.sendGlobalIDsXAdj[i] + j] = graph.sendRank[i];
 				}

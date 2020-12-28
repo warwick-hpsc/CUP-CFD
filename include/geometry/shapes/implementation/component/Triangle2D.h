@@ -145,6 +145,7 @@ namespace cupcfd
 					 */
 					//bool isPointInsideCrossProduct(cupcfd::geometry::euclidean::EuclideanPoint<T,N> p);
 
+				protected:
 					T computeArea();
 
 					/**

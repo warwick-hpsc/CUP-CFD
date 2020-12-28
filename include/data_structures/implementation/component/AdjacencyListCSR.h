@@ -53,7 +53,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~AdjacencyListCSR();
+				~AdjacencyListCSR();
 
 				// === Concrete Methods ===
 

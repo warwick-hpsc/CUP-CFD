@@ -69,7 +69,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~PartitionerNaiveConfigSourceJSON();
+				~PartitionerNaiveConfigSourceJSON();
 
 				// === Concrete Methods ===
 

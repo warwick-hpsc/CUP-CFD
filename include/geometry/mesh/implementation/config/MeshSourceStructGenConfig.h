@@ -101,7 +101,7 @@ namespace cupcfd
 					 * @tparam I The type of the indexing scheme/ cell labels
 					 * @tparam T The type of the stored array data
 					 */
-					virtual ~MeshSourceStructGenConfig();
+					~MeshSourceStructGenConfig();
 
 					// === Concrete Methods ===
 
@@ -308,7 +308,7 @@ namespace cupcfd
 					inline void operator=(const MeshSourceStructGenConfig<I,T>& source);
 					MeshSourceStructGenConfig<I,T> * clone();
 					__attribute__((warn_unused_result))
-					virtual cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
+					cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
 			};
 		} // namespace mesh
 	} // namespace geometry
