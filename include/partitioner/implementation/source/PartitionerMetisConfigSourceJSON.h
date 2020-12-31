@@ -69,11 +69,12 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~PartitionerMetisConfigSourceJSON();
+				~PartitionerMetisConfigSourceJSON();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Methods ===
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitionerConfig(PartitionerConfig<I,T> ** config);
 
 				// === Pure Virtual Methods ===

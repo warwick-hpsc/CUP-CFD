@@ -37,18 +37,13 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkName(std::string& benchmarkName)
-		{
-			cupcfd::error::eCodes status;
-
+		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkName(std::string& benchmarkName) {
 			const Json::Value dataSourceType = this->configData["BenchmarkName"];
 
-			if(dataSourceType == Json::Value::null)
-			{
+			if(dataSourceType == Json::Value::null) {
 				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
-			else
-			{
+			else {
 				benchmarkName = dataSourceType.asString();
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -58,20 +53,14 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkRepetitions(I * repetitions)
-		{
-			cupcfd::error::eCodes status;
-
-			if(this->configData.isMember("Repetitions"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getBenchmarkRepetitions(I * repetitions) {
+			if(this->configData.isMember("Repetitions")) {
 				const Json::Value dataSourceType = this->configData["Repetitions"];
 
-				if(dataSourceType == Json::Value::null)
-				{
+				if(dataSourceType == Json::Value::null) {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*repetitions = dataSourceType.asLargestInt();
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -85,12 +74,10 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getExchangePatternConfig(cupcfd::comm::ExchangePatternConfig ** patternConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::getExchangePatternConfig(cupcfd::comm::ExchangePatternConfig ** patternConfig) {
 			cupcfd::error::eCodes status;
 
-			if(this->configData.isMember("ExchangePattern"))
-			{
+			if(this->configData.isMember("ExchangePattern")) {
 				cupcfd::comm::ExchangePatternConfigSourceJSON patterConfigSource(this->configData["ExchangePattern"]);
 				status = patterConfigSource.buildExchangePatternConfig(patternConfig);
 				return status;
@@ -100,8 +87,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::buildBenchmarkConfig(BenchmarkConfigExchange<I,T> ** config)
-		{
+		cupcfd::error::eCodes BenchmarkConfigExchangeJSON<I,T>::buildBenchmarkConfig(BenchmarkConfigExchange<I,T> ** config) {
 
 			cupcfd::error::eCodes status;
 			std::string benchmarkName;
@@ -109,22 +95,13 @@ namespace cupcfd
 			cupcfd::comm::ExchangePatternConfig * patternConfig;
 
 			status = this->getBenchmarkName(benchmarkName);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getBenchmarkRepetitions(&repetitions);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			status = this->getExchangePatternConfig(&patternConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigExchange<I,T>(benchmarkName, repetitions, *patternConfig);
 

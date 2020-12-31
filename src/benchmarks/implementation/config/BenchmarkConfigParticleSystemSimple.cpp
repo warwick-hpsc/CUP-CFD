@@ -50,8 +50,7 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class M, class I, class T, class L>
-		void BenchmarkConfigParticleSystemSimple<M,I,T,L>::operator=(const BenchmarkConfigParticleSystemSimple<M,I,T,L>& source)
-		{
+		void BenchmarkConfigParticleSystemSimple<M,I,T,L>::operator=(const BenchmarkConfigParticleSystemSimple<M,I,T,L>& source) {
 			this->benchmarkName = source.benchmarkName;
 			this->repetitions = source.repetitions;
 			this->nTimesteps = source.nTimesteps;
@@ -60,33 +59,24 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		BenchmarkConfigParticleSystemSimple<M,I,T,L> * BenchmarkConfigParticleSystemSimple<M,I,T,L>::clone()
-		{
+		BenchmarkConfigParticleSystemSimple<M,I,T,L> * BenchmarkConfigParticleSystemSimple<M,I,T,L>::clone() {
 			return new BenchmarkConfigParticleSystemSimple<M,I,T,L>(*this);
 		}
 
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes BenchmarkConfigParticleSystemSimple<M,I,T,L>::buildBenchmark(BenchmarkParticleSystemSimple<M,I,T,L> ** bench,
-																								std::shared_ptr<M> meshPtr)
-		{
+																								std::shared_ptr<M> meshPtr) {
 			cupcfd::error::eCodes status;
 			cupcfd::distributions::Distribution<I,T> * dtDist;
 
 			cupcfd::particles::ParticleSystem<cupcfd::particles::ParticleSystemSimple<M, I, T, L>, cupcfd::particles::ParticleEmitterSimple<I,T>, cupcfd::particles::ParticleSimple<I,T>, M, I, T, L> * tmp;
 
 			// Build the dt Distribution
-			status = this->dtDistConfig->buildDistribution(&dtDist);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			this->dtDistConfig->buildDistribution(&dtDist);
 
 			// Build the Particle System;
 			status = this->particleSystemConfig->buildParticleSystem(&tmp, meshPtr);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr(static_cast<cupcfd::particles::ParticleSystemSimple<M,I,T,L> *>(tmp));
 

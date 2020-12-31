@@ -62,7 +62,10 @@ namespace cupcfd
 				// === Methods ===
 
 				void operator=(const LinearSolverConfigPETSc<C,I,T>& source);
+				__attribute__((warn_unused_result))
 				LinearSolverConfigPETSc<C,I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildLinearSolver(LinearSolverInterface<C,I,T> ** solverSystem,
 															 cupcfd::data_structures::SparseMatrix<C,I,T>& matrix,
 															 cupcfd::comm::Communicator& solverComm);

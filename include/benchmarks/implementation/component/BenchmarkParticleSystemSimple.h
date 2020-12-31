@@ -48,9 +48,9 @@ namespace cupcfd
 				 *
 				 */
 				BenchmarkParticleSystemSimple(std::string benchmarkName, I repetitions,
-										I nTimesteps,
-										cupcfd::distributions::Distribution<I,T>& dtDist,
-										std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr);
+											I nTimesteps,
+											cupcfd::distributions::Distribution<I,T>& dtDist,
+											std::shared_ptr<cupcfd::particles::ParticleSystemSimple<M,I,T,L>> particleSystemPtr);
 
 				/**
 				 *
@@ -62,7 +62,8 @@ namespace cupcfd
 				// === Inherited Overridden Methods ===
 				void setupBenchmark();
 				void recordParameters();
-				void runBenchmark();
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes runBenchmark();
 		};
 	}
 }

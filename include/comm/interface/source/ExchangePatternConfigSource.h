@@ -58,6 +58,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_CONFIG_OPT_NOT_FOUND An option required to build the config was found to be missing.
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE One or more options were found to have invalid values.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildExchangePatternConfig(ExchangePatternConfig ** config);
 
 				// === Pure Virtual Methods ===
@@ -73,6 +74,7 @@ namespace cupcfd
 				 * or is improperly formatted
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE A suitable data source was found, but not with a valid value
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getExchangeMethod(ExchangeMethod * method) = 0;
 		};
 	}

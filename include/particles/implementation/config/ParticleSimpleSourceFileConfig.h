@@ -61,7 +61,7 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
-				virtual ~ParticleSimpleSourceFileConfig();
+				~ParticleSimpleSourceFileConfig();
 
 				// === Concrete Methods ===
 
@@ -77,7 +77,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(const ParticleSimpleSourceFileConfig<I,T>& source);
+				void operator=(const ParticleSimpleSourceFileConfig<I,T>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -89,11 +89,13 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
-				virtual ParticleSimpleSourceFileConfig<I,T> * clone();
+				__attribute__((warn_unused_result))
+				ParticleSimpleSourceFileConfig<I,T> * clone();
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildParticleSource(ParticleSource<ParticleSimple<I,T>,I,T> ** particleSource, int sourceId);
 		};
 	}

@@ -48,6 +48,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes reduceAdd(T * bSend, int nBSend, T * bRecv, int nBRecv, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -79,6 +80,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes reduceMultiply(T * bSend, int nBSend, T * bRecv, int nBRecv, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -110,6 +112,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes reduceMin(T * bSend, int nBSend, T * bRecv, int nBRecv, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -141,6 +144,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes reduceMax(T * bSend, int nBSend, T * bRecv, int nBRecv, int sinkProcess, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -171,6 +175,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes allReduceAdd(T * bSend, int nBSend, T * bRecv, int nBRecv, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -201,6 +206,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes allReduceMultiply(T * bSend, int nBSend, T * bRecv, int nBRecv, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -231,6 +237,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes allReduceMin(T * bSend, int nBSend, T * bRecv, int nBRecv, cupcfd::comm::Communicator& mpComm);
 
 		/**
@@ -261,6 +268,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes allReduceMax(T * bSend, int nBSend, T * bRecv, int nBRecv, cupcfd::comm::Communicator& mpComm);
 	}
 }

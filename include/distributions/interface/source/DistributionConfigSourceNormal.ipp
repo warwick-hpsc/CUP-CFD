@@ -30,12 +30,6 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigSourceNormal<I,T>::DistributionConfigSourceNormal(const DistributionConfigSourceNormal<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
 		DistributionConfigSourceNormal<I,T>::~DistributionConfigSourceNormal()
 		{
 		
@@ -44,78 +38,26 @@ namespace cupcfd
 		// === Concrete Methods ===
 		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig) {
 			cupcfd::error::eCodes status;
 			
 			T lBound, uBound, mean, stDev;
 			
 			status = this->getLBound(&lBound);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			status = this->getUBound(&uBound);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 					
 			status = this->getMean(&mean);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			status = this->getStDev(&stDev);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			*distConfig = new DistributionConfigNormal<I,T>(lBound, uBound, mean, stDev);
 			
 			return cupcfd::error::E_SUCCESS;
-		}
-		
-		// === Pure Virtual Methods ===
-		// Definitions here to satisfy linker
-		
-		template <class I, class T>
-		void DistributionConfigSourceNormal<I,T>::operator=(const DistributionConfigSourceNormal<I,T>& source)
-		{
-			// Pure Virtual
-		}
-		
-		template <class I, class T>
-		DistributionConfigSourceNormal<I,T> * DistributionConfigSourceNormal<I,T>::clone()
-		{
-			// Pure Virtual
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getLBound(T * lBound)
-		{
-			// Pure Virtual
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getUBound(T * uBound)
-		{
-			// Pure Virtual
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getMean(T * mean)
-		{
-			// Pure Virtual
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceNormal<I,T>::getStDev(T * stDev)
-		{
-			// Pure Virtual
 		}
 	}
 }

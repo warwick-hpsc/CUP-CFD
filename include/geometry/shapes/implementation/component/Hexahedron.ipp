@@ -37,16 +37,23 @@ namespace cupcfd
 									  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb)
 			: tlf(tlf), trf(trf), blf(blf), brf(brf),
 			  tlb(tlb), trb(trb), blb(blb), brb(brb)
-			{
-				this->nEdges = 12;
-				this->nVertices = 8;
-				this->nFaces = 6;
+			 {
+			 	// // Decompose Hexahedron into 5 tetrahedrons
+				// Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				// Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				// Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				// Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				// Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
+
+				// this->centroid = ((t1.volume * t1.centroid) + (t2.volume * t2.centroid) + (t3.volume * t3.centroid) + (t4.volume * t4.centroid) + (t5.volume * t5.centroid)) 
+				// 				/ (t1.volume + t2.volume + t3.volume + t4.volume + t5.volume);
+
+				// this->volume = t1.volume + t2.volume + t3.volume + t4.volume + t5.volume;
+
 			}
 
 			template <class T>
-			Hexahedron<T>::~Hexahedron()
-			{
-
+			Hexahedron<T>::~Hexahedron() {
 			}
 
 			// === Static Methods ===
@@ -55,8 +62,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template<class T>
-			inline bool Hexahedron<T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool Hexahedron<T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				// ToDo: This algorithm could be moved up to a more general level in Polyhedron.
 				// However, we would need to either (a) find a way to export the vertices (overhead of extra copies)
 				// or (b) store a general vertex member list (such as an array) at the Polyhedron level - however
@@ -82,30 +88,29 @@ namespace cupcfd
 				// since if they are not, then this is not really a hexahedral (since a Quadrilateral non coplanar = two triangular faces...)
 				cupcfd::geometry::euclidean::EuclideanPlane3D<T> facePlanes[6] = 
 				{
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlf, trf, brf),
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(trf, trb, brb),
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(trb, tlb, blb),
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlb, tlf, blf),
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlf, tlb, trb),
-					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(blf, brf, brb)
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlf, trf, brf), // front plane
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(trf, trb, brb), // right plane
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(trb, tlb, blb), // back plane
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlb, tlf, blf), // left plane
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(tlf, tlb, trb), // top plane
+					cupcfd::geometry::euclidean::EuclideanPlane3D<T>(blf, brf, brb)  // bottom plane
 				};	
 					
 				cupcfd::geometry::shapes::Quadrilateral3D<T> faces[6] = 
 				{
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, trf, brf, blf),
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(trf, trb, brb, brf),
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(trb, tlb, blb, brb),
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlb, tlf, blf, blb),
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, tlb, trb, trf),
-					cupcfd::geometry::shapes::Quadrilateral3D<T>(blf, brf, brb, blb)
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, trf, brf, blf), // front face
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(trf, trb, brb, brf), // right face
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(trb, tlb, blb, brb), // back face
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlb, tlf, blf, blb), // left face
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, tlb, trb, trf), // top face
+					cupcfd::geometry::shapes::Quadrilateral3D<T>(blf, brf, brb, blb)  // bottom face
 				};	
-					
-							
+
+
 				// ToDo: We might not need both the planes AND the face objects.
 							
 				// (1) Test against each face
-				for(int i = 0; i < 6; i++)
-				{
+				for(int i = 0; i < 6; i++) {
 					// ToDo: This is presuming that all type 'P' base objects have a vertices data structure
 					// Could make it so Polygon3D has a pointer to a vertices array, and then leave the 
 					// storage implementation to the subclasses and updating the pointer to it.
@@ -115,17 +120,14 @@ namespace cupcfd
 					
 					// (2b) Are we on a face? If so this counts as inside, but the vector will be perpendicular
 					// to the normal/parallel to the plane
-					if(faces[i].isPointInside(point))
-					{
+					if(faces[i].isPointInside(point)) {
 						return true;
 					}
 					
 					// (2c) Is the point vector and the normal vector facing the same direction?
 					// If not, this point is not inside the polyhedron
 					dotProd = pointVector.dotProduct(facePlanes[i].getNormal());
-
-					if(dotProd < 0)
-					{
+					if(dotProd < 0) {
 						// Negative means different directions - i.e. the normal vector pointing out is not the same the same direction
 						// as the point vector pointing in. Therefore point not in shape
 						return false;
@@ -137,32 +139,29 @@ namespace cupcfd
 			}
 			
 			template <class T>
-			inline bool Hexahedron<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{							
+			inline bool Hexahedron<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {							
 				// ToDo: This can likely be condensed to a generic polygon method, using a getEdge method	  
-									  
+
 				// Recreate list of edges
 				std::vector<cupcfd::geometry::euclidean::EuclideanVector<T,3>> edgeVectors;
 				
 				bool tests[12];
-				tests[0] = isPointOnLine(tlf, trf, point);
-				tests[1] = isPointOnLine(tlf, tlb, point);
-				tests[2] = isPointOnLine(trb, tlb, point);
-				tests[3] = isPointOnLine(trb, trf, point);
-				tests[4] = isPointOnLine(blf, brf, point);
-				tests[5] = isPointOnLine(blf, blb, point);
-				tests[6] = isPointOnLine(brb, blb, point);
-				tests[7] = isPointOnLine(brb, brf, point);
-				tests[8] = isPointOnLine(tlf, blf, point);
-				tests[9] = isPointOnLine(trf, brf, point);
+				tests[0]  = isPointOnLine(tlf, trf, point);
+				tests[1]  = isPointOnLine(tlf, tlb, point);
+				tests[2]  = isPointOnLine(trb, tlb, point);
+				tests[3]  = isPointOnLine(trb, trf, point);
+				tests[4]  = isPointOnLine(blf, brf, point);
+				tests[5]  = isPointOnLine(blf, blb, point);
+				tests[6]  = isPointOnLine(brb, blb, point);
+				tests[7]  = isPointOnLine(brb, brf, point);
+				tests[8]  = isPointOnLine(tlf, blf, point);
+				tests[9]  = isPointOnLine(trf, brf, point);
 				tests[10] = isPointOnLine(tlb, blb, point);
 				tests[11] = isPointOnLine(trb, brb, point);
 				
 				// Test if the point lies on each edge
-				for(int i = 0; i < 12; i++)
-				{
-					if(tests[i])
-					{
+				for(int i = 0; i < 12; i++) {
+					if(tests[i]) {
 						return true;
 					}
 				}
@@ -171,35 +170,48 @@ namespace cupcfd
 			}
 			
 			template <class T>
-			inline bool Hexahedron<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool Hexahedron<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 				return (tlf == point) || (trf == point) || (tlb == point) || (trb == point) ||
 					   (blf == point) || (brf == point) || (blb == point) || (brb == point);
 			}
 
 			template<class T>
-			T Hexahedron<T>::computeVolume()
-			{
+			T Hexahedron<T>::computeVolume() {
 				// General Case means we cannot assume it is a regular hexahedron
 				// Divide the hexahedron into tetrahedrons (triangular pyramids), and compute the volumes of
 				// those, then sum
 				
 				// 5 Tetrahedrons
-				Tetrahedron<T> t1(trb, brb, brf, blb); 
-				Tetrahedron<T> t2(tlf, blf, blb, brf);
-				Tetrahedron<T> t3(trb, tlb, blb, tlf);
-				Tetrahedron<T> t4(brf, trf, tlf, trb);
-				Tetrahedron<T> t5(trb, tlf, blb, brf);
-				
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
 				return t1.computeVolume() + t2.computeVolume() + t3.computeVolume() + t4.computeVolume() + t5.computeVolume();
 			}
 			
 			template<class T>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Hexahedron<T>::computeCentroid()
-			{
+			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Hexahedron<T>::computeCentroid() {
 				// ToDo: Is this correct for hexahedrons, or just cubes?.....
 				return ((T(1)/T(8)) * (tlf + trf + blf + brf + tlb + trb + blb + brb));
-			}
+
+				/*
+				// Update: apparently, centroid of a polyhedron is volume-weighted average of its non-overlapping tetrahedrons.
+				// 5 Tetrahedrons
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
+
+				return (	  (t1.computeVolume()  * t1.computeCentroid())
+							+ (t2.computeVolume()  * t2.computeCentroid()) 
+							+ (t3.computeVolume()  * t3.computeCentroid())
+							+ (t4.computeVolume()  * t4.computeCentroid())
+							+ (t5.computeVolume()  * t5.computeCentroid()) 	) 
+						/ (t1.computeVolume()  + t2.computeVolume()  + t3.computeVolume()  + t4.computeVolume()  + t5.computeVolume() );
+				*/
+ 			}
 		}
 	}
 }

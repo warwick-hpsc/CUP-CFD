@@ -33,73 +33,70 @@ namespace cupcfd
 
 				this->fileName = fileName;
 
-				// Open File
-				this->openFile();
+				cupcfd::error::eCodes status;
+
+				status = this->openFile();
+				HARD_CHECK_ECODE(status)
 
 				// Open Group (If Applicable)
-				record.openGroup(*this);
+				status = record.openGroup(*this);
+				HARD_CHECK_ECODE(status)
 
 				// Open DataSet / Attribute (Combine method?)
-				record.openDataSet(*this);
-				record.openAttribute(*this);
+				status = record.openDataSet(*this);
+				HARD_CHECK_ECODE(status)
+				status = record.openAttribute(*this);
+				HARD_CHECK_ECODE(status)
 
 				// Open DataSpace
-				record.openDataSpace(*this);
+				status = record.openDataSpace(*this);
+				HARD_CHECK_ECODE(status)
 			}
 
-			HDF5Access::~HDF5Access()
-			{
-				record.closeDataSpace(*this);
-				record.closeDataSet(*this);
-				record.closeGroup(*this);
-				this->closeFile();
+			HDF5Access::~HDF5Access() {
+				cupcfd::error::eCodes status;
+
+				status = record.closeDataSpace(*this);
+				DBG_PRINT_BAD_ECODE(status)
+				status = record.closeDataSet(*this);
+				DBG_PRINT_BAD_ECODE(status)
+				status = record.closeGroup(*this);
+				DBG_PRINT_BAD_ECODE(status)
+				status = this->closeFile();
+				DBG_PRINT_BAD_ECODE(status) 
 			}
 
-			cupcfd::error::eCodes HDF5Access::openFile()
-			{
+			cupcfd::error::eCodes HDF5Access::openFile() {
+				cupcfd::error::eCodes status;
 				hid_t fileID;
 
 				// If a file is already open in this access, close it.
 				// ToDo - Should close other containers
-				if(this->fileID > 0)
-				{
-					this->closeFile();
+				if(this->fileID >= 0) {
+					status = this->closeFile();
+					CHECK_ECODE(status)
 				}
 
-				// HDF5 C Interface: Open File
 				fileID = H5Fopen(this->fileName.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
-
-				// Catch Errors - File was not opened in HDF5 successfully.
-				// ToDo: Replace with an error code
-				if(fileID == -1)
-				{
-					throw(std::invalid_argument("HDF5Interface: openFile: Unable to Open File " + this->fileName));
+				if(fileID < 0) {
+					throw( std::invalid_argument("HDF5Interface: openFile: HDF5 unable to open file '" + this->fileName + "'"));
 				}
-
 				this->fileID = fileID;
-
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::closeFile()
-			{
+			cupcfd::error::eCodes HDF5Access::closeFile() {
 				hid_t err;
 
-				// Catch Errors - Invalid File ID is provided
-				if(this->fileID < 0)
-				{
+				if(this->fileID < 0) {
 					throw( std::invalid_argument("HDF5Interface: closeFile: Invalid fileID - must be greater than zero."));
 				}
 
-				// HDF5 C Interface - Close File
-				if(this->fileID > 0)
-				{
-					err = H5Fclose(this->fileID);
-				}
+				err = H5Fclose(this->fileID);
+				this->fileID = -1;
 
-				if(err < 0)
-				{
-					throw( std::invalid_argument("HDF5Interface: closeFile: HDF5 unable to close file with ID " + std::to_string(this->fileID)));
+				if(err < 0) {
+					throw( std::invalid_argument("HDF5Interface: closeFile: HDF5 unable to close file '" + this->fileName + "'"));
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -107,331 +104,439 @@ namespace cupcfd
 
 			// Important ToDo: The handling of type checking for these vs the file storage type should be improved to prevent errors.
 
-			cupcfd::error::eCodes HDF5Access::readData(int * sink)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(int * sink) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
 					err = H5Dread(this->datasetID, H5T_NATIVE_INT, H5S_ALL,
 								  this->dataspaceID, H5P_DEFAULT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_INT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(float * sink)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(float * sink) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
 					err = H5Dread(this->datasetID, H5T_NATIVE_FLOAT, H5S_ALL,
 								  this->dataspaceID, H5P_DEFAULT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_FLOAT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(double * sink)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(double * sink) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
 					err = H5Dread(this->datasetID, H5T_NATIVE_DOUBLE, H5S_ALL,
 								  this->dataspaceID, H5P_DEFAULT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_DOUBLE, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(int * sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(int * sink, HDF5Properties& properties) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_INT, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_INT, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_INT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(float * sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(float * sink, HDF5Properties& properties) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_FLOAT, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_FLOAT, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_FLOAT, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(double * sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(double * sink, HDF5Properties& properties) {
 				hid_t err;
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_DOUBLE, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_DOUBLE, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_DOUBLE, sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(int ** sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(int ** sink, HDF5Properties& properties) {
 				hid_t err;
 
 				int cap = 1;
-				for(int i = 0; i < properties.ndim; i++)
-				{
+				for(int i = 0; i < properties.ndim; i++) {
 					cap = cap * properties.dim[i];
 				}
 
 				*sink = (int *) malloc(sizeof(int) * cap);
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_INT, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_INT, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_INT, *sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(float ** sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(float ** sink, HDF5Properties& properties) {
 				hid_t err;
 
 				int cap = 1;
-				for(int i = 0; i < properties.ndim; i++)
-				{
+				for(int i = 0; i < properties.ndim; i++) {
 					cap = cap * properties.dim[i];
 				}
 
 				*sink = (float *) malloc(sizeof(int) * cap);
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_FLOAT, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_FLOAT, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_FLOAT, *sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			cupcfd::error::eCodes HDF5Access::readData(double ** sink, HDF5Properties& properties)
-			{
+			cupcfd::error::eCodes HDF5Access::readData(double ** sink, HDF5Properties& properties) {
 				hid_t err;
 
 				int cap = 1;
-				for(int i = 0; i < properties.ndim; i++)
-				{
+				for(int i = 0; i < properties.ndim; i++) {
 					cap = cap * properties.dim[i];
 				}
 
 				*sink = (double *) malloc(sizeof(int) * cap);
 
-				if(this->record.attr == false)
-				{
+				if(this->record.attr == false) {
 					// Begin Data Read into arrays
-					if(properties.nidx > 0)
-					{
+					if(properties.nidx > 0) {
 						// Indexed Read
 
 						err = H5Sselect_elements(	this->dataspaceID,
 													H5S_SELECT_SET,
 													properties.nidx,
 													&properties.idx[0]);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_elements() failed"));
+						}
 
 						// ToDo - Move this out and associate it with the properties objects?
 						hid_t memspaceID = H5Screate_simple(1,&(properties.nidx), NULL);
+						if (memspaceID < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Screate_simple() failed"));
+						}
 
 						err = H5Dread(this->datasetID, H5T_NATIVE_DOUBLE, memspaceID,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 
 						err = H5Sclose(memspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sclose() failed"));
+						}
 
 						// Cleanup Indexing into Dataspace.
 						err = H5Sselect_none(this->dataspaceID);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Sselect_none() failed"));
+						}
 					}
 					else
 					{
 						// Full Read
 						err = H5Dread(this->datasetID, H5T_NATIVE_DOUBLE, H5S_ALL,
 									  this->dataspaceID, H5P_DEFAULT, *sink);
+						if (err < 0) {
+							throw(std::invalid_argument("HDF5Interface: readData: H5Dread() failed"));
+						}
 					}
 				}
-				else if(this->record. attr == true)
-				{
+				else if(this->record. attr == true) {
 					err = H5Aread(this->attrID, H5T_NATIVE_DOUBLE, *sink);
+					if (err < 0) {
+						throw(std::invalid_argument("HDF5Interface: readData: H5Aread() failed"));
+					}
 				}
 
 				return cupcfd::error::E_SUCCESS;

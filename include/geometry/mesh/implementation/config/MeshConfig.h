@@ -76,7 +76,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor
 					 */
-					virtual ~MeshConfig();
+					~MeshConfig();
 
 					// === Concrete Methods ===
 
@@ -85,6 +85,7 @@ namespace cupcfd
 					 *
 					 * @return The partitioner configuration stored for this mesh configuration.
 					 */
+					__attribute__((warn_unused_result))
 					inline cupcfd::partitioner::PartitionerConfig<I,I> * getPartitionerConfig();
 
 					/**
@@ -101,6 +102,7 @@ namespace cupcfd
 					 *
 					 * @return The mesh source configuration stored for this mesh configuration.
 					 */
+					__attribute__((warn_unused_result))
 					inline MeshSourceConfig<I,T,L> * getMeshSourceConfig();
 
 					/**
@@ -127,6 +129,7 @@ namespace cupcfd
 					 * @return A pointer to a new MeshConfig object
 					 * with copied values from this object.
 					 */
+					__attribute__((warn_unused_result))
 					MeshConfig<I,T,L> * clone();
 
 					/**
@@ -149,8 +152,9 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 					 */
 					template <class M>
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildUnstructuredMesh(M ** mesh,
-																	 cupcfd::comm::Communicator& comm);
+																cupcfd::comm::Communicator& comm);
 			};
 		}
 	}

@@ -61,14 +61,17 @@ namespace cupcfd
 			 */
 			SystemConfigJSON(Json::Value& parseJSON);
 
-			virtual ~SystemConfigJSON();
+			~SystemConfigJSON();
 
 			// === Concrete Methods ===
 
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getIntegerDataType(intDataType * dataType);
 
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getFloatingPointDataType(floatingDataType * dataType);
 
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes getMeshSpecialisationType(meshDataType * dataType);
 	};
 }

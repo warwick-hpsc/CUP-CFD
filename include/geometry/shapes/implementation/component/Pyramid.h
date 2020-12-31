@@ -14,7 +14,7 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_PYRAMID_INCLUDE_H
 #define CUPCFD_GEOMETRY_SHAPES_PYRAMID_INCLUDE_H
 
-#include "Polygon3D.h"
+#include "PolygonV2.h"
 #include "Polyhedron.h"
 #include "EuclideanPoint.h"
 #include "Quadrilateral3D.h"
@@ -29,7 +29,8 @@ namespace cupcfd
 			 * Class to store geometry information and access/compute various properties
 			 * of Pyramid shapes
 			 *
-			 * @tparam P Data type of the Polygon that makes up the pyramid base
+			 * @tparam P Polygon specialisation
+			 * @tparam V Number of vertices in base polygon
 			 * @tparam T Datatype of the geometry
 			 */
 			template <class P, class T>
@@ -58,25 +59,16 @@ namespace cupcfd
 					/**
 					 * Build a Pyramid object.
 					 *
-					 * @param apex The point that defines the apex of the pyramid/the vertex point
-					 * shared by all triangular faces
-					 * @param base The polygon base that makes up the bottom face of the pyramid.
-					 * Points in the base object should be stored in anti-clockwise order when viewed from
-					 * outside the object/clockwise when viewed from inside the object.
-					 * Not following this order will cause issues with certain functionality (e.g. isPointInside)
-					 * since it will affect the directions of computed normals.
-					 *
-					 * @tparam P Data type of the Polygon that makes up the pyramid base
-					 * @tparam T Datatype of the geometry
+					 * @param apex The point that defines the apex of the pyramid
+					 * @param base The polygon base of the pyramid.
 					 */
-					Pyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, const P& base);
+					Pyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, 
+							const P& base);
 
 					/**
 					 *
 					 */
 					virtual ~Pyramid();
-
-					// === Static Methods ===
 
 					// === Concrete Methods ===
 
@@ -84,34 +76,28 @@ namespace cupcfd
 					 * Determine whether the provided point is inside the polyhedron.
 					 * Edges/Faces/Vertices are treated as inside the polygon for this purpose.
 					 *
-					 * @tparam P Data type of the Polygon that makes up the pyramid base
-					 * @tparam T Datatype of the geometry
-					 *
-					 * @return Return whether the point exists inside this polyhedron
-					 * @retval true The point is inside the polyhedron
-					 * @retval false The point is outside the polyhedron
+					 * @return Return true if the point exists inside this polyhedron
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
+				// protected:
 					/**
 					 * Compute the volume of the pyramid
 					 *
-					 * @tparam P Data type of the Polygon that makes up the pyramid base
-					 * @tparam T Datatype of the geometry
-					 *
 					 * @return The computed volume
 					 */
+					__attribute__((warn_unused_result))
 					T computeVolume();
 
 					/**
 					 * Compute the centroid of the pyramid
 					 *
-					 * @tparam P Data type of the Polygon that makes up the pyramid base
-					 * @tparam T Datatype of the geometry
-					 *
 					 * @return The computed centroid
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					// virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

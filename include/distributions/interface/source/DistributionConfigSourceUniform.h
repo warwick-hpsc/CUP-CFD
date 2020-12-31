@@ -66,10 +66,11 @@ namespace cupcfd
 
 				// === Concrete Methods ===
 
-				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig);
-				virtual void operator=(const DistributionConfigSourceUniform<I,T>& source);
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig) = 0;
 
 				// === Pure Virtual Methods ===
+				__attribute__((warn_unused_result))
 				virtual DistributionConfigSourceUniform<I,T> * clone() = 0;
 
 				/**
@@ -86,6 +87,7 @@ namespace cupcfd
 				 * or is improperly formatted
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE A suitable data source was found, but not with a valid value
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getLBound(T * lBound) = 0;
 
 				/**
@@ -102,6 +104,7 @@ namespace cupcfd
 				 * or is improperly formatted
 				 * @retval cupcfd::error::E_CONFIG_INVALID_VALUE A suitable data source was found, but not with a valid value
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getUBound(T * uBound) = 0;
 		};
 	}

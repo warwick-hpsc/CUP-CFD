@@ -81,6 +81,7 @@ namespace cupcfd
 					 * @param indexes An array of base-zero indexes.
 					 * @param nIndexes The size of indexes in the number of elements of type I.
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellLabels(L * labels, I nLabels, I * indexes, I nIndexes) = 0;
 
 					/**
@@ -95,6 +96,7 @@ namespace cupcfd
 					 * @param indexes An array of base-zero indexes.
 					 * @param nIndexes The size of indexes in the number of elements of type I.
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceLabels(L * labels, I nLabels, I * indexes, I nIndexes) = 0;
 
 					/**
@@ -109,6 +111,7 @@ namespace cupcfd
 					 * @param indexes An array of base-zero indexes.
 					 * @param nIndexes The size of indexes in the number of elements of type I.
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getVertexLabels(L * labels, I nLabels, I * indexes, I nIndexes) = 0;
 
 					/**
@@ -123,6 +126,7 @@ namespace cupcfd
 					 * @param indexes An array of base-zero indexes.
 					 * @param nIndexes The size of indexes in the number of elements of type I.
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryLabels(L * labels, I nLabels, I * indexes, I nIndexes) = 0;
 
 					/**
@@ -137,6 +141,7 @@ namespace cupcfd
 					 * @param indexes An array of base-zero indexes.
 					 * @param nIndexes The size of indexes in the number of elements of type I.
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getRegionLabels(L * labels, I nLabels, I * indexes, I nIndexes) = 0;
 
 					/**
@@ -151,6 +156,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellCount(I * cellCount) = 0;
 
 					/**
@@ -165,6 +171,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceCount(I * faceCount) = 0;
 
 					/**
@@ -179,6 +186,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryCount(I * boundaryCount) = 0;
 
 					/**
@@ -193,6 +201,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getRegionCount(I * regionCount) = 0;
 
 					/**
@@ -207,6 +216,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getVertexCount(I * vertexCount) = 0;
 
 					/**
@@ -221,6 +231,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getMaxFaceCount(I * maxFaceCount) = 0;
 
 
@@ -236,6 +247,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getMaxVertexCount(I * maxVertexCount) = 0;
 
 					/**
@@ -256,6 +268,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellNFaces(I * nFaces, I nNFaces, L * cellLabels, I nCellLabels) = 0;
 
 					/**
@@ -275,6 +288,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellVolume(T * cellVol, I nCellVol, L * cellLabels, I nCellLabels) = 0;
 
 					/**
@@ -295,6 +309,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, L * cellLabels, I nCellLabels) = 0;
 
 					/**
@@ -324,6 +339,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, L * cellLabels, I nCellLabels) = 0;
 
 					/**
@@ -344,11 +360,13 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceIsBoundary(bool * isBoundary, I nIsBoundary, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceNVertices(I * nVertices, I nNVertices, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -369,6 +387,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 * @retval cupcfd::error::E_ERROR One or more faces are not boundaries
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceBoundaryLabels(I * faceBoundaryLabels, I nFaceBoundaryLabels, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -386,6 +405,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -409,6 +429,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -428,6 +449,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceLambda(T * faceLambda, I nFaceLambda, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -440,6 +462,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceArea(T * faceArea, I nFaceArea, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -457,6 +480,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal,
 																	 L * faceLabels, I nFaceLabels) = 0;
 
@@ -474,6 +498,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -481,6 +506,7 @@ namespace cupcfd
 					 *
 					 * The vertices should be ordered such that is a an edge going from vertex[0] - > vertex[1], vertex[1]->vertex[2]... vertex[n-1]->vertex[0].
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -497,6 +523,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, L * vertexLabels, I nVertexLabels) = 0;
 
 					/**
@@ -513,11 +540,13 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, L * boundaryLabels, I nBoundaryLabels) = 0;
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryNVertices(I * nVertices, I nNVertices, L * boundaryLabels, I nBoundaryLabels) = 0;
 
 					/**
@@ -534,12 +563,14 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryRegionLabels(I * boundaryRegionLabels, I nBoundaryRegionLabels, L * boundaryLabels, I nBoundaryLabels) = 0;
 
 					/**
 					 * Get the vertex labels associated with a face in a CSR format.
 					 * The vertices should be ordered such that is a an edge going from vertex[0] - > vertex[1], vertex[1]->vertex[2]... vertex[n-1]->vertex[0].
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -556,6 +587,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getBoundaryDistance(T * boundaryDistance, I nBoundaryDistance, L * boundaryLabels, I nBoundaryLabels) = 0;
 
 					/**
@@ -572,6 +604,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
+					__attribute__((warn_unused_result))
 					virtual cupcfd::error::eCodes getRegionName(std::string * names, I nNames, L * regionLabels, I nRegionLabels) = 0;
 
 					// === Concrete Methods ===
@@ -614,131 +647,10 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
-																			 cupcfd::comm::Communicator& comm,
-																			 L * cellLabels, I nCellLabels)
-					{
-						// This function builds a connectivity graph.
-						// The cell labels provided are the ones allocated to this process rank.
-
-						// ToDo: Do we want to add an error check here to ensure that the provided cellLabels
-						// are valid for the source?
-
-						cupcfd::error::eCodes status;
-
-						// (1) Get Number of Cells
-						// In this case, the number of cells we are interested in is the portion stated by nCellLabels
-						I cellCount = nCellLabels;
-
-						*graph = new cupcfd::data_structures::DistributedAdjacencyList<I,I>(comm);
-
-						// Only add cells if the number is greater than 0
-						if(cellCount > 0)
-						{
-							// Let us ensure that the cells are added in a sorted order
-							I * sortedCellLabels = (I *) malloc(sizeof(I) * nCellLabels);
-							cupcfd::utility::drivers::merge_sort(cellLabels, sortedCellLabels, nCellLabels);
-
-							// (2) To get the face indexes, we need to know the number of adjacent faces
-							//     This is found from the sum of the adjacent face count for each cell listed (nFaces)
-							I * nFaces = (I *) malloc(sizeof(I) * cellCount);
-							this->getCellNFaces(nFaces, cellCount, sortedCellLabels, nCellLabels);
-
-							I numEdges;
-							cupcfd::utility::drivers::sum(nFaces, cellCount, &numEdges);
-
-							// Free this now we no longerbuildDistributedAdjacencyList need it.
-							free(nFaces);
-
-							// (3) Get Face Indexes, but only for the cells we are interested in.
-							// This should give us them in a CSR format
-							I * pos = (I *) malloc(sizeof(I) * (cellCount + 1));
-							I * data = (I *) malloc(sizeof(I) * numEdges);
-							this->getCellFaceLabels(pos, cellCount + 1, data, numEdges, sortedCellLabels, nCellLabels);
-
-							// (4) We now need to find which cells are adjacent for the graph.
-							//     To do this, we need the cell1 and cell2 data from the face data,
-							//	   which details the global cell indexes either side of the face.
-
-							// We only need the face data for the faces attached to the requested cell data
-							// However, using the data array, there will be duplicates.
-							// We could remove them at this stage, but then we would have to update indexes so
-							// for the time being we will just load duplicates.
-							I * faceCell1 = (I *) malloc(sizeof(I) * numEdges);
-							I * faceCell2 = (I *) malloc(sizeof(I) * numEdges);
-							bool * faceIsBoundary = (bool *) malloc(sizeof(bool) * numEdges);
-
-							status = this->getFaceCell1Labels(faceCell1, numEdges, data, numEdges);
-							if(status != cupcfd::error::E_SUCCESS)
-							{
-								return status;
-							}
-
-							status = this->getFaceCell2Labels(faceCell2, numEdges, data, numEdges);
-							if(status != cupcfd::error::E_SUCCESS)
-							{
-								return status;
-							}
-
-							status = this->getFaceIsBoundary(faceIsBoundary, numEdges, data, numEdges);
-							if(status != cupcfd::error::E_SUCCESS)
-							{
-								return status;
-							}
-
-							// (5) Now we can start building the graph
-							// (a) First, we add the nodes (since this is the full dataset, it is just
-							//     a sequence from the base to the max index (in this file format, base index 1)
-							// (b) For each node, look up the attached faces, and then cross-reference with the
-							//     face cell1, cell2 data to find out what the other face is.
-
-							// Add Local Nodes
-							for(I i = 0; i < cellCount; i++)
-							{
-								(*graph)->addLocalNode(sortedCellLabels[i]);
-							}
-
-							// Add Edges
-							// Since we stored duplicate face data, the position of the face data in the faceCell1, faceCell2
-							// arrays is the same as the position in the 'data' array for cell face indexes
-							// I.e. we can loop over the faces instead of cells and just keep adding edges (at most we would try
-							// to add the same undirected edge twice)
-							// If we removed duplicate data to only store every face once, then we would have to store face indexes
-							// alongside and do a suitable search/lookup mechanism for every cell - this would use less memory but
-							// makes for more complex lookups. Since this is a distributed function, the extra memory overhead
-							// shouldn't be too much of an issue).
-
-							for(I i = 0; i < numEdges; i++)
-							{
-								if(!(faceIsBoundary[i]))
-								{
-									// Shouldn't matter if edge already exists, will just cause an error to be thrown without adding
-									// the edge again.
-									// If a node/cell is missing (i.e. not added as a local), the functionality of this method
-									// will add the node as a ghost node.
-									// ToDo: If this changes in the future we will need to revisit this.
-									(*graph)->addUndirectedEdge(faceCell1[i], faceCell2[i]);
-								}
-							}
-
-							// Free up remaining temporary storage
-							free(faceCell1);
-							free(faceCell2);
-							free(faceIsBoundary);
-							free(pos);
-							free(data);
-						}
-
-						// Finalize the Distributed Adjacency Graph so everyone is aware of their neighbours
-						status = (*graph)->finalize();
-						if(status != cupcfd::error::E_SUCCESS)
-						{
-							return status;
-						}
-
-						return cupcfd::error::E_SUCCESS;
-					}
-
+																		cupcfd::comm::Communicator& comm,
+																		L * cellLabels, I nCellLabels);
 
 					/**
 					 * Build a Distributed Adjacency List Connectivity Graph from a Mesh Source
@@ -775,79 +687,15 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
-																			 cupcfd::comm::Communicator& comm)
-					{
-						cupcfd::error::eCodes status;
-
-						// Note: to avoid blocking behaviour, all ranks of comm must call this method.
-
-						// (a) Divide the mesh file evenly across the processes that make up the partitioner
-						// This likely won't make for a good edge allocation, but this function makes no promises
-						// about the setup.
-						I nGCells, nLCells, r;
-
-						status = this->getCellCount(&nGCells);
-						if(status != cupcfd::error::E_SUCCESS)
-						{
-							return status;
-						}
-
-						// (b) Get the connectivity graph for this 'even' distribution
-						r = nGCells % comm.size;
-
-						// Compute the local cell count, distribute a remainder amongst the lower ranks
-						if(comm.rank < r)
-						{
-							nLCells = ((I) nGCells) / ((I) comm.size) + 1;
-						}
-						else
-						{
-							nLCells = ((I) nGCells) / ((I) comm.size);
-						}
-
-						I base;
-						I * naiveLocalCells = (I *) malloc(sizeof(I) * nLCells);
-
-						if(comm.rank < r)
-						{
-							base = (((I) nGCells) / ((I) comm.size) + 1) * comm.rank;
-						}
-						else
-						{
-							base = ((((I) nGCells) / ((I) comm.size) + 1) * r) +
-									   (((I) nGCells) / ((I) comm.size) * (comm.rank - r));
-						}
-
-						// Assign local nodes naively - each rank get a range from base -> base+nLCells
-						// where base is assigned such that e.g. [0->9|10->19...] to divide into segments
-						for(I i = 0; i < nLCells; i++)
-						{
-							naiveLocalCells[i] = base + i;
-						}
-
-						// Convert these cell indices into cell labels from the source
-						I * cellLabels = (I *) malloc(sizeof(I) * nLCells);
-
-						status = this->getCellLabels(cellLabels, nLCells, naiveLocalCells, nLCells);
-						if(status != cupcfd::error::E_SUCCESS)
-						{
-							free(naiveLocalCells);
-							free(cellLabels);
-							return status;
-						}
-
-						// Build the connectivity graph using the cell allocation built above
-						this->buildDistributedAdjacencyList(graph, comm, cellLabels, nLCells);
-
-						free(naiveLocalCells);
-						free(cellLabels);
-
-						return cupcfd::error::E_SUCCESS;
-					}
+																		cupcfd::comm::Communicator& comm);
 			};
 		}
 	}
 }
+
+// Include Header Level Definitions
+#include "MeshSource.ipp"
 
 #endif

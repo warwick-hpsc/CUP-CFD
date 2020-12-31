@@ -89,6 +89,7 @@ namespace cupcfd
 				/**
 				 * Clones the current object to create a new object
 				 */
+				__attribute__((warn_unused_result))
 				Communicator * clone();
 
 		};

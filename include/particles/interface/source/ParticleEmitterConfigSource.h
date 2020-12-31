@@ -44,32 +44,12 @@ namespace cupcfd
 				ParticleEmitterConfigSource();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				ParticleEmitterConfigSource(ParticleEmitterConfigSource<E,P,I,T>& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
 				virtual ~ParticleEmitterConfigSource();
 
-				// === Concrete Methods ===
-
-				// === Virtual Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(ParticleEmitterConfigSource<E,P,I,T>& source);
+				// === Pure Virtual Methods ===
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -81,11 +61,13 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual ParticleEmitterConfigSource<E,P,I,T> * clone() = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleEmitterConfig(ParticleEmitterConfig<E,P,I,T> ** config) = 0;
 		};
 	}

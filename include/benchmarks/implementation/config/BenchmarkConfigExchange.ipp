@@ -23,8 +23,7 @@ namespace cupcfd
 		template <class I, class T>
 		template <class N>
 		cupcfd::error::eCodes BenchmarkConfigExchange<I,T>::buildBenchmark(BenchmarkExchange<I,T> ** bench,
-																				cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph)
-		{
+																				cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph) {
 			cupcfd::error::eCodes status;
 			
 			// Build an Exchange Pattern from the Exchange Pattern Config + the Mesh Graph
@@ -33,11 +32,7 @@ namespace cupcfd
 			cupcfd::comm::ExchangePattern<T> * pattern;
 			
 			status = this->patternConfig.buildExchangePattern(&pattern, graph);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Shared pointer will take responsibility for cleaning up the pattern pointer.
 			std::shared_ptr<cupcfd::comm::ExchangePattern<T>> patternPtr(pattern);

@@ -37,21 +37,6 @@ namespace cupcfd
 			{
 
 			}
-
-			template <class I, class T, class L>
-			void MeshSourceConfig<I,T,L>::operator=(const MeshSourceConfig<I,T,L>& source)
-			{
-				// Nothing to set currently
-			}
-
-			// === Pure Virtual ===
-			// Here to satisfy the linker
-
-			template <class I, class T, class L>
-			MeshSourceConfig<I,T,L> * MeshSourceConfig<I,T,L>::clone()
-			{
-				return nullptr;
-			}
 		}
 	}
 }

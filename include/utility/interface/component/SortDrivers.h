@@ -45,6 +45,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort(T * source, I nele);
 
 			// Merge Sort (Non-Destructive, result in dest)
@@ -65,6 +66,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort(T * source,  T * dest, I nele);
 
 			/**
@@ -86,6 +88,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
@@ -105,7 +108,8 @@ namespace cupcfd
 			 * (i.e. < 0)
 			 */
 			template <class I, class T>
-			cupcfd::error::eCodes is_sorted(T * source, I nEle, bool * result);
+			__attribute__((warn_unused_result))
+			bool is_sorted(T * source, I nEle);
 
 			/**
 			 * Reorder an array: The element at source[i] is replaced by the value at source[indexes[i]]
@@ -128,6 +132,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 
 			/**
@@ -145,6 +150,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 		} // namespace drivers
 	} // namespace utility

@@ -100,47 +100,38 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt)
-		{
-			cupcfd::error::eCodes status;
-
+		cupcfd::error::eCodes ParticleEmitterSimple<I,T>::generateParticles(ParticleSimple<I,T> ** particles, I * nParticles, T dt) {
 			// tCurrent is the current time in the dt period, relative to 0
 			// tInc is the amount of time that must pass before the next particle is generated.
 			T tCurrent, tInc;
-			I ptr;
 
 			// Stores the relative times, from 0->dt, when each particle is generated
 			std::vector<T> times;
 
 			// Set tCurrent to be the time of the next particle generation
-			if(arth::isEqual(this->nextParticleTime, T(-1)))
-			{
+			if(arth::isEqual(this->nextParticleTime, T(-1))) {
 				// Generate the next interval
 				this->rate->getValues(&tInc, 1);
-				tCurrent = tCurrent + tInc;
-			}
-			else
-			{
+				tCurrent = tInc;
+			} else {
 				// Set the next internal to be the last unused interval
 				// This presumes that tStart picks straight up from the end of the prior interval though
 				// Error Check?
 				tCurrent = this->nextParticleTime;
 			}
 
-			ptr = 0;
-
 			// Loop till the time of the next particle is after the end of the dt time period.
-			while(tCurrent < dt)
-			{
+			// I ptr = 0;
+			while(tCurrent < dt) {
 				// Store the times of the particles to be generated
 				times.push_back(tCurrent);
 
 				// Get the time of the next particle
 				this->rate->getValues(&tInc, 1);
-				tCurrent = tCurrent + tInc;
+				tCurrent += tInc;
 
 				// Track number of loops
-				ptr = ptr + 1;
+				// ptr++;
 			}
 
 			// We have exceeded the range, store the unused time for use in the next time period
@@ -183,8 +174,7 @@ namespace cupcfd
 			this->decayThreshold->getValues(decayThreshold, *nParticles);
 
 			// Generate each particle
-			for(I i = 0; i < *nParticles; i++)
-			{
+			for(I i = 0; i < *nParticles; i++) {
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity(T(1),T(0),T(0));
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> acceleration(accelerationX[i],accelerationY[i],accelerationZ[i]);
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> jerk(jerkX[i],jerkY[i],jerkZ[i]);
@@ -197,8 +187,7 @@ namespace cupcfd
 				rotateYAxisRadian(angleRotation[i], velocity);
 
 				// Adjust the length of the vector to match the provided speed
-				T length;
-				velocity.length(&length);
+				T length = velocity.length();
 				velocity = (speed[i]/length) * velocity;
 
 				(*particles)[i] = ParticleSimple<I,T>(

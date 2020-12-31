@@ -38,22 +38,16 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					/** Number of vertices **/
-					int nVertices;
-
-					/** Number of edges **/
-					int nEdges;
+					int numVertices;
+					int numEdges;
+					T area;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> normal;
 
 					// === Constructors/Deconstructors ===
 
-					/**
-					 *
-					 */
 					Polygon3D();
 
-					/**
-					 *
-					 */
 					~Polygon3D();
 
 					// === Concrete Methods ===
@@ -66,7 +60,8 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices this polygon has
 					 */
-					inline int getNVertices();
+					__attribute__((warn_unused_result))
+					inline int getNumVertices();
 
 					/**
 					 * Get the number of edges in this polygon
@@ -76,7 +71,8 @@ namespace cupcfd
 					 *
 					 * @return The number of edges this polygon has
 					 */
-					inline int getNEdges();
+					__attribute__((warn_unused_result))
+					inline int getNumEdges();
 
 					/**
 					 * Determine whether the provided point is inside the polygon.
@@ -93,16 +89,16 @@ namespace cupcfd
 					 * @tparam P The implementation type of the polygon
 					 * @tparam T The type of the spatial domain
 					 *
-					 * @return Return whether the point exists inside this polygon
-					 * @retval true The point is inside the polygon
-					 * @retval false The point is outside the polygon
+					 * @return Return true if the point exists inside this polygon
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
-					inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
-														cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersect, 
-														T& timeToIntersect, 
-														bool verbose);
+					// inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
+					// 									const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
+					// 									cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersect, 
+					// 									T& timeToIntersect, 
+					// 									bool verbose);
 
 					/**
 					 * Determine whether the provided point is inside the polygon.
@@ -119,6 +115,7 @@ namespace cupcfd
 					 */
 					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
+				private:
 					/**
 					 * Compute the area of the polygon
 					 *
@@ -127,6 +124,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the polygon.
 					 */
+					__attribute__((warn_unused_result))
 					inline T computeArea();
 
 					/**
@@ -137,6 +135,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the polygon.
 					 */
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 			};
 
@@ -155,8 +154,8 @@ namespace cupcfd
 			 *
 			 * @return The area.
 			 */
-			template <class T>
-			inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
+			// template <class T>
+			// inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int numPoints);
 
 
 			/**
@@ -178,6 +177,7 @@ namespace cupcfd
 			 * @retval false The ordering is anti-clockwise
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}

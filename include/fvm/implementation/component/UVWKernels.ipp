@@ -36,33 +36,32 @@
 	namespace fvm
 	{
 		template <class M, class I, class T, class L>
-		void FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-									T gammaBlend,
-									T small,
-									T large,
-									T * uCell, I nUCell,
-									T * vCell, I nVCell,
-									T * wCell, I nWCell,
-									T * uBoundary, I nUBoundary,
-									T * vBoundary, I nVBoundary,
-									T * wBoundary, I nWBoundary,
-									T * visEffCell, I nVisEffCell,
-									T * visEffBoundary, I nVisEffBoundary,
-									T * massFlux, I nMassFlux,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
-									T * rFace, I nRFace,
-									T * su, I nSu,
-									T * sv, I nSv,
-									T * sw, I nSw,
-									T * au, I nAu,
-									T * av, I nAv,
-									T * aw, I nAw)
-		{
-			T pe0 = 9999.0;
-			T pe1 = -9999.0;
-			T totalForce = 0.0;
+		cupcfd::error::eCodes FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+													T gammaBlend,
+													T small,
+													// T large,
+													T * uCell, I nUCell,
+													T * vCell, I nVCell,
+													T * wCell, I nWCell,
+													T * uBoundary, I nUBoundary,
+													T * vBoundary, I nVBoundary,
+													T * wBoundary, I nWBoundary,
+													T * visEffCell, I nVisEffCell,
+													T * visEffBoundary, I nVisEffBoundary,
+													T * massFlux, I nMassFlux,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
+													T * rFace, I nRFace,
+													T * su, I nSu,
+													T * sv, I nSv,
+													T * sw, I nSw,
+													T * au, I nAu,
+													T * av, I nAv,
+													T * aw, I nAw) {
+			// T pe0 = 9999.0;
+			// T pe1 = -9999.0;
+			// T totalForce = 0.0;
 
 			I ip, in, ib, ir;
 			cupcfd::geometry::mesh::RType it;
@@ -70,7 +69,7 @@
 
 			T facn;
 			T facp;
-			T uac, vac, wac;
+			// T uac, vac, wac;
 			T visac;
 			T visFace;
 			T uFace, vFace, wFace;
@@ -83,7 +82,7 @@
 			T fudi, fvdi, fwdi;
 			T blendU, blendV, blendW;
 			T f;
-			T rlencos;
+			// T rlencos;
 
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dudxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dvdxac;
@@ -96,27 +95,64 @@
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> center3;
 
 
-			for(I i = 0; i < mesh.properties.lFaces; i++)
-			{
+			for(I i = 0; i < mesh.properties.lFaces; i++) {
+				#ifdef DEBUG
+					if (i >= nMassFlux) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				// Get Cell 1 Index
 				ip = mesh.getFaceCell1ID(i);
 
 				// Get Cell 2 Index
 				in = mesh.getFaceCell2ID(i);
 
+				#ifdef DEBUG
+					if (ip >= nUCell || in >= nUCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nVCell || in >= nVCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nWCell || in >= nWCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nVisEffCell || in >= nVisEffCell) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDudx || in >= nDudx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDvdx || in >= nDvdx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nDwdx || in >= nDwdx) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSu || in >= nSu) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSv || in >= nSv) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+					if (ip >= nSw || in >= nSw) {
+						return cupcfd::error::E_INVALID_INDEX;
+					}
+				#endif
+
 				bool isBoundary = mesh.getFaceIsBoundary(i);
 
-				if(!isBoundary)
-				{
+				if(!isBoundary) {
 
 					// Non-Boundary Face
 					facn = mesh.getFaceLambda(i);
 					facp = 1.0 - facn;
 
 					xac = (mesh.getCellCenter(in) * facn) + (mesh.getCellCenter(ip) * facp);
-					uac = uCell[in] * facn + uCell[ip] * facp;
-					vac = vCell[in] * facn + vCell[ip] * facp;
-					wac = wCell[in] * facn + wCell[ip] * facp;
+					// uac = uCell[in] * facn + uCell[ip] * facp;
+					// vac = vCell[in] * facn + vCell[ip] * facp;
+					// wac = wCell[in] * facn + wCell[ip] * facp;
 
 					dudxac = dudx[in] * facn + dudx[ip] * facp;
 					dvdxac = dvdx[in] * facn + dvdx[ip] * facp;
@@ -156,17 +192,15 @@
 					fvci = fmin * vCell[in] + fmax * vCell[ip];
 					fwci = fmin * wCell[in] + fmax * wCell[ip];
 
-					T rDotProduct;
+					fudi = visFace * dudxac.dotProduct(xpn);
+					fvdi = visFace * dvdxac.dotProduct(xpn);
+					fwdi = visFace * dwdxac.dotProduct(xpn);
 
-					dudxac.dotProduct(xpn, &rDotProduct);
-					fudi = visFace * rDotProduct;
-
-					dvdxac.dotProduct(xpn, &rDotProduct);
-					fvdi = visFace * rDotProduct;
-
-					dwdxac.dotProduct(xpn, &rDotProduct);
-					fwdi = visFace * rDotProduct;
-
+					#ifndef NDEBUG
+						if ((i*2)+1 >= nRFace) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					rFace[i*2] = -visFace - std::max(massFlux[i], T(0.0));
 					rFace[(i*2)+1] = -visFace + std::min(massFlux[i], T(0.0));
 
@@ -183,25 +217,46 @@
 					sw[ip] = sw[ip] - blendW + fwde - fwdi;
 					sw[in] = sw[in] + blendW - fwde + fwdi;
 
-					T peclet;
-					double xpn_length;
-					xpn.length(&xpn_length);
-					peclet = massFlux[i]/mesh.getFaceArea(i) * xpn_length/(visac+small);
+					// T xpn_length = (T)xpn.length();
 					// Leave these off for now, may reenable at later point
+					// T peclet;
+					// peclet = massFlux[i]/mesh.getFaceArea(i) * xpn_length/(visac+small);
 					//pe0 = min(pe0, peclet);
 					//pe1 = max(pe1, peclet);
 				}
-				else
-				{
+				else {
 					ib = mesh.getFaceBoundaryID(i);
 					ir = mesh.getBoundaryRegionID(ib);
 					it = mesh.getRegionType(ir);
 					ip = mesh.getFaceCell1ID(i);
 
+					#ifdef DEBUG
+						if (ib >= nUBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nVBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nWBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ib >= nVisEffBoundary) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAu) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAv) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+						if (ip >= nAw) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
+
 					// Boundary Face
 
-					if(it == cupcfd::geometry::mesh::RTYPE_INLET)
-					{
+					if(it == cupcfd::geometry::mesh::RTYPE_INLET) {
 						// Skip/Ignore User/UserInlet for now
 
 						dudxac = dudx[ip];
@@ -244,16 +299,9 @@
 						fvci = fmin * vFace + fmax * vCell[ip];
 						fwci = fmin * wFace + fmax * wCell[ip];
 
-						T rDotProduct;
-
-						dudxac.dotProduct(xpn, &rDotProduct);
-						fudi = visFace * rDotProduct;
-
-						dvdxac.dotProduct(xpn, &rDotProduct);
-						fvdi = visFace * rDotProduct;
-
-						dwdxac.dotProduct(xpn, &rDotProduct);
-						fwdi = visFace * rDotProduct;
+						fudi = visFace * dudxac.dotProduct(xpn);
+						fvdi = visFace * dvdxac.dotProduct(xpn);
+						fwdi = visFace * dwdxac.dotProduct(xpn);
 
 						f = -visFace + std::min(massFlux[i], T(0.0));
 
@@ -269,8 +317,7 @@
 						sw[ip] = sw[ip] - f * wFace + fwde - fwdi;
 						wBoundary[ib] = wFace;
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_OUTLET) {
 
 						dudxac = dudx[ip];
 						dvdxac = dvdx[ip];
@@ -311,19 +358,11 @@
 						fvci = fmin * vFace + fmax * vCell[ip];
 						fwci = fmin * wFace + fmax * wCell[ip];
 
-						T rDotProduct;
+						fudi = visFace * dudxac.dotProduct(xpn);
+						fvdi = visFace * dvdxac.dotProduct(xpn);
+						fwdi = visFace * dwdxac.dotProduct(xpn);
 
-						dudxac.dotProduct(xpn, &rDotProduct);
-						fudi = visFace * rDotProduct;
-
-						dvdxac.dotProduct(xpn, &rDotProduct);
-						fvdi = visFace * rDotProduct;
-
-						dwdxac.dotProduct(xpn, &rDotProduct);
-						fwdi = visFace * rDotProduct;
-
-						if(massFlux[i] < 0.0)
-						{
+						if(massFlux[i] < 0.0) {
 							massFlux[i] = small;
 						}
 
@@ -341,8 +380,7 @@
 						sw[ip] = sw[ip] - f * wFace + fwde - fwdi;
 						wBoundary[ib] = wFace;
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_SYMP) {
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> tmp;
 
 						xac = mesh.getFaceCenter(i);
@@ -353,7 +391,7 @@
 						dwdxac = dwdx[ip];
 						visac = visEffCell[ip];
 
-						T rDotProduct;
+						// T rDotProduct;
 						T du, dv, dw, dp, dn;
 
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> xn;
@@ -362,9 +400,9 @@
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> us;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> force;
 
-						dudxac.dotProduct(xpn, &du);
-						dvdxac.dotProduct(xpn, &dv);
-						dwdxac.dotProduct(xpn, &dw);
+						du = dudxac.dotProduct(xpn);
+						dv = dvdxac.dotProduct(xpn);
+						dw = dwdxac.dotProduct(xpn);
 
 						us.cmp[0] = uCell[ip] + du;
 						us.cmp[1] = vCell[ip] + dv;
@@ -373,7 +411,7 @@
 						xn = 0.0 - mesh.getFaceNorm(i);
 						xn.normalise();
 
-						us.dotProduct(xn, &dp);
+						dp = us.dotProduct(xn);
 						un = dp * xn;
 
 						dn = mesh.getBoundaryDistance(ib);
@@ -396,8 +434,7 @@
 						vBoundary[ib] = us.cmp[1];
 						wBoundary[ib] = us.cmp[2];
 					}
-					else if(it == cupcfd::geometry::mesh::RTYPE_WALL)
-					{
+					else if(it == cupcfd::geometry::mesh::RTYPE_WALL) {
 						T coef;
 						T dp, dn;
 						T uvel;
@@ -424,8 +461,7 @@
 
 						// ToDo: Do we want to force this to be a double here?
 						// May also wish for it to just be a float - move out to template?
-						double xpn_length;
-						xpn.length(&xpn_length);
+						T xpn_length = xpn.length();
 						coef = visac * mesh.getFaceArea(i) / xpn_length;
 
 						xn = mesh.getFaceNorm(i);
@@ -437,21 +473,19 @@
 
 						up = up - uw;
 
-						up.dotProduct(xn, &dp);
+						dp = up.dotProduct(xn);
 
 						un = dp * xn;
 						ut = up - un;
 						uvel = fabs(ut.cmp[0]) + fabs(ut.cmp[1]) + fabs(ut.cmp[2]);
 
-						if(uvel > small)
-						{
+						if(uvel > small) {
 							dn = mesh.getBoundaryDistance(ib);
 							tauNT = visac * ut/dn;
 							force = tauNT * mesh.getFaceArea(i);
 							mesh.setBoundaryShear(ib, force);
 						}
-						else
-						{
+						else {
 							force.cmp[0] = 0.0;
 							force.cmp[1] = 0.0;
 							force.cmp[2] = 0.0;
@@ -476,38 +510,33 @@
 					}
 				}
 			}
+
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class M, class I, class T, class L>
-		void FluxUVWDolfynRegionLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh)
-		{
+		void FluxUVWDolfynRegionLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			I ir;
-
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> zero((T) 0, (T) 0, (T) 0);
-
-			for(ir = 0; ir < mesh.properties.lRegions; ir++)
-			{
+			for(ir = 0; ir < mesh.properties.lRegions; ir++) {
 				mesh.setRegionForceTangent(ir, zero);
 			}
 		}
 
 
 		template <class M, class I, class T, class L>
-		void FluxUVWDolfynBndsLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh)
-		{
+		void FluxUVWDolfynBndsLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh) {
 			I ib, ir;
 			cupcfd::geometry::mesh::RType it;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> shear;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> forceTangent;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> tmp;
 
-			for(ib = 0; ib < mesh.properties.lBoundaries; ib++)
-			{
+			for(ib = 0; ib < mesh.properties.lBoundaries; ib++) {
 				ir = mesh.getBoundaryRegionID(ib);
 				it = mesh.getRegionType(ir);
 
-				if(it == cupcfd::geometry::mesh::RTYPE_WALL)
-				{
+				if(it == cupcfd::geometry::mesh::RTYPE_WALL) {
 					tmp = mesh.getRegionForceTangent(ir) + mesh.getBoundaryShear(ib);
 					mesh.setRegionForceTangent(ir, tmp);
 				}

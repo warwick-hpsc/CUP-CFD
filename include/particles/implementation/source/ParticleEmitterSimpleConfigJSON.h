@@ -61,7 +61,7 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
-				virtual ~ParticleEmitterSimpleConfigJSON();
+				~ParticleEmitterSimpleConfigJSON();
 
 				// === Concrete Methods ===
 
@@ -77,7 +77,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(ParticleEmitterSimpleConfigJSON<I,T>& source);
+				void operator=(ParticleEmitterSimpleConfigJSON<I,T>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -89,38 +89,53 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				ParticleEmitterSimpleConfigJSON<I,T> * clone();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getEmitterPosition(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAngleXYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAngleRotationDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getSpeedDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAccelerationXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAccelerationYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getAccelerationZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getJerkXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getJerkYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getJerkZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getDecayRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getDecayThresholdDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
 				/**
 				 * Utility function to build a distribution config from a json format (will iterate through potential
 				 * formats till matching one is found)
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getParticleEmitterDistributionConfig(std::string fieldName,
 																				cupcfd::distributions::DistributionConfig<I,T> ** distConfig);
 
@@ -128,6 +143,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildParticleEmitterConfig(ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> ** config);
 		};
 	}

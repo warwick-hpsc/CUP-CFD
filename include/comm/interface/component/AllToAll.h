@@ -44,6 +44,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED One of the required arrays (send/recv) is insufficiently sized.
 		 */
 		template <class T>
+		 __attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 										   T * recvBuffer, int nRecvBuffer,
 										   int chunkSize,
@@ -63,7 +64,7 @@ namespace cupcfd
 		 *
 		 * @param sendBuffer The buffer containing the data to be sent to all ranks, including itself.
 		 * @param nSendBuffer The size of sendBuffer - should be equal to sum(sendCounts)
-		 * @param nSendBounds An array of the number of elements to be sent to each process.
+		 * @param sendCounts An array of the number of elements to be sent to each process.
 		 * Data is assigned in order to destination processes from sendBuffer in chunks matching the sizes specified.
 		 * @param nSendCounts The size of nSendBounds in the number of elements of type int.
 		 * Must be the same size as the number of processes in mpComm.
@@ -83,6 +84,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer, int * sendCounts, int nSendCounts,
 											T * recvBuffer, int nRecvBuffer, int * recvCounts, int nRecvCounts,
 											cupcfd::comm::Communicator& mpComm);
@@ -98,7 +100,7 @@ namespace cupcfd
 		 *
 		 * @param sendBuffer The buffer containing the data to be sent to all ranks, including itself.
 		 * @param nSendBuffer The size of sendBuffer - should be equal to sum(sendCounts)
-		 * @param nSendBounds An array of the number of elements to be sent to each process.
+		 * @param sendCounts An array of the number of elements to be sent to each process.
 		 * Data is assigned in order to destination processes from sendBuffer in chunks matching the sizes specified.
 		 * @param nSendCounts The size of nSendBounds in the number of elements of type int.
 		 * Must be the same size as the number of processes in mpComm.
@@ -126,6 +128,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * sendCounts, int nSendCounts,
 											int * sDispls, int nSDispls,
@@ -201,6 +204,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * processIDs, int nProcessIDs,
 											T ** recvBuffer, int * nRecvBuffer,

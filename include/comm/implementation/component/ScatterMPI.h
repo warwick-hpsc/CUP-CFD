@@ -38,6 +38,7 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			*/
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes ScatterMPI(T * bufferSend, int nSend, T * bufferRecv, int nRecv, int sourcePID, MPI_Comm comm);
 
 			/**
@@ -57,6 +58,7 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			*/
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes ScatterVMPI(T * bufferSend, int nSend, T * bufferRecv, int nRecv, int * sendCounts, int nSendCounts, int sourcePID, MPI_Comm comm);
 		} // namespace mpi
 	} // namespace comm

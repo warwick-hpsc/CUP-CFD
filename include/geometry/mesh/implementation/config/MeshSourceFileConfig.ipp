@@ -55,9 +55,6 @@ namespace cupcfd
 			template <class I, class T>
 			inline void MeshSourceFileConfig<I,T>::operator=(const MeshSourceFileConfig<I,T>& source)
 			{
-				// Copy Members of Base
-				MeshSourceConfig<I,T,I>::operator=(source);
-
 				// Derived Members Copy
 				this->setFileFormat(source.fileFormat);
 				this->setSourceFilePath(source.sourceFilePath);
@@ -66,7 +63,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceFileConfig<I,T>::buildMeshSource(MeshSource<I,T,I> ** source)
 			{
-				cupcfd::error::eCodes status;
 				std::string filePath;
 				cupcfd::geometry::mesh::MeshFileFormat fileFormat;
 

@@ -18,6 +18,11 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 
+// #include "Polygon.h"
+#include "PolygonV2.h"
+
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -25,45 +30,102 @@ namespace cupcfd
 		namespace shapes
 		{
 			/**
-			 * This class is primarily for generic Triangle functions that are dimension
-			 * agnostic (i.e. can be used by both 2D and 3D), stored as static methods.
+			 * Top level interface for Triangle shapes.
+			 * Declares a set of common operations and/or members.
 			 *
+			 * Uses a CRTP design pattern to minimise/remove virtual overheads
+			 *
+			 * @tparam S The triangle specialisation
+			 * @tparam T Numerical type
+			 * @tparam N Number of spatial dimensions
+			 * Note: We can define 2D objects in a high dimensions - e.g. a plane in a 3D space.
 			 */
-			template <class T, unsigned int N>
-			class Triangle
+			template <class S, class T, uint N>
+			class Triangle : public PolygonV2<Triangle<S,T,N>, T, N, 3>
 			{
 				public:
-					/**
-					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
-					 *
-					 * @param a Position of Point a of the triangle
-					 * @param b Position of Point b of the triangle
-					 * @param c Position of Point c of the triangle
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the space the triangle is in (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return The area of the triangle
-					 */
-					static T heronsFormula(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& a,
-										   cupcfd::geometry::euclidean::EuclideanPoint<T,N>& b,
-										   cupcfd::geometry::euclidean::EuclideanPoint<T,N>& c);
+					// === Constructors/Deconstructors ===
+
+					Triangle();
+
+					Triangle(const euc::EuclideanPoint<T,N>& a,
+						  	const euc::EuclideanPoint<T,N>& b,
+						    const euc::EuclideanPoint<T,N>& c);
+
+					Triangle(const Triangle<S,T,N>& source);
+
+					~Triangle();
+
+					__attribute__((warn_unused_result))
+					bool isPointInside(const euc::EuclideanPoint<T,N>& p);
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
 					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
-					 * @param abLength Length of edge from Point a to Point b
-					 * @param acLength Length of edge from Point a to Point c
-					 * @param bcLength Length of edge from Point b to Point c
+					 * @param l1 Length of edge 1/3
+					 * @param l2 Length of edge 2/3
+					 * @param l3 Length of edge 3/3
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the space the triangle is in (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return The area of the triangle
+					 * @return Area
 					 */
-					static T heronsFormula(T abLength, T acLength, T bcLength);
+					__attribute__((warn_unused_result))
+					static T heronsFormula(T l1, T l2, T l3);
+
+					/**
+					 * Compute the area of the triangle, using Heron's Formula
+					 * (https://en.wikipedia.org/wiki/Heron's_formula).
+					 *
+					 * @param a Triangle vertex 1/3
+					 * @param b Triangle vertex 2/3
+					 * @param c Triangle vertex 3/3
+					 *
+					 * @return Area
+					 */
+					__attribute__((warn_unused_result))
+					static T heronsFormula(const euc::EuclideanPoint<T,N>& a,
+											const euc::EuclideanPoint<T,N>& b,
+											const euc::EuclideanPoint<T,N>& c);
+
+					/**
+					 * Compute the area of the triangle, using Heron's Formula
+					 * (https://en.wikipedia.org/wiki/Heron's_formula).
+					 *
+					 * @param tri Triangle
+					 *
+					 * @return Area
+					 */
+					__attribute__((warn_unused_result))
+					static T heronsFormula(const Triangle<S,T,N>& tri);
+
+
+				// protected:
+					// No one else should be calling these expensive operations:
+
+					/**
+					 * Compute the area of this triangle
+					 *
+					 * @return Area
+					 */
+					__attribute__((warn_unused_result))
+					T computeArea();
+
+					/**
+					 * Compute the centre point of triangle
+					 *
+					 * @return Centroid point
+					 */
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,N> computeCentroid();
+
+					/**
+					 * Compute the normal of triangle
+					 *
+					 * @return Normal vector
+					 */
+					__attribute__((warn_unused_result))
+					euc::EuclideanVector<T,N> computeNormal();
+
 			};
 		}
 	}

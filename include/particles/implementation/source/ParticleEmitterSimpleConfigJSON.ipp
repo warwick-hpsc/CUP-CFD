@@ -48,58 +48,48 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		void ParticleEmitterSimpleConfigJSON<I,T>::operator=(ParticleEmitterSimpleConfigJSON<I,T>& source)
-		{
+		void ParticleEmitterSimpleConfigJSON<I,T>::operator=(ParticleEmitterSimpleConfigJSON<I,T>& source) {
 			this->configData = source.configData;
 		}
 
 		template <class I, class T>
-		ParticleEmitterSimpleConfigJSON<I,T> * ParticleEmitterSimpleConfigJSON<I,T>::clone()
-		{
+		ParticleEmitterSimpleConfigJSON<I,T> * ParticleEmitterSimpleConfigJSON<I,T>::clone() {
 			return new ParticleEmitterSimpleConfigJSON<I,T>(*this);
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getEmitterPosition(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getEmitterPosition(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
 			T posX, posY, posZ;
 		
-			if(this->configData.isMember("Position"))
-			{
+			if(this->configData.isMember("Position")) {
 				Json::Value dataSourceType;
 	
 				// Need all three dimensional components of the position
 	
-				if(this->configData["Position"].isMember("X"))
-				{
+				if(this->configData["Position"].isMember("X")) {
 					// Access the X field
 					dataSourceType = this->configData["Position"]["X"];
 					posX = T(dataSourceType.asDouble());
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				
-				if(this->configData["Position"].isMember("Y"))
-				{
+				if(this->configData["Position"].isMember("Y")) {
 					// Access the Y field
 					dataSourceType = this->configData["Position"]["Y"];
 					posY = T(dataSourceType.asDouble());
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}	
 				
-				if(this->configData["Position"].isMember("Z"))
-				{
+				if(this->configData["Position"].isMember("Z")) {
 					// Access the Z field
 					dataSourceType = this->configData["Position"]["Z"];
 					posZ = T(dataSourceType.asDouble());
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 				
@@ -116,106 +106,84 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("Rate", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAngleXYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAngleXYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("AngleXY", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAngleRotationDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAngleRotationDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("AngleRotation", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getSpeedDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getSpeedDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("Speed", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("AccelerationX", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("AccelerationY", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getAccelerationZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("AccelerationZ", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkXDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("JerkX", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkYDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("JerkY", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getJerkZDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("JerkZ", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getDecayRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getDecayRateDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("DecayRate", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getDecayThresholdDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getDecayThresholdDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			return this->getParticleEmitterDistributionConfig("DecayThreshold", distConfig);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getParticleEmitterDistributionConfig(std::string fieldName, cupcfd::distributions::DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::getParticleEmitterDistributionConfig(std::string fieldName, cupcfd::distributions::DistributionConfig<I,T> ** distConfig) {
 			// Iterate through JSON formats for different potential distribution types
 			// Test each to see if a distribution can be built - if it can a viable format has been found.
-			cupcfd::distributions::DistributionConfig<I,T> * testDist;
-			cupcfd::error::eCodes status;
 				
-			if(this->configData.isMember(fieldName))
-			{
-				if(this->configData[fieldName].isMember("FixedDistribution"))
-				{
+			if(this->configData.isMember(fieldName)) {
+				if(this->configData[fieldName].isMember("FixedDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceFixedJSON<I,T> test1(this->configData[fieldName]["FixedDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 				
-				if(this->configData[fieldName].isMember("NormalDistribution"))
-				{
+				if(this->configData[fieldName].isMember("NormalDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["NormalDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 				
-				if(this->configData[fieldName].isMember("UniformDistribution"))
-				{
+				if(this->configData[fieldName].isMember("UniformDistribution")) {
 					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["UniformDistribution"]);
-					status = test1.buildDistributionConfig(distConfig);
-					return status;
+					return test1.buildDistributionConfig(distConfig);
 				}
 
 				// No matching field names were found
@@ -228,8 +196,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::buildParticleEmitterConfig(ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> ** config)
-		{
+		cupcfd::error::eCodes ParticleEmitterSimpleConfigJSON<I,T>::buildParticleEmitterConfig(ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> ** config) {
 			cupcfd::error::eCodes status;
 			
 			// Position
@@ -251,94 +218,55 @@ namespace cupcfd
 			
 			// Position
 			status = this->getEmitterPosition(pos);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Rate
 			status = this->getRateDistributionConfig(&rate);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Angle XY
 			status = this->getAngleXYDistributionConfig(&angleXY);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Angle Rotation
 			status = this->getAngleRotationDistributionConfig(&angleRotation);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Speed
 			status = this->getSpeedDistributionConfig(&speed);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Acceleration X
 			status = this->getAccelerationXDistributionConfig(&accelerationX);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Acceleration Y
 			status = this->getAccelerationYDistributionConfig(&accelerationY);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Acceleration Z
 			status = this->getAccelerationZDistributionConfig(&accelerationZ);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Jerk X
 			status = this->getJerkXDistributionConfig(&jerkX);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Jerk Y
 			status = this->getJerkYDistributionConfig(&jerkY);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Jerk Z
 			status = this->getJerkZDistributionConfig(&jerkZ);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Decay Rate
 			status = this->getDecayRateDistributionConfig(&decayRate);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// Decay Threshold
 			status = this->getDecayThresholdDistributionConfig(&decayThreshold);
-			if(status != cupcfd::error::E_SUCCESS)
-			{		
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			*config = new ParticleEmitterSimpleConfig<I,T>(pos, *rate, *angleXY, *angleRotation, *speed, *accelerationX, *accelerationY, *accelerationZ,
 														   *jerkX, *jerkY, *jerkZ, *decayRate, *decayThreshold);

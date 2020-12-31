@@ -31,47 +31,17 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigSourceFixed<I,T>::DistributionConfigSourceFixed(const DistributionConfigSourceFixed<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
 		DistributionConfigSourceFixed<I,T>::~DistributionConfigSourceFixed()
 		{
 		
 		}
 		
 		template <class I, class T>
-		void DistributionConfigSourceFixed<I,T>::operator=(const DistributionConfigSourceFixed<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::getFixedValue(T * value)
-		{
-		
-		}
-						
-		template <class I, class T>
-		DistributionConfigSourceFixed<I,T> * DistributionConfigSourceFixed<I,T>::clone()
-		{
-		
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes DistributionConfigSourceFixed<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig) {
 			cupcfd::error::eCodes status;
 			T fixedValue;
-			
 			status = this->getFixedValue(&fixedValue);
-			
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			*distConfig = new DistributionConfigFixed<I,T>(fixedValue);
 			return cupcfd::error::E_SUCCESS;

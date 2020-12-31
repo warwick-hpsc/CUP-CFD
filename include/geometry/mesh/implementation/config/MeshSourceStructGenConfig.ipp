@@ -152,7 +152,6 @@ namespace cupcfd
 			template <class I, class T>
 			cupcfd::error::eCodes MeshSourceStructGenConfig<I,T>::buildMeshSource(MeshSource<I,T,I> ** source)
 			{
-				cupcfd::error::eCodes status;
 				I nX, nY, nZ;
 				T sMinX, sMaxX, sMinY, sMaxY, sMinZ, sMaxZ;
 

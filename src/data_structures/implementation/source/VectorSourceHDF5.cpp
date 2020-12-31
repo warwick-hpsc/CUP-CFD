@@ -44,31 +44,28 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		VectorSourceHDF5<I, T>::~VectorSourceHDF5()
-		{
+		VectorSourceHDF5<I, T>::~VectorSourceHDF5() {
 			// Currently Nothing to Clean Up.
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getSize(I * vecSize)
-		{
+		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getSize(I * vecSize) {
 			cupcfd::error::eCodes status;
 
 			// This format will store it's attributes at the root level
 			cupcfd::io::hdf5::HDF5Record record("/", "size",true);
 			cupcfd::io::hdf5::HDF5Access access(this->fileName, record);
-			access.readData(vecSize);
+			status = access.readData(vecSize);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getData(T * data, I nData, I * indexes, I nIndexes, I indexBase)
-		{
+		cupcfd::error::eCodes VectorSourceHDF5<I,T>::getData(T * data, I nData, I * indexes, I nIndexes, I indexBase) {
 			cupcfd::error::eCodes status;
 
-			if(nData != nIndexes)
-			{
+			if(nData != nIndexes) {
 				return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
 			}
 
@@ -78,13 +75,13 @@ namespace cupcfd
 			cupcfd::io::hdf5::HDF5Properties properties(access);
 
 			// Compute the sizes from the range difference
-			for(I pos = 0; pos < nIndexes; pos++)
-			{
+			for(I pos = 0; pos < nIndexes; pos++) {
 				properties.addIndex(indexes[pos] - indexBase);
 			}
 
 			// Read Data
-			access.readData(data, properties);
+			status = access.readData(data, properties);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}

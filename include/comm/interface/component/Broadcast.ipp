@@ -21,8 +21,7 @@ namespace cupcfd
 	namespace comm
 	{
 		template <class T>
-		cupcfd::error::eCodes Broadcast(T * buf, int nBuf, int sourcePID, Communicator& myComm)
-		{
+		cupcfd::error::eCodes Broadcast(T * buf, int nBuf, int sourcePID, Communicator& myComm) {
 			// Error Checks
 
 			// Call a suitable underlying comm library driver (in this case, MPI)
@@ -34,41 +33,44 @@ namespace cupcfd
 		}
 
 		template <class T>
-		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T * bRecv, int nBRecv, int sourcePID, Communicator& myComm)
-		{
-			cupcfd::error::eCodes err;
+		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T * bRecv, int nBRecv, int sourcePID, Communicator& myComm) {
+			cupcfd::error::eCodes status;
 
-			if(myComm.rank == sourcePID)
-			{
-				err = cupcfd::comm::mpi::BroadcastMPI(bSend, nBSend, sourcePID, myComm.comm);
+			if(myComm.rank == sourcePID) {
+				status = cupcfd::comm::mpi::BroadcastMPI(bSend, nBSend, sourcePID, myComm.comm);
+				CHECK_ECODE(status)
 				//For consistency we copy the src buffer to the recv buffer, but this is technically an imbalance - not sure this behaviour is desirable
 				//since it makes the function more expensive
-				cupcfd::utility::drivers::copy(bSend, nBSend, bRecv, nBRecv);
+				status = cupcfd::utility::drivers::copy(bSend, nBSend, bRecv, nBRecv);
+				CHECK_ECODE(status)
 			}
-			else
-			{
-				err = cupcfd::comm::mpi::BroadcastMPI(bRecv, nBRecv, sourcePID, myComm.comm);
+			else {
+				status = cupcfd::comm::mpi::BroadcastMPI(bRecv, nBRecv, sourcePID, myComm.comm);
+				CHECK_ECODE(status)
 			}
 
-			return err;
+			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int sourcePID, Communicator& myComm)
-		{
+		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int sourcePID, Communicator& myComm) {
+			cupcfd::error::eCodes status;
+
 			// Obtain the number of expected elements from the source process via a single element broadcast
-			Broadcast(&nBSend, 1, nBRecv, 1, sourcePID, myComm);
+			status = Broadcast(&nBSend, 1, nBRecv, 1, sourcePID, myComm);
+			CHECK_ECODE(status)
 
 			// Allocate the space
 			*bRecv = (T *) malloc(sizeof(T) * *nBRecv);
 
-			cupcfd::error::eCodes err = Broadcast(bSend, nBSend, *bRecv, *nBRecv, sourcePID, myComm);
+			status = Broadcast(bSend, nBSend, *bRecv, *nBRecv, sourcePID, myComm);
+			CHECK_ECODE(status)
 
 			// Cleanup
 			// Note: Recv buffer is not free'd here - left to the caller.
 			// No other cleanup currently
 
-			return err;
+			return cupcfd::error::E_SUCCESS;
 		}
 	} // namespace comm
 } // namespace cupcfd

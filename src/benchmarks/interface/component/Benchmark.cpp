@@ -42,22 +42,6 @@ namespace cupcfd
 		{
 			TreeTimerExitBlock(blockName.c_str());
 		}
-
-
-		// === Pure Virtual Methods ===
-		// Here to satisfy linker
-
-		template <class I, class T>
-		void Benchmark<I,T>::setupBenchmark()
-		{
-
-		}
-
-		template <class I, class T>
-		void Benchmark<I,T>::runBenchmark()
-		{
-
-		}
 	}
 }
 

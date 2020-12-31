@@ -35,8 +35,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		AdjacencyListCSR<I, T>::~AdjacencyListCSR()
-		{
+		AdjacencyListCSR<I, T>::~AdjacencyListCSR() {
 			this->xadj.clear();
 			this->xadj.resize(1);	// Size needs to be 1 to prevent errors on access in empty graph
 
@@ -56,8 +55,7 @@ namespace cupcfd
 		// === CRTP Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I,T>::reset()
-		{
+		void AdjacencyListCSR<I,T>::reset() {
 			this->nNodes = 0;
 			this->nEdges = 0;
 
@@ -76,20 +74,10 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addNode(T node)
-		{
-			cupcfd::error::eCodes status;
-			bool nodeExists;
+		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addNode(T node) {
+			bool nodeExists = this->existsNode(node);
 
-			status = this->existsNode(node, &nodeExists);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
-
-			if(!nodeExists)
-			{
+			if(!nodeExists) {
 				// Generate a new local index
 				I nodeLocalIDX = this->nNodes;
 
@@ -114,46 +102,33 @@ namespace cupcfd
 
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsNode(T node, bool * exists)
-		{
-			if(this->nodeToIDX.find(node) != this->nodeToIDX.end())
-			{
-				*exists = true;
+		bool AdjacencyListCSR<I, T>::existsNode(T node) {
+			if(this->nodeToIDX.find(node) != this->nodeToIDX.end()) {
+				return true;
+			} else {
+				return false;
 			}
-			else
-			{
-				*exists = false;
-			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsEdge(T srcNode, T dstNode, bool * exists)
-		{
-			bool nodeExists;
-			int status;
+		cupcfd::error::eCodes AdjacencyListCSR<I, T>::existsEdge(T srcNode, T dstNode, bool * exists) {
+			cupcfd::error::eCodes status;
 
-			status = this->existsNode(srcNode, &nodeExists);
-
-			if(!nodeExists)
-			{
+			bool nodeExists = this->existsNode(srcNode);
+			if(!nodeExists) {
 				*exists = false;
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
-			status = this->existsNode(dstNode, &nodeExists);
-
-			if(!nodeExists)
-			{
+			nodeExists = this->existsNode(dstNode);
+			if(!nodeExists) {
 				*exists = false;
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
@@ -161,15 +136,18 @@ namespace cupcfd
 			// Get Node Count Adjacent to srcNode
 			I count;
 			status = this->getAdjacentNodeCount(srcNode, &count);
+			CHECK_ECODE(status)
 
 			// Get Nodes Adjacent to srcNode
 			T * adjNodes = (T *) malloc(sizeof(T) * count);
 			status = this->getAdjacentNodes(srcNode, adjNodes, count);
+			CHECK_ECODE(status)
 
 			// Search adjacent node list for the node
 			// Alternate: could seach for localIDX of node in adjncy array
 			// Would avoid need for comparison operators on custom nodes.
-			cupcfd::utility::drivers::linearSearch(adjNodes, count, dstNode, exists);
+			status = cupcfd::utility::drivers::linearSearch(adjNodes, count, dstNode, exists);
+			CHECK_ECODE(status)
 
 			free(adjNodes);
 
@@ -177,41 +155,29 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addEdge(T node, T adjNode)
-		{
+		cupcfd::error::eCodes AdjacencyListCSR<I, T>::addEdge(T node, T adjNode) {
 			cupcfd::error::eCodes status;
-			I nodeLocalIDX, adjNodeLocalIDX, ptr;
+			I nodeLocalIDX, adjNodeLocalIDX;
 			bool nodeExists, edgeExists;
 
 			// (1) Check the source node exists
-			nodeExists = false;
-			this->existsNode(node, &nodeExists);
-
-			if(nodeExists == false)
-			{
+			nodeExists = this->existsNode(node);
+			if(!nodeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (2) Check the destination node exists
-			nodeExists = false;
-			this->existsNode(adjNode, &nodeExists);
-
-			if(nodeExists == false)
-			{
+			nodeExists = this->existsNode(adjNode);
+			if(!nodeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// (3) Check that edge doesn't already exist
 			status = this->existsEdge(node, adjNode, &edgeExists);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Add if edge doesn't already exist
-			if(edgeExists)
-			{
+			if(edgeExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS;
 			}
 
@@ -227,8 +193,7 @@ namespace cupcfd
 			// All subsequent indexes in xadj now need to be increased by 1 to reflect
 			// the shift to the right
 
-			for(I i = nodeLocalIDX + 1; i < this->nNodes + 1; i++)
-			{
+			for(I i = nodeLocalIDX + 1; i < this->nNodes + 1; i++) {
 				this->xadj[i] = this->xadj[i] + 1;
 			}
 
@@ -239,15 +204,11 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::getAdjacentNodeCount(T node, I * count)
-		{
-			bool exists;
+		cupcfd::error::eCodes AdjacencyListCSR<I, T>::getAdjacentNodeCount(T node, I * count) {
+			bool exists = this->existsNode(node);
 			*count = 0;
 
-			this->existsNode(node, &exists);
-
-			if(!exists)
-			{
+			if(!exists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
@@ -258,23 +219,17 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes AdjacencyListCSR<I, T>::getAdjacentNodes(T node, T * adjNodes, I nAdjNodes)
-		{
+		cupcfd::error::eCodes AdjacencyListCSR<I, T>::getAdjacentNodes(T node, T * adjNodes, I nAdjNodes) {
 			cupcfd::error::eCodes status;
 			I idx, ptr, count;
 
 			// Get the number of adjacent nodes
 			// Error Check: If the node does not exist it will be raised as an error here
 			status = this->getAdjacentNodeCount(node, &count);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Error Check: Check the array is large enough
-			if(count > nAdjNodes)
-			{
+			if(count > nAdjNodes) {
 				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
@@ -282,8 +237,7 @@ namespace cupcfd
 			ptr = this->xadj[idx];
 
 			//ToDo: Check array size?
-			for(I i = 0; i< count; i++)
-			{
+			for(I i = 0; i< count; i++) {
 				adjNodes[i] = this->IDXToNode[this->adjncy[ptr+i]];
 			}
 

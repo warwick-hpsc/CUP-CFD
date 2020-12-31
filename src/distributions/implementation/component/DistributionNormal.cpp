@@ -23,11 +23,21 @@ namespace cupcfd
 		template <class I, class T>
 		DistributionNormal<I,T>::DistributionNormal(T mean, T stdev, T lbound, T ubound)
 		: Distribution<I,T>(),
-		 mean(mean),
-		 stdev(stdev),
 		 lbound(lbound),
-		 ubound(ubound)
+		 ubound(ubound),
+		 mean(mean),
+		 stdev(stdev)
 		{
+			if (lbound > mean) {
+				throw(std::runtime_error("DistributionNormal constructor: lbound must not exceed mean"));
+			}
+			if (ubound < mean) {
+				throw(std::runtime_error("DistributionNormal constructor: ubound must not be less than mean"));
+			}
+			if (lbound == ubound) {
+				throw(std::runtime_error("DistributionNormal constructor: lbound must differ to ubound"));
+			}
+
 			std::random_device seedSource;
 
 			this->dist = new std::normal_distribution<T>(this->mean, this->stdev);
@@ -37,10 +47,10 @@ namespace cupcfd
 		template <class I, class T>
 		DistributionNormal<I,T>::DistributionNormal(DistributionNormal<I,T>& source)
 		{
-			this->mean = source.mean;
-			this->stdev = source.stdev;
 			this->lbound = source.lbound;
 			this->ubound = source.ubound;
+			this->mean = source.mean;
+			this->stdev = source.stdev;
 		}
 
 		template <class I, class T>
@@ -55,30 +65,19 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionNormal<I,T>::getValues(T * values, I nValues)
-		{
-			for(I i = 0; i < nValues; i++)
-			{
-				// Generate Initial Value
+		void DistributionNormal<I,T>::getValues(T * values, I nValues) {
+			for(I i = 0; i < nValues; i++) {
+				// Loop until we get a number that is within bounds.
 				T val = (*(this->dist))(*(this->rEngine));
-
-				// Loop until we get a number that is within the specified range.
-				// ToDo: Danger of inifinite loop if a bad range + mean/stdev is provided?
-				// Might want to add a warning/error code/loop limit of some kind.
-				while ((val < lbound) || (val >= ubound))
-				{
+				while ((val < lbound) || (val >= ubound)) {
 					val = (*(this->dist))(*(this->rEngine));
 				}
-
 				values[i] = val;
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		DistributionNormal<I,T> * DistributionNormal<I,T>::clone()
-		{
+		DistributionNormal<I,T> * DistributionNormal<I,T>::clone() {
 			// Pure Virtual - Shouldn't be used
 			return new DistributionNormal(*this);
 		}

@@ -71,7 +71,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~SparseMatrixSourceFileConfig();
+				~SparseMatrixSourceFileConfig();
 
 				// === Concrete Methods ===
 
@@ -80,6 +80,7 @@ namespace cupcfd
 				 *
 				 * @return The file path to the matrix data.
 				 */
+				__attribute__((warn_unused_result))
 				inline std::string getFilePath();
 
 				/**
@@ -96,6 +97,7 @@ namespace cupcfd
 				 *
 				 * @return The file format of the matrix data.
 				 */
+				__attribute__((warn_unused_result))
 				inline SparseMatrixFileFormat getFormat();
 
 				/**
@@ -110,7 +112,11 @@ namespace cupcfd
 				// === Overridden Inherited Methods ===
 
 				void operator=(SparseMatrixSourceFileConfig<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				SparseMatrixSourceFileConfig<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource);
 		};
 	}

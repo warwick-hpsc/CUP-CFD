@@ -40,22 +40,16 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					/** Number of vertices **/
-					int nVertices;
-
-					/** Number of edges **/
-					int nEdges;
+					int numVertices;
+					int numEdges;
+					T area;
+					cupcfd::geometry::euclidean::EuclideanPoint<T,2> centroid;
+					cupcfd::geometry::euclidean::EuclideanVector<T,2> normal;
 
 					// === Constructors/Deconstructors ===
 
-					/**
-					 *
-					 */
 					Polygon2D();
 
-					/**
-					 *
-					 */
 					~Polygon2D();
 
 					// === Concrete Methods ===
@@ -69,7 +63,8 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices this Polygon2D has
 					 */
-					inline int getNVertices();
+					__attribute__((warn_unused_result))
+					inline int getNumVertices();
 
 					/**
 					 * Get the number of edges in this Polygon2D
@@ -80,7 +75,8 @@ namespace cupcfd
 					 *
 					 * @return The number of edges this Polygon2D has
 					 */
-					inline int getNEdges();
+					__attribute__((warn_unused_result))
+					inline int getNumEdges();
 
 					/**
 					 * Determine whether the provided point is inside the Polygon2D.
@@ -94,6 +90,7 @@ namespace cupcfd
 					 * @retval true The point is inside the Polygon2D
 					 * @retval false The point is outside the Polygon2D
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point);
 
 					/**
@@ -121,6 +118,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the Polygon2D.
 					 */
+					__attribute__((warn_unused_result))
 					inline T computeArea();
 			};
 

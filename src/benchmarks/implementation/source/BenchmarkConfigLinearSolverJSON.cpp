@@ -43,20 +43,14 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkName(std::string& benchmarkName)
-		{
-			cupcfd::error::eCodes status;
-
-			if(this->configData.isMember("BenchmarkName"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkName(std::string& benchmarkName) {
+			if(this->configData.isMember("BenchmarkName")) {
 				const Json::Value dataSourceType = this->configData["BenchmarkName"];
 
-				if(dataSourceType == Json::Value::null)
-				{
+				if(dataSourceType == Json::Value::null) {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					benchmarkName = dataSourceType.asString();
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -70,20 +64,14 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkRepetitions(I * repetitions)
-		{
-			cupcfd::error::eCodes status;
-
-			if(this->configData.isMember("Repetitions"))
-			{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchmarkRepetitions(I * repetitions) {
+			if(this->configData.isMember("Repetitions")) {
 				const Json::Value dataSourceType = this->configData["Repetitions"];
 
-				if(dataSourceType == Json::Value::null)
-				{
+				if(dataSourceType == Json::Value::null) {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else
-				{
+				else {
 					*repetitions = dataSourceType.asLargestInt();
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -97,17 +85,14 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getLinearSolverConfig(cupcfd::linearsolvers::LinearSolverConfig<C,I,T> ** solverSystemConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getLinearSolverConfig(cupcfd::linearsolvers::LinearSolverConfig<C,I,T> ** solverSystemConfig) {
 			cupcfd::error::eCodes status;
 
-			if(this->configData.isMember("LinearSolver"))
-			{
+			if(this->configData.isMember("LinearSolver")) {
 				// Try each of the potential Linear Solver Configuration Sources in Turn till a valid one is found
 
 				// Option 1 - PETSc Linear Solver
-				if(this->configData["LinearSolver"].isMember("LinearSolverPETSc"))
-				{
+				if(this->configData["LinearSolver"].isMember("LinearSolverPETSc")) {
 					cupcfd::linearsolvers::LinearSolverConfigPETScJSON<C,I,T> solverConfig(this->configData["LinearSolver"]["LinearSolverPETSc"]);
 					status = solverConfig.buildLinearSolverConfig(solverSystemConfig);
 					return status;
@@ -122,22 +107,18 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getSparseMatrixSourceConfig(cupcfd::data_structures::SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getSparseMatrixSourceConfig(cupcfd::data_structures::SparseMatrixSourceConfig<I,T> ** matrixSourceConfig) {
 			cupcfd::error::eCodes status;
 
-			if(this->configData.isMember("SparseMatrix"))
-			{
+			if(this->configData.isMember("SparseMatrix")) {
 				// Option 1 - Sparse Matrix from a File
 				// ToDo: Option 2: Add Matrix Gen From a MeshGenConfig
-				if(this->configData["SparseMatrix"].isMember("SparseMatrixFile"))
-				{
+				if(this->configData["SparseMatrix"].isMember("SparseMatrixFile")) {
 					cupcfd::data_structures::SparseMatrixSourceFileConfigJSON<I,T> configSource1(this->configData["SparseMatrix"]["SparseMatrixFile"]);
 					status = configSource1.buildSparseMatrixSourceConfig(matrixSourceConfig);
 					return status;
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 			}
@@ -147,22 +128,18 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getRHSVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** rhsSourceConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getRHSVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** rhsSourceConfig) {
 			cupcfd::error::eCodes status;
 
-			if(this->configData.isMember("RHSVector"))
-			{
+			if(this->configData.isMember("RHSVector")) {
 				// Option 1 - Sparse Matrix from a File
 				// ToDo: Option 2: Add Matrix Gen From a MeshGenConfig
-				if(this->configData["RHSVector"].isMember("VectorFile"))
-				{
+				if(this->configData["RHSVector"].isMember("VectorFile")) {
 					cupcfd::data_structures::VectorSourceFileConfigJSON<I,T> configSource1(this->configData["RHSVector"]["VectorFile"]);
 					status = configSource1.buildVectorSourceConfig(rhsSourceConfig);
 					return status;
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 			}
@@ -172,22 +149,18 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getSolutionVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** solSourceConfig)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getSolutionVectorSourceConfig(cupcfd::data_structures::VectorSourceConfig<I,T> ** solSourceConfig) {
 			cupcfd::error::eCodes status;
 
-			if(this->configData.isMember("SolVector"))
-			{
+			if(this->configData.isMember("SolVector")) {
 				// Option 1 - Sparse Matrix from a File
 				// ToDo: Option 2: Add Matrix Gen From a MeshGenConfig
-				if(this->configData["SolVector"].isMember("VectorFile"))
-				{
+				if(this->configData["SolVector"].isMember("VectorFile")) {
 					cupcfd::data_structures::VectorSourceFileConfigJSON<I,T> configSource1(this->configData["SolVector"]["VectorFile"]);
 					status = configSource1.buildVectorSourceConfig(solSourceConfig);
 					return status;
 				}
-				else
-				{
+				else {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
 			}
@@ -197,27 +170,22 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchSolverDistribution(BenchSolverDistribution * solverDist)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::getBenchSolverDistribution(BenchSolverDistribution * solverDist) {
 			Json::Value dataSourceType;
 
-			if(this->configData.isMember("DataDistribution"))
-			{
+			if(this->configData.isMember("DataDistribution")) {
 				// Access the correct field
 				dataSourceType = this->configData["DataDistribution"];
 
 				// Check the value and return the appropriate ID
-				if(dataSourceType == Json::Value::null)
-				{
+				if(dataSourceType == Json::Value::null) {
 					return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 				}
-				else if(dataSourceType == "Concurrent")
-				{
+				else if(dataSourceType == "Concurrent") {
 					*solverDist = BENCH_SOLVER_DIST_CONCURRENT;
 					return cupcfd::error::E_SUCCESS;
 				}
-				else if(dataSourceType == "Distributed")
-				{
+				else if(dataSourceType == "Distributed") {
 					*solverDist = BENCH_SOLVER_DIST_DISTRIBUTED;
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -231,65 +199,43 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::buildBenchmarkConfig(BenchmarkConfigLinearSolver<C,I,T> ** config)
-		{
+		cupcfd::error::eCodes BenchmarkConfigLinearSolverJSON<C,I,T>::buildBenchmarkConfig(BenchmarkConfigLinearSolver<C,I,T> ** config) {
 			cupcfd::error::eCodes status;
 
 			// Get Benchmark Name
 			std::string benchmarkName;
 			status = this->getBenchmarkName(benchmarkName);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Get Repetitions
 			I repetitions;
 			status = this->getBenchmarkRepetitions(&repetitions);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Get Distribution Type
 			BenchSolverDistribution distType;
 			status = this->getBenchSolverDistribution(&distType);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Matrix Source Config
 			cupcfd::data_structures::SparseMatrixSourceConfig<I,T> * matrixSourceConfig;
 			status = this->getSparseMatrixSourceConfig(&matrixSourceConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// RHS Vector Source Config
 			cupcfd::data_structures::VectorSourceConfig<I,T> * rhsSourceConfig;
 			status = this->getRHSVectorSourceConfig(&rhsSourceConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Sol Vector Source Config
 			cupcfd::data_structures::VectorSourceConfig<I,T> * solSourceConfig;
 			status = this->getSolutionVectorSourceConfig(&solSourceConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			// Linear Solver Config
 			cupcfd::linearsolvers::LinearSolverConfig<C,I,T> * linearSolverConfig;
 			status = this->getLinearSolverConfig(&linearSolverConfig);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*config = new BenchmarkConfigLinearSolver<C,I,T>(benchmarkName, repetitions, distType, *linearSolverConfig,
 															 *matrixSourceConfig, *rhsSourceConfig, *solSourceConfig);

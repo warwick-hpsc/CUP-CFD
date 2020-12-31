@@ -39,46 +39,54 @@ namespace cupcfd
 					// Constructors/Deconstructors
 					HDF5Record(std::string groupName, std::string dataName, bool attr);
 					HDF5Record(std::string dataName, bool attr);
-					virtual ~HDF5Record();
+					~HDF5Record();
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes openGroup(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes closeGroup(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes openDataSet(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes closeDataSet(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes openDataSpace(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes closeDataSpace(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes openAttribute(HDF5Access& access);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes closeAttribute(HDF5Access& access);
 			};
 		}

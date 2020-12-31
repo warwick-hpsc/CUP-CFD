@@ -91,21 +91,25 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				ParticleSystemSimpleConfigJSON<M,I,T,L> * clone();
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getParticleEmitterConfigs(std::vector<ParticleEmitterConfig<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> *>& configs);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>, I, T> ** particleSourceConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildParticleSystemConfig(ParticleSystemConfig<ParticleSystemSimple<M,I,T,L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M,I,T,L> ** config);
 		};
 	}

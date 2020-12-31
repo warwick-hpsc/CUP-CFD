@@ -34,8 +34,8 @@ namespace cupcfd
 			*
 			* @return Returns nothing
 			*/
-			template <class I, class T>
-			void add(T * source1, T * source2, T * dest, I nEle);
+			// template <class I, class T>
+			// void add(T * source1, T * source2, T * dest, I nEle);
 
 			/**
 			* Return the number of elements in the array that are unique (i.e. there exist no duplicates)
@@ -49,6 +49,7 @@ namespace cupcfd
 			* @return The number of unique elements (i.e. with no duplicates) in the array.
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I uniqueCount(T * source, I nEle);
 
 			/**
@@ -77,6 +78,7 @@ namespace cupcfd
 			* @return The number of distinct elements (i.e. counts the first instance, but not duplicates)
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I distinctCount(T * source, I nEle);
 
 			/**
@@ -126,6 +128,7 @@ namespace cupcfd
 			* @return The number of elements that appear in source1, but not in source 2, including duplicates
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I minusCount(T * source1, I nSource1, T * source2, I nSource2);
 
 			/**
@@ -145,8 +148,8 @@ namespace cupcfd
 			*
 			* @return Returns nothing
 			*/
-			template <class I, class T>
-			void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
+			// template <class I, class T>
+			// void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
 
 
 			/**
@@ -164,6 +167,7 @@ namespace cupcfd
 			 * @return The number of elements that appear in source1 and in source 2, including duplicates
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I intersectCount(T * source1, I nSource1, T * source2, I nSource2);
 
 			/**
@@ -184,7 +188,8 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
 
 			/**
 			 * Populates an array with random numbers, generated between lower_bound and upper_bound with

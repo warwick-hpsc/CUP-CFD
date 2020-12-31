@@ -92,12 +92,25 @@ namespace cupcfd
 
 				// === CRTP Methods ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes resize(I rows, I columns);
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes clear();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setElement(I row, I col, T val);
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getElement(I row, I col, T * val);
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes);
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes);
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getRowNNZValues(I row, T ** nnzValues, I * nNNZValues);
 		};
 	}

@@ -42,6 +42,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Broadcast(T * buf, int nBuf, int sourcePID, Communicator& myComm);
 
 		/**
@@ -70,6 +71,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T * bRecv, int nBRecv, int sourcePID, Communicator& myComm);
 
 		/**
@@ -98,6 +100,7 @@ namespace cupcfd
 		 * @retval E_MPI_ERR An MPI Error was encountered.
 		 */
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Broadcast(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int sourcePID, Communicator& myComm);
 	} // namespace comm
 } // namespace cupcfd

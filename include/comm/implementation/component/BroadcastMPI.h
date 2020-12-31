@@ -44,6 +44,7 @@ namespace cupcfd
 			 * @retval E_MPI_ERR An MPI Error was encountered.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes BroadcastMPI(T * buf, int nEle, int sourcePID, MPI_Comm comm);
 		} // namespace mpi
 	} // namespace comm

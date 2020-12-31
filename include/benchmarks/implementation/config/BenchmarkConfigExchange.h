@@ -58,18 +58,21 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual ~BenchmarkConfigExchange();
+				~BenchmarkConfigExchange();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				virtual void operator=(const BenchmarkConfigExchange<I,T>& source);
+				void operator=(const BenchmarkConfigExchange<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				BenchmarkConfigExchange<I,T> * clone();
 
 				template <class N>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(BenchmarkExchange<I,T> ** bench,
-														  cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph);
+													cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph);
 		};
 	}
 }

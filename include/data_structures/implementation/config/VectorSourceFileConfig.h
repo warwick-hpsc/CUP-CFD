@@ -68,7 +68,7 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~VectorSourceFileConfig();
+				~VectorSourceFileConfig();
 
 				// === Concrete Methods ===
 
@@ -77,6 +77,7 @@ namespace cupcfd
 				 *
 				 * @return The file path to the matrix data.
 				 */
+				__attribute__((warn_unused_result))
 				inline std::string getFilePath();
 
 				/**
@@ -93,6 +94,7 @@ namespace cupcfd
 				 *
 				 * @return The file format of the matrix data.
 				 */
+				__attribute__((warn_unused_result))
 				inline VectorFileFormat getFormat();
 
 				/**
@@ -107,7 +109,11 @@ namespace cupcfd
 				// === Overridden Inherited Methods ===
 
 				void operator=(VectorSourceFileConfig<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				VectorSourceFileConfig<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildVectorSource(VectorSource<I,T> ** vectorSource);
 		};
 	}

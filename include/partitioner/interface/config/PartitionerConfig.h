@@ -44,12 +44,6 @@ namespace cupcfd
 				PartitionerConfig();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				PartitionerConfig(PartitionerConfig& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
@@ -58,18 +52,6 @@ namespace cupcfd
 				// === Concrete Methods ===
 
 				// === Virtual Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(PartitionerConfig<I,T>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -81,6 +63,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual PartitionerConfig * clone() = 0;
 
 				/**
@@ -99,6 +82,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part) = 0;
 
 				/**
@@ -114,8 +98,9 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,
-															cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph) = 0;
+																cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph) = 0;
 		};
 	}
 }

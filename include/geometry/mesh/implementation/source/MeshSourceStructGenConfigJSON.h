@@ -68,7 +68,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */
-					virtual ~MeshSourceStructGenConfigJSON();
+					~MeshSourceStructGenConfigJSON();
 
 					// === Concrete Methods ===
 
@@ -84,7 +84,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshSourceStructGenConfigJSON<I,T>& source);
+					void operator=(MeshSourceStructGenConfigJSON<I,T>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.
@@ -96,30 +96,41 @@ namespace cupcfd
 					 *
 					 * @return A pointer to a cloned copy of this object.
 					 */
+					__attribute__((warn_unused_result))
 					MeshSourceStructGenConfigJSON<I,T> * clone();
 
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeX(I * cellX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeY(I * cellY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshCellSizeZ(I * cellZ);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialXMin(T * sMinX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialYMin(T * sMinY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialZMin(T * sMinZ);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialXMax(T * sMaxX);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialYMax(T * sMaxY);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getMeshSpatialZMax(T * sMaxZ);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildMeshSourceConfig(MeshSourceConfig<I,T,I> ** meshSourceConfig);
 			};
 		}

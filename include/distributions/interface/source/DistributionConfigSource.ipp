@@ -28,36 +28,9 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigSource<I,T>::DistributionConfigSource(const DistributionConfigSource<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
 		DistributionConfigSource<I,T>::~DistributionConfigSource()
 		{
 		
-		}
-		
-		// === Pure Virtual Methods ===
-		// Definitions here to satisfy linker
-		
-		template <class I, class T>
-		void DistributionConfigSource<I,T>::operator=(const DistributionConfigSource<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
-		DistributionConfigSource<I,T> * DistributionConfigSource<I,T>::clone()
-		{
-		
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSource<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)
-		{
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

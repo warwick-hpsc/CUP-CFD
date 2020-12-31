@@ -35,8 +35,7 @@ namespace cupcfd
 			// and the size of IA is 1 (nnz + 1)
 			// We can leave A and JA at their defaults, push zeros
 			// These are the row start pointers, but they are all set to 0 since they hold no values
-			for(I i = 0; i < this->m; i++)
-			{
+			for(I i = 0; i < this->m; i++) {
 				this->IA.push_back(0);
 			}
 
@@ -55,8 +54,7 @@ namespace cupcfd
 			// and the size of IA is 1 (nnz + 1)
 			// We can leave A and JA at their defaults, push zeros
 			// These are the row start pointers, but they are all set to 0 since they hold no values
-			for(I i = 0; i < this->m; i++)
-			{
+			for(I i = 0; i < this->m; i++) {
 				this->IA.push_back(0);
 			}
 
@@ -75,8 +73,7 @@ namespace cupcfd
 			// and the size of IA is 1 (nnz + 1)
 			// We can leave A and JA at their defaults, push zeros
 			// These are the row start pointers, but they are all set to 0 since they hold no values
-			for(I i = 0; i < this->m; i++)
-			{
+			for(I i = 0; i < this->m; i++) {
 				this->IA.push_back(0);
 			}
 
@@ -91,20 +88,15 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::resize(I rows, I columns)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::resize(I rows, I columns) {
+			cupcfd::error::eCodes status;
+
 			// Clear the matrix
-			this->clear();
+			status = this->clear();
+			CHECK_ECODE(status)
 
-			if(rows < 1)
-			{
-				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
-			}
-
-			if(columns < 1)
-			{
-				return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
-			}
+			if(rows < 1) return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
+			if(columns < 1) return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
 
 			// Resize the existing vectors to 0 (vector can resize when adding later....)
 			this->A.resize(0);
@@ -116,8 +108,7 @@ namespace cupcfd
 			this->n = columns;
 			
 			// Setup the initial state of the vectors, so they are suitable for CSR lookup
-			for(I i = 0; i < this->m; i++)
-			{
+			for(I i = 0; i < this->m; i++) {
 				this->IA.push_back(0);
 			}
 			this->IA.push_back(0);
@@ -126,8 +117,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::clear()
-		{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::clear() {
 			// Clear the vectors
 			this->A.clear();
 			this->IA.clear();
@@ -137,8 +127,7 @@ namespace cupcfd
 			this->nnz = 0;
 
 			// Re-setup the IA vector
-			for(I i = 0; i < this->m; i++)
-			{
+			for(I i = 0; i < this->m; i++) {
 				this->IA.push_back(0);
 			}
 
@@ -149,8 +138,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::setElement(I row, I col, T val)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::setElement(I row, I col, T val) {
 			cupcfd::error::eCodes status;
 
 			// Store in a sorted fashion to try and speed up searches a bit
@@ -158,13 +146,11 @@ namespace cupcfd
 			// comparisons...
 
 			// Error Check: Within Range -- Greater than baseIndex
-			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
-			{
+			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
-			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
-			{
+			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
 				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
@@ -177,8 +163,7 @@ namespace cupcfd
 			I colFoundIndex;
 			status = cupcfd::utility::drivers::linearSearch(&(this->JA[start]), nEle, col, &colFoundIndex);
 
-			if(status == cupcfd::error::E_SEARCH_NOT_FOUND)
-			{
+			if(status == cupcfd::error::E_SEARCH_NOT_FOUND) {
 				// If we reached here, we did not find a matching column, so it is not a non-zero value.
 				// We will need to insert a new value - this requires:
 				// (a(i)) inserting the value at a suitable place in A
@@ -193,11 +178,9 @@ namespace cupcfd
 
 				// Default to end in case we don't find a column index that is larger
 				I insertIndex = stop;
-				for(I index = start; index < stop; index++)
-				{
+				for(I index = start; index < stop; index++) {
 					// We store columns using the matrix index without the offset
-					if(this->JA[index] > col)
-					{
+					if(this->JA[index] > col) {
 						// Instance where stored column is greater than the desired column to insert
 						// Let's insert here and stop.
 						insertIndex = index;
@@ -218,22 +201,19 @@ namespace cupcfd
 
 				// Insert is done, update the start pointer values of all rows after
 				// this one
-				for(I index = ((row - this->baseIndex) + 1); index <= this->m; index++)
-				{
+				for(I index = ((row - this->baseIndex) + 1); index <= this->m; index++) {
 					this->IA[index] = this->IA[index] + 1;
 				}
 
 				// Done
 				return cupcfd::error::E_SUCCESS;
 			}
-			else if(status == cupcfd::error::E_SEARCH_SUCCESS)
-			{
+			else if(status == cupcfd::error::E_SEARCH_SUCCESS) {
 				// Value already exists, so we just need to overwrite
 				this->A[start + colFoundIndex] = val;
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// Some form of error other than value not found has occured.
 				return status;
 			}
@@ -242,8 +222,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getElement(I row, I col, T * val)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getElement(I row, I col, T * val) {
 			cupcfd::error::eCodes status;
 
 			// Data should be stored in a sorted fashion (By row, then column)
@@ -252,13 +231,11 @@ namespace cupcfd
 			// range)
 
 			// Error Check: Ensure we are within range
-			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
-			{
+			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
-			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
-			{
+			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
 				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
@@ -278,21 +255,18 @@ namespace cupcfd
 			// We store the column index using the matrix indexing (i.e. without the offset)
 			status = cupcfd::utility::drivers::linearSearch(&(this->JA[start]), nEle, col, &colFoundIndex);
 
-			if(status == cupcfd::error::E_SEARCH_NOT_FOUND)
-			{
+			if(status == cupcfd::error::E_SEARCH_NOT_FOUND) {
 				// If we reached here, we did not find a matching column, so it is not a non-zero value.
 				*val = 0.0;
 				return cupcfd::error::E_SUCCESS;
 			}
-			else if(status == cupcfd::error::E_SEARCH_SUCCESS)
-			{
+			else if(status == cupcfd::error::E_SEARCH_SUCCESS) {
 				// colFoundIndex should hold the offset where the non-zero value is stored since the column
 				// and nnz are stored at the same indexes in their respective vectors
 				*val = this->A[start + colFoundIndex];
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// Some form of error other than value not found has occured.
 				// Will set value to 0.0 for tidyness, but really it is undefined past this point
 				// since the error has to be handled.
@@ -302,17 +276,14 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes) {
 			// ToDo: This could probably be moved out to a utility function
 
 			// First pass
 			// Count number of non-zero size rows
 			I count = 0;
-			for(I i = 0; i < this->m; i++)
-			{
-				if((this->IA[i+1] - this->IA[i]) > 0)
-				{
+			for(I i = 0; i < this->m; i++) {
+				if((this->IA[i+1] - this->IA[i]) > 0) {
 					count = count + 1;
 				}
 			}
@@ -324,10 +295,8 @@ namespace cupcfd
 			// Second pass
 			// Set the row indexes that are non-zero
 			count = 0;
-			for(I i = 0; i < this->m; i++)
-			{
-				if((this->IA[i+1] - this->IA[i]) > 0)
-				{
+			for(I i = 0; i < this->m; i++) {
+				if((this->IA[i+1] - this->IA[i]) > 0) {
 					// We're returning matrix row indexes, so make sure we include any matrix index offset
 					(*rowIndexes)[count] = i + this->baseIndex;
 					count = count + 1;
@@ -338,10 +307,8 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes)
-		{
-			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0)
-			{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
+			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
@@ -353,22 +320,14 @@ namespace cupcfd
 
 			// Allocate the array
 			*nColumnIndexes = nEle;
-			*columnIndexes = (I *) malloc(sizeof(I) * (*nColumnIndexes));
+			*columnIndexes = cupcfd::utility::drivers::duplicate(&(this->JA[start]), nEle);
 
-			// Copy to the array
-			cupcfd::utility::drivers::copy(&(this->JA[start]), nEle, *columnIndexes, (*nColumnIndexes));
-
-			// ToDo: Should check error status here...
-
-			// Done without error
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues)
-		{
-			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0)
-			{
+		inline cupcfd::error::eCodes SparseMatrixCSR<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues) {
+			if((row - this->baseIndex) >= this->m || (row - this->baseIndex) < 0) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
@@ -380,10 +339,7 @@ namespace cupcfd
 
 			// Allocate the array
 			*nNNZValues = nEle;
-			*nnzValues = (T *) malloc(sizeof(T) * (*nNNZValues));
-
-			// Copy to the array
-			cupcfd::utility::drivers::copy(&(this->A[start]), nEle, *nnzValues, (*nNNZValues));
+			*nnzValues = cupcfd::utility::drivers::duplicate(&(this->A[start]), nEle);
 
 			// ToDo: Should check error status here...
 

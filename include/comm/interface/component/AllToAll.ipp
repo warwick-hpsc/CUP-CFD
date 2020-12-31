@@ -28,55 +28,63 @@ namespace cupcfd
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 										   T * recvBuffer, int nRecvBuffer,
 										   int chunkSize,
-										   cupcfd::comm::Communicator& mpComm)
-		{
-			cupcfd::error::eCodes err;
-
+										   cupcfd::comm::Communicator& mpComm) {
 			// Error Check 1: Is the send buffer a suitable size?
-			if(nSendBuffer < (mpComm.size * chunkSize))
-			{
+			if(nSendBuffer < (mpComm.size * chunkSize)) {
 				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Error Check 2: Is the recv buffer a suitable size?
-			if(nRecvBuffer < (mpComm.size * chunkSize))
-			{
+			if(nRecvBuffer < (mpComm.size * chunkSize)) {
 				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Error Check 3: Comm Size is at least 1
-
-			// Process with a suitable communication call
-			err = cupcfd::comm::mpi::AllToAllMPI(sendBuffer, chunkSize, recvBuffer, chunkSize, mpComm.comm);
-
-			// Error Check 3: Did the communication call complete successfully?
-			if(err == cupcfd::error::E_MPI_ERR)
-			{
+			if (mpComm.size <= 1) {
 				return cupcfd::error::E_MPI_ERR;
 			}
-
-			// If no errors encountered, return a suitable success code
-			return cupcfd::error::E_SUCCESS;
+			// Process with a suitable communication call
+			return cupcfd::comm::mpi::AllToAllMPI(sendBuffer, chunkSize, recvBuffer, chunkSize, mpComm.comm);
 		}
 
 		template <class T>
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer, int * sendCounts, int nSendCounts,
 											T * recvBuffer, int nRecvBuffer, int * recvCounts, int nRecvCounts,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === Pass through to suitable communicator library ===
 
-			// Error Checks
 			// Error Check 1: Communicator is at least of size 1
+			if (mpComm.size <= 1) {
+				return cupcfd::error::E_MPI_ERR;
+			}
+			if (nSendCounts != mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			if (nRecvCounts != mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 
 			// Error Check 2: Send Buffer is of a suitable size
+			int nSendActual = 0;
+			for (int i=0; i<mpComm.size; i++) {
+				nSendActual += sendCounts[i];
+			}
+			if (nSendActual != nSendBuffer) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 
 			// Error Check 3: Recv Buffer is of a suitable size
-
+			int nRecvActual = 0;
+			for (int i=0; i<mpComm.size; i++) {
+				nRecvActual += recvCounts[i];
+			}
+			if (nRecvActual != nRecvBuffer) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 
 			// Use MPI communicator library
 			// ToDo: Displacements are computed in the MPI wrapper function, should it be moved up a level to here?
-			cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, recvBuffer, recvCounts, mpComm.comm);
+			return cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, recvBuffer, recvCounts, mpComm.comm);
 		}
 
 		template <class T>
@@ -86,16 +94,56 @@ namespace cupcfd
 											T * recvBuffer, int nRecvBuffer,
 											int * recvCounts, int nRecvCounts,
 											int * rDispls, int nRDispls,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === Pass through to suitable communicator library ===
 
 			// Error Checks
 			// Error Check 1: Communicator is at least of size 1
+			if (mpComm.size <= 1) {
+				return cupcfd::error::E_MPI_ERR;
+			}
+			if (nSendCounts != mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			if (nRecvCounts != mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 
 			// Error Check 2: Send Buffer is of a suitable size
+			if (nSendCounts != nSDispls) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			int nSendActual = 0;
+			for (int i=0; i<mpComm.size; i++) {
+				nSendActual += sendCounts[i];
+			}
+			if (nSendActual != nSendBuffer) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			for (int i=0; i<mpComm.size-1; i++) {
+				int relativeDisp = sDispls[i+1] - sDispls[i];
+				if (relativeDisp != sendCounts[i]) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+			}
 
 			// Error Check 3: Recv Buffer is of a suitable size
+			if (nRecvCounts != nRDispls) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			int nRecvActual = 0;
+			for (int i=0; i<mpComm.size; i++) {
+				nRecvActual += recvCounts[i];
+			}
+			if (nRecvActual != nRecvBuffer) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+			for (int i=0; i<mpComm.size-1; i++) {
+				int relativeDisp = rDispls[i+1] - rDispls[i];
+				if (relativeDisp != recvCounts[i]) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+			}
 
 			// Use MPI communicator library
 			return cupcfd::comm::mpi::AllToAllVMPI(sendBuffer, sendCounts, sDispls, recvBuffer, recvCounts, rDispls, mpComm.comm);
@@ -113,12 +161,13 @@ namespace cupcfd
 		cupcfd::error::eCodes AllToAll(T * sendBuffer, int nSendBuffer,
 											int * processIDs, int nProcessIDs,
 											T ** recvBuffer, int * nRecvBuffer,
-											cupcfd::comm::Communicator& mpComm)
-		{
+											cupcfd::comm::Communicator& mpComm) {
 			// === AllToAllV with unknown recv counts ===
 			// In this method, we know the data we wish to send, but we do not know how much data we will recieve.
 			// Determine the amount of data we will recieve prior to AllToAll, also accounting for factors such as
 			// ungrouped data.
+
+			cupcfd::error::eCodes status;
 
 			T * localSendBuffer = nullptr;
 			int nLocalSendBuffer = 0;
@@ -146,12 +195,10 @@ namespace cupcfd
 			//		moving a driver function to MPIUtility for determining message sizes.
 
 			//		Check whether the processID array is sorted
-			bool sorted;
-			cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs, & sorted);
+			bool sorted = cupcfd::utility::drivers::is_sorted(processIDs, nProcessIDs);
 
 			// 		Use original buffers or sort copies depending on is_sorted outcome
-			if(sorted)
-			{
+			if(sorted) {
 				// Set pointers to use the original arrays, since we don't need to modify them
 				localSendBuffer = sendBuffer;
 				nLocalSendBuffer = nSendBuffer;
@@ -168,18 +215,18 @@ namespace cupcfd
 
 				int * sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 
-				localSendBuffer = (T *) malloc(sizeof(T) * nLocalSendBuffer);
-				localProcessIDs = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 				sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 
-				cupcfd::utility::drivers::copy(sendBuffer, nSendBuffer, localSendBuffer, nLocalSendBuffer);
-				cupcfd::utility::drivers::copy(processIDs, nProcessIDs, localProcessIDs, nLocalProcessIDs);
+				localSendBuffer = cupcfd::utility::drivers::duplicate(sendBuffer, nSendBuffer);
+				localProcessIDs = cupcfd::utility::drivers::duplicate(processIDs, nProcessIDs);
 
 				// Group the process ids,keeping a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);
+				status = cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);
+				CHECK_ECODE(status)
 
 				// Now we have a sorted order by original index, let us reorder sendBuffer to that order
-				cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
+				status = cupcfd::utility::drivers::sourceIndexReorder(localSendBuffer, nLocalSendBuffer, sortIndexes, nLocalProcessIDs);
+				CHECK_ECODE(status)
 
 				free(sortIndexes);
 			}
@@ -188,7 +235,8 @@ namespace cupcfd
 			//	   will need this information
 
 			// This driver will allocate memory for the group id/size arrays (but we must free it in this function to avoid leaks)
-			cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize, &nGroupSize);
+			status = cupcfd::utility::drivers::distinctArray(localProcessIDs, nLocalProcessIDs, &groupID, &nGroupID, &groupSize, &nGroupSize);
+			CHECK_ECODE(status)
 
 			nSendCounts = mpComm.size;
 			nRecvCounts = mpComm.size;
@@ -196,20 +244,17 @@ namespace cupcfd
 			sendCounts = (int *) malloc(sizeof(int) * nSendCounts);
 			recvCounts = (int *) malloc(sizeof(int) * nRecvCounts);
 
-			for(int i = 0; i < nSendCounts; i++)
-			{
+			for(int i = 0; i < nSendCounts; i++) {
 				sendCounts[i] = 0;
 			}
 
-			for(int i = 0; i < nRecvCounts; i++)
-			{
+			for(int i = 0; i < nRecvCounts; i++) {
 				recvCounts[i] = 0;
 			}
 
 			// For those process IDs that were listed, set their counts to what was previously calculated.
 			// Those that were not in pSend will remain at the default of 0.
-			for(int i = 0; i < nGroupID; i++)
-			{
+			for(int i = 0; i < nGroupID; i++) {
 				sendCounts[groupID[i]] = groupSize[i];
 			}
 
@@ -219,7 +264,8 @@ namespace cupcfd
 			// 	   It is necessary to send out send counts to every process, and receive counts from every process
 			//	   We can do this with a fixed-size chunk AllToAll.
 
-			AllToAll(sendCounts, nSendCounts, recvCounts, nRecvCounts, 1, mpComm);
+			status = AllToAll(sendCounts, nSendCounts, recvCounts, nRecvCounts, 1, mpComm);
+			CHECK_ECODE(status)
 
 			// Total number of received elements
 			cupcfd::utility::drivers::sum(recvCounts, nRecvCounts, nRecvBuffer);
@@ -229,41 +275,36 @@ namespace cupcfd
 
 			// (d) Perform the communication - we will use AllToAllV
 
-			AllToAll(localSendBuffer, nLocalSendBuffer,
-					 sendCounts, nSendCounts,
-					 *recvBuffer, *nRecvBuffer,
-					 recvCounts, nRecvCounts,
-					 mpComm);
+			status = AllToAll(localSendBuffer, nLocalSendBuffer,
+							sendCounts, nSendCounts,
+							*recvBuffer, *nRecvBuffer,
+							recvCounts, nRecvCounts,
+							mpComm);
+			CHECK_ECODE(status)
 
 			// (e) Cleanup
 			// Only free pointers if they were allocated memory (i.e. different address to method input buffers)
-			if(localSendBuffer != nullptr && localSendBuffer != sendBuffer)
-			{
+			if(localSendBuffer != nullptr && localSendBuffer != sendBuffer) {
 				free(localSendBuffer);
 			}
 
-			if(localProcessIDs != nullptr && localProcessIDs != processIDs)
-			{
+			if(localProcessIDs != nullptr && localProcessIDs != processIDs) {
 				free(localProcessIDs);
 			}
 
-			if(groupID != nullptr)
-			{
+			if(groupID != nullptr) {
 				free(groupID);
 			}
 
-			if(groupSize != nullptr)
-			{
+			if(groupSize != nullptr) {
 				free(groupSize);
 			}
 
-			if(sendCounts != nullptr)
-			{
+			if(sendCounts != nullptr) {
 				free(sendCounts);
 			}
 
-			if(recvCounts != nullptr)
-			{
+			if(recvCounts != nullptr) {
 				free(recvCounts);
 			}
 

@@ -61,7 +61,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Currently does nothing.
 				 */
-				virtual ~DistributionConfigFixed();
+				~DistributionConfigFixed();
 
 				// === Concrete Methods ===
 
@@ -89,8 +89,9 @@ namespace cupcfd
 				// === Inherited Overloaded Methods ===
 
 				void operator=(const DistributionConfigFixed<I,T>& source);
+				__attribute__((warn_unused_result))
 				DistributionConfigFixed<I,T> * clone();
-				cupcfd::error::eCodes buildDistribution(Distribution<I,T> ** dist);
+				void buildDistribution(Distribution<I,T> ** dist);
 		};
 	}
 }

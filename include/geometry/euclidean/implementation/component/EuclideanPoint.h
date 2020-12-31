@@ -117,6 +117,8 @@ namespace cupcfd
 					 */
 					inline void operator=(const T scalar);
 
+					inline void operator*=(T scalar);
+
 					/**
 					 * Compare two points to see if they are equivalent (i.e. they have the same coordinates)
 					 *
@@ -131,9 +133,10 @@ namespace cupcfd
 					 * @retval true The points are equal
 					 * @retval false The points are not equal
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator==(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							if(!(cupcfd::utility::arithmetic::kernels::isEqual(point1.cmp[i], point2.cmp[i])))
 							{
@@ -159,6 +162,7 @@ namespace cupcfd
 					 * @retval true The points are not equal
 					 * @retval false The points are equal
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator!=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						return !(point1 == point2);
@@ -178,11 +182,12 @@ namespace cupcfd
 					 * @retval true point1 is less than to point 2
 					 * @retval false point1 is not less than to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
 
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] < point2.cmp[i])
 							{
@@ -207,10 +212,11 @@ namespace cupcfd
 					 * @retval true point1 is less than or equal to point 2
 					 * @retval false point1 is not less than or equal to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] < point2.cmp[i])
 							{
@@ -242,11 +248,12 @@ namespace cupcfd
 					 * @retval true point1 is greater than point 2
 					 * @retval false point1 is not greater than point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
 
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] > point2.cmp[i])
 							{
@@ -272,10 +279,11 @@ namespace cupcfd
 					 * @retval true point1 is greater than or equal to point 2
 					 * @retval false point1 is not greater than or equal to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(int i = N-1; i >= 0; i--)
+						for(uint i = N-1; i >= 0; i--)
 						{
 							if(point1.cmp[i] > point2.cmp[i])
 							{
@@ -303,11 +311,12 @@ namespace cupcfd
 					 *
 					 * @return The sum of thw two points
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point1.cmp[i] + point2.cmp[i];
 						}
@@ -326,11 +335,12 @@ namespace cupcfd
 					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] + vector.cmp[i];
 						}
@@ -350,11 +360,12 @@ namespace cupcfd
 					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = vector.cmp[i] + point.cmp[i];
 						}
@@ -373,11 +384,12 @@ namespace cupcfd
 					 *
 					 * @return The shifted point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] + scalar;
 						}
@@ -396,11 +408,12 @@ namespace cupcfd
 					 *
 					 * @return The shifted point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar + point.cmp[i];
 						}
@@ -419,11 +432,12 @@ namespace cupcfd
 					 *
 					 * @return The vector for moving from origin to dest
 					 */
+					__attribute__((warn_unused_result))
 					friend inline cupcfd::geometry::euclidean::EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
 					{
 						cupcfd::geometry::euclidean::EuclideanVector<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = end.cmp[i] - start.cmp[i];
 						}
@@ -441,11 +455,12 @@ namespace cupcfd
 					 *
 					 * @return The point at the start of the vector
 					 */
+					__attribute__((warn_unused_result))
 					friend inline cupcfd::geometry::euclidean::EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
 					{
 						cupcfd::geometry::euclidean::EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = end.cmp[i] - vec.cmp[i];
 						}
@@ -464,11 +479,12 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator*(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] * scalar;
 						}
@@ -487,11 +503,12 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator*(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar * point.cmp[i];
 						}
@@ -510,11 +527,12 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator/(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = point.cmp[i] / scalar;
 						}
@@ -533,11 +551,12 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator/(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(int i = 0; i < N; i++)
+						for(uint i = 0; i < N; i++)
 						{
 							result.cmp[i] = scalar / point.cmp[i];
 						}
@@ -552,14 +571,16 @@ namespace cupcfd
 
 					// === Inherited Overloads ===
 
+					__attribute__((warn_unused_result))
 					inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
 
-					inline MPI_Datatype getMPIType();
-
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes registerMPIType();
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes deregisterMPIType();
 
+					__attribute__((warn_unused_result))
 					inline bool isRegistered();
 			};
 		} // namespace euclidean
@@ -569,5 +590,16 @@ namespace cupcfd
 // Include Header Level Definitions
 // ToDo: Would like to move friend functions into here as well, although will need to fix compiler errors.
 #include "EuclideanPoint.ipp"
+
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiType;
+extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiDataTypeReg;
 
 #endif

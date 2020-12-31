@@ -141,7 +141,7 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 */
-				virtual ~ParticleSimple();
+				~ParticleSimple();
 
 				// === Concrete Methods ===
 
@@ -177,6 +177,7 @@ namespace cupcfd
 				 *
 				 * @return The particle acceleration
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getAcceleration();
 
 				/**
@@ -199,6 +200,7 @@ namespace cupcfd
 				 *
 				 * @return The particle jerk
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getJerk();
 
 				/**
@@ -224,6 +226,7 @@ namespace cupcfd
 				 *
 				 * @return The particle's decay level
 				 */
+				__attribute__((warn_unused_result))
 				inline T getDecayLevel();
 
 				/**
@@ -248,9 +251,11 @@ namespace cupcfd
 				 *
 				 * @return The particle's decay rate per unit time
 				 */
+				__attribute__((warn_unused_result))
 				inline T getDecayRate();
 
 				inline void setInactive();
+				__attribute__((warn_unused_result))
 				inline bool getInactive() const;
 
 				/**
@@ -263,6 +268,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes updateVelocity(T dt);
 
 				/**
@@ -275,6 +281,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes updateAcceleration(T dt);
 
 				/**
@@ -285,6 +292,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes updateDecayLevel(T dt);
 
 				/**
@@ -301,6 +309,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateVelocityAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																I cellLocalID,
 																T dt);
@@ -317,6 +326,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateStateAtomic(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																    I cellLocalID,
 																    T dt);
@@ -334,6 +344,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateNonBoundaryFace(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																 I faceLocalID);
 
@@ -357,6 +368,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceWall(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 																		  I cellLocalID, I faceLocalID);
 
@@ -377,6 +389,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceSymp(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 						  	  	  	  	  	  	  	  	  	  	  	  	  I cellLocalID, I faceLocalID);
 
@@ -397,6 +410,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceInlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 						  	  	  	  	  	  	  	  	  	  	  	  	   I cellLocalID, I faceLocalID);
 
@@ -417,6 +431,7 @@ namespace cupcfd
 				 * has no further travel time.
 				 */
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateBoundaryFaceOutlet(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
 						  	  	  	  	  	  	  	  	  	  	  	I cellLocalID, I faceLocalID);
 
@@ -424,14 +439,16 @@ namespace cupcfd
 
 				// === Inherited Overloaded Methods ===
 
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getMPIType(MPI_Datatype * dType);
 
-				inline MPI_Datatype getMPIType();
-
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes registerMPIType();
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes deregisterMPIType();
 
+				__attribute__((warn_unused_result))
 				inline bool isRegistered();
 		};
 	}
@@ -439,5 +456,11 @@ namespace cupcfd
 
 // Include Header Level Definitions
 #include "ParticleSimple.ipp"
+
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype cupcfd::particles::ParticleSimple<int, float>::mpiType;
+extern template bool cupcfd::particles::ParticleSimple<int, float>::mpiDataTypeReg;
+extern template MPI_Datatype cupcfd::particles::ParticleSimple<int, double>::mpiType;
+extern template bool cupcfd::particles::ParticleSimple<int, double>::mpiDataTypeReg;
 
 #endif

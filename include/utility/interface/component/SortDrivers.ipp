@@ -23,82 +23,101 @@ namespace cupcfd
 		namespace drivers
 		{
 			template <class I, class T>
-			cupcfd::error::eCodes merge_sort(T * source, I nele)
-			{
-				// ToDo: Error checks before and after
-				kernels::merge_sort(source, nele);
+			cupcfd::error::eCodes merge_sort(T * source, I nEle) {
+				if(nEle < 0) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+
+				int err = kernels::merge_sort(source, nEle);
+				if (err == -1) {
+					return cupcfd::error::E_ERROR;
+				}
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes merge_sort(T * source,  T * dest, I nele)
-			{
-				// ToDo: Error checks before and after
+			cupcfd::error::eCodes merge_sort(T * source,  T * dest, I nEle) {
+				if(nEle < 0) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				cupcfd::error::eCodes status;
 
 				// Copy the source array to the destination array
-				cupcfd::utility::drivers::copy(source, nele, dest, nele);
+				status = cupcfd::utility::drivers::copy(source, nEle, dest, nEle);
+				CHECK_ECODE(status)
 
 				// Sort the copied array
-				kernels::merge_sort(dest, nele);
+				int err = kernels::merge_sort(dest, nEle);
+				if (err == -1) {
+					return cupcfd::error::E_SORT_ERROR;
+				}
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			// Merge Sort (Destructive) - Also returns original indexes in sorted fashion
 			template <class I, class T>
-			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes)
-			{
-				// ToDo: Error checks before and after
+			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes) {
+				if(nSource < 0) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				if (nSource != nIndexes) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
 
 				// Populate the index array with indexes
-				for(I i = 0; i < nSource; i++)
-				{
+				for(I i = 0; i < nSource; i++) {
 					indexes[i] = i;
 				}
 
-				kernels::merge_sort(source, nSource, indexes, nIndexes);
+				int err = kernels::merge_sort(source, nSource, indexes, nIndexes);
+				if (err == -1) {
+					return cupcfd::error::E_ERROR;
+				}
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes index_sort(T * source, I nele, I * indexes, I nidx)
-			{
-				// ToDo: Error checks before and after
+			cupcfd::error::eCodes index_sort(T * source, I nEle, I * indexes, I nidx) {
+				if(nEle < 0) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+				cupcfd::error::eCodes status;
 
-				index_sort(source, nele, indexes, nidx);
+				status = index_sort(source, nEle, indexes, nidx);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			// Detected whether an array is sorted
 			template <class I, class T>
-			cupcfd::error::eCodes is_sorted(T * source, I nEle, bool * result)
-			{
-				// Size Error Check
-				if(nEle < 0)
-				{
-					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+			bool is_sorted(T * source, I nEle) {
+				if(nEle < 0) {
+					return true;
 				}
 
 				// ToDo: Could use inbuilt C++ is_sorted method instead
-				*result = kernels::is_sorted(source, nEle);
+				return kernels::is_sorted(source, nEle);
+			}
 
+			template <class I, class T>
+			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+				cupcfd::error::eCodes status;
+
+				// ToDo: Error checks before and after
+
+				status = kernels::sourceIndexReorder(source, nEleSource, indexes, nEleIndexes);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes)
-			{
+			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes) {
+				cupcfd::error::eCodes status;
+
 				// ToDo: Error checks before and after
 
-				kernels::sourceIndexReorder(source, nEleSource, indexes, nEleIndexes);
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T>
-			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes)
-			{
-				// ToDo: Error checks before and after
-
-				kernels::destIndexReorder(source, nEleSource, indexes, nEleIndexes);
+				status = kernels::destIndexReorder(source, nEleSource, indexes, nEleIndexes);
+				CHECK_ECODE(status)
 				return cupcfd::error::E_SUCCESS;
 			}
 

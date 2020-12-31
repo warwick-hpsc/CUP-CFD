@@ -31,6 +31,7 @@ namespace cupcfd
 			 * @return The array sum
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			T sum(T * source, I nEle);
 
 			/**
@@ -45,6 +46,7 @@ namespace cupcfd
 			 * @return The array median
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			T median(T * source, I nEle);
 
 			/**
@@ -59,6 +61,7 @@ namespace cupcfd
 			 * @return The array mode
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			T mode(T * source, I nEle);
 
 			/**
@@ -73,7 +76,8 @@ namespace cupcfd
 			 * @return The array standard deviation
 			 */
 			template <class I, class T>
-			double stDev(T * source, I nEle);
+			__attribute__((warn_unused_result))
+			T stDev(T * source, I nEle);
 
 			/**
 			 * Count the number of instances of a particular element in an array - requires
@@ -89,7 +93,8 @@ namespace cupcfd
 			 * @return The number of instances found of target
 			 */
 			template <class I, class T>
-			int count(T * source, I nEle, T target);
+			__attribute__((warn_unused_result))
+			I count(T * source, I nEle, T target);
 		} // namespace kernels
 	} // namespace utility
 } // namespace cupcfd

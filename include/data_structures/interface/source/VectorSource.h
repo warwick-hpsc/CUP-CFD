@@ -63,6 +63,7 @@ namespace cupcfd
 				 * @return An error code indicating the success or failure of the function
 				 * @retval cupcfd::error::E_SUCCESS The function completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getSize(I * vecSize) = 0;
 
 				/**
@@ -76,6 +77,7 @@ namespace cupcfd
 				 * @param indexBase The base index used for the indexes provided in the indexes array (e.g. 0 for zero-indexed etc).
 				 * These will be shifted if the data source requires it.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getData(T * data, I nData, I * indexes, I nIndexes, I indexBase) = 0;
 		};
 	}

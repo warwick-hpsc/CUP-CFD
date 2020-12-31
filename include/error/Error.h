@@ -14,6 +14,7 @@
 
 #include <string>
 #include <unordered_map>
+#include <iostream>
 
 namespace cupcfd
 {
@@ -49,6 +50,9 @@ namespace cupcfd
 			E_GEOMETRY_NO_VALID_CELL,
 			E_GEOMETRY_ON_EDGE,
 			E_GEOMETRY_ON_VERTEX,
+			E_GEOMETRY_LOGIC_ERROR,
+			E_GEOMETRY_ZERO_AREA,
+			E_GEOMETRY_NAN_AREA,
 			E_ARRAY_SUCCESS,
 			E_ARRAY_SIZE_UNDERSIZED,
 			E_ARRAY_SIZE_MISMATCH,
@@ -58,6 +62,7 @@ namespace cupcfd
 			E_SEARCH_UNSORTED,
 			E_SEARCH_SORT_CHECK_FAILURE,
 			E_SEARCH_UNKNOWN,
+			E_SORT_ERROR,
 			E_PARTICLE_CELL_NOT_FOUND,
 			E_PARTITIONER_SUCCESS,
 			E_PARTITIONER_UNDERSIZED_ARRAY,
@@ -82,6 +87,7 @@ namespace cupcfd
 			E_PARMETIS_LIBRARY_ERROR,
 			E_PARMETIS_UNDERSIZED_COMM,
 			E_DISTGRAPH_UNFINALIZED,
+			E_DISTGRAPH_FINALIZED,
 			E_DISTGRAPH_NO_LOCAL_NODES,
 			E_PARMETIS_INVALID_SUBDOMAIN_WEIGHT_ARRAYS,
 			E_PARMETIS_INVALID_VERTEX_IMBALANCE_WEIGHT_ARRAYS,
@@ -121,6 +127,7 @@ namespace cupcfd
 			E_FINALIZED,
 			E_SUCCESS,
 			E_FAILURE,
+			E_NO_DATA,
 			E_ERROR,
 			E_NULL_PTR,
 			E_NOT_NULL_PTR,
@@ -130,9 +137,62 @@ namespace cupcfd
 			E_MPI_ERR,
 			E_INVALID_FILE_FORMAT,
 			E_SPECIALISATION_ERROR,
-			E_PARTITIONER_INVALID_WORK_ARRAY
+			E_PARTITIONER_INVALID_WORK_ARRAY,
+			E_PETSC_ERROR,
+			E_NOT_IMPLEMENTED
 		};
+
+		extern const char* eStrings[];
 	}
 }
+
+#ifndef DEBUGGABLE_ERROR
+	#ifdef DEBUG
+		// #define DEBUGGABLE_ERROR fprintf(stderr, "%s:%d\n\n", __FILE__, __LINE__); fflush(stderr); fflush(stdout);
+ 		#define DEBUGGABLE_ERROR {std::cout << __FILE__ << ":" << STRINGIZE(__LINE__) << std::endl; }
+	#else
+		#define DEBUGGABLE_ERROR 
+	#endif
+#endif
+
+
+#define STRINGIZE_DETAIL(x) #x
+#define STRINGIZE(x) STRINGIZE_DETAIL(x)
+#ifndef CHECK_ECODE
+	#ifdef DEBUG
+ 		#define CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#else
+		#define CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) return E; }
+	#endif
+#endif
+#ifndef HARD_CHECK_ECODE
+	#ifdef DEBUG
+		#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#else
+		#define HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg("ERROR = "); msg+=cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#endif
+#endif
+#ifndef DBG_HARD_CHECK_ECODE
+	#ifdef DEBUG
+		#define DBG_HARD_CHECK_ECODE(E) { if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; throw std::runtime_error(msg.c_str()); } }
+	#else
+		#define DBG_HARD_CHECK_ECODE(E)
+	#endif
+#endif
+#ifndef DBG_PRINT_BAD_ECODE
+	#ifdef DEBUG
+		#define DBG_PRINT_BAD_ECODE(E) if (E != cupcfd::error::E_SUCCESS) { std::string msg(__FILE__); msg+=":"+std::string(STRINGIZE(__LINE__)) + " - ERROR = " + cupcfd::error::eStrings[E]; std::cout << msg << std::endl; }
+	#else
+		#define DBG_PRINT_BAD_ECODE(E)
+	#endif
+#endif
+
+#ifndef DBG_SAFE_VECTOR_LOOKUP
+	#ifdef DEBUG
+		#define DBG_SAFE_VECTOR_LOOKUP(V, I) ( (V).at((I)) )
+	#else
+		#define DBG_SAFE_VECTOR_LOOKUP(V, I) ( (V)[(I)] )
+	#endif
+#endif
 
 #endif

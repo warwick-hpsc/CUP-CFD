@@ -52,17 +52,6 @@ namespace cupcfd
 				 */
 				virtual ~ParticleSourceConfig();
 
-				// === Concrete Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(ParticleSourceConfig<P,I,T>& source);
-
 				// === Pure Virtual Methods ===
 
 				/**
@@ -72,6 +61,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual ParticleSourceConfig<P,I,T> * clone() = 0;
 
 				/**
@@ -80,6 +70,7 @@ namespace cupcfd
 				 * @param particleSource A pointer to the location where the pointer of the newly created object will be stored.
 				 * @param sourceId ID for this source, unique across all emitters and sources in system; used to create unique particle IDs
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId) = 0;
 		};
 	}

@@ -77,6 +77,7 @@ namespace cupcfd
 				 * @param result Location to store result in
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBoolArg(std::string flag, int arg, bool * result);
 
 				/**
@@ -89,6 +90,7 @@ namespace cupcfd
 				 * @param result Location to store result in
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getIntArg(std::string flag, int arg, int * result);
 
 				/**
@@ -101,6 +103,7 @@ namespace cupcfd
 				 * @param result Location to store result in
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getDoubleArg(std::string flag, int arg, double * result);
 
 				/**
@@ -121,6 +124,7 @@ namespace cupcfd
 				 * invalid - it is either negative or there are insufficient arguments to the requested
 				 * flag
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getStringArg(std::string flag, int arg, std::string * result);
 		};
 	}

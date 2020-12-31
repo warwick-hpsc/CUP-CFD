@@ -64,14 +64,15 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~DistributionUniform();
+				~DistributionUniform();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				cupcfd::error::eCodes getValues(T * values, I nValues);
+				void getValues(T * values, I nValues);
 
+				__attribute__((warn_unused_result))
 				DistributionUniform<I,T> * clone();
 
 				// === Pure Virtual Methods ===

@@ -79,14 +79,18 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual ~BenchmarkConfigLinearSolver();
+				~BenchmarkConfigLinearSolver();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
-				virtual void operator=(const BenchmarkConfigLinearSolver<C,I,T>& source);
+				void operator=(const BenchmarkConfigLinearSolver<C,I,T>& source);
+
+				__attribute__((warn_unused_result))
 				BenchmarkConfigLinearSolver<C,I,T> * clone();
+				
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(BenchmarkLinearSolver<C,I,T> ** bench);
 		};
 	}

@@ -56,56 +56,47 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		T DistributionConfigNormal<I,T>::getLBound()
-		{
+		T DistributionConfigNormal<I,T>::getLBound() {
 			return this->lbound;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigNormal<I,T>::setLBound(T lbound)
-		{
+		void DistributionConfigNormal<I,T>::setLBound(T lbound) {
 			this->lbound = lbound;
 		}
 		
 		template <class I, class T>
-		T DistributionConfigNormal<I,T>::getUBound()
-		{
+		T DistributionConfigNormal<I,T>::getUBound() {
 			return this->ubound;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigNormal<I,T>::setUBound(T ubound)
-		{
+		void DistributionConfigNormal<I,T>::setUBound(T ubound) {
 			this->ubound = ubound;
 		}
 		
 		template <class I, class T>
-		T DistributionConfigNormal<I,T>::getMean()
-		{
+		T DistributionConfigNormal<I,T>::getMean() {
 			return this->mean;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigNormal<I,T>::setMean(T mean)
-		{
+		void DistributionConfigNormal<I,T>::setMean(T mean) {
 			this->mean = mean;
 		}
 		
 		template <class I, class T>
-		T DistributionConfigNormal<I,T>::getStdev()
-		{
+		T DistributionConfigNormal<I,T>::getStdev() {
 			return this->stdev;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigNormal<I,T>::setStdev(T stdev)
-		{
+		void DistributionConfigNormal<I,T>::setStdev(T stdev) {
 			this->stdev = stdev;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigNormal<I,T>::operator=(const DistributionConfigNormal<I,T>& source)
-		{
+		void DistributionConfigNormal<I,T>::operator=(const DistributionConfigNormal<I,T>& source) {
 			// Call Base
 			DistributionConfig<I,T>::operator=(source);
 			
@@ -116,16 +107,13 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigNormal<I,T> * DistributionConfigNormal<I,T>::clone()
-		{
+		DistributionConfigNormal<I,T> * DistributionConfigNormal<I,T>::clone() {
 			return new DistributionConfigNormal(*this);
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigNormal<I,T>::buildDistribution(Distribution<I,T> ** dist)
-		{
+		void DistributionConfigNormal<I,T>::buildDistribution(Distribution<I,T> ** dist) {
 			*dist = new DistributionNormal<I,T>(this->mean, this->stdev, this->lbound, this->ubound);
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

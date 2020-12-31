@@ -36,30 +36,6 @@ namespace cupcfd
 		{
 			// Nothing to do
 		}
-
-		// === Concrete Methods ===
-
-		template <class P, class I, class T>
-		void ParticleSourceConfig<P,I,T>::operator=(ParticleSourceConfig<P,I,T>& source)
-		{
-			// Nothing to do
-		}
-
-		// === Pure Virtual Methods ===
-		// Here to satisfy linker
-
-		template <class P, class I, class T>
-		ParticleSourceConfig<P,I,T> * ParticleSourceConfig<P,I,T>::clone()
-		{
-			return nullptr;
-		}
-
-		template <class P, class I, class T>
-		// cupcfd::error::eCodes ParticleSourceConfig<P,I,T>::buildParticleSource(ParticleSource<P,I,T> ** particleSource)
-		cupcfd::error::eCodes ParticleSourceConfig<P,I,T>::buildParticleSource(ParticleSource<P,I,T> ** particleSource, int sourceId)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
 	}
 }
 

@@ -86,7 +86,7 @@ namespace cupcfd
 					 * Deconstructor:
 					 * Cleans up any open accessors, records etc.
 					 */
-					virtual ~HDF5Access();
+					~HDF5Access();
 
 					/**
 					 * Open the HDF5 file tracked by this object.
@@ -94,6 +94,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes openFile();
 
 					/**
@@ -102,6 +103,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes closeFile();
 
 					// ToDo: These readData functions should also take in the size of the array,
@@ -118,6 +120,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(int * sink);
 
 					/**
@@ -130,6 +133,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(float * sink);
 
 					/**
@@ -142,6 +146,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(double * sink);
 
 					/**
@@ -159,6 +164,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(int * sink, HDF5Properties& properties);
 
 					/**
@@ -176,6 +182,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(float * sink, HDF5Properties& properties);
 
 					/**
@@ -193,6 +200,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(double * sink, HDF5Properties& properties);
 
 					/**
@@ -213,6 +221,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(int ** sink, HDF5Properties& properties);
 
 					/**
@@ -233,6 +242,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(float ** sink, HDF5Properties& properties);
 
 					/**
@@ -253,6 +263,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Operation was successful
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes readData(double ** sink, HDF5Properties& properties);
 			};
 		}

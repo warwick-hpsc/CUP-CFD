@@ -13,6 +13,9 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_TETRAHEDRON_IPP_H
 #define CUPCFD_GEOMETRY_SHAPES_TETRAHEDRON_IPP_H
 
+namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -22,34 +25,21 @@ namespace cupcfd
 			// === Constructors/Deconstructors ===
 
 			template <class T>
-			Tetrahedron<T>::Tetrahedron(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex,
-							cupcfd::geometry::euclidean::EuclideanPoint<T,3>& f,
-							cupcfd::geometry::euclidean::EuclideanPoint<T,3>& bl,
-							cupcfd::geometry::euclidean::EuclideanPoint<T,3>& br)
-			:Pyramid<Triangle3D<T>,T>(apex, Triangle3D<T>(f, br, bl))
+			Tetrahedron<T>::Tetrahedron(const euc::EuclideanPoint<T,3>& apex,
+										const shapes::Triangle3D<T>& base)
+			: Pyramid<Triangle3D<T>,T>(apex, base)
 			{
-				// Note in the initialiser list that we define the base in anti-clockwise order
-				// when viewed from the outside/clockwise when viewed from inside the polyhedron
-				// This is so normals for the base when using the vertices in order point outwards.
-			
-				this->nEdges = 6;
-				this->nVertices = 4;
-				this->nFaces = 4;
 			}
 			
 			template <class T>
 			Tetrahedron<T>::~Tetrahedron()
 			{
-			
 			}
-
-			// === Static Methods ===
 
 			// === Concrete Methods ===
 			
 			template <class T>
-			inline bool Tetrahedron<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{							
+			inline bool Tetrahedron<T>::isPointOnEdge(const euc::EuclideanPoint<T,3>& point) {							
 				// ToDo: This can likely be condensed to a generic polygon method, using a getEdge method	  
 				
 				bool tests[6];
@@ -61,10 +51,8 @@ namespace cupcfd
 				tests[5] = isPointOnLine(this->base.vertices[2], this->base.vertices[0], point);
 				
 				// Test if the point lies on each edge
-				for(int i = 0; i < 6; i++)
-				{
-					if(tests[i])
-					{
+				for(int i = 0; i < 6; i++) {
+					if(tests[i]) {
 						return true;
 					}
 				}
@@ -73,10 +61,17 @@ namespace cupcfd
 			}
 			
 			template <class T>
-			inline bool Tetrahedron<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			inline bool Tetrahedron<T>::isPointOnVertex(const euc::EuclideanPoint<T,3>& point) {
 				return (this->apex == point) || (this->base.vertices[0] == point) || (this->base.vertices[1] == point) || (this->base.vertices[2] == point);
 			}
+			
+			// template<class T>
+			// euc::EuclideanPoint<T,3> Tetrahedron<T>::computeCentroid() {
+			// 	// Override Pyramid's function, because for Tetrahedron is much easier:
+
+			// 	// Arithmetic mean of four vertices
+			// 	return (this->base.vertices[0] + this->base.vertices[1] + this->base.vertices[2] + this->base.vertices[3]) / T(4);
+ 			// }
 		}
 	}
 }
