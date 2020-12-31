@@ -177,6 +177,7 @@ namespace cupcfd
 				 *
 				 * @return The particle acceleration
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getAcceleration();
 
 				/**
@@ -199,6 +200,7 @@ namespace cupcfd
 				 *
 				 * @return The particle jerk
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getJerk();
 
 				/**
@@ -224,6 +226,7 @@ namespace cupcfd
 				 *
 				 * @return The particle's decay level
 				 */
+				__attribute__((warn_unused_result))
 				inline T getDecayLevel();
 
 				/**
@@ -248,9 +251,11 @@ namespace cupcfd
 				 *
 				 * @return The particle's decay rate per unit time
 				 */
+				__attribute__((warn_unused_result))
 				inline T getDecayRate();
 
 				inline void setInactive();
+				__attribute__((warn_unused_result))
 				inline bool getInactive() const;
 
 				/**

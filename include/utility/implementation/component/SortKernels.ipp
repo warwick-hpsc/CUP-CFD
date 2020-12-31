@@ -59,14 +59,14 @@ namespace cupcfd
 					// Left array is empty, copy from next value in right array
 					if(left_idx >= n_l) {
 						source[i] = right[right_idx];
-						right_idx = right_idx + 1;
+						right_idx++;
 						continue;
 					}
 
 					// Right array is empty, copy from next value in left array
 					if(right_idx >= n_r) {
 						source[i] = left[left_idx];
-						left_idx = left_idx + 1;
+						left_idx++;
 						continue;
 					}
 
@@ -74,11 +74,11 @@ namespace cupcfd
 					// is smaller
 					if(left[left_idx] <= right[right_idx]) {
 						source[i] = left[left_idx];
-						left_idx = left_idx + 1;
+						left_idx++;
 					}
 					else {
 						source[i] = right[right_idx];
-						right_idx = right_idx + 1;
+						right_idx++;
 					}
 				}
 

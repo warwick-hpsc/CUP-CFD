@@ -63,6 +63,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual PartitionerConfig * clone() = 0;
 
 				/**

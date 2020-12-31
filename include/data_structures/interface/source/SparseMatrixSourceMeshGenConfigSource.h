@@ -62,6 +62,7 @@ namespace cupcfd
 
 				// === Virtual Methods ===
 
+				__attribute__((warn_unused_result))
 				virtual SparseMatrixSourceMeshGenConfigSource<I,T> * clone() = 0;
 				
 				__attribute__((warn_unused_result))

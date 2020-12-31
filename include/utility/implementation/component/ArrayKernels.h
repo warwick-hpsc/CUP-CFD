@@ -49,6 +49,7 @@ namespace cupcfd
 			* @return The number of unique elements (i.e. with no duplicates) in the array.
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I uniqueCount(T * source, I nEle);
 
 			/**
@@ -77,6 +78,7 @@ namespace cupcfd
 			* @return The number of distinct elements (i.e. counts the first instance, but not duplicates)
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I distinctCount(T * source, I nEle);
 
 			/**
@@ -126,6 +128,7 @@ namespace cupcfd
 			* @return The number of elements that appear in source1, but not in source 2, including duplicates
 			*/
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I minusCount(T * source1, I nSource1, T * source2, I nSource2);
 
 			/**
@@ -164,6 +167,7 @@ namespace cupcfd
 			 * @return The number of elements that appear in source1 and in source 2, including duplicates
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			I intersectCount(T * source1, I nSource1, T * source2, I nSource2);
 
 			/**

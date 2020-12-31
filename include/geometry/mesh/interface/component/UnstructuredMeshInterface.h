@@ -202,6 +202,7 @@ namespace cupcfd
 					 *
 					 * @return The center point of the cell
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getCellCenter(I cellID);
 
 					/**
@@ -228,6 +229,7 @@ namespace cupcfd
 					 *
 					 * @return The volume of the cell
 					 */
+					__attribute__((warn_unused_result))
 					T getCellVolume(I cellID);
 
 
@@ -270,6 +272,7 @@ namespace cupcfd
 					 * @tparam T The type of the stored array data
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					I getCellNFaces(I cellID);
 
 					/**
@@ -308,6 +311,7 @@ namespace cupcfd
 					 *
 					 * @return The number of cell faces
 					 */
+					__attribute__((warn_unused_result))
 					I getCellStoredNFaces(I cellID);
 
 					/**
@@ -346,6 +350,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
+					__attribute__((warn_unused_result))
 					I getCellNVertices(I cellID);
 
 					/**
@@ -384,7 +389,8 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
-					 I getCellStoredNVertices(I cellID);
+					__attribute__((warn_unused_result))
+					I getCellStoredNVertices(I cellID);
 
 					/**
 					 * Get the local face ID of one of the faces associated with a cell that is stored on this rank.
@@ -417,6 +423,7 @@ namespace cupcfd
 					 *
 					 * @return The local ID of the face in the mesh on this process
 					 */
+					__attribute__((warn_unused_result))
 					I getCellFaceID(I cellID, I cellFaceID);
 
 					/**
@@ -513,6 +520,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID for the given cell label
 					 */
+					__attribute__((warn_unused_result))
 					I getCellID(L cellLabel);
 
 					// =========================== Face Operators ===========================
@@ -541,6 +549,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices
 					 */
+					__attribute__((warn_unused_result))
 					inline I getFaceNVertices(I faceID);
 
 					/**
@@ -571,6 +580,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID in the mesh
 					 */
+					__attribute__((warn_unused_result))
 					I getFaceCell1ID(I faceID);
 
 					/**
@@ -600,6 +610,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID in the mesh
 					 */
+					__attribute__((warn_unused_result))
 					I getFaceCell2ID(I faceID);
 
 					/**
@@ -626,6 +637,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face lambda value
 					 */
+					__attribute__((warn_unused_result))
 					T getFaceLambda(I faceID);
 
 					/**
@@ -652,6 +664,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face normal vector
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector<T,3> getFaceNorm(I faceID);
 
 					/**
@@ -695,6 +708,7 @@ namespace cupcfd
 					 * for the given faceVertexID (e.g. ID 3 in a triangular face since there are only three vertices in a zero
 					 * indexed scheme)
 					 */
+					__attribute__((warn_unused_result))
 					I getFaceVertex(I faceID, I faceVertexID);
 
 					/**
@@ -721,6 +735,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face center point
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceCenter(I faceID);
 
 					/**
@@ -747,6 +762,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face rlencos
 					 */
+					__attribute__((warn_unused_result))
 					T getFaceRLencos(I faceID);
 
 					/**
@@ -773,6 +789,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face area
 					 */
+					__attribute__((warn_unused_result))
 					T getFaceArea(I faceID);
 
 					/**
@@ -799,6 +816,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face xpac
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXpac(I faceID);
 
 					/**
@@ -825,6 +843,7 @@ namespace cupcfd
 					 *
 					 * @return The stored face xnac
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXnac(I faceID);
 
 					/**
@@ -853,6 +872,7 @@ namespace cupcfd
 					 * @retval true The face is a boundary
 					 * @retval false The face is not a boundary
 					 */
+					__attribute__((warn_unused_result))
 					bool getFaceIsBoundary(I faceID);
 
 					/**
@@ -881,6 +901,7 @@ namespace cupcfd
 					 * @retval -1 The face is not a boundary face
 					 * @retval >-1 The boundary id
 					 */
+					__attribute__((warn_unused_result))
 					I getFaceBoundaryID(I faceID);
 
 					/**
@@ -1124,6 +1145,7 @@ namespace cupcfd
 					 *
 					 * @return The face ID
 					 */
+					__attribute__((warn_unused_result))
 					I getFaceID(L faceLabel);
 
 					// === Boundary Operators ===
@@ -1152,6 +1174,7 @@ namespace cupcfd
 					 *
 					 * @return The local face ID associated with this local boundary ID.
 					 */
+					__attribute__((warn_unused_result))
 					I getBoundaryFaceID(I boundaryID);
 
 					/**
@@ -1180,6 +1203,7 @@ namespace cupcfd
 					 *
 					 * @return The local vertex ID in the mesh
 					 */
+					__attribute__((warn_unused_result))
 					I getBoundaryVertex(I boundaryID, I boundaryVertexID);
 
 					/**
@@ -1206,6 +1230,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary distance
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryDistance(I boundaryID);
 
 					/**
@@ -1232,6 +1257,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary yplus
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryYPlus(I boundaryID);
 
 					/**
@@ -1258,6 +1284,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary uplus
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryUPlus(I boundaryID);
 
 					/**
@@ -1284,6 +1311,7 @@ namespace cupcfd
 					 *
 					 * @return The local region ID in the mesh associated with this boundary
 					 */
+					__attribute__((warn_unused_result))
 					I getBoundaryRegionID(I boundaryID);
 
 					/**
@@ -1310,6 +1338,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary shear
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector<T,3> getBoundaryShear(I boundaryID);
 
 					/**
@@ -1336,6 +1365,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary Q
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryQ(I boundaryID);
 
 					/**
@@ -1362,6 +1392,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary H
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryH(I boundaryID);
 
 					/**
@@ -1388,6 +1419,7 @@ namespace cupcfd
 					 *
 					 * @return The stored boundary T
 					 */
+					__attribute__((warn_unused_result))
 					T getBoundaryT(I boundaryID);
 
 
@@ -1609,6 +1641,7 @@ namespace cupcfd
 					 *
 					 * @return The local cell ID for the given cell label
 					 */
+					__attribute__((warn_unused_result))
 					I getBoundaryID(L boundaryLabel);
 
 
@@ -1638,6 +1671,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region type
 					 */
+					__attribute__((warn_unused_result))
 					RType getRegionType(I regionID);
 
 					/**
@@ -1664,6 +1698,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region std
 					 */
+					__attribute__((warn_unused_result))
 					bool getRegionStd(I regionID);
 
 					/**
@@ -1690,6 +1725,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region ylog
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionYLog(I regionID);
 
 					/**
@@ -1716,6 +1752,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region elog
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionELog(I regionID);
 
 					/**
@@ -1742,6 +1779,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region density
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionDensity(I regionID);
 
 					/**
@@ -1768,6 +1806,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region turbke
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionTurbKE(I regionID);
 
 					/**
@@ -1794,6 +1833,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region turbDiss
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionTurbDiss(I regionID);
 
 					/**
@@ -1820,6 +1860,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region splvl
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionSplvl(I regionID);
 
 					/**
@@ -1846,6 +1887,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region den
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionDen(I regionID);
 
 					/**
@@ -1872,6 +1914,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region tangent
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionForceTangent(I regionID);
 
 					/**
@@ -1898,6 +1941,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region uvw
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionUVW(I regionID);
 
 					/**
@@ -1924,6 +1968,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region name
 					 */
+					__attribute__((warn_unused_result))
 					std::string getRegionName(I regionID);
 
 					/**
@@ -1950,6 +1995,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region flux
 					 */
+					__attribute__((warn_unused_result))
 					bool getRegionFlux(I regionID);
 
 					/**
@@ -1976,6 +2022,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region adaib
 					 */
+					__attribute__((warn_unused_result))
 					bool getRegionAdiab(I regionID);
 
 					/**
@@ -2002,6 +2049,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region R
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionR(I regionID);
 
 					/**
@@ -2028,6 +2076,7 @@ namespace cupcfd
 					 *
 					 * @return The stored region T
 					 */
+					__attribute__((warn_unused_result))
 					T getRegionT(I regionID);
 
 
@@ -2336,6 +2385,7 @@ namespace cupcfd
 					 *
 					 * @return The local region ID for the given vertex label
 					 */
+					__attribute__((warn_unused_result))
 					I getRegionID(L regionLabel);
 
 					// === Vertex Operators ===
@@ -2364,6 +2414,7 @@ namespace cupcfd
 					 *
 					 * @return The vertex position
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> getVertexPos(I vertexID);
 
 					/**
@@ -2427,6 +2478,7 @@ namespace cupcfd
 					 *
 					 * @return The local vertex ID for the given vertex label
 					 */
+					__attribute__((warn_unused_result))
 					I getVertexID(L vertexLabel);
 
 					// === Other ===

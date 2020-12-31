@@ -108,6 +108,7 @@ namespace cupcfd
 			 * (i.e. < 0)
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			bool is_sorted(T * source, I nEle);
 
 			/**

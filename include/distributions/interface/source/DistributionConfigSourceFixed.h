@@ -79,6 +79,7 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFixedValue(T * value) = 0;
 
+				__attribute__((warn_unused_result))
 				virtual DistributionConfigSourceFixed<I,T> * clone() = 0;
 		};
 	}

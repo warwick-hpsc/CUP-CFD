@@ -81,6 +81,7 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getFileFormat(ParticleSimpleFileFormat * format);
 				void operator=(const ParticleSimpleSourceFileConfigJSON<I,T>& source);
+				__attribute__((warn_unused_result))
 				ParticleSimpleSourceFileConfigJSON<I,T> * clone();
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildParticleSourceConfig(ParticleSourceConfig<ParticleSimple<I,T>,I,T> ** config);

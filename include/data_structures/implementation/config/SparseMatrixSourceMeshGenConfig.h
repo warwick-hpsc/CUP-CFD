@@ -69,6 +69,7 @@ namespace cupcfd
 
 				void operator=(SparseMatrixSourceMeshGenConfig<I,T>& source);
 				
+				__attribute__((warn_unused_result))
 				SparseMatrixSourceMeshGenConfig<I,T> * clone();
 
 				__attribute__((warn_unused_result))

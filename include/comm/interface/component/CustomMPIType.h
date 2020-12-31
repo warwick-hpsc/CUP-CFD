@@ -108,6 +108,7 @@ namespace cupcfd
 					 * @retval true The datatype has been registered.
 					 * @retval false The datatype has not been registered.
 					 */
+					__attribute__((warn_unused_result))
 					virtual bool isRegistered() = 0;
 			};
 		}

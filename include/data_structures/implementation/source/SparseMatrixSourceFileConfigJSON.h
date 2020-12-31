@@ -86,6 +86,7 @@ namespace cupcfd
 
 				void operator=(const SparseMatrixSourceFileConfigJSON<I,T>& source);
 
+				__attribute__((warn_unused_result))
 				SparseMatrixSourceFileConfigJSON<I,T> * clone();
 
 				__attribute__((warn_unused_result))

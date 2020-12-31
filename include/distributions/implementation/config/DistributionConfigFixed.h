@@ -89,6 +89,7 @@ namespace cupcfd
 				// === Inherited Overloaded Methods ===
 
 				void operator=(const DistributionConfigFixed<I,T>& source);
+				__attribute__((warn_unused_result))
 				DistributionConfigFixed<I,T> * clone();
 				void buildDistribution(Distribution<I,T> ** dist);
 		};

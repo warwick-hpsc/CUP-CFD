@@ -35,6 +35,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			int merge_sort(T * source, I nele);
 
 
@@ -57,6 +58,7 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			int merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
@@ -73,6 +75,7 @@ namespace cupcfd
 			 * @retval false The array is not sorted
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			bool is_sorted(T * source, I nEle);
 
 			/**

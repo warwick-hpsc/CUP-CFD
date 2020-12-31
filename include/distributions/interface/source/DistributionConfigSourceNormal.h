@@ -60,6 +60,7 @@ namespace cupcfd
 				virtual cupcfd::error::eCodes buildDistributionConfig(DistributionConfig<I,T> ** distConfig);
 
 				// === Pure Virtual Methods ===
+				__attribute__((warn_unused_result))
 				virtual DistributionConfigSourceNormal<I,T> * clone() = 0;
 
 				/**

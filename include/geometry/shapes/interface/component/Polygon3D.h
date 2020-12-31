@@ -60,6 +60,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices this polygon has
 					 */
+					__attribute__((warn_unused_result))
 					inline int getNumVertices();
 
 					/**
@@ -70,6 +71,7 @@ namespace cupcfd
 					 *
 					 * @return The number of edges this polygon has
 					 */
+					__attribute__((warn_unused_result))
 					inline int getNumEdges();
 
 					/**
@@ -89,6 +91,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this polygon
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 					// inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
@@ -121,6 +124,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the polygon.
 					 */
+					__attribute__((warn_unused_result))
 					inline T computeArea();
 
 					/**
@@ -131,6 +135,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the polygon.
 					 */
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 			};
 
@@ -172,6 +177,7 @@ namespace cupcfd
 			 * @retval false The ordering is anti-clockwise
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}

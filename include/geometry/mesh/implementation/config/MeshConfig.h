@@ -85,6 +85,7 @@ namespace cupcfd
 					 *
 					 * @return The partitioner configuration stored for this mesh configuration.
 					 */
+					__attribute__((warn_unused_result))
 					inline cupcfd::partitioner::PartitionerConfig<I,I> * getPartitionerConfig();
 
 					/**
@@ -101,6 +102,7 @@ namespace cupcfd
 					 *
 					 * @return The mesh source configuration stored for this mesh configuration.
 					 */
+					__attribute__((warn_unused_result))
 					inline MeshSourceConfig<I,T,L> * getMeshSourceConfig();
 
 					/**
@@ -127,6 +129,7 @@ namespace cupcfd
 					 * @return A pointer to a new MeshConfig object
 					 * with copied values from this object.
 					 */
+					__attribute__((warn_unused_result))
 					MeshConfig<I,T,L> * clone();
 
 					/**

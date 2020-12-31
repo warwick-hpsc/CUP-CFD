@@ -78,6 +78,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this polyhedron
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 				// protected:
@@ -86,6 +87,7 @@ namespace cupcfd
 					 *
 					 * @return The computed volume
 					 */
+					__attribute__((warn_unused_result))
 					T computeVolume();
 
 					/**
@@ -93,6 +95,7 @@ namespace cupcfd
 					 *
 					 * @return The computed centroid
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 					// virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};

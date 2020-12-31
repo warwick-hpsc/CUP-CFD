@@ -59,6 +59,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 					/**
@@ -68,6 +69,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 			};
 		}

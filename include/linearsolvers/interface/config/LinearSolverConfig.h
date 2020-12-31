@@ -50,6 +50,7 @@ namespace cupcfd
 
 				// === Methods ===
 
+				__attribute__((warn_unused_result))
 				virtual LinearSolverConfig<C,I,T> * clone() = 0;
 
 				__attribute__((warn_unused_result))

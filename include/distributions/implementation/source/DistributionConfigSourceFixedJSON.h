@@ -102,6 +102,8 @@ namespace cupcfd
 
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getFixedValue(T * value);
+
+				__attribute__((warn_unused_result))
 				DistributionConfigSourceFixedJSON<I,T> * clone();
 		};
 	}

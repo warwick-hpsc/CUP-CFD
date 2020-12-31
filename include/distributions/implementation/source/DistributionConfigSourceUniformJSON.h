@@ -83,6 +83,7 @@ namespace cupcfd
 
 				// === Methods ===
 				void operator=(const DistributionConfigSourceUniformJSON<I,T>& source);
+				__attribute__((warn_unused_result))
 				DistributionConfigSourceUniformJSON<I,T> * clone();
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getLBound(T * lBound);

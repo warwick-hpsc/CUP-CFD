@@ -77,6 +77,7 @@ namespace cupcfd
 					 * @retval true The point is inside the Polygon
 					 * @retval false The point is outside the Polygon
 					 */
+					__attribute__((warn_unused_result))
 					bool isPointInside(euc::EuclideanPoint<T,N>& point);
 
 					/**
@@ -96,6 +97,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the Polygon.
 					 */
+					__attribute__((warn_unused_result))
 					T computeArea();
 			};
 

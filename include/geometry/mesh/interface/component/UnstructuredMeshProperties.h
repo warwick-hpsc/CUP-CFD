@@ -178,6 +178,7 @@ namespace cupcfd
 					 *
 					 * @return A pointer to the cloned object
 					 */
+					__attribute__((warn_unused_result))
 					virtual UnstructuredMeshProperties<I,T> * clone();
 
 					// ToDo: Getters and setters

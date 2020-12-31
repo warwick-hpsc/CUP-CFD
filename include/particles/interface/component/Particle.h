@@ -146,6 +146,7 @@ namespace cupcfd
 				 *
 				 * @return The current in-flight position of the particle
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getInFlightPos();
 
 				/**
@@ -162,6 +163,7 @@ namespace cupcfd
 				 *
 				 * @return The particle velocity
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getVelocity();
 
 				/**
@@ -169,6 +171,7 @@ namespace cupcfd
 				 *
 				 * @return The owner rank of the particle
 				 */
+				__attribute__((warn_unused_result))
 				inline I getRank();
 
 				/**
@@ -176,6 +179,7 @@ namespace cupcfd
 				 *
 				 * @return The cell ID of the particle
 				 */
+				__attribute__((warn_unused_result))
 				inline I getCellGlobalID() const;
 
 				/**
@@ -183,6 +187,7 @@ namespace cupcfd
 				 *
 				 * @return Cell ID
 				 */
+				__attribute__((warn_unused_result))
 				inline I getLastCellGlobalID() const;
 
 				/**
@@ -190,6 +195,7 @@ namespace cupcfd
 				 *
 				 * @return Face ID
 				 */
+				__attribute__((warn_unused_result))
 				inline I getCellEntryFaceLocalID() const;
 
 				/**
@@ -197,6 +203,7 @@ namespace cupcfd
 				 *
 				 * @return Particle ID
 				 **/
+				__attribute__((warn_unused_result))
 				inline I getParticleID() const;
 
 				/**
@@ -213,6 +220,7 @@ namespace cupcfd
 				 *
 				 * @return The remaining travel time of the particle
 				 */
+				__attribute__((warn_unused_result))
 				inline T getTravelTime() const;
 
 				/**
@@ -234,6 +242,7 @@ namespace cupcfd
 				 * @retval true The particle is inactive
 				 * @retval false The particle is active
 				 */
+				__attribute__((warn_unused_result))
 				inline bool getInactive() const;
 
 				/**
@@ -243,6 +252,7 @@ namespace cupcfd
 				 * @retval true No contradictions
 				 * @retval false Contradiction detected
 				 */
+				__attribute__((warn_unused_result))
 				inline bool stateValid() const;
 
 				/**
@@ -463,6 +473,7 @@ namespace cupcfd
 				virtual cupcfd::error::eCodes registerMPIType();
 				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes deregisterMPIType();
+				__attribute__((warn_unused_result))
 				virtual inline bool isRegistered();
 
 			protected:

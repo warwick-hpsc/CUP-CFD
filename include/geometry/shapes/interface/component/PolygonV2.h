@@ -73,6 +73,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this Polygon
 					 */
+					__attribute__((warn_unused_result))
 					virtual bool isPointInside(const euc::EuclideanPoint<T,N>& point) = 0;
 
 					/**
@@ -93,6 +94,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the Polygon.
 					 */
+					__attribute__((warn_unused_result))
 					virtual T computeArea() = 0;
 
 					/**
@@ -100,6 +102,7 @@ namespace cupcfd
 					 *
 					 * @return Centroid point
 					 */
+					__attribute__((warn_unused_result))
 					virtual euc::EuclideanPoint<T,N> computeCentroid() = 0;
 
 					/**
@@ -107,6 +110,7 @@ namespace cupcfd
 					 *
 					 * @return Normal vector
 					 */
+					__attribute__((warn_unused_result))
 					virtual euc::EuclideanVector<T,N> computeNormal() = 0;
 
 			};

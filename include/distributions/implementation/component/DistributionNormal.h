@@ -89,6 +89,7 @@ namespace cupcfd
 
 				void getValues(T * values, I nValues);
 
+				__attribute__((warn_unused_result))
 				DistributionNormal<I,T> * clone();
 
 				// === Pure Virtual Methods ===

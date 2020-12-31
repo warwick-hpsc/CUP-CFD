@@ -129,6 +129,7 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 */
+				__attribute__((warn_unused_result))
 				I getNodeCount();
 
 				/**
@@ -157,6 +158,7 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored node data
 				 */
+				__attribute__((warn_unused_result))
 				I getEdgeCount();
 
 				/**

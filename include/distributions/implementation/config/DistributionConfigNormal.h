@@ -84,6 +84,7 @@ namespace cupcfd
 				 *
 				 * @return The lower bound value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getLBound();
 
 				/**
@@ -104,6 +105,7 @@ namespace cupcfd
 				 *
 				 * @return The upper bound value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getUBound();
 
 				/**
@@ -124,6 +126,7 @@ namespace cupcfd
 				 *
 				 * @return The mean value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getMean();
 
 				/**
@@ -144,6 +147,7 @@ namespace cupcfd
 				 *
 				 * @return The standard deviation value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getStdev();
 
 				/**
@@ -161,6 +165,7 @@ namespace cupcfd
 				// === Inherited Overloaded Methods ===
 
 				void operator=(const DistributionConfigNormal<I,T>& source);
+				__attribute__((warn_unused_result))
 				DistributionConfigNormal<I,T> * clone();
 				void buildDistribution(Distribution<I,T> ** dist);
 		};

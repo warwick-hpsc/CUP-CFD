@@ -70,6 +70,7 @@ namespace cupcfd
 
 				void getValues(T * values, I nValues);
 
+				__attribute__((warn_unused_result))
 				DistributionFixed<I,T> * clone();
 
 				// === Pure Virtual Methods ===

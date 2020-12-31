@@ -104,6 +104,7 @@ namespace cupcfd
 					 *
 					 * @return True if the two plane objects are composed of same vertices
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator==(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						// ToDo: Do we want a tolerance comparison here? There will probably be comparisons of
 						// floating point values....
@@ -119,6 +120,7 @@ namespace cupcfd
 					 *
 					 * @return True if p1 vertices numerically less than p2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						if(p1.p1 < p2.p1) {
 							return true;
@@ -150,6 +152,7 @@ namespace cupcfd
 					 *
 					 * @return False if the two plane objects are composed of same vertices
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator!=(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						return !(p1 == p2);
 					}
@@ -163,6 +166,7 @@ namespace cupcfd
 					 *
 					 * @return True if p1 vertices less-than-or-equal p2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<=(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						return (p1 < p2) || (p1 == p2);
 					}
@@ -176,6 +180,7 @@ namespace cupcfd
 					 *
 					 * @return True if p1 vertices numerically greater than p2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						return !( (p1==p2) || (p1<p2) );
 					}
@@ -190,6 +195,7 @@ namespace cupcfd
 					 *
 					 * @return True if p1 vertices greater-than-or-equal p2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>=(const EuclideanPlane3D<T>& p1, const EuclideanPlane3D<T>& p2) {
 						return !( p1<p2 );
 					}
@@ -201,6 +207,7 @@ namespace cupcfd
 					 *
 					 * @return The normal vector of the plane
 					 */
+					__attribute__((warn_unused_result))
 					euc::EuclideanVector<T,3> getNormal();
 
 					/**
@@ -226,6 +233,7 @@ namespace cupcfd
 					 * @retval true The point lies on the plane
 					 * @retval false The point does not lie on the plane
 					 */
+					__attribute__((warn_unused_result))
 					bool isPointOnPlane(const euc::EuclideanPoint<T,3>& point);
 
 
@@ -238,6 +246,7 @@ namespace cupcfd
 					 * @return The point that lies on the plane, projected from the provided point along
 					 * the normal
 					 */
+					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,3> computeProjectedPoint(const euc::EuclideanPoint<T,3>& point);
 
 					/**
@@ -249,6 +258,7 @@ namespace cupcfd
 					 * @retval true The vector is parallel to this plane
 					 * @retval false The vector path is not parallel to this plane
 					 */
+					__attribute__((warn_unused_result))
 					bool isVectorParallel(const euc::EuclideanVector<T,3>& vec);
 
 					/**
@@ -261,6 +271,7 @@ namespace cupcfd
 					 * @retval true The vector is parallel to the plane and the line lies exactly on/inside the plane
 					 * @retval false The vector is not parallel OR the line does not lie on the plane
 					 */
+					__attribute__((warn_unused_result))
 					bool isVectorParallelInPlane(const euc::EuclideanVector<T,3>& vec,
 												 const euc::EuclideanPoint<T,3>& l0);
 
@@ -289,6 +300,7 @@ namespace cupcfd
 					 *
 					 * @return The shortest distance to the point from the plane.
 					 */
+					__attribute__((warn_unused_result))
 					T shortestDistance(const euc::EuclideanPoint<T,3>& p);
 
 					// === Static Methods ===
@@ -304,6 +316,7 @@ namespace cupcfd
 					 *
 					 * @return A vector containing the values for the normal vector of this plane
 					 */
+					__attribute__((warn_unused_result))
 					static euc::EuclideanVector<T,3> calculateNormal(const euc::EuclideanPoint<T,3>& p1,
 																	const euc::EuclideanPoint<T,3>& p2,
 																	const euc::EuclideanPoint<T,3>& p3);

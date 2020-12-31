@@ -65,6 +65,8 @@ namespace cupcfd
 				// === Overloaded Inherited Methods ===
 
 				void operator=(const BenchmarkConfigExchange<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				BenchmarkConfigExchange<I,T> * clone();
 
 				template <class N>

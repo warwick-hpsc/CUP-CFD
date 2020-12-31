@@ -198,6 +198,7 @@ namespace cupcfd
 					 *
 					 * @return The combined vector
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator+(const EuclideanVector<T,N>& vec1, const EuclideanVector<T,N>& vec2)
 					{
 						EuclideanVector<T,N> result;
@@ -221,6 +222,7 @@ namespace cupcfd
 					 *
 					 * @return The vector with the scalar added
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator+(const EuclideanVector<T,N>& vec, T scalar)
 					{
 						EuclideanVector<T,N> result;
@@ -244,6 +246,7 @@ namespace cupcfd
 					 *
 					 * @return The vector with the scalar added
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator+(T scalar, const EuclideanVector<T,N>& vec)
 					{
 						EuclideanVector<T,N> result;
@@ -267,6 +270,7 @@ namespace cupcfd
 					 *
 					 * @return The displacement vector that is vec1 - vec2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator-(const EuclideanVector<T,N>& vec1, const EuclideanVector<T,N>& vec2)
 					{
 						EuclideanVector<T,N> result;
@@ -290,6 +294,7 @@ namespace cupcfd
 					 *
 					 * @return The vector with the scalar subtracted
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator-(const EuclideanVector<T,N>& vec, T scalar)
 					{
 						EuclideanVector<T,N> result;
@@ -313,6 +318,7 @@ namespace cupcfd
 					 *
 					 * @return The vector with the scalar subtracted
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator-(T scalar, const EuclideanVector<T,N>& vec)
 					{
 						EuclideanVector<T,N> result;
@@ -359,6 +365,7 @@ namespace cupcfd
 					 *
 					 * @return The vector scaled up by the scalar multiplier
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator*(T scalar, const EuclideanVector<T,N>& vec)
 					{
 						EuclideanVector<T,N> result;
@@ -382,6 +389,7 @@ namespace cupcfd
 					 *
 					 * @return The vector divided up by the scalar
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator/(const EuclideanVector<T,N>& vec, T scalar)
 					{
 						EuclideanVector<T,N> result;
@@ -405,6 +413,7 @@ namespace cupcfd
 					 *
 					 * @return The vector divided up by the scalar
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanVector<T,N> operator/(T scalar, const EuclideanVector<T,N>& vec)
 					{
 						EuclideanVector<T,N> result;
@@ -442,6 +451,7 @@ namespace cupcfd
 					 *
 					 * @return The dot-product
 					 */
+					__attribute__((warn_unused_result))
 					T dotProduct(const EuclideanVector<T,N>& vec);
 
 
@@ -460,6 +470,7 @@ namespace cupcfd
 					 *
 					 * @return length
 					 */
+					__attribute__((warn_unused_result))
 					double length();
 
 					/**
@@ -492,6 +503,7 @@ namespace cupcfd
 					 *
 					 * @return An orthagonal vector.
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector<T,N> computeOrthagonalVector();
 
 
@@ -504,6 +516,7 @@ namespace cupcfd
 					 * @retval true The vectors are parallel
 					 * @retval false The vectors are not parallel
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isParallel(EuclideanVector<T,N>& b);
 
 					/**
@@ -523,6 +536,7 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes deregisterMPIType();
 
+					__attribute__((warn_unused_result))
 					inline bool isRegistered();
 			};
 
@@ -544,6 +558,7 @@ namespace cupcfd
 			 * @retval false They are not colinear
 			 */
 			template <class T, unsigned int N>
+			__attribute__((warn_unused_result))
 			bool colinearPoints(EuclideanPoint<T,N> a, EuclideanPoint<T,N> b, EuclideanPoint<T,N> c);
 
 			/**
@@ -557,6 +572,7 @@ namespace cupcfd
 			 * @return The cross-product vector
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			EuclideanVector<T,3> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2);
 
 			/**
@@ -623,6 +639,7 @@ namespace cupcfd
 			 * @retval false The vectors do not intersect, or they intersect outside the range of the points.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			inline bool isVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
 											 	const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4);
 
@@ -669,6 +686,7 @@ namespace cupcfd
 			 * @retval false The vectors do not intersect, or they intersect outside the range of the points.
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			inline bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
 									  const EuclideanPoint<T,3>& p);
 

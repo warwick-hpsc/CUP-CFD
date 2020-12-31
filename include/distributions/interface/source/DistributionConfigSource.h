@@ -67,6 +67,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to the newly created clone of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual DistributionConfigSource<I,T> * clone() = 0;
 
 				/**

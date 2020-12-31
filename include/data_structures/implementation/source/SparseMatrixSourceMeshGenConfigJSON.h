@@ -90,6 +90,7 @@ namespace cupcfd
 
 				void operator=(const SparseMatrixSourceMeshGenConfigJSON<I,T>& source);
 
+				__attribute__((warn_unused_result))
 				SparseMatrixSourceMeshGenConfigJSON<I,T> * clone();
 
 				__attribute__((warn_unused_result))

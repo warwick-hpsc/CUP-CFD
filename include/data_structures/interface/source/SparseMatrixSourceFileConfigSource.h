@@ -75,7 +75,9 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getFileFormat(SparseMatrixFileFormat * format) = 0;
 
+				__attribute__((warn_unused_result))
 				virtual SparseMatrixSourceFileConfigSource<I,T> * clone() = 0;
+				
 				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig) = 0;
 		};

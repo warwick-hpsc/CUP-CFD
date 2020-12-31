@@ -68,6 +68,7 @@ namespace cupcfd
 					 *
 					 * @return True if the point lies inside the triangle vertices
 					 */
+					__attribute__((warn_unused_result))
 					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
 
 					/**
@@ -83,6 +84,7 @@ namespace cupcfd
 					 *
 					 * @return True if the ray intersects
 					 */
+					__attribute__((warn_unused_result))
 					bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
                                                 const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
 												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 

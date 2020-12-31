@@ -95,6 +95,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if point exists inside this polyhedron
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 					/**
@@ -120,6 +121,7 @@ namespace cupcfd
 			 *
 			 * @return An indentifier for the type of Polyhedron
 			 */
+			__attribute__((warn_unused_result))
 			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces);
 		}
 	}

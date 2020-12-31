@@ -130,6 +130,7 @@ namespace cupcfd
 					 *
 					 * @return The unique coordinate label
 					 */
+					__attribute__((warn_unused_result))
 					I calculateLabel(I xCoord, I yCoord, I zCoord, I xMin, I xMax, I yMin, I yMax, I zMin);
 
 					/**
@@ -140,6 +141,7 @@ namespace cupcfd
 					 * @param xMin The minimum X Positional Coordinate in the scheme
 					 * @param xMax The maximum X Positional Coordinate in the scheme
 					 */
+					__attribute__((warn_unused_result))
 					I calculateXCoord(I label, I xMin, I xMax);
 
 					/**
@@ -152,6 +154,7 @@ namespace cupcfd
 					 * @param yMin The minimum Y Positional Coordinate in the scheme
 					 * @param yMax The minimum Y Positional Coordinate in the scheme
 					 */
+					__attribute__((warn_unused_result))
 					I calculateYCoord(I label, I xMin, I xMax, I yMin, I yMax);
 
 
@@ -167,6 +170,7 @@ namespace cupcfd
 					 * @param zMin The minimum Z Positional Coordinate in the scheme
 					 * @param zMax The minimum Z Positional Coordinate in the scheme
 					 */
+					__attribute__((warn_unused_result))
 					I calculateZCoord(I label, I xMin, I xMax, I yMin, I yMax, I zMin, I zMax);
 
 					// === Overloaded Inherited Virtual Methods ===

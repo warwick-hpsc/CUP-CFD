@@ -102,6 +102,7 @@ namespace cupcfd
 					 *
 					 * @return A pointer to a new Quadrilateral3D object, with values copied from this object.
 					 */
+					__attribute__((warn_unused_result))
 					Quadrilateral3D<T> * clone();
 
 					// === Static Methods ===
@@ -122,6 +123,7 @@ namespace cupcfd
 					 *
 					 * @return The area of the quadrilateral
 					 */
+					__attribute__((warn_unused_result))
 					static T triangularAreaSum(const euc::EuclideanPoint<T,3>& a,
 											   const euc::EuclideanPoint<T,3>& b,
 											   const euc::EuclideanPoint<T,3>& c,
@@ -197,6 +199,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point is inside the Quadrilateral made up by the three points
 					 */
+					__attribute__((warn_unused_result))
 					static inline bool isPointInsideCentroid(const euc::EuclideanPoint<T,3>& a,
 														    const euc::EuclideanPoint<T,3>& b,
 															const euc::EuclideanPoint<T,3>& c,
@@ -211,6 +214,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this Quadrilateral
 					 */
+					__attribute__((warn_unused_result))
 					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 				// protected:
@@ -219,6 +223,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the Quadrilateral.
 					 */
+					__attribute__((warn_unused_result))
 					T computeArea();
 
 					/**
@@ -227,6 +232,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the Quadrilateral.
 					 */
+					__attribute__((warn_unused_result))
 					inline euc::EuclideanVector<T,3> computeNormal();
 
 					/**
@@ -234,6 +240,7 @@ namespace cupcfd
 					 *
 					 * @return The point at the center of the four points
 					 */
+					__attribute__((warn_unused_result))
 					inline euc::EuclideanPoint<T,3> computeCentroid();
 			};
 		}

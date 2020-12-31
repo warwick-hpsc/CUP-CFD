@@ -68,6 +68,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to the newly created clone of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual SparseMatrixSourceConfigSource<I,T> * clone() = 0;
 
 				/**

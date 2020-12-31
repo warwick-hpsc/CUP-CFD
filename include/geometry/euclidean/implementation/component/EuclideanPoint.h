@@ -133,6 +133,7 @@ namespace cupcfd
 					 * @retval true The points are equal
 					 * @retval false The points are not equal
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator==(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						for(uint i = 0; i < N; i++)
@@ -161,6 +162,7 @@ namespace cupcfd
 					 * @retval true The points are not equal
 					 * @retval false The points are equal
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator!=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						return !(point1 == point2);
@@ -180,6 +182,7 @@ namespace cupcfd
 					 * @retval true point1 is less than to point 2
 					 * @retval false point1 is not less than to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
@@ -209,6 +212,7 @@ namespace cupcfd
 					 * @retval true point1 is less than or equal to point 2
 					 * @retval false point1 is not less than or equal to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator<=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
@@ -244,6 +248,7 @@ namespace cupcfd
 					 * @retval true point1 is greater than point 2
 					 * @retval false point1 is not greater than point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
@@ -274,6 +279,7 @@ namespace cupcfd
 					 * @retval true point1 is greater than or equal to point 2
 					 * @retval false point1 is not greater than or equal to point 2
 					 */
+					__attribute__((warn_unused_result))
 					friend inline bool operator>=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
@@ -305,6 +311,7 @@ namespace cupcfd
 					 *
 					 * @return The sum of thw two points
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						EuclideanPoint<T,N> result;
@@ -328,6 +335,7 @@ namespace cupcfd
 					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector)
 					{
 						EuclideanPoint<T,N> result;
@@ -352,6 +360,7 @@ namespace cupcfd
 					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
@@ -375,6 +384,7 @@ namespace cupcfd
 					 *
 					 * @return The shifted point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
@@ -398,6 +408,7 @@ namespace cupcfd
 					 *
 					 * @return The shifted point
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator+(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
@@ -421,6 +432,7 @@ namespace cupcfd
 					 *
 					 * @return The vector for moving from origin to dest
 					 */
+					__attribute__((warn_unused_result))
 					friend inline cupcfd::geometry::euclidean::EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
 					{
 						cupcfd::geometry::euclidean::EuclideanVector<T,N> result;
@@ -443,6 +455,7 @@ namespace cupcfd
 					 *
 					 * @return The point at the start of the vector
 					 */
+					__attribute__((warn_unused_result))
 					friend inline cupcfd::geometry::euclidean::EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
 					{
 						cupcfd::geometry::euclidean::EuclideanPoint<T,N> result;
@@ -466,6 +479,7 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator*(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
@@ -489,6 +503,7 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator*(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
@@ -512,6 +527,7 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator/(const EuclideanPoint<T,N>& point, T scalar)
 					{
 						EuclideanPoint<T,N> result;
@@ -535,6 +551,7 @@ namespace cupcfd
 					 *
 					 * @return The point of the new location
 					 */
+					__attribute__((warn_unused_result))
 					friend inline EuclideanPoint<T,N> operator/(T scalar, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
@@ -563,6 +580,7 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes deregisterMPIType();
 
+					__attribute__((warn_unused_result))
 					inline bool isRegistered();
 			};
 		} // namespace euclidean

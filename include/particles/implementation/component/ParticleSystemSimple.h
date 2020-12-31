@@ -65,8 +65,11 @@ namespace cupcfd
 				~ParticleSystemSimple();
 
 				// === Interface Methods ===
+				__attribute__((warn_unused_result))
 				I getNParticles();
+				__attribute__((warn_unused_result))
 				I getNActiveParticles();
+				__attribute__((warn_unused_result))
 				I getNTravelParticles();
 
 				

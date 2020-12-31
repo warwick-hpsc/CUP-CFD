@@ -318,7 +318,6 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->pos, &componentType);
 			CHECK_ECODE(status)
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, pos);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->pos) - (char*)this );
 			idx++;
 
@@ -326,7 +325,6 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->inflightPos, &componentType);
 			CHECK_ECODE(status)
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, inflightPos);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->inflightPos) - (char*)this );
 			idx++;
 			
@@ -334,7 +332,6 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->velocity, &componentType);
 			CHECK_ECODE(status)
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, velocity);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->velocity) - (char*)this );
 			idx++;
 
@@ -342,7 +339,6 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->acceleration, &componentType);
 			CHECK_ECODE(status)
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, acceleration);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->acceleration) - (char*)this );
 			idx++;
 
@@ -350,67 +346,57 @@ namespace cupcfd
 			status = cupcfd::comm::mpi::getMPIType(this->jerk, &componentType);
 			CHECK_ECODE(status)
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, jerk);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->jerk) - (char*)this );
 			idx++;
 			
 			// Particle ID
 			cupcfd::comm::mpi::getMPIType(this->particleID, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, particleID);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->particleID) - (char*)this );
 			idx++;
 
 			// Cell global ID
 			cupcfd::comm::mpi::getMPIType(this->cellGlobalID, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, cellGlobalID);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->cellGlobalID) - (char*)this );
 			idx++;
 
 			// Last cell global ID
 			cupcfd::comm::mpi::getMPIType(this->lastCellGlobalID, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastCellGlobalID);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->lastCellGlobalID) - (char*)this );
 			idx++;
 			cupcfd::comm::mpi::getMPIType(this->lastLastCellGlobalID, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastLastCellGlobalID);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->lastLastCellGlobalID) - (char*)this );
 			idx++;
 
 			// Rank
 			cupcfd::comm::mpi::getMPIType(this->rank, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, rank);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->rank) - (char*)this );
 			idx++;
 
 			cupcfd::comm::mpi::getMPIType(this->lastRank, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, lastRank);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->lastRank) - (char*)this );
 			idx++;
 			
 			// Travel dt
 			cupcfd::comm::mpi::getMPIType(this->travelDt, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, travelDt);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->travelDt) - (char*)this );
 			idx++;
 
 			// Decay level
 			cupcfd::comm::mpi::getMPIType(this->decayLevel, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayLevel;
 			displ[idx] = (MPI_Aint) ( (char*)&(this->decayLevel) - (char*)this );
 			idx++;
 
 			// Decay rate
 			cupcfd::comm::mpi::getMPIType(this->decayRate, &componentType);
 			structTypes[idx] = componentType;
-			// displ[idx]  = (MPI_Aint) offsetof(class ParticleSimple, decayRate);
 			displ[idx] = (MPI_Aint) ( (char*)&(this->decayRate) - (char*)this );
 			idx++;
 			
@@ -424,31 +410,26 @@ namespace cupcfd
 
 			mpiErr = MPI_Type_create_struct(nb, blocklengths, displ, structTypes, &vecType);
 			if(mpiErr != MPI_SUCCESS) {
-				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecType);
 			if(mpiErr != MPI_SUCCESS) {
-				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_create_resized(vecType, displ[0], (MPI_Aint) sizeof(class ParticleSimple<I,T>), &vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
-				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
-				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 
 			mpiErr = MPI_Type_commit(&vecTypeResized);
 			if(mpiErr != MPI_SUCCESS) {
-				DBG_PRINT_BAD_ECODE(cupcfd::error::E_MPI_ERR)
 				return cupcfd::error::E_MPI_ERR;
 			}
 

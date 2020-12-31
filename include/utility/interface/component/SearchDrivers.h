@@ -115,9 +115,9 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE Error occurred checking if source is sorted
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
- 			template <class I, class T>
- 			__attribute__((warn_unused_result))
- 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found);
+ 			// template <class I, class T>
+ 			// __attribute__((warn_unused_result))
+ 			// cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found);
  		} // namespace drivers
  	} // namespace utility
 } // namespace cupcfd

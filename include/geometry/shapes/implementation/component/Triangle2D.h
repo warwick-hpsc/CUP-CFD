@@ -85,6 +85,7 @@ namespace cupcfd
 					 * @retval true The point lies inside the triangle (or on one of the edges/vertices)
 					 * @retval false The point does not lie inside the triangle
 					 */
+					__attribute__((warn_unused_result))
 					static bool isPointInsideBarycentric(
 									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
 									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
@@ -122,6 +123,7 @@ namespace cupcfd
 					 * @retval true The point lies inside the triangle (or on one of the edges/vertices)
 					 * @retval false The point does not lie inside the triangle
 					 */
+					__attribute__((warn_unused_result))
 					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p);
 
 					/**

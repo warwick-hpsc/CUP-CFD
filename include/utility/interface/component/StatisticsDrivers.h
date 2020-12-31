@@ -36,8 +36,6 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			// __attribute__((warn_unused_result))
-			// cupcfd::error::eCodes sum(T * source, I nEle, T * result);
 			void sum(T * source, I nEle, T * result);
 
 			/**

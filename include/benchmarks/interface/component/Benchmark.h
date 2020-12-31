@@ -99,6 +99,7 @@ namespace cupcfd
 				 *
 				 * @return error code
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes runBenchmark() = 0;
 		};
 	}

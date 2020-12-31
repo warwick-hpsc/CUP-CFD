@@ -213,18 +213,22 @@ namespace cupcfd
 
 					inline void getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getCellCenter(I cellID);
 
 					inline void getCellVolume(I cellID, T * vol);
 
+					__attribute__((warn_unused_result))
 					inline T getCellVolume(I cellID);
 
 					inline void getCellNFaces(I cellID, I * nFaces);
 
+					__attribute__((warn_unused_result))
 					inline I getCellNFaces(I cellID);
 
 					inline void getCellStoredNFaces(I cellID, I * nFaces);
 
+					__attribute__((warn_unused_result))
 					inline I getCellStoredNFaces(I cellID);
 
 					inline void getCellNVertices(I cellID, int * nVertices);
@@ -237,12 +241,14 @@ namespace cupcfd
 
 					inline void getCellFaceID(I cellID, I cellFaceID, I * faceID);
 
+					__attribute__((warn_unused_result))
 					inline I getCellFaceID(I cellID, I cellFaceID);
 
 					inline void setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
 
 					inline void setCellVolume(I cellID, T vol);
 
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes addCell(L cellLabel,
 													cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
 													T vol,
@@ -253,35 +259,49 @@ namespace cupcfd
 
 					void getCellID(L cellLabel, I * cellID);
 
+					__attribute__((warn_unused_result))
 					I getCellID(L cellLabel);
 
 					// =========================== Face Operators ===========================
 
 					inline void getFaceNVertices(I faceID, I * nVertices);
+					__attribute__((warn_unused_result))
 					inline I getFaceNVertices(I faceID);
 					inline void getFaceCell1ID(I faceID, I * cellID);
+					__attribute__((warn_unused_result))
 					inline I getFaceCell1ID(I faceID);
 					inline void getFaceCell2ID(I faceID, I * cellID);
+					__attribute__((warn_unused_result))
 					inline I getFaceCell2ID(I faceID);
 					inline void getFaceLambda(I faceID, T * lambda);
+					__attribute__((warn_unused_result))
 					inline T getFaceLambda(I faceID);
 					inline void getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getFaceNorm(I faceID);
 					inline void getFaceVertex(I faceID, I faceVertexID, I * vertexID);
+					__attribute__((warn_unused_result))
 					inline I getFaceVertex(I faceID, I faceVertexID);
 					inline void getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceCenter(I faceID);
 					inline void getFaceRLencos(I faceID, T * rlencos);
+					__attribute__((warn_unused_result))
 					inline T getFaceRLencos(I faceID);
 					inline void getFaceArea(I faceID, T * area);
+					__attribute__((warn_unused_result))
 					inline T getFaceArea(I faceID);
 					inline void getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXpac(I faceID);
 					inline void getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getFaceXnac(I faceID);
 					inline void getFaceIsBoundary(I faceID, bool * result);
+					__attribute__((warn_unused_result))
 					inline bool getFaceIsBoundary(I faceID);
 					inline void getFaceBoundaryID(I faceID, I * boundaryID);
+					__attribute__((warn_unused_result))
 					inline I getFaceBoundaryID(I faceID);
 					inline void setFaceCell1ID(I faceID, I cellID);
 					inline void setFaceCell2ID(I faceID, I cellID);
@@ -318,29 +338,40 @@ namespace cupcfd
 
 
 					void getFaceID(L faceLabel, I * faceID);
+					__attribute__((warn_unused_result))
 					I getFaceID(L faceLabel);
 
 					// =========================== Boundary Operators ===========================
 
-inline void getBoundaryFaceID(I boundaryID, I * faceID);
+					inline void getBoundaryFaceID(I boundaryID, I * faceID);
+					__attribute__((warn_unused_result))
 					inline I getBoundaryFaceID(I boundaryID);
 					inline void getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID);
+					__attribute__((warn_unused_result))
 					inline I getBoundaryVertex(I boundaryID, I boundaryVertexID);
 					inline void getBoundaryDistance(I boundaryID, T * distance);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryDistance(I boundaryID);
 					inline void getBoundaryYPlus(I boundaryID, T * yPlus);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryYPlus(I boundaryID);
 					inline void getBoundaryUPlus(I boundaryID, T * uPlus);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryUPlus(I boundaryID);
 					inline void getBoundaryRegionID(I boundaryID, I * regionID);
+					__attribute__((warn_unused_result))
 					inline I getBoundaryRegionID(I boundaryID);
 					inline void getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getBoundaryShear(I boundaryID);
 					inline void getBoundaryQ(I boundaryID, T * q);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryQ(I boundaryID);
 					inline void getBoundaryH(I boundaryID, T * h);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryH(I boundaryID);
 					inline void getBoundaryT(I boundaryID, T * t);
+					__attribute__((warn_unused_result))
 					inline T getBoundaryT(I boundaryID);
 					inline void setBoundaryFaceID(I boundaryID, I faceID);
 					inline void setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID);
@@ -365,41 +396,58 @@ inline void getBoundaryFaceID(I boundaryID, I * faceID);
 													L * vertexLabels, I nVertexLabels);
 
 					void getBoundaryID(L boundaryLabel, I * boundaryID);
+					__attribute__((warn_unused_result))
 					I getBoundaryID(L boundaryLabel);
 
 					// =========================== Region Operators ===========================
 
 					inline void getRegionType(I regionID, RType * type);
+					__attribute__((warn_unused_result))
 					inline RType getRegionType(I regionID);
 					inline void getRegionStd(I regionID, bool * std);
+					__attribute__((warn_unused_result))
 					inline bool getRegionStd(I regionID);
 					inline void getRegionYLog(I regionID, T * yLog);
+					__attribute__((warn_unused_result))
 					inline T getRegionYLog(I regionID);
 					inline void getRegionELog(I regionID, T * eLog);
+					__attribute__((warn_unused_result))
 					inline T getRegionELog(I regionID);
 					inline void getRegionDensity(I regionID, T * density);
+					__attribute__((warn_unused_result))
 					inline T getRegionDensity(I regionID);
 					inline void getRegionTurbKE(I regionID, T * turbKE);
+					__attribute__((warn_unused_result))
 					inline T getRegionTurbKE(I regionID);
 					inline void getRegionTurbDiss(I regionID, T * turbDiss);
+					__attribute__((warn_unused_result))
 					inline T getRegionTurbDiss(I regionID);
 					inline void getRegionSplvl(I regionID, T * splvl);
+					__attribute__((warn_unused_result))
 					inline T getRegionSplvl(I regionID);
 					inline void getRegionDen(I regionID, T * den);
+					__attribute__((warn_unused_result))
 					inline T getRegionDen(I regionID);
 					inline void getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionForceTangent(I regionID);
 					inline void getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> getRegionUVW(I regionID);
 					inline void getRegionName(I regionID, std::string& regionName);
+					__attribute__((warn_unused_result))
 					inline std::string getRegionName(I regionID);
 					inline void getRegionFlux(I regionID, bool * flux);
+					__attribute__((warn_unused_result))
 					inline bool getRegionFlux(I regionID);
 					inline void getRegionAdiab(I regionID, bool * adiab);
+					__attribute__((warn_unused_result))
 					inline bool getRegionAdiab(I regionID);
 					inline void getRegionR(I regionID, T * r);
+					__attribute__((warn_unused_result))
 					inline T getRegionR(I regionID);
 					inline void getRegionT(I regionID, T * t);
+					__attribute__((warn_unused_result))
 					inline T getRegionT(I regionID);
 					inline void setRegionType(I regionID, RType type);
 					inline void setRegionStd(I regionID, bool std);
@@ -442,15 +490,18 @@ inline void getBoundaryFaceID(I boundaryID, I * faceID);
 													std::string& regionName);
 
 					void getRegionID(L regionLabel, I * regionID);
+					__attribute__((warn_unused_result))
 					I getRegionID(L regionLabel);
 
 					// =========================== Vertex Operators ===========================
 
 					inline void getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
+					__attribute__((warn_unused_result))
 					inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> getVertexPos(I vertexID);
 					inline void setVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 					cupcfd::error::eCodes addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos);
 					inline void getVertexID(L vertexLabel, I * vertexID);
+					__attribute__((warn_unused_result))
 					inline I getVertexID(L vertexLabel);
 
 					// === Other ===

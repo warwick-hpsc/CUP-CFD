@@ -88,6 +88,7 @@ namespace cupcfd
 
 				void operator=(const VectorSourceFileConfigJSON<I,T>& source);
 
+				__attribute__((warn_unused_result))
 				VectorSourceFileConfigJSON<I,T> * clone();
 
 				__attribute__((warn_unused_result))

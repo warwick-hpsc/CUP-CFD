@@ -62,6 +62,7 @@ namespace cupcfd
 				// === Methods ===
 
 				void operator=(const LinearSolverConfigPETSc<C,I,T>& source);
+				__attribute__((warn_unused_result))
 				LinearSolverConfigPETSc<C,I,T> * clone();
 
 				__attribute__((warn_unused_result))

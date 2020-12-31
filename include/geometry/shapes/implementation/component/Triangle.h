@@ -56,6 +56,7 @@ namespace cupcfd
 
 					~Triangle();
 
+					__attribute__((warn_unused_result))
 					bool isPointInside(const euc::EuclideanPoint<T,N>& p);
 
 					/**
@@ -68,6 +69,7 @@ namespace cupcfd
 					 *
 					 * @return Area
 					 */
+					__attribute__((warn_unused_result))
 					static T heronsFormula(T l1, T l2, T l3);
 
 					/**
@@ -80,6 +82,7 @@ namespace cupcfd
 					 *
 					 * @return Area
 					 */
+					__attribute__((warn_unused_result))
 					static T heronsFormula(const euc::EuclideanPoint<T,N>& a,
 											const euc::EuclideanPoint<T,N>& b,
 											const euc::EuclideanPoint<T,N>& c);
@@ -92,6 +95,7 @@ namespace cupcfd
 					 *
 					 * @return Area
 					 */
+					__attribute__((warn_unused_result))
 					static T heronsFormula(const Triangle<S,T,N>& tri);
 
 
@@ -103,6 +107,7 @@ namespace cupcfd
 					 *
 					 * @return Area
 					 */
+					__attribute__((warn_unused_result))
 					T computeArea();
 
 					/**
@@ -110,6 +115,7 @@ namespace cupcfd
 					 *
 					 * @return Centroid point
 					 */
+					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,N> computeCentroid();
 
 					/**
@@ -117,6 +123,7 @@ namespace cupcfd
 					 *
 					 * @return Normal vector
 					 */
+					__attribute__((warn_unused_result))
 					euc::EuclideanVector<T,N> computeNormal();
 
 			};

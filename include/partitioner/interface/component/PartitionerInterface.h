@@ -177,6 +177,7 @@ namespace cupcfd
 				 *
 				 * @return The number of partitions this partitioner is currently using
 				 */
+				__attribute__((warn_unused_result))
 				virtual I getNParts();
 
 				/**

@@ -82,6 +82,8 @@ namespace cupcfd
 
 				// === Overloaded Inherited Methods ===
 				void operator=(const DistributionConfigSourceNormalJSON<I,T>& source);
+
+				__attribute__((warn_unused_result))
 				DistributionConfigSourceNormalJSON<I,T> * clone();
 
 				__attribute__((warn_unused_result))

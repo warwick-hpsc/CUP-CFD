@@ -113,6 +113,7 @@ namespace cupcfd
 					 *
 					 * @return Number of cells in the X dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline I getCellX();
 
 					/**
@@ -135,6 +136,7 @@ namespace cupcfd
 					 *
 					 * @return Number of cells in the Y dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline I getCellY();
 
 					/**
@@ -157,6 +159,7 @@ namespace cupcfd
 					 *
 					 * @return Number of cells in the Z dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline I getCellZ();
 
 					/**
@@ -179,6 +182,7 @@ namespace cupcfd
 					 *
 					 * @return Minimum spatial position in the X dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMinX();
 
 					/**
@@ -201,6 +205,7 @@ namespace cupcfd
 					 *
 					 * @return Minimum spatial position in the Y dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMinY();
 
 					/**
@@ -223,6 +228,7 @@ namespace cupcfd
 					 *
 					 * @return Minimum spatial position in the Z dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMinZ();
 
 					/**
@@ -245,6 +251,7 @@ namespace cupcfd
 					 *
 					 * @return Maximum spatial position in the X dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMaxX();
 
 					/**
@@ -267,6 +274,7 @@ namespace cupcfd
 					 *
 					 * @return Maximum spatial position in the Y dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMaxY();
 
 					/**
@@ -289,6 +297,7 @@ namespace cupcfd
 					 *
 					 * @return Maximum spatial position in the Z dimension.
 					 */
+					__attribute__((warn_unused_result))
 					inline T getSpatialMaxZ();
 
 					/**

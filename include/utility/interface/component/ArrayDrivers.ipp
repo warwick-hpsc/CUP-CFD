@@ -65,7 +65,6 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			// cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count) {
 			void uniqueCount(T * source, I nSourceEle, I * count) {
 				bool isSorted;
 				isSorted = cupcfd::utility::drivers::is_sorted(source, nSourceEle);
@@ -78,11 +77,9 @@ namespace cupcfd
 					cupcfd::utility::drivers::merge_sort(source, scratch, nSourceEle);
 					*count = cupcfd::utility::kernels::uniqueCount(scratch, nSourceEle);
 					free(scratch);
-					// return cupcfd::error::E_SUCCESS;;
 				}
 				else {
 					*count = cupcfd::utility::kernels::uniqueCount(source, nSourceEle);
-					// return cupcfd::error::E_SUCCESS;
 				}
 			}
 

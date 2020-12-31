@@ -22,21 +22,30 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		SparseMatrix<C,I,T>::SparseMatrix()
-		: m(1), n(1), baseIndex(0), nnz(0)
+		:m(1),
+		 n(1),
+		 baseIndex(0),
+		 nnz(0)
 		{
 			// Nothing else to add
 		}
 
 		template <class C, class I, class T>
 		SparseMatrix<C,I,T>::SparseMatrix(I m, I n)
-		: m(m), n(n), baseIndex(0), nnz(0)
+		:m(m),
+		 n(n),
+		 baseIndex(0),
+		 nnz(0)
 		{
 			// Nothing else to add
 		}
 
 		template <class C, class I, class T>
 		SparseMatrix<C,I,T>::SparseMatrix(I m, I n, I baseIndex)
-		: m(m), n(n), baseIndex(baseIndex), nnz(0)
+		:m(m),
+		 n(n),
+		 baseIndex(baseIndex),
+		 nnz(0)
 		{
 			// Nothing else to add
 		}

@@ -52,6 +52,7 @@ namespace cupcfd
 				// === Concrete Methods ===
 
 				// === Overridden Inherited Methods ===
+				__attribute__((warn_unused_result))
 				PartitionerNaiveConfig<I,T> * clone();
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part);

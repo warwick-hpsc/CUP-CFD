@@ -70,41 +70,39 @@ namespace cupcfd
  				return status;
  			}
 
- 			template <class I, class T>
- 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index) {
- 				cupcfd::error::eCodes status;
- 			 	bool isSorted;
+ 			// template <class I, class T>
+ 			// cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index) {
+ 			// 	// cupcfd::error::eCodes status;
+ 			//  	bool isSorted;
 
- 				// ================================================================
- 				// (1) Array must be sorted to use binarySearch kernel.
- 				//     Check status, and return error without searching if unsorted
- 				// ================================================================
+ 			// 	// ================================================================
+ 			// 	// (1) Array must be sorted to use binarySearch kernel.
+ 			// 	//     Check status, and return error without searching if unsorted
+ 			// 	// ================================================================
 
- 			 	status = cupcfd::utility::drivers::is_sorted(source, nEle, &isSorted);
- 				// if(status ) {
- 				// 	return cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE;
- 				// }
- 				if(isSorted == false) {
- 					return cupcfd::error::E_SEARCH_UNSORTED;
- 				}
+ 			//  	// status = cupcfd::utility::drivers::is_sorted(source, nEle, &isSorted);
+ 			//  	cupcfd::utility::drivers::is_sorted(source, nEle, &isSorted);
+ 			// 	if(!isSorted) {
+ 			// 		return cupcfd::error::E_SEARCH_UNSORTED;
+ 			// 	}
 
- 				// ================================================================
- 				// (2) Array is sorted. Run binarySearch kernel.
- 				// ================================================================
- 				// *index = cupcfd::utility::kernels::binarySearch(source, nEle, target);
- 				status = cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
+ 			// 	// ================================================================
+ 			// 	// (2) Array is sorted. Run binarySearch kernel.
+ 			// 	// ================================================================
+ 			// 	// status = cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
+ 			// 	cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
 
- 				 // ===============================================================
- 				// (3) Check whether value was found in binarySearch kernel.
- 				// ================================================================
+ 			// 	 // ===============================================================
+ 			// 	// (3) Check whether value was found in binarySearch kernel.
+ 			// 	// ================================================================
 
- 				if(*index == -1) {
-					return cupcfd::error::E_SEARCH_NOT_FOUND;
- 				}
- 				else {
-					return cupcfd::error::E_SEARCH_SUCCESS;
- 				}
- 			}
+ 			// 	if(*index == -1) {
+				// 	return cupcfd::error::E_SEARCH_NOT_FOUND;
+ 			// 	}
+ 			// 	else {
+				// 	return cupcfd::error::E_SEARCH_SUCCESS;
+ 			// 	}
+ 			// }
 
 		} // namespace drivers
 	} // namespace utility

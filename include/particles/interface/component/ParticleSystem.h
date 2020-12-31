@@ -84,16 +84,19 @@ namespace cupcfd
 				/**
 				 * Get the number of total number of particles stored in the system, both active and inactive.
 				 */
+				__attribute__((warn_unused_result))
 				I getNParticles();
 
 				/**
 				 * Get the number of active particles in the system
 				 */
+				__attribute__((warn_unused_result))
 				I getNActiveParticles();
 
 				/**
 				 * Get the number of active particles that have remaining travel time
 				 */
+				__attribute__((warn_unused_result))
 				I getNTravelParticles();
 
 				/**

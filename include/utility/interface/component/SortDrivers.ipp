@@ -47,7 +47,10 @@ namespace cupcfd
 				CHECK_ECODE(status)
 
 				// Sort the copied array
-				kernels::merge_sort(dest, nEle);
+				int err = kernels::merge_sort(dest, nEle);
+				if (err == -1) {
+					return cupcfd::error::E_SORT_ERROR;
+				}
 				return cupcfd::error::E_SUCCESS;
 			}
 
