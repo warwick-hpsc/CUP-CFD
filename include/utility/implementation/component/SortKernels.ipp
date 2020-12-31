@@ -215,10 +215,6 @@ namespace cupcfd
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
 
-				// cupcfd::error::eCodes status;
-				// T * tmpCpy = (T *) malloc(sizeof(T) * nEleSource);
-				// status = cupcfd::utility::drivers::copy(source, nEleSource, tmpCpy, nEleSource);
-				// CHECK_ECODE(status)
 				T* tmpCpy = cupcfd::utility::drivers::duplicate(source, nEleSource);
 
 				for(I i=0; i < nEleIndexes; i++) {

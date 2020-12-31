@@ -217,14 +217,8 @@ namespace cupcfd
 
 				sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 
-				localSendBuffer = (T *) malloc(sizeof(T) * nLocalSendBuffer);
-				status = cupcfd::utility::drivers::copy(sendBuffer, nSendBuffer, localSendBuffer, nLocalSendBuffer);
-				CHECK_ECODE(status)
-				localProcessIDs = (int *) malloc(sizeof(int) * nLocalProcessIDs);
-				status = cupcfd::utility::drivers::copy(processIDs, nProcessIDs, localProcessIDs, nLocalProcessIDs);
-				CHECK_ECODE(status)
-				// localSendBuffer = cupcfd::utility::drivers::duplicate(sendBuffer, nSendBuffer);
-				// localProcessIDs = cupcfd::utility::drivers::duplicate(processIDs, nProcessIDs);
+				localSendBuffer = cupcfd::utility::drivers::duplicate(sendBuffer, nSendBuffer);
+				localProcessIDs = cupcfd::utility::drivers::duplicate(processIDs, nProcessIDs);
 
 				// Group the process ids,keeping a copy of their original indexes.
 				status = cupcfd::utility::drivers::merge_sort_index(localProcessIDs, nLocalProcessIDs, sortIndexes, nLocalProcessIDs);

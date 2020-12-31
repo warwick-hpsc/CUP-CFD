@@ -267,8 +267,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
-			cupcfd::error::eCodes status;
-			
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
@@ -300,12 +298,7 @@ namespace cupcfd
 			}
 
 			*nColumnIndexes = (stopIndex - startIndex) + 1;
-			// Allocate the space
-			*columnIndexes = (I *) malloc(sizeof(I) * *nColumnIndexes);
-			// Copy the column indexes across
-			status = cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
-			CHECK_ECODE(status)
-			// *columnIndexes = cupcfd::utility::drivers::duplicate(&(this->col[startIndex]), *nColumnIndexes);
+			*columnIndexes = cupcfd::utility::drivers::duplicate(&(this->col[startIndex]), *nColumnIndexes);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;
@@ -316,8 +309,6 @@ namespace cupcfd
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
-
-			cupcfd::error::eCodes status;
 
 			I startIndex = -1;
 			I stopIndex = -1;
@@ -346,12 +337,7 @@ namespace cupcfd
 			}
 
 			*nNNZValues = (stopIndex - startIndex) + 1;
-			// Allocate the space
-			*nnzValues = (T *) malloc(sizeof(T) * *nNNZValues);
-			// Copy the column indexes across
-			status = cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
-			CHECK_ECODE(status)
-			// *nnzValues = cupcfd::utility::drivers::duplicate(&(this->val[startIndex]), *nNNZValues);
+			*nnzValues = cupcfd::utility::drivers::duplicate(&(this->val[startIndex]), *nNNZValues);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;

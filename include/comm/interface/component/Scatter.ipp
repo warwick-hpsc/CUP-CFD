@@ -74,14 +74,8 @@ namespace cupcfd
 				sortIndexes = (int *) malloc(sizeof(int) * nElePSend);
 
 				// First we can make copies of bSend and pSend so it is non-destructive
-				bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
-				pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
-				status = cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
-				CHECK_ECODE(status)
-				status = cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
-				CHECK_ECODE(status)
-				// bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
-				// pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
+				bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
+				pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
 				status = cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
