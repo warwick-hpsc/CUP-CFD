@@ -25,14 +25,21 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes BroadcastMPI(T * buf, int nEle, int sourcePID, MPI_Comm comm) {
+				if (nEle == 0) {
+					return cupcfd::error::E_NO_DATA;
+				}
+
+				int mpi_err;
 				MPI_Datatype dType;
-				// Get the datatype based on the type of the dummy variable.
-				// If a CustomMPIType, this could be unregistered.
-				cupcfd::comm::mpi::getMPIType(buf[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				// MPI Broadcast
-				int err = MPI_Bcast(buf, nEle, dType, sourcePID, comm);
-				if(err != MPI_SUCCESS) {
+				mpi_err = MPI_Bcast(buf, nEle, dType, sourcePID, comm);
+				if(mpi_err != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 

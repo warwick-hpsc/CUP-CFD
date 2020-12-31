@@ -7,13 +7,11 @@
  *
  * @section DESCRIPTION
  *
- * Definitions for the Triangle class
+ * Description
+ *
  */
 
-#include "Triangle.h"
-
-namespace arth = cupcfd::utility::arithmetic::kernels;
-namespace euc = cupcfd::geometry::euclidean;
+#include "Polygon.h"
 
 namespace cupcfd
 {
@@ -21,6 +19,7 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
+
 		}
 	}
 }

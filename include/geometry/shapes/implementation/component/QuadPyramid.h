@@ -36,34 +36,19 @@ namespace cupcfd
 			class QuadPyramid : public Pyramid<Quadrilateral3D<T>,T>
 			{
 				public:
-					// === Members ===
-
-					// === Constructors/Deconstructors ===
-
 					/**
 					 * Build a Pyramid object.
 					 *
-					 * @param apex The point that defines the apex of the pyramid/the vertex point
-					 * shared by all triangular faces
-					 * @param fl The 'front' left point of the triangular base
-					 * @param fr The 'front' right point of the triangular base
-					 * @param bl The 'back' left point of the triangular base
-					 * @param br The 'back' right point of the triangular base
-					 *
-					 * @tparam T Datatype of the geometry
+					 * @param apex The point that defines the apex of the pyramid
+					 * @param quad The Quadrilateral3D base of the pyramid
 					 */
-					QuadPyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex,
-							    const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& fl,
-								const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& fr,
-								const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& bl,
-								const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& br);
+					QuadPyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, 
+								const cupcfd::geometry::shapes::Quadrilateral3D<T>& quad);
 
 					/**
 					 *
 					 */
 					~QuadPyramid();
-
-					// === Static Methods ===
 
 					// === Concrete Methods ===
 
@@ -72,13 +57,7 @@ namespace cupcfd
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
@@ -87,13 +66,7 @@ namespace cupcfd
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 			};

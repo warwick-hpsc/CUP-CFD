@@ -28,6 +28,8 @@ namespace cupcfd
 			 * Stores geometry data for a Hexahedron shape.
 			 *
 			 * Does not presume that opposite faces are parallel, or equivalent.
+			 *
+			 * @tparam T The numerical type
 			 */
 			template <class T>
 			class Hexahedron : public Polyhedron<Hexahedron<T>,T>
@@ -92,7 +94,11 @@ namespace cupcfd
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blb,
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb);
 
+					/**
+					 *
+					 */
 					~Hexahedron();
+
 
 					// === Static Methods ===
 
@@ -104,10 +110,6 @@ namespace cupcfd
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
 					 * @return Return true if the point exists inside this polyhedron
 					 */
 					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
@@ -116,10 +118,6 @@ namespace cupcfd
 					 * Determine whether the provided point is on an edge of the polyhedron
 					 *
 					 * @param point The point to test
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
@@ -130,21 +128,13 @@ namespace cupcfd
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
-				protected:
+				// protected:
 					/**
 					 * Compute the volume of this polyhedron
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
 					 * @return The computed volume
 					 */
@@ -152,8 +142,6 @@ namespace cupcfd
 
 					/**
 					 * Compute the centroid of the Hexahedral
-					 *
-					 * @tparam T Datatype of the geometry
 					 *
 					 * @return The computed centroid
 					 */

@@ -17,7 +17,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
-#include "Polygon2D.h"
+#include "Triangle.h"
 
 namespace cupcfd
 {
@@ -30,14 +30,9 @@ namespace cupcfd
 			 * N-dimensional space.
 			 */
 			template <class T>
-			class Triangle2D : public Polygon2D<Triangle2D<T>,T>
+			class Triangle2D : public Triangle<Triangle2D<T>, T, 2>
 			{
 				public:
-					// === Members ===
-
-					/** Position of vertices from origin(0,0) **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,2> vertices[3];
-
 					// === Constructor/Deconstructors ===
 
 					/**
@@ -90,10 +85,11 @@ namespace cupcfd
 					 * @retval true The point lies inside the triangle (or on one of the edges/vertices)
 					 * @retval false The point does not lie inside the triangle
 					 */
-					static bool isPointInsideBarycentric(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-												    cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-												    cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
-													cupcfd::geometry::euclidean::EuclideanPoint<T,2> p);
+					static bool isPointInsideBarycentric(
+									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
+									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
+									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
+									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p);
 
 					/**
 					 * Compute the center of three points
@@ -104,9 +100,9 @@ namespace cupcfd
 					 *
 					 * @return The point at the center of the three points
 					 */
-					static inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-																								 cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-																								 cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c);
+					// static inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
+					// 																			cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
+					// 																			cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c);
 
 					// === Concrete Methods ===
 
@@ -126,7 +122,7 @@ namespace cupcfd
 					 * @retval true The point lies inside the triangle (or on one of the edges/vertices)
 					 * @retval false The point does not lie inside the triangle
 					 */
-					bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2> p);
+					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p);
 
 					/**
 					 * Determine whether a point lies within the three points of the triangle.
@@ -146,14 +142,14 @@ namespace cupcfd
 					//bool isPointInsideCrossProduct(cupcfd::geometry::euclidean::EuclideanPoint<T,N> p);
 
 				protected:
-					T computeArea();
+					// T computeArea();
 
 					/**
 					 * Compute the center of three points that make up this triangle
 					 *
 					 * @return The point at the center of the three points
 					 */
-					inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid();
+					// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid();
 			};
 		}
 	}

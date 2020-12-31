@@ -305,8 +305,8 @@ namespace cupcfd
 					euc::EuclideanPoint<T,3> brb = centers[i] + euc::EuclideanPoint<T,3>(dX, -dY, -dZ);
 
 					cupcfd::geometry::shapes::Hexahedron<T> cellShape(tlf, trf, blf, brf, tlb, trb, blb, brb);
-					// cellVol[i] = cellShape.computeVolume();
-					cellVol[i] = cellShape.volume;
+					cellVol[i] = cellShape.computeVolume();
+					// cellVol[i] = cellShape.volume;
 				}
 
 				return cupcfd::error::E_SUCCESS;
@@ -862,10 +862,14 @@ namespace cupcfd
 
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {
-					faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[i],
-																									vertexPos[i]+1,
-																									vertexPos[i]+2,
-																									vertexPos[i]+3);
+					// faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[i],
+					// 																				vertexPos[i+1],
+					// 																				vertexPos[i+2],
+					// 																				vertexPos[i+3]);
+					faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[(i*4)],
+																									vertexPos[(i*4)+1],
+																									vertexPos[(i*4)+2],
+																									vertexPos[(i*4)+3]);
 				}
 
 				free(csrIndices);
@@ -918,10 +922,10 @@ namespace cupcfd
 					// faces outwards)
 					if(isClockwise) {
 						// Clockwise when viewed from Cell Center
-						faceNormal[i] = euc::EuclideanPlane3D<T>::normal(vertexPos[(i*4)], vertexPos[(i*4)+1], vertexPos[(i*4)+2]);
+						faceNormal[i] = euc::EuclideanPlane3D<T>::calculateNormal(vertexPos[(i*4)], vertexPos[(i*4)+1], vertexPos[(i*4)+2]);
 					} else {
 						// Anti-Clockwise when viewed from Cell Center so invert for computation
-						faceNormal[i] = euc::EuclideanPlane3D<T>::normal(vertexPos[(i*4)+2], vertexPos[(i*4)+1], vertexPos[(i*4)]);
+						faceNormal[i] = euc::EuclideanPlane3D<T>::calculateNormal(vertexPos[(i*4)+2], vertexPos[(i*4)+1], vertexPos[(i*4)]);
 					}
 
 				}
@@ -956,9 +960,9 @@ namespace cupcfd
 
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {
-					cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[i], vertexPos[i]+1, vertexPos[i]+2, vertexPos[i]+3);
-					// faceCenter[i] = shape.computeCentroid();
-					faceCenter[i] = shape.centroid;
+					// cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[i], vertexPos[i]+1, vertexPos[i]+2, vertexPos[i]+3);
+					cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[(i*4)], vertexPos[(i*4)+1], vertexPos[(i*4)+2], vertexPos[(i*4)+3]);
+					faceCenter[i] = shape.computeCentroid();
 				}
 
 				free(csrIndices);

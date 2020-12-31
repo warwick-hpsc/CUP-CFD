@@ -37,13 +37,19 @@ namespace cupcfd
 									  const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb)
 			: tlf(tlf), trf(trf), blf(blf), brf(brf),
 			  tlb(tlb), trb(trb), blb(blb), brb(brb)
-			  {
-				this->numEdges = 12;
-				this->numVertices = 8;
-				this->numFaces = 6;
+			 {
+			 	// // Decompose Hexahedron into 5 tetrahedrons
+				// Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				// Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				// Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				// Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				// Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
 
-				this->centroid = this->computeCentroid();
-				this->volume = this->computeVolume();
+				// this->centroid = ((t1.volume * t1.centroid) + (t2.volume * t2.centroid) + (t3.volume * t3.centroid) + (t4.volume * t4.centroid) + (t5.volume * t5.centroid)) 
+				// 				/ (t1.volume + t2.volume + t3.volume + t4.volume + t5.volume);
+
+				// this->volume = t1.volume + t2.volume + t3.volume + t4.volume + t5.volume;
+
 			}
 
 			template <class T>
@@ -99,6 +105,7 @@ namespace cupcfd
 					cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, tlb, trb, trf), // top face
 					cupcfd::geometry::shapes::Quadrilateral3D<T>(blf, brf, brb, blb)  // bottom face
 				};	
+
 
 				// ToDo: We might not need both the planes AND the face objects.
 							
@@ -174,31 +181,36 @@ namespace cupcfd
 				// Divide the hexahedron into tetrahedrons (triangular pyramids), and compute the volumes of
 				// those, then sum
 				
-				// // 5 Tetrahedrons
-				// Tetrahedron<T> t1(trb, brb, brf, blb); 
-				// Tetrahedron<T> t2(tlf, blf, blb, brf);
-				// Tetrahedron<T> t3(trb, tlb, blb, tlf);
-				// Tetrahedron<T> t4(brf, trf, tlf, trb);
-				// Tetrahedron<T> t5(trb, tlf, blb, brf);
-				// return t1.computeVolume() + t2.computeVolume() + t3.computeVolume() + t4.computeVolume() + t5.computeVolume();
-
-				// Update: surely, can just split into two opposing tetrahedrons:
-				Tetrahedron<T> t1(trb, brb, brf, blb); 
-				Tetrahedron<T> t2(tlf, blf, blb, brf);
-				// return t1.computeVolume() + t2.computeVolume();
-				return t1.volume + t2.volume;
+				// 5 Tetrahedrons
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
+				return t1.computeVolume() + t2.computeVolume() + t3.computeVolume() + t4.computeVolume() + t5.computeVolume();
 			}
 			
 			template<class T>
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> Hexahedron<T>::computeCentroid() {
 				// ToDo: Is this correct for hexahedrons, or just cubes?.....
-				// return ((T(1)/T(8)) * (tlf + trf + blf + brf + tlb + trb + blb + brb));
+				return ((T(1)/T(8)) * (tlf + trf + blf + brf + tlb + trb + blb + brb));
 
+				/*
 				// Update: apparently, centroid of a polyhedron is volume-weighted average of its non-overlapping tetrahedrons.
-				Tetrahedron<T> t1(trb, brb, brf, blb); 
-				Tetrahedron<T> t2(tlf, blf, blb, brf);
+				// 5 Tetrahedrons
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
 
-				return ((t1.volume * t1.centroid) + (t2.volume * t2.centroid)) / (t1.volume + t2.volume);
+				return (	  (t1.computeVolume()  * t1.computeCentroid())
+							+ (t2.computeVolume()  * t2.computeCentroid()) 
+							+ (t3.computeVolume()  * t3.computeCentroid())
+							+ (t4.computeVolume()  * t4.computeCentroid())
+							+ (t5.computeVolume()  * t5.computeCentroid()) 	) 
+						/ (t1.computeVolume()  + t2.computeVolume()  + t3.computeVolume()  + t4.computeVolume()  + t5.computeVolume() );
+				*/
  			}
 		}
 	}

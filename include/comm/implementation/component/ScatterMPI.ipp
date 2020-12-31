@@ -29,7 +29,11 @@ namespace cupcfd
 				MPI_Datatype dTypeRecv;
 				int err;
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(bufferSend[0], &dTypeSend);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
+				#pragma GCC diagnostic pop
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;
@@ -79,7 +83,11 @@ namespace cupcfd
 				int * displs = nullptr;
 				
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(bufferSend[0], &dTypeSend);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
+				#pragma GCC diagnostic pop
 				
 				// Send and recv types should be the same
 				dTypeRecv = dTypeSend;

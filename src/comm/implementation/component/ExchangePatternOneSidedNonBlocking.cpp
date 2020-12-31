@@ -205,7 +205,19 @@ namespace cupcfd
 
 		template <class T>
 		cupcfd::error::eCodes ExchangePatternOneSidedNonBlocking<T>::exchangeStart(T * sourceData, int nData) {
+			if (nData == 0) {
+				return cupcfd::error::E_NO_DATA;
+			}
+
 			cupcfd::error::eCodes status;
+
+			// Get MPI DataType
+			MPI_Datatype dType;
+			#pragma GCC diagnostic push
+			#pragma GCC diagnostic ignored "-Wuninitialized"
+			T dummy;
+			cupcfd::comm::mpi::getMPIType(dummy, &dType);
+			#pragma GCC diagnostic pop
 
 			// Pack the send buffer
 			status = this->packSendBuffer(sourceData, nData);
@@ -233,9 +245,6 @@ namespace cupcfd
 				// ToDo - Should separate this into the ExchangeMPI drivers section?
 				// This class is more responsible for storing the window and buffers
 				// that are passed through.
-				// Get MPI DataType
-				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(sourceData[0], &dType);
 
 				MPI_Put(sendData, sendCount, dType,
 						this->sProc[i], this->targetDispls[i], sendCount, dType,

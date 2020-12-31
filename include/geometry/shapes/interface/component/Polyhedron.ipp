@@ -34,16 +34,16 @@ namespace cupcfd
 
 			// === Concrete Methods ===
 			
-			template <class P, class T>
-			inline int Polyhedron<P,T>::getNumEdges() {
-				return this->numEdges;
-			}
+			// template <class P, class T>
+			// inline int Polyhedron<P,T>::getNumEdges() {
+			// 	return this->numEdges;
+			// }
 				
-			template <class P, class T>		
-			inline int Polyhedron<P,T>::getNumVertices() {
-				return this->numVertices;
-			}		
-								
+			// template <class P, class T>		
+			// inline int Polyhedron<P,T>::getNumVertices() {
+			// 	return this->numVertices;
+			// }		
+
 			// === Interface Methods ===
 
 			template <class P, class T>

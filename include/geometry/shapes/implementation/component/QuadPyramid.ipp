@@ -22,26 +22,15 @@ namespace cupcfd
 			// === Constructors/Deconstructors ===
 
 			template <class T>
-			QuadPyramid<T>::QuadPyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& fl,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& fr,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& bl,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& br)
-			: Pyramid<Quadrilateral3D<T>,T>(apex, Quadrilateral3D<T>(fl, fr, br, bl))
+			QuadPyramid<T>::QuadPyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, 
+										const cupcfd::geometry::shapes::Quadrilateral3D<T>& base)
+			 : Pyramid<Quadrilateral3D<T>,T>(apex, base)
 			{
-				// Note in the initialiser list that we define the base in anti-clockwise order
-				// when viewed from the outside/clockwise order when viewed from inside the polyhedron.
-				// This is so normals for the base when using the vertices in order point outwards.
-				
-				this->numEdges = 8;
-				this->numVertices = 5;
-				this->numFaces = 5;
 			}
 			
 			template <class T>
 			QuadPyramid<T>::~QuadPyramid()
 			{
-			
 			}
 
 			// === Static Methods ===

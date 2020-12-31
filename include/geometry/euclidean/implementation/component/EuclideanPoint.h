@@ -117,6 +117,8 @@ namespace cupcfd
 					 */
 					inline void operator=(const T scalar);
 
+					inline void operator*=(T scalar);
+
 					/**
 					 * Compare two points to see if they are equivalent (i.e. they have the same coordinates)
 					 *

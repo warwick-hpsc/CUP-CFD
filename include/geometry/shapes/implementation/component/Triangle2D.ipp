@@ -33,31 +33,33 @@ namespace cupcfd
 								      const euc::EuclideanPoint<T,2>& b,
 								      const euc::EuclideanPoint<T,2>& c)
 			// :Polygon2D<Triangle2D<T>,T>() // Polygon2D constructor does nothing
+			: Triangle<Triangle2D<T>,T,2>(a,b,c)
 			{
-				this->numVertices = 3;
-				this->numEdges = 3;
+				// this->numVertices = 3;
+				// this->numEdges = 3;
 
-				this->vertices[0] = a;
-				this->vertices[1] = b;
-				this->vertices[2] = c;
+				// this->vertices[0] = a;
+				// this->vertices[1] = b;
+				// this->vertices[2] = c;
 
-				this->centroid = computeCentroid();
-				this->area = computeArea();
+				// this->centroid = computeCentroid();
+				// this->area = computeArea();
 			}
 			
 			template <class T>
 			Triangle2D<T>::Triangle2D(const Triangle2D& source)
 			// :Polygon2D<Triangle2D<T>,T>() // Polygon2D constructor does nothing
+			: Triangle<Triangle2D<T>,T,2>(source)
 			{
-				this->numVertices = 3;
-				this->numEdges = 3;
+				// this->numVertices = 3;
+				// this->numEdges = 3;
 			
-				this->vertices[0] = source.vertices[0];
-				this->vertices[1] = source.vertices[1];
-				this->vertices[2] = source.vertices[2];
+				// this->vertices[0] = source.vertices[0];
+				// this->vertices[1] = source.vertices[1];
+				// this->vertices[2] = source.vertices[2];
 
-				this->centroid = source.centroid;
-				this->area = source.area;
+				// this->centroid = source.centroid;
+				// this->area = source.area;
 			}
 
 			template <class T>
@@ -69,10 +71,11 @@ namespace cupcfd
 			// === Static Methods ===
 
 			template <class T>
-			bool Triangle2D<T>::isPointInsideBarycentric(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-										    cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-										    cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
-											cupcfd::geometry::euclidean::EuclideanPoint<T,2> p) {
+			bool Triangle2D<T>::isPointInsideBarycentric(
+										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
+										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
+										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
+										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p) {
 				// Barycentric coordinates method
 				// www.drdobbs.com/database/triangle-intersection-tests/184404201
 				// https://www.youtube.com/watch?v=HYAgJN3x4GA
@@ -125,35 +128,37 @@ namespace cupcfd
 				return true;
 			}
 			
-			template <class T>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-																										cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-																										cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c) {
-				// ToDo: This could be moved up into a generic polygon method....
-				// https://en.wikipedia.org/wiki/Centroid
-				// https://en.wikipedia.org/wiki/Median_(triangle)
+			// template <class T>
+			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
+			// 																							cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
+			// 																							cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c) {
+			// 	// ToDo: This could be moved up into a generic polygon method....
+			// 	// https://en.wikipedia.org/wiki/Centroid
+			// 	// https://en.wikipedia.org/wiki/Median_(triangle)
 			
-				// Centroid located at arithmetic mean of three points
-				return ((a + b + c) / T(3.0));
-			}
-																								 								
+			// 	// Centroid located at arithmetic mean of three points
+			// 	return ((a + b + c) / T(3.0));
+			// }
+
 			// === Concrete Methods ===
 
 			template <class T>
-			bool Triangle2D<T>::isPointInside(euc::EuclideanPoint<T,2> p) {
+			bool Triangle2D<T>::isPointInside(const euc::EuclideanPoint<T,2>& p) {
 				// Currently defaults to barycentric method
 				return this->isPointInsideBarycentric(this->vertices[0], this->vertices[1], this->vertices[2], p);
 			}
 
-			template <class T>
-			T Triangle2D<T>::computeArea() {
-				return Triangle<T,2>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
+			// template <class T>
+			// T Triangle2D<T>::computeArea() {
+			// 	// return Triangle<Triangle2D<T>,T,2>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// 	Triangle<Triangle2D<T>,T,2>* t = (Triangle<Triangle2D<T>,T,2>*)this;
+			// 	return Triangle<Triangle2D<T>,T,2>::heronsFormula(*t);
+			// }
 			
-			template <class T>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid() {
-				return Triangle2D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
+			// template <class T>
+			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid() {
+			// 	return Triangle2D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// }
 		}
 	}
 }

@@ -88,6 +88,7 @@ namespace cupcfd
 				// Compute the normal of the polygon
 				cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(points[0], points[1], points[2]);
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = plane.getNormal();
+				// cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = plane.normal;
 				
 				// If the points are traversed in clockwise order from the observation point, the vector will
 				// point towards the observation point.

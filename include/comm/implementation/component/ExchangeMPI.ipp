@@ -22,11 +22,11 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes ExchangeMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * tRanks, int nTRanks,
-															 int elePerRank,
-															 MPI_Comm comm,
-															 MPI_Request ** requests, int * nRequests) {
+														T * recvBuffer, int nRecvBuffer,
+														int * tRanks, int nTRanks,
+														int elePerRank,
+														MPI_Comm comm,
+														MPI_Request ** requests, int * nRequests) {
 				if (nSendBuffer < (nTRanks*elePerRank)) {
 					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
@@ -39,7 +39,11 @@ namespace cupcfd
 
 				// Get the datatype based on the type of the dummy variable
 				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 				int tag = 78;
 
 				*nRequests = nTRanks * 2;
@@ -114,8 +118,12 @@ namespace cupcfd
 
 				// Get the datatype based on the type of the dummy variable
 				MPI_Datatype dType;
-				status = cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				CHECK_ECODE(status)
+				#pragma GCC diagnostic pop
 				int tag = 79;
 
 				*nRequests = 0;
@@ -135,7 +143,6 @@ namespace cupcfd
 
 
 				// Init the irecvs
-
 				offset = 0;
 				reqPtr = 0;
 				for(int i = 0; i < nRRanks; i++) {
@@ -153,7 +160,7 @@ namespace cupcfd
 				// Initiate the isends
 				offset = 0;
 				for(int i = 0; i < nSRanks; i++) {
-					if(sendCount[i] > 0) {					
+					if(sendCount[i] > 0) {
 						err = MPI_Isend(sendBuffer + offset, sendCount[i], dType, sRanks[i], tag, comm, (*requests) + reqPtr);
 						offset += sendCount[i];
 						reqPtr++;
@@ -171,13 +178,13 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes ExchangeVMPIIsendIrecv(T * sendBuffer, int nSendBuffer,
-															 int * sendCount, int nSendCount,
-															 T * recvBuffer, int nRecvBuffer,
-															 int * recvCount, int nRecvCount,
-															 int * sRanks, int nSRanks,
-															 int * rRanks, int nRRanks,
-															 MPI_Comm comm,
-															 MPI_Request * requests, int nRequests) {
+														int * sendCount, int nSendCount,
+														T * recvBuffer, int nRecvBuffer,
+														int * recvCount, int nRecvCount,
+														int * sRanks, int nSRanks,
+														int * rRanks, int nRRanks,
+														MPI_Comm comm,
+														MPI_Request * requests, int nRequests) {
 				if (nSendCount < nSRanks) {
 					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 				}
@@ -218,9 +225,12 @@ namespace cupcfd
 				int offset;
 				int reqPtr;
 
-				// Get the datatype based on the type of the dummy variable
 				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				int tag = 79;
 
@@ -281,7 +291,8 @@ namespace cupcfd
 				cupcfd::error::eCodes status;
 
 				// Get the datatype based on the type of the dummy variable
-				cupcfd::comm::mpi::getMPIType(sendBuffer[0], &dType);
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				CHECK_ECODE(status)
 				
 				int tag = 79;

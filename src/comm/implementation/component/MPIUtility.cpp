@@ -18,25 +18,30 @@ namespace cupcfd
 	{
 		namespace mpi
 		{
-			void getMPIType(int dummy __attribute__((unused)), MPI_Datatype * mpiType) {
+			cupcfd::error::eCodes getMPIType(int dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				*mpiType = MPI_INT;
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void getMPIType(double dummy __attribute__((unused)), MPI_Datatype * mpiType) {
+			cupcfd::error::eCodes getMPIType(double dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				*mpiType = MPI_DOUBLE;
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void getMPIType(float dummy __attribute__((unused)), MPI_Datatype * mpiType) {
+			cupcfd::error::eCodes getMPIType(float dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				*mpiType = MPI_FLOAT;
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void getMPIType(long dummy __attribute__((unused)), MPI_Datatype * mpiType) {
+			cupcfd::error::eCodes getMPIType(long dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				*mpiType = MPI_LONG;
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void getMPIType(bool dummy __attribute__((unused)), MPI_Datatype * mpiType) {
+			cupcfd::error::eCodes getMPIType(bool dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				// ToDo: C MPI doesn't have a bool datatype
 				*mpiType = MPI::BOOL;
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			cupcfd::error::eCodes getMPIType(cupcfd::comm::mpi::CustomMPIType& customObject, MPI_Datatype * mpiType) {

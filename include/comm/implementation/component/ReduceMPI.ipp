@@ -28,9 +28,16 @@ namespace cupcfd
 				if (nBSend != nBRecv) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
+				if (nBSend == 0) {
+					return cupcfd::error::E_NO_DATA;
+				}
 				
 				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 				
 				// Call the Reduce operation
 				int err = MPI_Reduce(bSend, bRecv, nBSend, dType, op, sProcess, comm);
@@ -73,9 +80,16 @@ namespace cupcfd
 				if (nBSend != nBRecv) {
 					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 				}
+				if (nBSend == 0) {
+					return cupcfd::error::E_NO_DATA;
+				}
 
 				MPI_Datatype dType;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				// Call the AllReduce operation
 				int err = MPI_Allreduce(bSend, bRecv, nBSend, dType, op, comm);

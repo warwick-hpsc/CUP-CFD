@@ -52,6 +52,13 @@ namespace cupcfd
 			}
 			
 			template <class T, unsigned int N>
+			inline void EuclideanPoint<T,N>::operator*=(const T scalar) {
+				for(uint i = 0; i < N; i++) {
+					this->cmp[i] *= scalar;
+				}
+			}
+			
+			template <class T, unsigned int N>
 			inline void EuclideanPoint<T,N>::print() const {
 				if (N > 0) {
 					std::cout << "[ " << this->cmp[0];

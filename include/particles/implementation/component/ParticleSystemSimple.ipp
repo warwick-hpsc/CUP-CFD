@@ -182,7 +182,7 @@ namespace cupcfd
 			for(I i = 0; i < nParticles; i++) {
 				if(this->particles[i].getRank() != this->mesh->cellConnGraph->comm->rank) {
 					I index = neighbourIDMapping[this->particles[i].getRank()];
-					neighbourCount[index] = neighbourCount[index] + 1;
+					neighbourCount[index]++;
 				}
 			}
 
@@ -191,10 +191,10 @@ namespace cupcfd
 			MPI_Request * requests;
 			I nRequests;
 			
-			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours,recvBuffer, nNeighbours, 
-								  neighbourRanks, nNeighbours,
-								  1, this->mesh->cellConnGraph->comm->comm,
-								  &requests, &nRequests);
+			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours, recvBuffer, nNeighbours, 
+											neighbourRanks, nNeighbours,
+											1, this->mesh->cellConnGraph->comm->comm,
+											&requests, &nRequests);
 			CHECK_ECODE(status)
 			
 			// ToDo: Getting multiple definitions error when using WaitallMPI.h header.
@@ -211,8 +211,8 @@ namespace cupcfd
 			I totalRecvCount = 0;
 			
 			for(I i = 0; i < nNeighbours; i++) {
-				totalSendCount = totalSendCount + neighbourCount[i];
-				totalRecvCount = totalRecvCount + recvBuffer[i];
+				totalSendCount += neighbourCount[i];
+				totalRecvCount += recvBuffer[i];
 			}
 			
 			ParticleSimple<I,T> * particleSendBuffer = (ParticleSimple<I,T> *) malloc(sizeof(ParticleSimple<I,T>) * totalSendCount);
@@ -232,11 +232,11 @@ namespace cupcfd
 			}
 			
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
-								   particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
-								   neighbourRanks, nNeighbours,
-								   neighbourRanks, nNeighbours,
-								   this->mesh->cellConnGraph->comm->comm,
-								   &requests, &nRequests);
+											particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
+											neighbourRanks, nNeighbours,
+											neighbourRanks, nNeighbours,
+											this->mesh->cellConnGraph->comm->comm,
+											&requests, &nRequests);
 			CHECK_ECODE(status)
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);

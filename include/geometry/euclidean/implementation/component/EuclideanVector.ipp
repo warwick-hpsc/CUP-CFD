@@ -409,12 +409,18 @@ namespace cupcfd
 				if((x1 == x2) && (x3 == x4)) {
 					// Both single points, but not same point since the previous check failed
 					// Therefore must not be overlapping
+					#ifdef DEBUG
+						std::cout << "Both single points, but not same point since the previous check failed. Therefore must not be overlapping" << std::endl;
+					#endif
 					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 				
 				if((x1 == x2)) {
 					// First range is a point, second one is not since previous checks failed
 					// Therefore can only intersect if the point *is* the intersection point
+					#ifdef DEBUG
+						std::cout << "First range is a point, second one is not since previous checks failed. Therefore can only intersect if the point *is* the intersection point" << std::endl;
+					#endif
 
 					// Test whether the point lies on the line
 					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(x3, x4, x1);
@@ -423,6 +429,9 @@ namespace cupcfd
 						return cupcfd::error::E_SUCCESS;
 					}
 					else {
+						#ifdef DEBUG
+							std::cout << "ERROR: isIntersect is false" << std::endl;
+						#endif
 						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
@@ -430,6 +439,9 @@ namespace cupcfd
 				if((x3 == x4)) {
 					// Second range is a point, first one is not since previous checks failed
 					// Therefore can only intersect if the point *is* the intersection point
+					#ifdef DEBUG
+						std::cout << "Second range is a point, first one is not since previous checks failed. Therefore can only intersect if the point *is* the intersection point" << std::endl;
+					#endif
 
 					// Test whether the point lies on the line
 					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(x1, x2, x3);
@@ -439,7 +451,9 @@ namespace cupcfd
 						return cupcfd::error::E_SUCCESS;
 					}
 					else {
-						std::cout << "ERROR: isIntersect is false" << std::endl;
+						#ifdef DEBUG
+							std::cout << "ERROR: isIntersect is false" << std::endl;
+						#endif
 						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 				}
@@ -454,6 +468,9 @@ namespace cupcfd
 				T coplanarCheck = tmp1.dotProduct(tmp4);
 				if(!(arth::isEqual(coplanarCheck, (T) 0))) {
 					// Not coplanar points
+					#ifdef DEBUG
+						std::cout << "not coplanar" << std::endl;
+					#endif
 					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 
@@ -535,11 +552,17 @@ namespace cupcfd
 						else {
 							// Colinear, but not overlapping since neither the min nor max
 							// of the first range lies in the second range
+							#ifdef DEBUG
+								std::cout << "colinear, but not overlapping" << std::endl;
+							#endif
 							return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 						}
 					}
 					else {
 						// Parallel, but not colinear so they never meet
+						#ifdef DEBUG
+							std::cout << "parallel, not not colinear" << std::endl;
+						#endif
 						return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 					}
 					
@@ -648,6 +671,9 @@ namespace cupcfd
 				
 				if((r < 0) || (s < 0) || (r > 1) || (s > 1)) {
 					// Have to travel more than the length of the range to reach the intersection point
+					#ifdef DEBUG
+						std::cout << "Have to travel more than the length of the range to reach the intersection point" << std::endl;
+					#endif
 					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 				
@@ -666,6 +692,9 @@ namespace cupcfd
 					return cupcfd::error::E_SUCCESS;
 				}
 				else {
+					#ifdef DEBUG
+						std::cout << "At end of routine, no intersection" << std::endl;
+					#endif
 					return cupcfd::error::E_GEOMETRY_NO_INTERSECT;
 				}
 
@@ -719,8 +748,8 @@ namespace cupcfd
 				
 				// First Check: Make sure it's parallel
 				if(!(x1p.isParallel(x1x2))) {
-					std::cout << "ERROR: isPointOnLine(): parallel check failed" << std::endl;
-					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR)
+					// std::cout << "ERROR: isPointOnLine(): parallel check failed" << std::endl;
+					// HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR)
 					return false;
 				}
 				

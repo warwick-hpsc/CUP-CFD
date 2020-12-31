@@ -24,9 +24,17 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes GatherMPI(T * bSend, T * bRecv, int nElePerProcess, int sinkProcess, MPI_Comm comm) {
+				if (nElePerProcess == 0) {
+					return cupcfd::error::E_NO_DATA;
+				}
+
 				MPI_Datatype dType;
 				int mpiErr;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				// Each process sends nElePerProcess, and the sink process receieves nElePerProcess
 				// for a single receive from any one process
@@ -40,9 +48,17 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes AllGatherMPI(T * bSend, T * bRecv, int nElePerProcess, MPI_Comm comm) {
+				if (nElePerProcess == 0) {
+					return cupcfd::error::E_NO_DATA;
+				}
+
 				MPI_Datatype dType;
 				int mpiErr;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				// Each process sends nElePerProcess, and each process receives nElePerProcess
 				// for a single receive from any one process (nElePerProcess * process count in total)
@@ -56,10 +72,15 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes GatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, int sinkPID, MPI_Comm comm) {
+				
 				MPI_Datatype dType;
-				int mpiErr;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
+				int mpiErr;
 				int commSize;
 				int commRank;
 
@@ -77,7 +98,6 @@ namespace cupcfd
 
 				// Compute Displacements from expected recv counts for each process (if this is the sink process)
 				if(commRank == sinkPID) {
-
 					displs = (int *) malloc(sizeof(int) * commSize);
 					displs[0] = 0;
 
@@ -104,7 +124,11 @@ namespace cupcfd
 			cupcfd::error::eCodes AllGatherVMPI(T * bSend, int nEleSend, T * bRecv, int * bRecvCounts, MPI_Comm comm) {
 				MPI_Datatype dType;
 				int mpiErr;
-				cupcfd::comm::mpi::getMPIType(bSend[0], &dType);
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
 				int commSize;
 				int commRank;

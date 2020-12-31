@@ -35,33 +35,14 @@ namespace cupcfd
 			Triangle3D<T>::Triangle3D(const euc::EuclideanPoint<T,3>& a,
 								  	  const euc::EuclideanPoint<T,3>& b,
 								      const euc::EuclideanPoint<T,3>& c)
-			// :Polygon3D<Triangle3D<T>,T>()
+			: Triangle<Triangle3D<T>, T, 3>(a, b, c)
 			{
-				this->numVertices = 3;
-				this->numEdges = 3;
-
-				this->vertices[0] = a;
-				this->vertices[1] = b;
-				this->vertices[2] = c;
-
-				this->centroid = this->computeCentroid();
-				this->area = this->computeArea();
-				this->normal = this->computeNormal();
 			}
 			
 			template <class T>
 			Triangle3D<T>::Triangle3D(const Triangle3D<T>& source)
+			: Triangle<Triangle3D<T>, T, 3>(source)
 			{
-				this->numVertices = 3;
-				this->numEdges = 3;
-
-				this->vertices[0] = source.vertices[0];
-				this->vertices[1] = source.vertices[1];
-				this->vertices[2] = source.vertices[2];
-
-				this->centroid = source.centroid;
-				this->area = source.area;
-				this->normal = source.normal;
 			}
 
 			template <class T>
@@ -210,8 +191,8 @@ namespace cupcfd
 				}
 				
 				// Compute the centroid
-				// cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = Triangle3D<T>::computeCentroid(a, b, c);
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = this->centroid;
+				cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = this->computeCentroid();
+				// cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = this->centroid;
 				
 				// Test the intersection of the ray ranging from the point to the centroid
 				// if it intersects any of the faces, then the point p lies on the opposite side
@@ -232,30 +213,54 @@ namespace cupcfd
 				return true;
 			}
 			
-			template <class T>
-			T Triangle3D<T>::computeArea() {
-				return Triangle<T,3>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
-
-			template <class T>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> Triangle3D<T>::computeNormal() {
-				return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::normal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
+			// template <class T>
+			// T Triangle3D<T>::computeAreaV2(Triangle3D<T>& tri) {
+			// 	T area = Triangle<Triangle3D<T>, T,3>::heronsFormula(tri);
+			// 	// T area = Triangle<T,3>::heronsFormula(tri);
+			// 	// T area = T(0);
+			// 	if (area == T(0.0)) {
+			// 		HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+			// 	}
+			// 	if (std::isnan(area) || std::isnan(-area)) {
+			// 		HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_NAN_AREA)
+			// 	}
+			// 	return area;
+			// }
 			
-			template <class T>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Triangle3D<T>::computeCentroid() {
-				// return Triangle3D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// template <class T>
+			// T Triangle3D<T>::computeArea() {
+			// 	// T area = Triangle<T,3>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// 	// if (area == T(0.0)) {
+			// 	// 	HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+			// 	// }
+			// 	// if (std::isnan(area) || std::isnan(-area)) {
+			// 	// 	HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_NAN_AREA)
+			// 	// }
+			// 	// return area;
 
-				// ToDo: This could be moved up into a generic polygon method....
-				// https://en.wikipedia.org/wiki/Centroid
-				// https://en.wikipedia.org/wiki/Median_(triangle)
+			// 	T area = Triangle3D<T>::computeAreaV2(*this);
+			// 	return area;
+			// }
+
+			// template <class T>
+			// cupcfd::geometry::euclidean::EuclideanVector<T,3> Triangle3D<T>::computeNormal() {
+			// 	return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::normal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// }
 			
-				// Centroid located at arithmetic mean of three points
-				euc::EuclideanPoint<T,3> a = this->vertices[0];
-				euc::EuclideanPoint<T,3> b = this->vertices[1];
-				euc::EuclideanPoint<T,3> c = this->vertices[2];
-				return ((a + b + c) / T(3.0));
-			}
+			// template <class T>
+			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Triangle3D<T>::computeCentroid() {
+			// 	// return Triangle3D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
+
+			// 	// ToDo: This could be moved up into a generic polygon method....
+			// 	// https://en.wikipedia.org/wiki/Centroid
+			// 	// https://en.wikipedia.org/wiki/Median_(triangle)
+			
+			// 	// Centroid located at arithmetic mean of three points
+			// 	euc::EuclideanPoint<T,3> a = this->vertices[0];
+			// 	euc::EuclideanPoint<T,3> b = this->vertices[1];
+			// 	euc::EuclideanPoint<T,3> c = this->vertices[2];
+			// 	return ((a + b + c) / T(3.0));
+			// }
 			
 		}
 	}

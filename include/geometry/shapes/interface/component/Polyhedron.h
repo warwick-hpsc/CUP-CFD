@@ -25,12 +25,13 @@ namespace cupcfd
 		{
 			/**
 			 * Top level interface for Polyhedron shapes.
+			 * Fix dimension to 3D (not interested in 4D and above, cannot be 2D)
 			 * Declares a set of common operations and/or members.
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam P The implementation type of the polygon
-			 * @tparam T The type of the spatial domain
+			 * @tparam S The polyhedron specialisation
+			 * @tparam T Numerical type
 			 */
 
 			enum PolyhedronType 
@@ -42,20 +43,18 @@ namespace cupcfd
 				POLYHEDRON_UNKNOWN
 			};
 
-			// For now, we will hard code all Polyhedrons to be 3D (not interested in 4D and above, cannot be 2D)
-			// ... what? A polyhedron is 3D by definition.
-			template <class P, class T>
+			template <class S, class T>
 			class Polyhedron
 			{
 				public:
 					// === Members ===
 
-					int numEdges;
-					int numVertices;
-					int numFaces;
+					// int numEdges;
+					// int numVertices;
+					// int numFaces;
 
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
-					T volume;
+					// cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
+					// T volume;
 
 					// === Constructors/Deconstructors ===
 
@@ -73,7 +72,7 @@ namespace cupcfd
 					 *
 					 * @return The number of edges.
 					 */
-					inline int getNumEdges();
+					// inline int getNumEdges();
 
 					/**
 					 * Get the number of vertices in this polyhedron.
@@ -83,7 +82,7 @@ namespace cupcfd
 					 *
 					 * @return The number of vertices.
 					 */
-					inline int getNumVertices();
+					// inline int getNumVertices();
 
 					// === Interface Methods ===
 

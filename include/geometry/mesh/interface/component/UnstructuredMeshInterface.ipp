@@ -36,6 +36,7 @@
 #include "Hexahedron.h"
 
 namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
 
 namespace cupcfd
 {
@@ -1022,8 +1023,7 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> centerFace1 = center - triFaceAPos;
 				
 				cupcfd::geometry::shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
-				// cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.normal;
+				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
 				
 				T face1Dot = normalFace1.dotProduct(centerFace1);
 								
@@ -1084,12 +1084,15 @@ namespace cupcfd
 
 				// ToDo: Error Check - should check all 6 vertices were set
 
-				*shape = new cupcfd::geometry::shapes::TriPrism<T>(this->getVertexPos(tf), 
-																	this->getVertexPos(tlb), 
-																	this->getVertexPos(trb), 
-																	this->getVertexPos(bf), 
-																	this->getVertexPos(blb), 
-																	this->getVertexPos(brb));
+				// *shape = new cupcfd::geometry::shapes::TriPrism<T>(this->getVertexPos(tf), 
+				// 													this->getVertexPos(tlb), 
+				// 													this->getVertexPos(trb), 
+				// 													this->getVertexPos(bf), 
+				// 													this->getVertexPos(blb), 
+				// 													this->getVertexPos(brb));
+				shapes::Triangle3D<T> top(this->getVertexPos(tf), this->getVertexPos(tlb), this->getVertexPos(trb));
+				shapes::Triangle3D<T> bottom(this->getVertexPos(bf), this->getVertexPos(blb), this->getVertexPos(brb));
+				*shape = new cupcfd::geometry::shapes::TriPrism<T>(top, bottom);
 
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -1244,12 +1247,12 @@ namespace cupcfd
 				if(isClockwise) {
 					// Clockwise (base is in order of fl->fr->br->bl
 					// Note: QuadPyramid Constructor Expects in order of fl, fr, bl, br
-					*shape = new cupcfd::geometry::shapes::QuadPyramid<T>(apexPos, basePos[0], basePos[1], basePos[3], basePos[2]);
+					*shape = new shapes::QuadPyramid<T>(apexPos, shapes::Quadrilateral3D<T>(basePos[0], basePos[1], basePos[3], basePos[2]));
 				}
 				else {
 					// Anti-Clockwise (base is in order of fl->bl->br->fr
 					// Note: QuadPyramid Constructor Expects in order of fl, fr, bl, br
-					*shape = new cupcfd::geometry::shapes::QuadPyramid<T>(apexPos, basePos[0], basePos[3], basePos[1], basePos[2]);
+					*shape = new shapes::QuadPyramid<T>(apexPos, shapes::Quadrilateral3D<T>(basePos[0], basePos[3], basePos[1], basePos[2]));
 				}
 				
 				return cupcfd::error::E_SUCCESS;
@@ -1403,12 +1406,12 @@ namespace cupcfd
 				if(isClockwise) {
 					// Clockwise (base is in order of f->br->bl
 					// Note: QuadPyramid Constructor Expects in order of f, bl, br
-					*shape = new cupcfd::geometry::shapes::Tetrahedron<T>(apexPos, basePos[0], basePos[2], basePos[1]);
+					*shape = new shapes::Tetrahedron<T>(apexPos, shapes::Triangle3D<T>(basePos[0], basePos[2], basePos[1]));
 				}
 				else {
 					// Anti-Clockwise (base is in order of f->bl->br
 					// Note: QuadPyramid Constructor Expects in order of f, bl, br
-					*shape = new cupcfd::geometry::shapes::Tetrahedron<T>(apexPos, basePos[0], basePos[1], basePos[2]);
+					*shape = new shapes::Tetrahedron<T>(apexPos, shapes::Triangle3D<T>(basePos[0], basePos[1], basePos[2]));
 				}
 				
 				return cupcfd::error::E_SUCCESS;

@@ -44,6 +44,7 @@ namespace cupcfd
 					int numEdges;
 					T area;
 					cupcfd::geometry::euclidean::EuclideanPoint<T,2> centroid;
+					cupcfd::geometry::euclidean::EuclideanVector<T,2> normal;
 
 					// === Constructors/Deconstructors ===
 

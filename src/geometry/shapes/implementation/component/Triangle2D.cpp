@@ -22,8 +22,8 @@ namespace cupcfd
 		namespace shapes
 		{
 			// Explicit Instantiation
-			template class Triangle2D<float>;
-			template class Triangle2D<double>;
+			// template class Triangle2D<float>;
+			// template class Triangle2D<double>;
 		}
 	}
 }
