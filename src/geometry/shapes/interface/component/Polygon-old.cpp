@@ -11,7 +11,7 @@
  *
  */
 
-#include "PolygonV2.h"
+#include "Polygon.h"
 
 namespace cupcfd
 {
