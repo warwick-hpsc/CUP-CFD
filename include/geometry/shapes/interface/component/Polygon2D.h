@@ -38,14 +38,6 @@ namespace cupcfd
 			class Polygon2D
 			{
 				public:
-					// === Members ===
-
-					int numVertices;
-					int numEdges;
-					T area;
-					cupcfd::geometry::euclidean::EuclideanPoint<T,2> centroid;
-					cupcfd::geometry::euclidean::EuclideanVector<T,2> normal;
-
 					// === Constructors/Deconstructors ===
 
 					Polygon2D();
@@ -55,40 +47,10 @@ namespace cupcfd
 					// === Concrete Methods ===
 
 					/**
-					 * Get the number of vertices in this Polygon2D
-					 *
-					 * @tparam P The implementation type of the Polygon2D
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return The number of vertices this Polygon2D has
-					 */
-					__attribute__((warn_unused_result))
-					inline int getNumVertices();
-
-					/**
-					 * Get the number of edges in this Polygon2D
-					 *
-					 * @tparam P The implementation type of the Polygon2D
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return The number of edges this Polygon2D has
-					 */
-					__attribute__((warn_unused_result))
-					inline int getNumEdges();
-
-					/**
 					 * Determine whether the provided point is inside the Polygon2D.
 					 * Edges/Vertices are treated as inside the Polygon2D for this purpose.
 					 *
-					 * @tparam P The implementation type of the Polygon2D
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point exists inside this Polygon2D
-					 * @retval true The point is inside the Polygon2D
-					 * @retval false The point is outside the Polygon2D
+					 * @return Return true if the point exists inside this Polygon2D
 					 */
 					__attribute__((warn_unused_result))
 					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point);
@@ -99,22 +61,12 @@ namespace cupcfd
 					 *
 					 * This method uses a ray casting technique to test whether the point is inside the Polygon2D.
 					 *
-					 * @tparam P The implementation type of the Polygon2D
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point exists inside this Polygon2D
-					 * @retval true The point is inside the Polygon2D
-					 * @retval false The point is outside the Polygon2D
+					 * @return Return true if the point exists inside this Polygon2D
 					 */
 					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
 					/**
 					 * Compute the area of the Polygon2D
-					 *
-					 * @tparam P The implementation type of the Polygon2D
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
 					 *
 					 * @return Return the computed area of the Polygon2D.
 					 */

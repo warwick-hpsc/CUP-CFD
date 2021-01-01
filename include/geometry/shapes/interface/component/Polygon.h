@@ -41,8 +41,6 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					int numVertices;
-					int numEdges;
 					T area;
 					euc::EuclideanPoint<T,N> centroid;
 					euc::EuclideanVector<T,N> normal;
@@ -54,20 +52,6 @@ namespace cupcfd
 					virtual ~Polygon() = 0;
 
 					// === Concrete Methods ===
-
-					/**
-					 * Get the number of vertices in this Polygon
-					 *
-					 * @return The number of vertices this Polygon has
-					 */
-					// virtual int getNumVertices() = 0;
-
-					/**
-					 * Get the number of edges in this Polygon
-					 *
-					 * @return The number of edges this Polygon has
-					 */
-					// virtual int getNumEdges() = 0;
 
 					/**
 					 * Determine whether the provided point is inside the Polygon.

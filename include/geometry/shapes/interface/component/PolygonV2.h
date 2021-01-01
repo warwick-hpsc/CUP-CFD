@@ -61,6 +61,13 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
+					/**
+					 * Copys the data from the source to this object
+					 *
+					 * @param source The PolygonV2 to copy from
+					 */
+					inline void operator=(const PolygonV2<S,T,N,V>& source);
+
 					// cupcfd::error::eCodes initialise();
 
 					/**
@@ -106,7 +113,7 @@ namespace cupcfd
 					 * @return Return the computed area of the Polygon.
 					 */
 					__attribute__((warn_unused_result))
-					virtual T computeArea() = 0;
+					T computeArea();
 
 					/**
 					 * Compute the centre point of triangle

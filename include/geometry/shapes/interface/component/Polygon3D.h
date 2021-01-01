@@ -38,8 +38,6 @@ namespace cupcfd
 			class Polygon3D : public PolygonV2<Polygon3D<P,T,V>, T, 3, V>
 			{
 				public:
-					// === Members ===
-
 					// === Constructors/Deconstructors ===
 
 					Polygon3D();
@@ -50,22 +48,6 @@ namespace cupcfd
 					~Polygon3D();
 
 					// === Concrete Methods ===
-
-					/**
-					 * Get the number of vertices in this polygon
-					 *
-					 * @return The number of vertices this polygon has
-					 */
-					// __attribute__((warn_unused_result))
-					// inline int getNumVertices();
-
-					/**
-					 * Get the number of edges in this polygon
-					 *
-					 * @return The number of edges this polygon has
-					 */
-					// __attribute__((warn_unused_result))
-					// inline int getNumEdges();
 
 					/**
 					 * Determine whether the provided point is inside the polygon.
@@ -112,7 +94,7 @@ namespace cupcfd
 					 * @return Return the computed area of the polygon.
 					 */
 					__attribute__((warn_unused_result))
-					inline T computeArea();
+					T computeArea();
 
 					__attribute__((warn_unused_result))
 					// inline euc::EuclideanPoint<T,3> computeCentroid();

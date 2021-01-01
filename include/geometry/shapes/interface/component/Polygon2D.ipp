@@ -22,22 +22,10 @@ namespace cupcfd
 		{
 			template <class P, class T>
 			Polygon2D<P,T>::Polygon2D() {
-				this->numVertices = 0;
-				this->numEdges = 0;
 			}
 			
 			template <class P, class T>
 			Polygon2D<P,T>::~Polygon2D() {
-			}
-			
-			template <class P, class T>
-			inline int Polygon2D<P,T>::getNumVertices() {
-				return this->numVertices;
-			}
-			
-			template <class P, class T>
-			inline int Polygon2D<P,T>::getNumEdges() {
-				return this->numEdges;
 			}
 			
 			template <class P, class T>

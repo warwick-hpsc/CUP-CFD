@@ -93,17 +93,6 @@ namespace cupcfd
 			// === Overloaded Inherited Methods ===
 			
 			template <class T>
-			inline void Quadrilateral3D<T>::operator=(const Quadrilateral3D<T>& source) {
-				this->vertices[0] = source.vertices[0];
-				this->vertices[1] = source.vertices[1];
-				this->vertices[2] = source.vertices[2];
-				this->vertices[3] = source.vertices[3];
-				// this->area        = source.area;
-				// this->normal      = source.normal;
-				// this->centroid    = source.centroid;
-			}
-			
-			template <class T>
 			Quadrilateral3D<T> * Quadrilateral3D<T>::clone() {
 				return new Quadrilateral3D(*this);
 			}
@@ -228,12 +217,6 @@ namespace cupcfd
 				return Quadrilateral3D<T>::isPointInsideCentroid(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3], point);
 			}
 
-			template <class T>
-			T Quadrilateral3D<T>::computeArea() {
-				// Pass through to the static method
-				return this->triangularAreaSum(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
-			}
-			
 			// template <class T>
 			// euc::EuclideanVector<T,3> Quadrilateral3D<T>::computeNormal() {
 			// 	// Pass through to the static method
@@ -307,26 +290,6 @@ namespace cupcfd
 			// 		}
 			// 	}
 
-			// 	// std::cout << "vertices:" << std::endl;
-			// 	// for (uint i=0; i<4; i++) {
-			// 	// 	printf("  %.4f, %.4f, %.4f\n", this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
-			// 	// }
-			// 	// std::cout << "cXY:" << std::endl;
-			// 	// // printf("  %.4f, %.4f, %.4f\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
-			// 	// printf("  %.4e, %.4e, %.4e\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
-			// 	// std::cout << "cXZ:" << std::endl;
-			// 	// // printf("  %.4f, %.4f, %.4f\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
-			// 	// printf("  %.4e, %.4e, %.4e\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
-			// 	// std::cout << "cYZ:" << std::endl;
-			// 	// printf("  %.4f, %.4f, %.4f\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
-			// 	// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
-			// 	// std::cout << "centroid:" << std::endl;
-			// 	// printf("  %.4f, %.4f, %.4f\n", centroid.cmp[0], centroid.cmp[1], centroid.cmp[2]);
-			// 	// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
-
-			// 	// // ToDo: finish logic
-			// 	// HARD_CHECK_ECODE(cupcfd::error::E_ERROR)
-				
 			// 	return centroid;
 			// }
 		}

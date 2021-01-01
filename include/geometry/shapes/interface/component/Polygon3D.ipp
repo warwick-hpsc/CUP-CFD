@@ -15,6 +15,7 @@
 #define CUPCFD_GEOMETRY_SHAPES_Polygon3D_3D_IPP_H
 
 #include "EuclideanPlane3D.h"
+#include "Triangle3D.h"
 
 namespace cupcfd
 {
@@ -47,16 +48,6 @@ namespace cupcfd
 			}
 			
 			// template <class P, class T, uint V>
-			// inline int Polygon3D<P,T,V>::getNumVertices() {
-			// 	return this->numVertices;
-			// }
-			
-			// template <class P, class T, uint V>
-			// inline int Polygon3D<P,T,V>::getNumEdges() {
-			// 	return this->numEdges;
-			// }
-			
-			// template <class P, class T, uint V>
 			// bool Polygon3D<P,T,V>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
 			// 	return static_cast<P*>(this)->isPointInside(point);
 			// }
@@ -80,7 +71,14 @@ namespace cupcfd
 			
 			template <class P, class T, uint V>
 			T Polygon3D<P,T,V>::computeArea() {
-				return static_cast<P*>(this)->computeArea();
+				T area = T(0);
+				euc::EuclideanPoint<T,3> v0 = this->vertices[0];
+				for (int i2=2; i2<V; i2++) {
+					const uint i1 = i2-1;
+					shapes::Triangle3D<T> t(v0, this->vertices[i1], this->vertices[i2]);
+					area += t.computeArea();
+				}
+				return area;
 			}
 			
 			template <class P, class T, uint V>

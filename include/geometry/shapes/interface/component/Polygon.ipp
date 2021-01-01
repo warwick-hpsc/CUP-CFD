@@ -26,20 +26,6 @@ namespace cupcfd
 			Polygon<S,T,N>::Polygon() {
 			}
 			
-			// template <class S, class T, uint N>
-			// Polygon<S,T,N>::~Polygon() {
-			// }
-			
-			// template <class S, class T, uint N>
-			// inline int Polygon<S,T,N>::getNumVertices() {
-			// 	return this->numVertices;
-			// }
-			
-			// template <class S, class T, uint N>
-			// inline int Polygon<S,T,N>::getNumEdges() {
-			// 	return this->numEdges;
-			// }
-			
 			template <class S, class T, uint N>
 			bool Polygon<S,T,N>::isPointInside(euc::EuclideanPoint<T,N>& point) {
 				return static_cast<S*>(this)->isPointInside(point);

@@ -90,13 +90,6 @@ namespace cupcfd
 					// === Inherited Overloaded Methods ===
 
 					/**
-					 * Copys the data from the source to this object
-					 *
-					 * @param source The Quadrilateral3D to copy from
-					 */
-					inline void operator=(const Quadrilateral3D<T>& source);
-
-					/**
 					 * Returns a cloned copy of this object
 					 *
 					 * @return A pointer to a new Quadrilateral3D object, with values copied from this object.
@@ -217,13 +210,6 @@ namespace cupcfd
 					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 				// protected:
-					/**
-					 * Compute the area of the Quadrilateral
-					 *
-					 * @return Return the computed area of the Quadrilateral.
-					 */
-					__attribute__((warn_unused_result))
-					T computeArea();
 
 					/**
 					 * Compute the normal of the 3D Quadrilateral.

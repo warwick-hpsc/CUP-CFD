@@ -44,6 +44,16 @@ namespace cupcfd
 			// template <class S, class T, uint N, uint V>
 			// PolygonV2<S,T,N,V>::~PolygonV2() {
 			// }
+
+			template <class S, class T, uint N, uint V>
+			void PolygonV2<S,T,N,V>::operator=(const PolygonV2<S,T,N,V>& source) {
+				for (uint i=0; i<V; i++) {
+					this->vertices[i] = source.vertices[i];
+				}
+				this->area     = source.area;
+				this->normal   = source.normal;
+				this->centroid = source.centroid;
+			}
 			
 			// template <class S, class T, uint N, uint V>
 			// inline int PolygonV2<S,T,N,V>::getNumVertices() {
@@ -74,7 +84,7 @@ namespace cupcfd
 			// }
 
 			// template <class S, class T, uint N, uint V>
-			// T PolygonV2<S,T,N,V>::computeCentroid() {
+			// euc::EuclideanPoint<T,N> PolygonV2<S,T,N,V>::computeCentroid() {
 			// 	return static_cast<S*>(this)->computeCentroid();
 			// }
 
@@ -84,10 +94,10 @@ namespace cupcfd
 			// 	return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
 			// }
 			
-			// template <class S, class T, uint N, uint V>
-			// T PolygonV2<S,T,N,V>::computeArea() {
-			// 	return static_cast<S*>(this)->computeArea();
-			// }
+			template <class S, class T, uint N, uint V>
+			T PolygonV2<S,T,N,V>::computeArea() {
+				return static_cast<S*>(this)->computeArea();
+			}
 		}
 	}
 }
