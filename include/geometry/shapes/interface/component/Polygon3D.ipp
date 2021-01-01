@@ -11,8 +11,8 @@
  *
  */
 
-#ifndef CUPCFD_GEOMETRY_SHAPES_Polygon3D_3D_IPP_H
-#define CUPCFD_GEOMETRY_SHAPES_Polygon3D_3D_IPP_H
+#ifndef CUPCFD_GEOMETRY_SHAPES_POLYGON3D_3D_IPP_H
+#define CUPCFD_GEOMETRY_SHAPES_POLYGON3D_3D_IPP_H
 
 #include "EuclideanPlane3D.h"
 #include "Triangle3D.h"
@@ -30,9 +30,9 @@ namespace cupcfd
 			template <class P, class T, uint V>
 			template<class...Args>
 			Polygon3D<P,T,V>::Polygon3D(Args...v)
-			: PolygonV2<Polygon3D<P,T,V>,T,3,V>::PolygonV2( (v)... )
+			: Polygon<Polygon3D<P,T,V>,T,3,V>::Polygon( (v)... )
 			{
-				static_assert(sizeof...(Args) == V, "PolygonV2 constructor dimension does not match number of parameters");
+				static_assert(sizeof...(Args) == V, "Polygon constructor dimension does not match number of parameters");
 				if (!this->coplanar()) {
 					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
 				}

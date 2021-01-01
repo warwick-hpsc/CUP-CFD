@@ -16,7 +16,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
-#include "PolygonV2.h"
+#include "Polygon.h"
 
 namespace cupcfd
 {
@@ -35,7 +35,7 @@ namespace cupcfd
 			 * @tparam V Number of vertices
 			 */
 			template <class P, class T, uint V>
-			class Polygon3D : public PolygonV2<Polygon3D<P,T,V>, T, 3, V>
+			class Polygon3D : public Polygon<Polygon3D<P,T,V>, T, 3, V>
 			{
 				public:
 					// === Constructors/Deconstructors ===

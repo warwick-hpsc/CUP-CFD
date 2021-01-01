@@ -11,8 +11,8 @@
  *
  */
 
-#ifndef CUPCFD_GEOMETRY_SHAPES_POLYGONV2_INCLUDE_H
-#define CUPCFD_GEOMETRY_SHAPES_POLYGONV2_INCLUDE_H
+#ifndef CUPCFD_GEOMETRY_SHAPES_POLYGON_INCLUDE_H
+#define CUPCFD_GEOMETRY_SHAPES_POLYGON_INCLUDE_H
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
@@ -37,7 +37,7 @@ namespace cupcfd
 			 * @tparam V Number of vertices
 			 */
 			template <class S, class T, uint N, uint V>
-			class PolygonV2
+			class Polygon
 			{
 				public:
 					// === Members ===
@@ -52,21 +52,21 @@ namespace cupcfd
 
 					// === Constructors/Deconstructors ===
 
-					PolygonV2();
+					Polygon();
 
 					template<class...Args>
-					PolygonV2(Args...v);
+					Polygon(Args...v);
 
-					virtual ~PolygonV2();
+					virtual ~Polygon();
 
 					// === Concrete Methods ===
 
 					/**
 					 * Copys the data from the source to this object
 					 *
-					 * @param source The PolygonV2 to copy from
+					 * @param source The Polygon to copy from
 					 */
-					inline void operator=(const PolygonV2<S,T,N,V>& source);
+					inline void operator=(const Polygon<S,T,N,V>& source);
 
 					// cupcfd::error::eCodes initialise();
 
@@ -141,6 +141,6 @@ namespace cupcfd
 }
 
 // Include Header Level Definitions
-#include "PolygonV2.ipp"
+#include "Polygon.ipp"
 
 #endif

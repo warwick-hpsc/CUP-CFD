@@ -16,6 +16,7 @@
 
 #include "ArithmeticKernels.h"
 #include "EuclideanPlane3D.h"
+#include "EuclideanVector3D.h"
 #include "Triangle.h"
 
 #include <iostream>
@@ -113,26 +114,26 @@ namespace cupcfd
 			template <class T>
 			bool Triangle3D<T>::calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
 														euc::EuclideanPoint<T,3>& intersection, 
-										T& timeToIntersect, 
-										bool* onEdge,
+														T& timeToIntersect, 
+														bool* onEdge,
 														bool verbose) const
 			{
 				// http://www.lighthouse3d.com/tutorials/maths/ray-triangle-intersection
-				euc::EuclideanVector<T,3> e1 = this->vertices[1] - this->vertices[0];
-				euc::EuclideanVector<T,3> e2 = this->vertices[2] - this->vertices[0];
-
-				euc::EuclideanVector<T,3> h = 
-					euc::crossProduct(velocity, e2);
+				euc::EuclideanVector3D<T> e1 = this->vertices[1] - this->vertices[0];
+				euc::EuclideanVector3D<T> e2 = this->vertices[2] - this->vertices[0];
+				
+				euc::EuclideanVector3D<T> vel(velocity);
+				euc::EuclideanVector3D<T> h = vel.crossProduct(e2);
 			
 				T a = e1.dotProduct(h);
 
 				T f = T(1)/a;
 
-				euc::EuclideanVector<T,3> s = v0 - this->vertices[0];
+				euc::EuclideanVector3D<T> s = v0 - this->vertices[0];
 
 				T u = f * s.dotProduct(h);
 
-				euc::EuclideanVector<T,3> q = euc::crossProduct(s, e1);
+				euc::EuclideanVector3D<T> q = s.crossProduct(e1);
 
 				T v = f * q.dotProduct(velocity);
 
@@ -187,6 +188,7 @@ namespace cupcfd
 				
 				// If the point lies on one of the edges it counts as inside
 				if(isPointOnLine(a, b, p) || isPointOnLine(a, c, p) || isPointOnLine(b, c, p)) {
+				// if(euc::isPointOnLine(a, b, p) || euc::isPointOnLine(a, c, p) || euc::isPointOnLine(b, c, p)) {
 					return true;
 				}
 				

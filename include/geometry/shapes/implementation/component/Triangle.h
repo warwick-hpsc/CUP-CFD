@@ -18,8 +18,7 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 
-// #include "Polygon.h"
-#include "PolygonV2.h"
+#include "Polygon.h"
 
 namespace euc = cupcfd::geometry::euclidean;
 
@@ -41,7 +40,7 @@ namespace cupcfd
 			 * Note: We can define 2D objects in a high dimensions - e.g. a plane in a 3D space.
 			 */
 			template <class S, class T, uint N>
-			class Triangle : public PolygonV2<Triangle<S,T,N>, T, N, 3>
+			class Triangle : public Polygon<Triangle<S,T,N>, T, N, 3>
 			{
 				public:
 					// === Constructors/Deconstructors ===

@@ -14,7 +14,7 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_PYRAMID_INCLUDE_H
 #define CUPCFD_GEOMETRY_SHAPES_PYRAMID_INCLUDE_H
 
-#include "PolygonV2.h"
+#include "Polygon.h"
 #include "Polyhedron.h"
 #include "EuclideanPoint.h"
 #include "Quadrilateral3D.h"

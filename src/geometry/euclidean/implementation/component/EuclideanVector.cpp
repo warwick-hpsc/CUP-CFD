@@ -209,16 +209,16 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			template <class T>
-			EuclideanVector<T,3> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2) {
-				EuclideanVector<T,3> result;
+			// template <class T>
+			// EuclideanVector<T,3> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2) {
+			// 	EuclideanVector<T,3> result;
 
-                result.cmp[0] = (vec1.cmp[1] * vec2.cmp[2]) - (vec1.cmp[2] * vec2.cmp[1]);
-                result.cmp[1] = (vec1.cmp[2] * vec2.cmp[0]) - (vec1.cmp[0] * vec2.cmp[2]);
-                result.cmp[2] = (vec1.cmp[0] * vec2.cmp[1]) - (vec1.cmp[1] * vec2.cmp[0]);
+			// 	result.cmp[0] = (vec1.cmp[1] * vec2.cmp[2]) - (vec1.cmp[2] * vec2.cmp[1]);
+			// 	result.cmp[1] = (vec1.cmp[2] * vec2.cmp[0]) - (vec1.cmp[0] * vec2.cmp[2]);
+			// 	result.cmp[2] = (vec1.cmp[0] * vec2.cmp[1]) - (vec1.cmp[1] * vec2.cmp[0]);
 
-                return result;
-			}
+			// 	return result;
+			// }
 
 			// Explicit Instantiation
 			// ToDo: This is kind of brittle for template usage
@@ -235,8 +235,8 @@ namespace cupcfd
 			template class EuclideanVector<double, 3>;
 			template EuclideanVector<double, 3>::EuclideanVector(double x, double y, double z);
 
-			template EuclideanVector<float,3> cupcfd::geometry::euclidean::crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
-			template EuclideanVector<double,3> cupcfd::geometry::euclidean::crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);
+			// template EuclideanVector<float,3> cupcfd::geometry::euclidean::crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
+			// template EuclideanVector<double,3> cupcfd::geometry::euclidean::crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);
 		}
 	}
 }
