@@ -2630,6 +2630,9 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildPolyhedron(I cellID, cupcfd::geometry::shapes::Hexahedron<T> ** shape);
 
+					__attribute__((warn_unused_result))
+					cupcfd::error::eCodes buildPolyhedronV2(I cellID, cupcfd::geometry::shapes::Hexahedron<T> ** shape);
+
 					/**
 					 * Sets up a mesh and populates it with data from a source of mesh data.
 					 *

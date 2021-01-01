@@ -17,7 +17,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
-#include "PolygonV2.h"
+#include "Polygon3D.h"
 
 namespace euc = cupcfd::geometry::euclidean;
 
@@ -37,13 +37,12 @@ namespace cupcfd
 			 * @tparam N The dimension of the euclidean space the quadrilateral exists in.
 			 */
 			template <class T>
-			class Quadrilateral3D : public PolygonV2<Quadrilateral3D<T>, T, 3, 4>
+			class Quadrilateral3D : public Polygon3D<Quadrilateral3D<T>, T, 4>
 			{
 				public:
 					// === Members ===
 
 					/** Vertices that make up the 3D Quadrilateral **/
-					euc::EuclideanPoint<T,3> vertices[4];
 
 					// === Constructors/Deconstructors ===
 
@@ -232,16 +231,16 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the Quadrilateral.
 					 */
-					__attribute__((warn_unused_result))
-					inline euc::EuclideanVector<T,3> computeNormal();
+					// __attribute__((warn_unused_result))
+					// inline euc::EuclideanVector<T,3> computeNormal();
 
 					/**
 					 * Compute the center of the four points that make up this Quadrilateral
 					 *
 					 * @return The point at the center of the four points
 					 */
-					__attribute__((warn_unused_result))
-					inline euc::EuclideanPoint<T,3> computeCentroid();
+					// __attribute__((warn_unused_result))
+					// inline euc::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

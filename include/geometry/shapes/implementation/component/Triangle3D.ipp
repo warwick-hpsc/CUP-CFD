@@ -113,8 +113,8 @@ namespace cupcfd
 			template <class T>
 			bool Triangle3D<T>::calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
 														euc::EuclideanPoint<T,3>& intersection, 
-														T& timeToIntersect, 
-														bool* onEdge, 
+										T& timeToIntersect, 
+										bool* onEdge,
 														bool verbose) const
 			{
 				// http://www.lighthouse3d.com/tutorials/maths/ray-triangle-intersection

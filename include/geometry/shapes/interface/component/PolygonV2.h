@@ -44,15 +44,18 @@ namespace cupcfd
 
 					const int numVertices = V;
 					euc::EuclideanPoint<T,N> vertices[V];
-					// T area;
-					// euc::EuclideanPoint<T,N> centroid;
-					// euc::EuclideanVector<T,N> normal;
+					T area;
+					euc::EuclideanPoint<T,N> centroid;
+					euc::EuclideanVector<T,N> normal;
 					
 					// bool initialised = false;
 
 					// === Constructors/Deconstructors ===
 
 					PolygonV2();
+
+					template<class...Args>
+					PolygonV2(Args...v);
 
 					virtual ~PolygonV2();
 
@@ -88,7 +91,15 @@ namespace cupcfd
 					 */
 					//bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
-				protected:
+					// __attribute__((warn_unused_result))
+					// // bool coplanar();
+					// virtual bool coplanar() = 0;
+
+					// __attribute__((warn_unused_result))
+					// // bool verifyNoEdgesIntersect();
+					// virtual bool verifyNoEdgesIntersect() = 0;
+
+				// protected:
 					/**
 					 * Compute the area of the Polygon
 					 *
@@ -102,16 +113,19 @@ namespace cupcfd
 					 *
 					 * @return Centroid point
 					 */
-					__attribute__((warn_unused_result))
-					virtual euc::EuclideanPoint<T,N> computeCentroid() = 0;
+					// __attribute__((warn_unused_result))
+					// virtual euc::EuclideanPoint<T,N> computeCentroid() = 0;
+					// virtual euc::EuclideanPoint<T,N> computeCentroid();
+					// euc::EuclideanPoint<T,N> computeCentroid();
 
 					/**
 					 * Compute the normal of triangle
 					 *
 					 * @return Normal vector
 					 */
-					__attribute__((warn_unused_result))
-					virtual euc::EuclideanVector<T,N> computeNormal() = 0;
+					// __attribute__((warn_unused_result))
+					// virtual euc::EuclideanVector<T,N> computeNormal() = 0;
+					// virtual euc::EuclideanVector<T,N> computeNormal();
 
 			};
 

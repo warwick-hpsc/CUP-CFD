@@ -32,7 +32,9 @@ namespace cupcfd
 			// === Constructors/Deconstructors ===
 
 			template <class T>
-			Quadrilateral3D<T>::Quadrilateral3D() {
+			Quadrilateral3D<T>::Quadrilateral3D()
+			// : PolygonV2<Quadrilateral3D<T>, T, 3, 4>(T(0.0), T(0.0), T(0.0), T(0.0))
+			{
 				this->vertices[0] = T(0.0);
 				this->vertices[1] = T(0.0);
 				this->vertices[2] = T(0.0);
@@ -40,8 +42,6 @@ namespace cupcfd
 				
 				this->vertices[2].cmp[0] = 1.0;
 				this->vertices[3].cmp[0] = 1.0;
-				// this->vertices[3].cmp[1] = 1.0;
-				// this->vertices[4].cmp[1] = 1.0;
 				this->vertices[1].cmp[1] = 1.0;
 				this->vertices[2].cmp[1] = 1.0;
 
@@ -66,15 +66,19 @@ namespace cupcfd
 			Quadrilateral3D<T>::Quadrilateral3D(const euc::EuclideanPoint<T,3>& a,
 											    const euc::EuclideanPoint<T,3>& b,
 											    const euc::EuclideanPoint<T,3>& c,
-											    const euc::EuclideanPoint<T,3>& d) {
-				this->vertices[0] = a;
-				this->vertices[1] = b;
-				this->vertices[2] = c;
-				this->vertices[3] = d;
-
+											    const euc::EuclideanPoint<T,3>& d)
+			: Polygon3D<Quadrilateral3D<T>, T, 4>(a, b, c, d)
+			{
 				// this->centroid = Quadrilateral3D<T>::computeCentroidBiMedianIntersection(a, b, c, d);
 				// this->normal = euc::EuclideanPlane3D<T>::calculateNormal(a, b, c);
 				// this->area = Quadrilateral3D<T>::triangularAreaSum(a, b, c, d);
+
+				// Verify that vectors between opposing vertices do not intersect
+				// if (!this->coplanar()) {
+				// 	HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+				// }
+
+				// ToDo: verify that vector a->c does NOT cross b->d
 			}
 
 			template <class T>
@@ -230,101 +234,101 @@ namespace cupcfd
 				return this->triangularAreaSum(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
 			}
 			
-			template <class T>
-			euc::EuclideanVector<T,3> Quadrilateral3D<T>::computeNormal() {
-				// Pass through to the static method
-				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
+			// template <class T>
+			// euc::EuclideanVector<T,3> Quadrilateral3D<T>::computeNormal() {
+			// 	// Pass through to the static method
+			// 	return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			// }
 			
-			template <class T>
-			inline euc::EuclideanPoint<T,3> Quadrilateral3D<T>::computeCentroid() {
-				// Pass through to the static method
-				// return Quadrilateral3D<T>::computeCentroidBiMedianIntersection(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
+			// template <class T>
+			// inline euc::EuclideanPoint<T,3> Quadrilateral3D<T>::computeCentroid() {
+			// 	// Pass through to the static method
+			// 	// return Quadrilateral3D<T>::computeCentroidBiMedianIntersection(this->vertices[0], this->vertices[1], this->vertices[2], this->vertices[3]);
 
-				// computeCentroidBiMedianIntersection() is incredibly convoluted, and also wrong/broken.
-				// Better method below:
+			// 	// computeCentroidBiMedianIntersection() is incredibly convoluted, and also wrong/broken.
+			// 	// Better method below:
 
-				// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
-				// Necessary assumption: the vertices forming this 3D polygon are co-planar.
-				// Entering this process without knowing what plane the polygon lies on, so 
-				// a little more work required. 
-				// Process: calculate centroids of three projections (using Wiki method):
-				//  1. XY plane
-				//  2. YZ plane
-				//  3. YZ plane
-				// 'unwind' the projection to get the polygon centroid
+			// 	// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+			// 	// Necessary assumption: the vertices forming this 3D polygon are co-planar.
+			// 	// Entering this process without knowing what plane the polygon lies on, so 
+			// 	// a little more work required. 
+			// 	// Process: calculate centroids of three projections (using Wiki method):
+			// 	//  1. XY plane
+			// 	//  2. YZ plane
+			// 	//  3. YZ plane
+			// 	// 'unwind' the projection to get the polygon centroid
 
-				T area = this->computeArea();
+			// 	T area = this->computeArea();
 
-				// 1. calculate centroid of XY projection
-				euc::EuclideanPoint<T,3> cXY(T(0), T(0), T(0));
-				for (uint i=0; i<4; i++) {
-					uint i2=(i+1)%4;
-					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
-					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
-					cXY.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
-					cXY.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
-				}
-				cXY *= T(1) / (T(6) * area);
+			// 	// 1. calculate centroid of XY projection
+			// 	euc::EuclideanPoint<T,3> cXY(T(0), T(0), T(0));
+			// 	for (uint i=0; i<4; i++) {
+			// 		uint i2=(i+1)%4;
+			// 		euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+			// 		euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+			// 		cXY.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
+			// 		cXY.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
+			// 	}
+			// 	cXY *= T(1) / (T(6) * area);
 
-				// 2. calculate centroid of XZ projection
-				euc::EuclideanPoint<T,3> cXZ(T(0), T(0), T(0));
-				for (uint i=0; i<4; i++) {
-					uint i2=(i+1)%4;
-					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
-					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
-					cXZ.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
-					cXZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
-				}
-				cXZ *= T(1) / (T(6) * area);
+			// 	// 2. calculate centroid of XZ projection
+			// 	euc::EuclideanPoint<T,3> cXZ(T(0), T(0), T(0));
+			// 	for (uint i=0; i<4; i++) {
+			// 		uint i2=(i+1)%4;
+			// 		euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+			// 		euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+			// 		cXZ.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
+			// 		cXZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
+			// 	}
+			// 	cXZ *= T(1) / (T(6) * area);
 
-				// 3. calculate centroid of YZ projection
-				euc::EuclideanPoint<T,3> cYZ(T(0), T(0), T(0));
-				for (uint i=0; i<4; i++) {
-					uint i2=(i+1)%4;
-					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
-					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
-					cYZ.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
-					cYZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
-				}
-				cYZ *= T(1) / (T(6) * area);
+			// 	// 3. calculate centroid of YZ projection
+			// 	euc::EuclideanPoint<T,3> cYZ(T(0), T(0), T(0));
+			// 	for (uint i=0; i<4; i++) {
+			// 		uint i2=(i+1)%4;
+			// 		euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+			// 		euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+			// 		cYZ.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
+			// 		cYZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
+			// 	}
+			// 	cYZ *= T(1) / (T(6) * area);
 
-				// 4. 'unwind' projections:
-				euc::EuclideanPoint<T,3> centroid;
-				for (uint i=0; i<3; i++) {
-					if (cXY.cmp[i] != T(0)) {
-						centroid.cmp[i] = cXY.cmp[i];
-					}
-					else if (cXZ.cmp[i] != T(0)) {
-						centroid.cmp[i] = cXZ.cmp[i];
-					}
-					else {
-						centroid.cmp[i] = cYZ.cmp[i];
-					}
-				}
+			// 	// 4. 'unwind' projections:
+			// 	euc::EuclideanPoint<T,3> centroid;
+			// 	for (uint i=0; i<3; i++) {
+			// 		if (cXY.cmp[i] != T(0)) {
+			// 			centroid.cmp[i] = cXY.cmp[i];
+			// 		}
+			// 		else if (cXZ.cmp[i] != T(0)) {
+			// 			centroid.cmp[i] = cXZ.cmp[i];
+			// 		}
+			// 		else {
+			// 			centroid.cmp[i] = cYZ.cmp[i];
+			// 		}
+			// 	}
 
-				// std::cout << "vertices:" << std::endl;
-				// for (uint i=0; i<4; i++) {
-				// 	printf("  %.4f, %.4f, %.4f\n", this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
-				// }
-				// std::cout << "cXY:" << std::endl;
-				// // printf("  %.4f, %.4f, %.4f\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
-				// printf("  %.4e, %.4e, %.4e\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
-				// std::cout << "cXZ:" << std::endl;
-				// // printf("  %.4f, %.4f, %.4f\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
-				// printf("  %.4e, %.4e, %.4e\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
-				// std::cout << "cYZ:" << std::endl;
-				// printf("  %.4f, %.4f, %.4f\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
-				// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
-				// std::cout << "centroid:" << std::endl;
-				// printf("  %.4f, %.4f, %.4f\n", centroid.cmp[0], centroid.cmp[1], centroid.cmp[2]);
-				// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
+			// 	// std::cout << "vertices:" << std::endl;
+			// 	// for (uint i=0; i<4; i++) {
+			// 	// 	printf("  %.4f, %.4f, %.4f\n", this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
+			// 	// }
+			// 	// std::cout << "cXY:" << std::endl;
+			// 	// // printf("  %.4f, %.4f, %.4f\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
+			// 	// printf("  %.4e, %.4e, %.4e\n", cXY.cmp[0], cXY.cmp[1], cXY.cmp[2]);
+			// 	// std::cout << "cXZ:" << std::endl;
+			// 	// // printf("  %.4f, %.4f, %.4f\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
+			// 	// printf("  %.4e, %.4e, %.4e\n", cXZ.cmp[0], cXZ.cmp[1], cXZ.cmp[2]);
+			// 	// std::cout << "cYZ:" << std::endl;
+			// 	// printf("  %.4f, %.4f, %.4f\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
+			// 	// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
+			// 	// std::cout << "centroid:" << std::endl;
+			// 	// printf("  %.4f, %.4f, %.4f\n", centroid.cmp[0], centroid.cmp[1], centroid.cmp[2]);
+			// 	// // printf("  %.4e, %.4e, %.4e\n", cYZ.cmp[0], cYZ.cmp[1], cYZ.cmp[2]);
 
-				// // ToDo: finish logic
-				// HARD_CHECK_ECODE(cupcfd::error::E_ERROR)
+			// 	// // ToDo: finish logic
+			// 	// HARD_CHECK_ECODE(cupcfd::error::E_ERROR)
 				
-				return centroid;
-			}
+			// 	return centroid;
+			// }
 		}
 	}
 }

@@ -22,39 +22,158 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
-			template <class P, class T>
-			Polygon3D<P,T>::Polygon3D() {
-				this->numVertices = 0;
-				this->numEdges = 0;
+			template <class P, class T, uint V>
+			Polygon3D<P,T,V>::Polygon3D() {
+			}
+
+			template <class P, class T, uint V>
+			template<class...Args>
+			Polygon3D<P,T,V>::Polygon3D(Args...v)
+			: PolygonV2<Polygon3D<P,T,V>,T,3,V>::PolygonV2( (v)... )
+			{
+				static_assert(sizeof...(Args) == V, "PolygonV2 constructor dimension does not match number of parameters");
+				if (!this->coplanar()) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+				}
+
+				// ToDo: Verify that no edges intersect
+				if (!this->verifyNoEdgesIntersect()) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+				}
 			}
 			
-			template <class P, class T>
-			Polygon3D<P,T>::~Polygon3D() {
+			template <class P, class T, uint V>
+			Polygon3D<P,T,V>::~Polygon3D() {
 			}
 			
-			template <class P, class T>
-			inline int Polygon3D<P,T>::getNumVertices() {
-				return this->numVertices;
+			// template <class P, class T, uint V>
+			// inline int Polygon3D<P,T,V>::getNumVertices() {
+			// 	return this->numVertices;
+			// }
+			
+			// template <class P, class T, uint V>
+			// inline int Polygon3D<P,T,V>::getNumEdges() {
+			// 	return this->numEdges;
+			// }
+			
+			// template <class P, class T, uint V>
+			// bool Polygon3D<P,T,V>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
+			// 	return static_cast<P*>(this)->isPointInside(point);
+			// }
+
+			template <class P, class T, uint V>
+			bool Polygon3D<P,T,V>::coplanar() {
+				// Calculate plane normal from first three vertices:
+				// euc::EuclideanVector<T,3> normal = euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+				euc::EuclideanVector<T,3> normal = this->computeNormal();
+				// Check if any other vertex is NOT coplanar:
+				for (int i=3; i<V; i++){
+					euc::EuclideanVector<T,3> v = this->vertices[i] - this->vertices[0];
+					T dp = v.dotProduct(normal);
+					if (dp != T(0)) {
+						printf("NOT COPLANAR! (dp = %.2e)\n", dp);
+						return false;
+					}
+				}
+				return true;
 			}
 			
-			template <class P, class T>
-			inline int Polygon3D<P,T>::getNumEdges() {
-				return this->numEdges;
-			}
-			
-			template <class P, class T>
-			bool Polygon3D<P,T>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
-				return static_cast<P*>(this)->isPointInside(point);
-			}
-			
-			template <class P, class T>
-			T Polygon3D<P,T>::computeArea() {
+			template <class P, class T, uint V>
+			T Polygon3D<P,T,V>::computeArea() {
 				return static_cast<P*>(this)->computeArea();
 			}
 			
-			template <class P, class T>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> Polygon3D<P,T>::computeNormal() {
-				return static_cast<P*>(this)->computeNormal();
+			template <class P, class T, uint V>
+			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> Polygon3D<P,T,V>::computeNormal() {
+				// return static_cast<P*>(this)->computeNormal();
+				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			}
+
+			template <class P, class T, uint V>
+			inline euc::EuclideanPoint<T,3> Polygon3D<P,T,V>::computeCentroid() {
+				// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+				// Necessary assumption: the vertices forming this 3D polygon are co-planar.
+				// Entering this process without knowing what plane the polygon lies on, so 
+				// a little more work required. 
+				// Process: calculate centroids of three projections (using Wiki method):
+				//  1. XY plane
+				//  2. YZ plane
+				//  3. YZ plane
+				// 'unwind' the projection to get the polygon centroid
+
+				T area = this->computeArea();
+
+				// 1. calculate centroid of XY projection
+				euc::EuclideanPoint<T,3> cXY(T(0), T(0), T(0));
+				for (uint i=0; i<V; i++) {
+					uint i2=(i+1)%V;
+					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+					cXY.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
+					cXY.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[0]*v2.cmp[1] - v2.cmp[0] * v1.cmp[1] );
+				}
+				cXY *= T(1) / (T(6) * area);
+
+				// 2. calculate centroid of XZ projection
+				euc::EuclideanPoint<T,3> cXZ(T(0), T(0), T(0));
+				for (uint i=0; i<V; i++) {
+					uint i2=(i+1)%V;
+					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+					cXZ.cmp[0] += (v1.cmp[0] + v2.cmp[0]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
+					cXZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[0]*v2.cmp[2] - v2.cmp[0] * v1.cmp[2] );
+				}
+				cXZ *= T(1) / (T(6) * area);
+
+				// 3. calculate centroid of YZ projection
+				euc::EuclideanPoint<T,3> cYZ(T(0), T(0), T(0));
+				for (uint i=0; i<V; i++) {
+					uint i2=(i+1)%V;
+					euc::EuclideanPoint<T,3> v1 = this->vertices[i];
+					euc::EuclideanPoint<T,3> v2 = this->vertices[i2];
+					cYZ.cmp[1] += (v1.cmp[1] + v2.cmp[1]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
+					cYZ.cmp[2] += (v1.cmp[2] + v2.cmp[2]) * ( v1.cmp[1]*v2.cmp[2] - v2.cmp[1] * v1.cmp[2] );
+				}
+				cYZ *= T(1) / (T(6) * area);
+
+				// 4. 'unwind' projections:
+				euc::EuclideanPoint<T,3> centroid;
+				for (uint i=0; i<3; i++) {
+					if (cXY.cmp[i] != T(0)) {
+						centroid.cmp[i] = cXY.cmp[i];
+					}
+					else if (cXZ.cmp[i] != T(0)) {
+						centroid.cmp[i] = cXZ.cmp[i];
+					}
+					else {
+						centroid.cmp[i] = cYZ.cmp[i];
+					}
+				}
+
+				return centroid;
+			}
+
+			// Probably an actual geometric term for 'polygon edges do not intersect':
+			// template <class S, class T, uint N, uint V>
+			template <class P, class T, uint V>
+			bool Polygon3D<P,T,V>::verifyNoEdgesIntersect() {
+				// floating-point round errors could prevent detection of any true
+				// 3D intersection point. Best bet is to rotate the polygon so
+				// normal becomes Z-axis, then only working in 2D and will 
+				// definitely find intersection point (unless parallel)
+
+				// Gather the calculation inputs:
+				euc::EuclideanPoint<T,3> centroid = this->computeCentroid();
+				euc::EuclideanVector<T,3> normal = this->computeNormal();
+				normal.normalise();
+				euc::EuclideanVector<T,3> zAxis(T(0), T(0), T(1));
+
+				// Begin:
+				// euc::EuclideanVector<T,3> v = normal.crossProduct(zAxis);
+
+				// T rotMatrix[3][3];
+
+				return true;
 			}
 			
 			// template <class T>

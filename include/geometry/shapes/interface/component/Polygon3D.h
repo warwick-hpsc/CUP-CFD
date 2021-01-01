@@ -16,6 +16,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "PolygonV2.h"
 
 namespace cupcfd
 {
@@ -29,24 +30,22 @@ namespace cupcfd
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam P The implementation type of the polygon
-			 * @tparam T The type of the spatial domain
+			 * @tparam P The polygon specialisation
+			 * @tparam T Numerical type
+			 * @tparam V Number of vertices
 			 */
-			template <class P, class T>
-			class Polygon3D
+			template <class P, class T, uint V>
+			class Polygon3D : public PolygonV2<Polygon3D<P,T,V>, T, 3, V>
 			{
 				public:
 					// === Members ===
 
-					int numVertices;
-					int numEdges;
-					T area;
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> normal;
-
 					// === Constructors/Deconstructors ===
 
 					Polygon3D();
+
+					template<class...Args>
+					Polygon3D(Args...v);
 
 					~Polygon3D();
 
@@ -55,24 +54,18 @@ namespace cupcfd
 					/**
 					 * Get the number of vertices in this polygon
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
 					 * @return The number of vertices this polygon has
 					 */
-					__attribute__((warn_unused_result))
-					inline int getNumVertices();
+					// __attribute__((warn_unused_result))
+					// inline int getNumVertices();
 
 					/**
 					 * Get the number of edges in this polygon
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
 					 * @return The number of edges this polygon has
 					 */
-					__attribute__((warn_unused_result))
-					inline int getNumEdges();
+					// __attribute__((warn_unused_result))
+					// inline int getNumEdges();
 
 					/**
 					 * Determine whether the provided point is inside the polygon.
@@ -82,17 +75,13 @@ namespace cupcfd
 					 * onto the same plane as the polygon (i.e. points that lie directly above or below
 					 * the polygon will consider 'inside').
 					 *
-					 *
 					 * This is a generic interface should derived classes prefer to implement additional
 					 * methods.
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
 					 * @return Return true if the point exists inside this polygon
 					 */
-					__attribute__((warn_unused_result))
-					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					// __attribute__((warn_unused_result))
+					// inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 					// inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
 					// 									const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
@@ -106,37 +95,37 @@ namespace cupcfd
 					 *
 					 * This method uses a ray casting technique to test whether the point is inside the polygon.
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
 					 * @return Return whether the point exists inside this polygon
 					 * @retval true The point is inside the polygon
 					 * @retval false The point is outside the polygon
 					 */
 					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
-				private:
+				// private:
+					bool coplanar();
+
+					bool verifyNoEdgesIntersect();
+
 					/**
 					 * Compute the area of the polygon
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
 					 *
 					 * @return Return the computed area of the polygon.
 					 */
 					__attribute__((warn_unused_result))
 					inline T computeArea();
 
+					__attribute__((warn_unused_result))
+					// inline euc::EuclideanPoint<T,3> computeCentroid();
+					euc::EuclideanPoint<T,3> computeCentroid();
+
 					/**
 					 * Compute the normal of the polygon. Direction will depend on ordering of vertices.
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
 					 *
 					 * @return Return the computed normal vector of the polygon.
 					 */
 					__attribute__((warn_unused_result))
-					inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
+					// inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
+					cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 			};
 
 			// === Non-Class, but Generic Methods ===
@@ -149,8 +138,6 @@ namespace cupcfd
 			 * of connecting edges - i.e. points[0] connects to point 1, 1 to 2 etc till n-1 connects to 0.
 			 * They should also be coplanar.
 			 * @param nPoints Number of points in points
-			 *
-			 * @tparam T The type of the spatial domain
 			 *
 			 * @return The area.
 			 */
@@ -169,8 +156,6 @@ namespace cupcfd
 			 * They should also be coplanar.
 			 * Must be at least three vertices.
 			 * @param nPoints Number of points in points
-			 *
-			 * @tparam T The type of the spatial domain
 			 *
 			 * @return Whether the ordering is clockwise when viewing the polygon from the observation point
 			 * @retval true The ordering is clockwise

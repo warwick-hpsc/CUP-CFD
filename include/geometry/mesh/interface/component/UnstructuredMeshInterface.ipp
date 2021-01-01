@@ -1417,6 +1417,51 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 			
+
+			template <class M, class I, class T, class L>
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedronV2(I cellID, cupcfd::geometry::shapes::Hexahedron<T> ** shape) {
+				// Error Check: Check that the provided cell ID is actually a Hexahedron
+				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);				
+				if(type != cupcfd::geometry::shapes::POLYHEDRON_HEXAHEDRON) {
+					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
+				}
+
+				I cellLocalFaceID[6];
+				for(I i = 0; i  < 6; i++) {
+					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
+				}
+
+				I faceNVertices[6];
+				for(I i = 0; i  < 6; i++) {
+					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
+					if (faceNVertices[i] != 4) {
+						// Each face should be a quadrilateral!
+						return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
+					}
+				}
+
+				cupcfd::geometry::shapes::Quadrilateral3D<T> quads[6];
+				for(I i = 0; i  < 6; i++) {
+					// for(I j = 0; j < faceNVertices[i]; j++) {
+					// 	vertexID = this->getFaceVertex(cellLocalFaceID[i], j);
+					// }
+					I id0 = this->getFaceVertex(cellLocalFaceID[i], 0);
+					I id1 = this->getFaceVertex(cellLocalFaceID[i], 1);
+					I id2 = this->getFaceVertex(cellLocalFaceID[i], 2);
+					I id3 = this->getFaceVertex(cellLocalFaceID[i], 3);
+
+					quads[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>(
+									this->getVertexPos(id0),
+									this->getVertexPos(id1),
+									this->getVertexPos(id2),
+									this->getVertexPos(id3));
+				}
+
+				*shape = NULL;
+
+				return cupcfd::error::E_SUCCESS;
+			}
+			
 			template <class M, class I, class T, class L>
 			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, cupcfd::geometry::shapes::Hexahedron<T> ** shape) {
 				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
@@ -2132,7 +2177,8 @@ namespace cupcfd
 					}
 					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_HEXAHEDRON) {
 						cupcfd::geometry::shapes::Hexahedron<T> * shape4;
-						status = this->buildPolyhedron(i, &shape4);																
+						status = this->buildPolyhedron(i, &shape4);
+						// status = this->buildPolyhedronV2(i, &shape4);
 						CHECK_ECODE(status)
 						inside = shape4->isPointInside(point);						
 						delete shape4;

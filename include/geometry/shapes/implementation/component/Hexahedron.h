@@ -17,6 +17,7 @@
 #include "Polygon3D.h"
 #include "Polyhedron.h"
 #include "EuclideanPoint.h"
+#include "Quadrilateral3D.h"
 
 namespace cupcfd
 {
@@ -67,6 +68,13 @@ namespace cupcfd
 					/** Bottom-Right Back Vertex **/
 					cupcfd::geometry::euclidean::EuclideanPoint<T,3> brb;
 
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f1;
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f2;
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f3;
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f4;
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f5;
+					cupcfd::geometry::shapes::Quadrilateral3D<T> f6;
+
 
 					// === Constructors/Deconstructors ===
 
@@ -93,6 +101,14 @@ namespace cupcfd
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& trb,
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blb,
 							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb);
+
+					Hexahedron(const cupcfd::geometry::shapes::Quadrilateral3D<T>& f1,
+							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f2,
+							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f3,
+							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f4,
+							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f5,
+							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f6);
+
 
 					/**
 					 *

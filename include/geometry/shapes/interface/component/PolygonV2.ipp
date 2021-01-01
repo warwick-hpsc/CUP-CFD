@@ -14,6 +14,9 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_POLYGONV2_IPP_H
 #define CUPCFD_GEOMETRY_SHAPES_POLYGONV2_IPP_H
 
+#include "EuclideanPlane3D.h"
+#include "EuclideanVector.h"
+
 namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
@@ -25,7 +28,15 @@ namespace cupcfd
 			template <class S, class T, uint N, uint V>
 			PolygonV2<S,T,N,V>::PolygonV2() {
 			}
-			
+
+			template <class S, class T, uint N, uint V>
+			template<class...Args>
+			PolygonV2<S,T,N,V>::PolygonV2(Args...v)
+			: vertices{ (v)... }
+			{
+				static_assert(sizeof...(Args) == V, "PolygonV2 constructor dimension does not match number of parameters");
+			}
+
 			template <class S, class T, uint N, uint V>
 			PolygonV2<S,T,N,V>::~PolygonV2() {
 			}
@@ -60,6 +71,17 @@ namespace cupcfd
 			// template <class S, class T, uint N, uint V>
 			// bool PolygonV2<S,T,N,V>::isPointInside(euc::EuclideanPoint<T,N>& point) {
 			// 	return static_cast<S*>(this)->isPointInside(point);
+			// }
+
+			// template <class S, class T, uint N, uint V>
+			// T PolygonV2<S,T,N,V>::computeCentroid() {
+			// 	return static_cast<S*>(this)->computeCentroid();
+			// }
+
+			// template <class S, class T, uint N, uint V>
+			// euc::EuclideanVector<T,N> PolygonV2<S,T,N,V>::computeNormal() {
+			// 	// Pass through to the static method
+			// 	return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
 			// }
 			
 			// template <class S, class T, uint N, uint V>
