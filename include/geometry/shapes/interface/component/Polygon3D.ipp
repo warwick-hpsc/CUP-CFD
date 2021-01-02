@@ -56,10 +56,10 @@ namespace cupcfd
 			bool Polygon3D<P,T,V>::coplanar() {
 				// Calculate plane normal from first three vertices:
 				// euc::EuclideanVector<T,3> normal = euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-				euc::EuclideanVector<T,3> normal = this->computeNormal();
+				euc::EuclideanVector3D<T> normal = this->computeNormal();
 				// Check if any other vertex is NOT coplanar:
 				for (int i=3; i<V; i++){
-					euc::EuclideanVector<T,3> v = this->vertices[i] - this->vertices[0];
+					euc::EuclideanVector3D<T> v = this->vertices[i] - this->vertices[0];
 					T dp = v.dotProduct(normal);
 					if (dp != T(0)) {
 						printf("NOT COPLANAR! (dp = %.2e)\n", dp);
@@ -82,7 +82,7 @@ namespace cupcfd
 			}
 			
 			template <class P, class T, uint V>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> Polygon3D<P,T,V>::computeNormal() {
+			inline cupcfd::geometry::euclidean::EuclideanVector3D<T> Polygon3D<P,T,V>::computeNormal() {
 				// return static_cast<P*>(this)->computeNormal();
 				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
 			}
@@ -162,15 +162,62 @@ namespace cupcfd
 
 				// Gather the calculation inputs:
 				euc::EuclideanPoint<T,3> centroid = this->computeCentroid();
-				euc::EuclideanVector<T,3> normal = this->computeNormal();
+				euc::EuclideanVector3D<T> normal = this->computeNormal();
 				normal.normalise();
-				euc::EuclideanVector<T,3> zAxis(T(0), T(0), T(1));
+				euc::EuclideanVector3D<T> zAxis(T(0), T(0), T(1));
 
 				// Begin:
-				// euc::EuclideanVector<T,3> v = normal.crossProduct(zAxis);
+				euc::EuclideanVector3D<T> axis = normal.crossProduct(zAxis);
+				T cosine = normal.dotProduct(zAxis);
+				T sine = axis.length();
+				axis.normalise();
+				T oneMinusCosine = T(1) - cosine;
+				if (cosine != T(0) || sine != T(0)) {
+					// Construct rotation matrix
+					// https://en.wikipedia.org/wiki/Transformation_matrix#Rotation_2
+					T rotMatrix[3][3];
+					T x = zAxis.cmp[0];
+					T y = zAxis.cmp[1];
+					T z = zAxis.cmp[2];
+					rotMatrix[0][0] = x*x*oneMinusCosine + cosine;
+					rotMatrix[0][1] = y*x*oneMinusCosine - sine*z;
+					rotMatrix[0][2] = z*x*oneMinusCosine + sine*y;
 
-				// T rotMatrix[3][3];
+					rotMatrix[1][0] = x*y*oneMinusCosine + sine*z;
+					rotMatrix[1][1] = y*y*oneMinusCosine + cosine;
+					rotMatrix[1][2] = z*y*oneMinusCosine - sine*x;
 
+					rotMatrix[2][0] = x*z*oneMinusCosine - sine*y;
+					rotMatrix[2][1] = y*z*oneMinusCosine + sine*x;
+					rotMatrix[2][2] = z*z*oneMinusCosine + cosine;
+
+					euc::EuclideanVector3D<T> normalRot(T(0));
+					normalRot.cmp[0] = rotMatrix[0][0]*x + rotMatrix[0][1]*y + rotMatrix[0][2]*z;
+					normalRot.cmp[1] = rotMatrix[1][0]*x + rotMatrix[1][1]*y + rotMatrix[1][2]*z;
+					normalRot.cmp[2] = rotMatrix[2][0]*x + rotMatrix[2][1]*y + rotMatrix[2][2]*z;
+
+					if (!(normalRot == zAxis)) {
+						printf("Vector: ");
+						normal.print(); std::cout << std::endl;
+						printf("Target: ");
+						zAxis.print(); std::cout << std::endl;
+						printf("Axis:");
+						axis.print(); std::cout << std::endl;
+						printf("cosine: %.2f\n", cosine);
+						printf("sine: %.2f\n", sine);
+
+						printf("rotMatrix:\n");
+						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[0][0], rotMatrix[0][1], rotMatrix[0][2]);
+						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[1][0], rotMatrix[1][1], rotMatrix[1][2]);
+						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[2][0], rotMatrix[2][1], rotMatrix[2][2]);
+						printf("\n");
+
+						printf("Vector rotated: ");
+						normalRot.print(); std::cout << std::endl;
+
+						HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
+					}
+				}
 				return true;
 			}
 			
@@ -200,12 +247,11 @@ namespace cupcfd
 				// ToDo: Error Check - observation must not be coplanar with points
 			
 				// Draw a vector from the observation point to a point on the polygon
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> obsVec = observation - points[0];
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> obsVec = observation - points[0];
 				
 				// Compute the normal of the polygon
 				cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(points[0], points[1], points[2]);
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = plane.getNormal();
-				// cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = plane.normal;
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> normal = plane.getNormal();
 				
 				// If the points are traversed in clockwise order from the observation point, the vector will
 				// point towards the observation point.

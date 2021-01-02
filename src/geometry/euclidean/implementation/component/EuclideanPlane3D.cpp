@@ -12,6 +12,7 @@
 
 #include "EuclideanPlane3D.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "ArithmeticKernels.h"
 
 // C++ Library
@@ -60,7 +61,7 @@ namespace cupcfd
 			// }
 
 			template <class T>
-			euc::EuclideanVector<T,3> EuclideanPlane3D<T>::getNormal() {
+			euc::EuclideanVector3D<T> EuclideanPlane3D<T>::getNormal() {
 				return EuclideanPlane3D<T>::calculateNormal(this->p1, this->p2, this->p3);
 			}
 
@@ -73,7 +74,7 @@ namespace cupcfd
 				// ax + by + cz = ax0 + by0 + cz0
 
 				// <a,b,c> = normal vector(x,y,z>
-				euc::EuclideanVector<T,3> norm = EuclideanPlane3D<T>::calculateNormal(this->p1, this->p2, this->p3);
+				euc::EuclideanVector3D<T> norm = EuclideanPlane3D<T>::calculateNormal(this->p1, this->p2, this->p3);
 
 				// (x0, y0, z0) = any point: Will select point p1
 				T rhs = (norm.cmp[0] * this->p1.cmp[0]) + (norm.cmp[1] * this->p1.cmp[1]) + (norm.cmp[2] * this->p1.cmp[2]);
@@ -99,8 +100,7 @@ namespace cupcfd
 				euc::EuclideanVector<T,3> vec = point - this->p1;
 
 				// Compute the unit normal vector
-				euc::EuclideanVector<T,3> n = this->getNormal();
-				// euc::EuclideanVector<T,3> n = this->normal;
+				euc::EuclideanVector3D<T> n = this->getNormal();
 
 				// Compute The Scalar Component of vec in the direction of the normal vector
 				// https://en.wikipedia.org/wiki/Dot_product#Scalar_projection_and_first_properties
@@ -150,8 +150,7 @@ namespace cupcfd
 																			 	  const euc::EuclideanPoint<T,3>& l0,
 																				  euc::EuclideanPoint<T,3>& result) {
 				// https://en.wikipedia.org/wiki/Line-plane_intersection
-				euc::EuclideanVector<T,3> normal = this->getNormal();
-				// euc::EuclideanVector<T,3> normal = this->normal;
+				euc::EuclideanVector3D<T> normal = this->getNormal();
 				T dotP = normal.dotProduct(l);
 
 				// Could use isVectorParallel, but don't want to compute dot product twice.
@@ -164,7 +163,7 @@ namespace cupcfd
 				// Vector is not parallel, so we can compute the intersection point
 				// d = (p0 - l0) . n / (l.n)
 
-				euc::EuclideanVector<T,3> tmp = this->p1 - l0;
+				euc::EuclideanVector3D<T> tmp = this->p1 - l0;
 				T d = tmp.dotProduct(normal);
 				d = d / dotP;
 
@@ -205,15 +204,15 @@ namespace cupcfd
 			// === Static Methods ===
 
 			template <class T>
-			euc::EuclideanVector<T,3> EuclideanPlane3D<T>::calculateNormal(const euc::EuclideanPoint<T,3>& p1,
-																		 	const euc::EuclideanPoint<T,3>& p2,
+			euc::EuclideanVector3D<T> EuclideanPlane3D<T>::calculateNormal(const euc::EuclideanPoint<T,3>& p1,
+																			const euc::EuclideanPoint<T,3>& p2,
 																			const euc::EuclideanPoint<T,3>& p3) {
 				// Algorithm: https://www.khronos.org/opengl/wiki/Calculating_a_Surface_Normal
 
 				// U = point 2 - point 1
-				euc::EuclideanVector<T,3> u = p2 - p1;
-				euc::EuclideanVector<T,3> v = p3 - p1;
-				euc::EuclideanVector<T,3> normVec;
+				euc::EuclideanVector3D<T> u = p2 - p1;
+				euc::EuclideanVector3D<T> v = p3 - p1;
+				euc::EuclideanVector3D<T> normVec;
 
 				normVec.cmp[0] = (u.cmp[1] * v.cmp[2]) - (u.cmp[2] * v.cmp[1]);
 				normVec.cmp[1] = (u.cmp[2] * v.cmp[0]) - (u.cmp[0] * v.cmp[2]);

@@ -60,18 +60,6 @@ namespace cupcfd
 			}
 
 			template <class T>
-			EuclideanVector3D<T> EuclideanVector3D<T>::crossProduct(const EuclideanVector<T,3>& vec) {
-				EuclideanVector3D<T> v1(vec);
-				EuclideanVector3D<T> result = this->crossProduct(v1);
-				// EuclideanVector<T,3> res2;
-				// res2.cmp[0] = result.cmp[0];
-				// res2.cmp[1] = result.cmp[1];
-				// res2.cmp[2] = result.cmp[2];
-				// return res2;
-				return result;
-			}
-
-			template <class T>
 			EuclideanVector3D<T> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2) {
 				EuclideanVector3D<T> v1(vec1);
 				EuclideanVector3D<T> v2(vec2);
@@ -538,7 +526,5 @@ namespace cupcfd
 template class cupcfd::geometry::euclidean::EuclideanVector3D<float>;
 
 template class cupcfd::geometry::euclidean::EuclideanVector3D<double>;
-// template cupcfd::geometry::euclidean::EuclideanVector3D<double>::EuclideanVector3D(const cupcfd::geometry::euclidean::EuclideanVector<T,3>& v);
-// template cupcfd::geometry::euclidean::EuclideanVector3D<double>::rotateYAxisRadian(double radians);
 
 #endif

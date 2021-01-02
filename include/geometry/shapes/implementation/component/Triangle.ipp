@@ -86,11 +86,6 @@ namespace cupcfd
 			}
 
 			template <class S, class T, uint N>
-			euc::EuclideanVector<T,N> Triangle<S,T,N>::computeNormal() {
-				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
-
-			template <class S, class T, uint N>
 			T Triangle<S,T,N>::heronsFormula(T abLength, T acLength, T bcLength)
 			{
 				// Heron's formula: Calculate area purely from edge lengths

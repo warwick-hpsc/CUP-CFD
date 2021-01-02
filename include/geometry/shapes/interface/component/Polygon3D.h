@@ -16,6 +16,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "Polygon.h"
 
 namespace cupcfd
@@ -107,7 +108,7 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					// inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
+					cupcfd::geometry::euclidean::EuclideanVector3D<T> computeNormal();
 			};
 
 			// === Non-Class, but Generic Methods ===

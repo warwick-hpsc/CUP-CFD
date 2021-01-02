@@ -207,12 +207,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			void UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm) {
 				static_cast<M*>(this)->getFaceNorm(faceID, norm);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID) {
+			cupcfd::geometry::euclidean::EuclideanVector3D<T> UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID) {
 				return static_cast<M*>(this)->getFaceNorm(faceID);
 			}
 			
@@ -312,7 +312,7 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			void UnstructuredMeshInterface<M,I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm) {
 				static_cast<M*>(this)->setFaceNorm(faceID, norm);
 			}
 
@@ -358,7 +358,7 @@ namespace cupcfd
 						L cell2OrBoundaryLabel,
 						bool isBoundary,
 						T lambda,
-						cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm,
+						cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm,
 						L * vertexLabels, I nVertexLabels,
 						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
 						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac,
@@ -1020,10 +1020,10 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triFaceBPos = this->getVertexPos(triFaceB);
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triFaceCPos = this->getVertexPos(triFaceC);
 				
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> centerFace1 = center - triFaceAPos;
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> centerFace1 = center - triFaceAPos;
 				
 				cupcfd::geometry::shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> normalFace1 = face1.computeNormal();
 				
 				T face1Dot = normalFace1.dotProduct(centerFace1);
 								
@@ -2022,7 +2022,7 @@ namespace cupcfd
 					CHECK_ECODE(status)
 
 					// Face Normal
-					euc::EuclideanVector<T,3> * fNorm = (euc::EuclideanVector<T,3> *) malloc(sizeof(euc::EuclideanVector<T,3>) * nFaceLabelsDistinct);
+					euc::EuclideanVector3D<T> * fNorm = (euc::EuclideanVector3D<T> *) malloc(sizeof(euc::EuclideanVector3D<T>) * nFaceLabelsDistinct);
 					status = data.getFaceNormal(fNorm, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
 					CHECK_ECODE(status)
 

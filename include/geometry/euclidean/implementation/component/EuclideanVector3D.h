@@ -49,8 +49,6 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					EuclideanVector3D<T> crossProduct(const EuclideanVector3D<T>& vec);
-					__attribute__((warn_unused_result))
-					EuclideanVector3D<T> crossProduct(const EuclideanVector<T,3>& vec);
 
 					/**
 					 * Rotate vector by specified radians about the X axis.

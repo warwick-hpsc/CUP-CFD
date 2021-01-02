@@ -15,6 +15,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "Error.h"
 
 namespace euc = cupcfd::geometry::euclidean;
@@ -208,7 +209,7 @@ namespace cupcfd
 					 * @return The normal vector of the plane
 					 */
 					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,3> getNormal();
+					euc::EuclideanVector3D<T> getNormal();
 
 					/**
 					 * Compute the equation of the plane ax + by + cz + d = 0
@@ -317,7 +318,7 @@ namespace cupcfd
 					 * @return A vector containing the values for the normal vector of this plane
 					 */
 					__attribute__((warn_unused_result))
-					static euc::EuclideanVector<T,3> calculateNormal(const euc::EuclideanPoint<T,3>& p1,
+					static euc::EuclideanVector3D<T> calculateNormal(const euc::EuclideanPoint<T,3>& p1,
 																	const euc::EuclideanPoint<T,3>& p2,
 																	const euc::EuclideanPoint<T,3>& p3);
 

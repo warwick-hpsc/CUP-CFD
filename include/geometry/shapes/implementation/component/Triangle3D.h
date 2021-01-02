@@ -19,6 +19,8 @@
 #include "EuclideanVector.h"
 #include "Triangle.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -41,9 +43,9 @@ namespace cupcfd
 					 * Constructor - Build a triangle using the three provided points
 					 * as vertices.
 					 */
-					Triangle3D(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
+					Triangle3D(const euc::EuclideanPoint<T,3>& a,
+							   const euc::EuclideanPoint<T,3>& b,
+							   const euc::EuclideanPoint<T,3>& c);
 
 					/**
 					 * Copy Constructor
@@ -69,7 +71,7 @@ namespace cupcfd
 					 * @return True if the point lies inside the triangle vertices
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
+					bool isPointInside(const euc::EuclideanPoint<T,3>& p);
 
 					/**
 					 * Calculate intersection of a moving point with this triangle: intersection point, 
@@ -85,9 +87,9 @@ namespace cupcfd
 					 * @return True if the ray intersects
 					 */
 					__attribute__((warn_unused_result))
-					bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
-                                                const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
-												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
+					bool calculateIntersection(const euc::EuclideanPoint<T,3> v0, 
+                                                const euc::EuclideanVector<T,3> velocity, 
+												euc::EuclideanPoint<T,3>& intersection, 
 												T& timeToIntersect, 
 												bool* onEdge,
 												bool verbose) const;
@@ -109,14 +111,14 @@ namespace cupcfd
 					 *
 					 * @return Return the computed normal vector of the triangle.
 					 */
-					//  cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
+					euc::EuclideanVector3D<T> computeNormal();
 
 					/**
 					 * Compute the center of three points that make up this triangle
 					 *
 					 * @return The point at the center of the three points
 					 */
-					// inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					// inline euc::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

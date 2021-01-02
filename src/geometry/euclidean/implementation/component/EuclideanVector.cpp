@@ -83,6 +83,14 @@ namespace cupcfd
 				for(uint i = 0; i < N; i++) {
 					dotP += (this->cmp[i] * vec.cmp[i]);
 				}
+				// Ensure floating-point rounding errors do not produce an 
+				// invalid dot product value (must be in range [-1.0, 1.0])
+				if (dotP < T(-1)) {
+					dotP = T(-1);
+				}
+				else if (dotP > T(11)) {
+					dotP = T(1);
+				}
 				return dotP;
 			}
 

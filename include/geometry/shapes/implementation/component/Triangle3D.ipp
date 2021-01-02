@@ -244,10 +244,10 @@ namespace cupcfd
 			// 	return area;
 			// }
 
-			// template <class T>
-			// cupcfd::geometry::euclidean::EuclideanVector<T,3> Triangle3D<T>::computeNormal() {
-			// 	return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::normal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			// }
+			template <class T>
+			cupcfd::geometry::euclidean::EuclideanVector3D<T> Triangle3D<T>::computeNormal() {
+				return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			}
 			
 			// template <class T>
 			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Triangle3D<T>::computeCentroid() {

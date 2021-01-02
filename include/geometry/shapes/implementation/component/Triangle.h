@@ -17,6 +17,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 
 #include "Polygon.h"
 
@@ -123,7 +124,7 @@ namespace cupcfd
 					 * @return Normal vector
 					 */
 					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,N> computeNormal();
+					virtual euc::EuclideanVector3D<T> computeNormal() = 0;
 
 			};
 		}

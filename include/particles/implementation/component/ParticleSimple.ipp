@@ -217,7 +217,7 @@ namespace cupcfd
 			
 			// (1) Get the face and normalise it
 			// Get Normal
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> normal = mesh.getFaceNorm(faceLocalID);
+			cupcfd::geometry::euclidean::EuclideanVector3D<T> normal = mesh.getFaceNorm(faceLocalID);
 			
 			// Check which direction it is facing
 			I cell1ID = mesh.getFaceCell1ID(faceLocalID);

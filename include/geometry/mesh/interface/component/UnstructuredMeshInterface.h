@@ -36,6 +36,7 @@
 #include "Communicator.h"
 #include "DistributedAdjacencyList.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "EuclideanPoint.h"
 #include "MeshSource.h"
 #include "Polyhedron.h"
@@ -652,7 +653,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					void getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm);
+					void getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm);
 
 					/**
 					 * Get the stored face normal vector. This will point from cell 1 towards cell 2.
@@ -665,7 +666,7 @@ namespace cupcfd
 					 * @return The stored face normal vector
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> getFaceNorm(I faceID);
+					cupcfd::geometry::euclidean::EuclideanVector3D<T> getFaceNorm(I faceID);
 
 					/**
 					 * Get the local mesh ID of one of the face vertexes.
@@ -958,7 +959,7 @@ namespace cupcfd
 					 * @return An error status indicating the success or failure of the operation
 					 * @retval cupcfd::error::E_SUCCESS Success
 					 */
-					void setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm);
+					void setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm);
 
 					/**
 					 * Set the vertex of one of the associated face vertices
@@ -1098,7 +1099,7 @@ namespace cupcfd
 								L cell2OrBoundaryLabel,
 								bool isBoundary,
 								T lambda,
-								cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm,
+								cupcfd::geometry::euclidean::EuclideanVector3D<T>& norm,
 								L * vertexLabels, I nVertexLabels,
 								cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
 								cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac,
