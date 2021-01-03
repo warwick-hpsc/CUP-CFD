@@ -13,13 +13,16 @@
 #ifndef CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR3D_IPP_H
 #define CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR3D_IPP_H
 
-#include <iostream>
 #include "ArithmeticKernels.h"
+#include "Matrix.h"
+
+#include <iostream>
 #include <cmath>
 
 // ToDo: Need to check for dangers of division by 0....
 
 namespace arth = cupcfd::utility::arithmetic::kernels;
+namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
 {
@@ -518,6 +521,52 @@ namespace cupcfd
 				
 				// All checks passed
 				return true;
+			}
+
+			template <class T>
+			static Matrix<T,3,3> calculateRotationMatrix(
+								const EuclideanVector3D<T>& source, 
+								const EuclideanVector3D<T>& target) {
+				EuclideanVector3D<T> v1(source);
+				v1.normalise();
+
+				EuclideanVector3D<T> v2(target);
+				v2.normalise();
+
+				T cosine = v1.dotProduct(v2);
+				euc::EuclideanVector3D<T> axis;
+				T sine;
+				if (cosine == T(-1) || cosine == T(1)) {
+					// Cross Product will fail to find a rotation axis, because there
+					// are an infinite number. Fortunately can handle this edge case, 
+					// just use any perpendicular vector as axis:
+					v2.cmp[0] = v1.cmp[1];
+					v2.cmp[1] = v1.cmp[2];
+					v2.cmp[2] = v1.cmp[0];
+					axis = v1.crossProduct(v2);
+					axis.normalise();
+					sine = T(0);
+				} else {
+					axis = v1.crossProduct(v2);
+					sine = axis.length();
+				}
+				T oneMinusCosine = T(1) - cosine;
+
+				Matrix<T,3,3> m;
+				T x = axis.cmp[0];
+				T y = axis.cmp[1];
+				T z = axis.cmp[2];
+				m.mat[0][0] = x*x*oneMinusCosine + cosine;
+				m.mat[0][1] = y*x*oneMinusCosine - sine*z;
+				m.mat[0][2] = z*x*oneMinusCosine + sine*y;
+				m.mat[1][0] = x*y*oneMinusCosine + sine*z;
+				m.mat[1][1] = y*y*oneMinusCosine + cosine;
+				m.mat[1][2] = z*y*oneMinusCosine - sine*x;
+				m.mat[2][0] = x*z*oneMinusCosine - sine*y;
+				m.mat[2][1] = y*z*oneMinusCosine + sine*x;
+				m.mat[2][2] = z*z*oneMinusCosine + cosine;
+
+				return m;
 			}
 		}
 	}

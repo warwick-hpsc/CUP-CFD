@@ -16,6 +16,7 @@
 #include "Error.h"
 #include "MPIUtility.h"
 #include "EuclideanPoint.h"
+#include "Matrix.h"
 
 namespace cupcfd
 {
@@ -138,8 +139,12 @@ namespace cupcfd
 			template <class T>
 			__attribute__((warn_unused_result))
 			bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-									  const EuclideanPoint<T,3>& p);
+								const EuclideanPoint<T,3>& p);
 
+			template <class T, unsigned int N>
+			static Matrix<T,N,N> calculateRotationMatrix(
+								const EuclideanVector3D<T>& source, 
+								const EuclideanVector3D<T>& target);
 
 		} // namespace euclidean
 	} // namespace geometry

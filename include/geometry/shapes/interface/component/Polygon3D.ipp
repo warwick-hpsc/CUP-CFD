@@ -16,6 +16,7 @@
 
 #include "EuclideanPlane3D.h"
 #include "Triangle3D.h"
+#include "Matrix.h"
 
 namespace cupcfd
 {
@@ -160,63 +161,54 @@ namespace cupcfd
 				// normal becomes Z-axis, then only working in 2D and will 
 				// definitely find intersection point (unless parallel)
 
-				// Gather the calculation inputs:
-				euc::EuclideanPoint<T,3> centroid = this->computeCentroid();
-				euc::EuclideanVector3D<T> normal = this->computeNormal();
+				// Operate on copy of vertices:
+				euc::EuclideanPoint<T,3> vertices[V];
+				for (int i=0; i<V; i++) {
+					vertices[i] = this->vertices[i];
+				}
+
+				// Calculate rotation matrix:
+				euc::EuclideanVector3D<T> normal = euc::EuclideanPlane3D<T>::calculateNormal(vertices[0], vertices[1], vertices[2]);
 				normal.normalise();
 				euc::EuclideanVector3D<T> zAxis(T(0), T(0), T(1));
+				euc::Matrix<T,3,3> rotMatrix2;
+				rotMatrix2 = euc::calculateRotationMatrix(normal, zAxis);
 
-				// Begin:
-				euc::EuclideanVector3D<T> axis = normal.crossProduct(zAxis);
-				T cosine = normal.dotProduct(zAxis);
-				T sine = axis.length();
-				axis.normalise();
-				T oneMinusCosine = T(1) - cosine;
-				if (cosine != T(0) || sine != T(0)) {
-					// Construct rotation matrix
-					// https://en.wikipedia.org/wiki/Transformation_matrix#Rotation_2
-					T rotMatrix[3][3];
-					T x = zAxis.cmp[0];
-					T y = zAxis.cmp[1];
-					T z = zAxis.cmp[2];
-					rotMatrix[0][0] = x*x*oneMinusCosine + cosine;
-					rotMatrix[0][1] = y*x*oneMinusCosine - sine*z;
-					rotMatrix[0][2] = z*x*oneMinusCosine + sine*y;
+				// Apply rotation:
+				for (int i=0; i<V; i++) {
+					vertices[i] = rotMatrix2 * this->vertices[i];
+				}
+				euc::EuclideanVector3D<T> normalRotated = rotMatrix2 * normal;
 
-					rotMatrix[1][0] = x*y*oneMinusCosine + sine*z;
-					rotMatrix[1][1] = y*y*oneMinusCosine + cosine;
-					rotMatrix[1][2] = z*y*oneMinusCosine - sine*x;
+				// Verify that rotation aligned polygon normal with Z-axis:
+				euc::EuclideanVector3D<T> normalActual = euc::EuclideanPlane3D<T>::calculateNormal(vertices[0], vertices[1], vertices[2]);
+				normalActual.normalise();
+				T cosine = zAxis.dotProduct(normalActual);
+				if (cosine < T(0.999)) {
+					// Ideally 'cosine' should be 1.0 exactly, but allow 
+					// a tiny tolerance for floating-point.
+					printf("Polygon rotation failed to align its normal with Z-axis\n");
 
-					rotMatrix[2][0] = x*z*oneMinusCosine - sine*y;
-					rotMatrix[2][1] = y*z*oneMinusCosine + sine*x;
-					rotMatrix[2][2] = z*z*oneMinusCosine + cosine;
-
-					euc::EuclideanVector3D<T> normalRot(T(0));
-					normalRot.cmp[0] = rotMatrix[0][0]*x + rotMatrix[0][1]*y + rotMatrix[0][2]*z;
-					normalRot.cmp[1] = rotMatrix[1][0]*x + rotMatrix[1][1]*y + rotMatrix[1][2]*z;
-					normalRot.cmp[2] = rotMatrix[2][0]*x + rotMatrix[2][1]*y + rotMatrix[2][2]*z;
-
-					if (!(normalRot == zAxis)) {
-						printf("Vector: ");
-						normal.print(); std::cout << std::endl;
-						printf("Target: ");
-						zAxis.print(); std::cout << std::endl;
-						printf("Axis:");
-						axis.print(); std::cout << std::endl;
-						printf("cosine: %.2f\n", cosine);
-						printf("sine: %.2f\n", sine);
-
-						printf("rotMatrix:\n");
-						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[0][0], rotMatrix[0][1], rotMatrix[0][2]);
-						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[1][0], rotMatrix[1][1], rotMatrix[1][2]);
-						printf("| %.2f  %.2f  %.2f |\n", rotMatrix[2][0], rotMatrix[2][1], rotMatrix[2][2]);
-						printf("\n");
-
-						printf("Vector rotated: ");
-						normalRot.print(); std::cout << std::endl;
-
-						HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
+					printf("Polygon vertices before:\n");
+					for (int i=0; i<V; i++) {
+						printf("V %d: [ %.2f %.2f %.2f ]\n", i, this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
 					}
+					
+					printf("Polygon vertices after:\n");
+					for (int i=0; i<V; i++) {
+						printf("V %d: [ %.2f %.2f %.2f ]\n", i, vertices[i].cmp[0], vertices[i].cmp[1], vertices[i].cmp[2]);
+					}
+					printf("Normal after: ");
+					normalActual.print(); std::cout << std::endl;
+					printf("Normal rotated (should match above): ");
+					normalRotated.print(); std::cout << std::endl;
+
+					printf("Rotation matrix: \n");
+					rotMatrix2.print(); std::cout << std::endl;
+
+					printf("\n");
+
+					HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
 				}
 				return true;
 			}
