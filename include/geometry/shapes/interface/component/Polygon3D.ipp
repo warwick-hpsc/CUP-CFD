@@ -15,6 +15,7 @@
 #define CUPCFD_GEOMETRY_SHAPES_POLYGON3D_3D_IPP_H
 
 #include "EuclideanPlane3D.h"
+#include "EuclideanVector2D.h"
 #include "Triangle3D.h"
 #include "Matrix.h"
 
@@ -38,7 +39,6 @@ namespace cupcfd
 					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
 				}
 
-				// ToDo: Verify that no edges intersect
 				if (!this->verifyNoEdgesIntersect()) {
 					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
 				}
@@ -46,28 +46,6 @@ namespace cupcfd
 			
 			template <class P, class T, uint V>
 			Polygon3D<P,T,V>::~Polygon3D() {
-			}
-			
-			// template <class P, class T, uint V>
-			// bool Polygon3D<P,T,V>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
-			// 	return static_cast<P*>(this)->isPointInside(point);
-			// }
-
-			template <class P, class T, uint V>
-			bool Polygon3D<P,T,V>::coplanar() {
-				// Calculate plane normal from first three vertices:
-				// euc::EuclideanVector<T,3> normal = euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-				euc::EuclideanVector3D<T> normal = this->computeNormal();
-				// Check if any other vertex is NOT coplanar:
-				for (int i=3; i<V; i++){
-					euc::EuclideanVector3D<T> v = this->vertices[i] - this->vertices[0];
-					T dp = v.dotProduct(normal);
-					if (dp != T(0)) {
-						printf("NOT COPLANAR! (dp = %.2e)\n", dp);
-						return false;
-					}
-				}
-				return true;
 			}
 			
 			template <class P, class T, uint V>
@@ -83,13 +61,16 @@ namespace cupcfd
 			}
 			
 			template <class P, class T, uint V>
-			inline cupcfd::geometry::euclidean::EuclideanVector3D<T> Polygon3D<P,T,V>::computeNormal() {
-				// return static_cast<P*>(this)->computeNormal();
-				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			T Polygon3D<P,T,V>::getArea() {
+				if (!this->areaComputed) {
+					this->area = this->computeArea();
+					this->areaComputed = true;
+				}
+				return this->area;
 			}
 
 			template <class P, class T, uint V>
-			inline euc::EuclideanPoint<T,3> Polygon3D<P,T,V>::computeCentroid() {
+			euc::EuclideanPoint<T,3> Polygon3D<P,T,V>::computeCentroid() {
 				// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 				// Necessary assumption: the vertices forming this 3D polygon are co-planar.
 				// Entering this process without knowing what plane the polygon lies on, so 
@@ -152,6 +133,84 @@ namespace cupcfd
 				return centroid;
 			}
 
+			template <class P, class T, uint V>
+			euc::EuclideanPoint<T,3> Polygon3D<P,T,V>::getCentroid() {
+				if (!this->centroidComputed) {
+					this->centroid = this->computeCentroid();
+					this->centroidComputed = true;
+				}
+				return this->centroid;
+			}
+
+			template <class P, class T, uint V>
+			cupcfd::geometry::euclidean::EuclideanVector3D<T> Polygon3D<P,T,V>::computeNormal() {
+				return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+			}
+
+			template <class P, class T, uint V>
+			cupcfd::geometry::euclidean::EuclideanVector<T,3> Polygon3D<P,T,V>::getNormal() {
+				if (!this->normalComputed) {
+					this->normal = this->computeNormal();
+					this->normalComputed = true;
+				}
+				return this->normal;
+			}
+
+			template <class P, class T, uint V>
+			bool Polygon3D<P,T,V>::isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p) {
+				// Does the point lie on the same plane as the Quadrilateral Points?
+				euc::EuclideanPlane3D<T> plane(this->vertices[0], this->vertices[1], this->vertices[2]);
+				
+				if(!(plane.isPointOnPlane(p))) {
+					return false;
+				}
+				
+				// Does the point equal one of the points - if so it counts as inside
+				for (int i=0; i<V; i++) {
+					if (p == this->vertices[i]) {
+						return true;
+					}
+				}
+				
+				// If the point lies on one of the edges it counts as inside
+				for (int i2=1; i2<V; i2++) {
+					const int i1 = i2-1;
+					if (isPointOnLine(this->vertices[i1], this->vertices[i2], p)) {
+						return true;
+					}
+				}
+				
+				// Compute the centroid
+				euc::EuclideanPoint<T,3> centroid = this->computeCentroid();
+				
+				// Test the intersection of the ray ranging from the point to the centroid. 
+				// If it intersects any of the edges, then the point p lies on the opposite side
+				// of an edge to the centroid, and so must be outside
+				for (int i2=1; i2<V; i2++) {
+					const int i1 = i2-1;
+					if (euc::isVectorRangeIntersection(p, centroid, this->vertices[i1], this->vertices[i2])) {
+						return false;
+					}
+				}
+				return true;
+			}
+
+			template <class P, class T, uint V>
+			bool Polygon3D<P,T,V>::coplanar() {
+				// Calculate plane normal from first three vertices:
+				euc::EuclideanVector3D<T> normal = this->computeNormal();
+				// Check if any other vertex is NOT coplanar:
+				for (int i=3; i<V; i++){
+					euc::EuclideanVector3D<T> v = this->vertices[i] - this->vertices[0];
+					T dp = v.dotProduct(normal);
+					if (dp != T(0)) {
+						printf("NOT COPLANAR! (dp = %.2e)\n", dp);
+						return false;
+					}
+				}
+				return true;
+			}
+			
 			// Probably an actual geometric term for 'polygon edges do not intersect':
 			// template <class S, class T, uint N, uint V>
 			template <class P, class T, uint V>
@@ -210,25 +269,44 @@ namespace cupcfd
 
 					HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
 				}
+
+				// Now have polygon rotated into 2D X-Y plane, scan for any 
+				// crossing edges. 
+				// Permute through all possible pairs of edges - maybe there is a better 
+				// way to scan, but this check is only performed once.
+				for (uint e1=1; e1<V; e1++) {
+					euc::EuclideanPoint<T,2> e1a(vertices[e1-1].cmp[0], vertices[e1-1].cmp[1]);
+					euc::EuclideanPoint<T,2> e1b(vertices[e1  ].cmp[0], vertices[e1  ].cmp[1]);
+
+					// Don't test connected edges:
+					for (uint e2=e1+2; e2<V; e2++) {
+						euc::EuclideanPoint<T,2> e2a(vertices[e2-1].cmp[0], vertices[e2-1].cmp[1]);
+						euc::EuclideanPoint<T,2> e2b(vertices[e2  ].cmp[0], vertices[e2  ].cmp[1]);
+
+						euc::EuclideanPoint<T,2> intersectPoint(T(0.0), T(0.0));
+						cupcfd::error::eCodes status = euc::computeVectorRangeIntersection(e1a, e1b, e2a, e2b, intersectPoint);
+						if (status == cupcfd::error::E_SUCCESS) {
+							printf("Intersection detected!\n");
+
+							printf("Polygon vertices:\n");
+							for (int i=0; i<V; i++) {
+								printf("V %d: [ %.2f %.2f %.2f ]\n", i, vertices[i].cmp[0], vertices[i].cmp[1], vertices[i].cmp[2]);
+							}
+
+							printf("Edges:\n");
+							e1a.print(); printf(" --> "); e1b.print(); printf("\n");
+							e2a.print(); printf(" --> "); e2b.print(); printf("\n");
+
+							printf("Intersection point:\n");
+							intersectPoint.print();
+
+							return false;
+						}
+					}
+				}
+
 				return true;
 			}
-			
-			// template <class T>
-			// inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints) {
-			// 	// (Typo is intentional)
-			// 	//https://math.stackexchange.com/questions/3207981/caculate-area-of-polygon-in-3d
-				
-			// 	cupcfd::geometry::euclidean::EuclideanVector<T,3> partialVector(T(0),T(0),T(0));
-				
-			// 	for(int i = 1; i < (nPoints-1); i++) {
-			// 		partialVector += (0.5 * cupcfd::geometry::euclidean::crossProduct(points[i] - points[0], points[i+1] - points[0]));	
-			// 	}
-				
-			// 	// Compute norm/length - this will also ignore any direction (magnitude only)
-			// 	T length;
-			// 	partialVector.length(&length);
-			// 	return length;
-			// }
 			
 			template <class T>
 			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints) {

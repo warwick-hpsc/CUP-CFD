@@ -33,12 +33,12 @@ namespace cupcfd
 			{
 				/*
 				// Flip either face if its normal points inwards:
-				T dp = this->top.computeNormal().dotProduct(this->top.computeCentroid() - this->bottom.computeCentroid());
+				T dp = this->top.getNormal().dotProduct(this->top.getCentroid() - this->bottom.getCentroid());
 				// T dp = this->top.normal.dotProduct(this->top.centroid - this->bottom.centroid);
 				if (dp < T(0.0)) {
 					this->top.reverseVertexOrdering();
 				}
-				dp = this->bottom.computeNormal().dotProduct(this->bottom.computeCentroid() - this->top.computeCentroid());
+				dp = this->bottom.getNormal().dotProduct(this->bottom.getCentroid() - this->top.getCentroid());
 				// dp = this->bottom.normal.dotProduct(this->bottom.centroid - this->top.centroid);
 				if (dp < T(0.0)) {
 					this->bottom.reverseVertexOrdering();
@@ -143,13 +143,13 @@ namespace cupcfd
 				// T volume = (this->verticesStore[0].cmp[2] - this->verticesStore[3].cmp[2]) * base.computeArea(); 
 				// T volume = (this->verticesStore[0].cmp[2] - this->verticesStore[3].cmp[2]) * base.area;
 				// T height = this->top.vertices[0].cmp[2] - this->bottom.vertices[0].cmp[2];
-				T height = (this->top.computeCentroid() - this->bottom.computeCentroid()).length();
+				T height = (this->top.getCentroid() - this->bottom.getCentroid()).length();
 				// T height = (this->top.centroid - this->bottom.centroid).length();
 				// if(height < T(0)) {
 				// 	height *= T(-1);
 				// }
 
-				T volume = height * this->bottom.computeArea();
+				T volume = height * this->bottom.getArea();
 				// T volume = height * this->bottom.area;
 
 				// if(volume < 0) {

@@ -62,18 +62,6 @@ namespace cupcfd
 					// === Concrete Methods ===
 
 					/**
-					 * Determine whether a point lies within the three points of the triangle.
-					 * Triangle edges/vertices are treated as inside the triangle for this purpose.
-					 *
-					 * Points that do not lie on the same plane as the triangle will not be treated as
-					 * inside, even if directly above or below.
-					 *
-					 * @return True if the point lies inside the triangle vertices
-					 */
-					__attribute__((warn_unused_result))
-					bool isPointInside(const euc::EuclideanPoint<T,3>& p);
-
-					/**
 					 * Calculate intersection of a moving point with this triangle: intersection point, 
 					 * time to intersect, and whether it intersects the edge.
 					 *
@@ -102,23 +90,7 @@ namespace cupcfd
 					 *
 					 * @return Return the computed area of the Triangle.
 					 */
-					// T computeArea();
-
-					/**
-					 * Compute the normal of the triangle.
-					 *
-					 * If the dimensionality is 2, then this is treated as a 3D polygon with a z component of 0.
-					 *
-					 * @return Return the computed normal vector of the triangle.
-					 */
-					euc::EuclideanVector3D<T> computeNormal();
-
-					/**
-					 * Compute the center of three points that make up this triangle
-					 *
-					 * @return The point at the center of the three points
-					 */
-					// inline euc::EuclideanPoint<T,3> computeCentroid();
+					T computeArea();
 			};
 		}
 	}

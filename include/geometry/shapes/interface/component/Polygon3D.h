@@ -63,8 +63,8 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this polygon
 					 */
-					// __attribute__((warn_unused_result))
-					// inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					__attribute__((warn_unused_result))
+					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 
 					// inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
 					// 									const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
@@ -72,22 +72,21 @@ namespace cupcfd
 					// 									T& timeToIntersect, 
 					// 									bool verbose);
 
-					/**
-					 * Determine whether the provided point is inside the polygon.
-					 * Edges/Vertices are treated as inside the polygon for this purposes.
-					 *
-					 * This method uses a ray casting technique to test whether the point is inside the polygon.
-					 *
-					 * @return Return whether the point exists inside this polygon
-					 * @retval true The point is inside the polygon
-					 * @retval false The point is outside the polygon
-					 */
-					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
+					__attribute__((warn_unused_result))
+					T getArea();
 
-				// private:
-					bool coplanar();
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,3> getCentroid();
 
-					bool verifyNoEdgesIntersect();
+					__attribute__((warn_unused_result))
+					euc::EuclideanVector<T,3> getNormal();
+
+				protected:
+					// area, centroid, and normal calculations are costly, and not always required, 
+					// so do not compute in a constructor. Instead, compute ONCE in a getter
+					bool areaComputed = false;
+					bool centroidComputed = false;
+					bool normalComputed = false;
 
 					/**
 					 * Compute the area of the polygon
@@ -98,7 +97,6 @@ namespace cupcfd
 					T computeArea();
 
 					__attribute__((warn_unused_result))
-					// inline euc::EuclideanPoint<T,3> computeCentroid();
 					euc::EuclideanPoint<T,3> computeCentroid();
 
 					/**
@@ -107,26 +105,16 @@ namespace cupcfd
 					 * @return Return the computed normal vector of the polygon.
 					 */
 					__attribute__((warn_unused_result))
-					// inline cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
 					cupcfd::geometry::euclidean::EuclideanVector3D<T> computeNormal();
+
+					bool coplanar();
+
+					bool verifyNoEdgesIntersect();
+
 			};
 
 			// === Non-Class, but Generic Methods ===
 			// Not included as static to avoid need for setting template P (and generating an entire template)
-
-			/**
-			 * Compute the unsigned area of a polygon in 3D
-			 *
-			 * @param points An array of the vertices/points to compute the area for. These should be in order
-			 * of connecting edges - i.e. points[0] connects to point 1, 1 to 2 etc till n-1 connects to 0.
-			 * They should also be coplanar.
-			 * @param nPoints Number of points in points
-			 *
-			 * @return The area.
-			 */
-			// template <class T>
-			// inline T computeArea(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int numPoints);
-
 
 			/**
 			 * Compute the direction of the vertices ordering from the observation point.

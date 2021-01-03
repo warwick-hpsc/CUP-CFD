@@ -33,7 +33,7 @@ namespace cupcfd
 			 *
 			 * @tparam S The polygon specialisation
 			 * @tparam T Numerical type
-			 * @tparam N Spatial dimension
+			 * @tparam N Number of spatial dimensions
 			 * @tparam V Number of vertices
 			 */
 			template <class S, class T, uint N, uint V>
@@ -41,14 +41,8 @@ namespace cupcfd
 			{
 				public:
 					// === Members ===
-
 					const int numVertices = V;
 					euc::EuclideanPoint<T,N> vertices[V];
-					T area;
-					euc::EuclideanPoint<T,N> centroid;
-					euc::EuclideanVector<T,N> normal;
-					
-					// bool initialised = false;
 
 					// === Constructors/Deconstructors ===
 
@@ -68,14 +62,10 @@ namespace cupcfd
 					 */
 					inline void operator=(const Polygon<S,T,N,V>& source);
 
-					// cupcfd::error::eCodes initialise();
-
 					/**
 					 * Reverse vertex ordering, and flip normal
 					 */
-					// void reverseVertexOrdering();
-
-					// ToDo: replace pure-virtual methods below with CRTP calls using static_cast
+					void reverseVertexOrdering();
 
 					/**
 					 * Determine whether the provided point is inside the Polygon.
@@ -84,56 +74,21 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this Polygon
 					 */
 					__attribute__((warn_unused_result))
-					virtual bool isPointInside(const euc::EuclideanPoint<T,N>& point) = 0;
+					bool isPointInside(const euc::EuclideanPoint<T,N>& point);
 
-					/**
-					 * Determine whether the provided point is inside the Polygon.
-					 * Edges/Vertices are treated as inside the Polygon for this purposes.
-					 *
-					 * This method uses a ray casting technique to test whether the point is inside the Polygon.
-					 *
-					 * @return Return whether the point exists inside this Polygon
-					 * @retval true The point is inside the Polygon
-					 * @retval false The point is outside the Polygon
-					 */
-					//bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
-
-					// __attribute__((warn_unused_result))
-					// // bool coplanar();
-					// virtual bool coplanar() = 0;
-
-					// __attribute__((warn_unused_result))
-					// // bool verifyNoEdgesIntersect();
-					// virtual bool verifyNoEdgesIntersect() = 0;
-
-				// protected:
-					/**
-					 * Compute the area of the Polygon
-					 *
-					 * @return Return the computed area of the Polygon.
-					 */
 					__attribute__((warn_unused_result))
-					T computeArea();
+					T getArea();
 
-					/**
-					 * Compute the centre point of triangle
-					 *
-					 * @return Centroid point
-					 */
-					// __attribute__((warn_unused_result))
-					// virtual euc::EuclideanPoint<T,N> computeCentroid() = 0;
-					// virtual euc::EuclideanPoint<T,N> computeCentroid();
-					// euc::EuclideanPoint<T,N> computeCentroid();
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,N> getCentroid();
 
-					/**
-					 * Compute the normal of triangle
-					 *
-					 * @return Normal vector
-					 */
-					// __attribute__((warn_unused_result))
-					// virtual euc::EuclideanVector<T,N> computeNormal() = 0;
-					// virtual euc::EuclideanVector<T,N> computeNormal();
+					__attribute__((warn_unused_result))
+					euc::EuclideanVector<T,N> getNormal();
 
+				protected:
+					T area;
+					euc::EuclideanPoint<T,N> centroid;
+					euc::EuclideanVector<T,N> normal;
 			};
 
 		}

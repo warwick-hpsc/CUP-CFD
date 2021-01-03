@@ -55,48 +55,37 @@ namespace cupcfd
 				this->centroid = source.centroid;
 			}
 			
-			// template <class S, class T, uint N, uint V>
-			// inline int Polygon<S,T,N,V>::getNumVertices() {
-			// 	return this->numVertices;
-			// }
-			
-			// template <class S, class T, uint N, uint V>
-			// inline int Polygon<S,T,N,V>::getNumEdges() {
-			// 	return this->numEdges;
-			// }
-			
-			// template <class S, class T, uint N, uint V>
-			// void Polygon<S,T,N,V>::reverseVertexOrdering() {
-			// 	euc::EuclideanPoint<T,N> v2[V];
-			// 	for (uint i=0; i<V; i++) {
-			// 		uint i2 = (V-1)-i;
-			// 		v2[i2] = this->vertices[i];
-			// 	}
-			// 	for (uint i=0; i<V; i++) {
-			// 		this->vertices[i] = v2[i];
-			// 	}
-			// 	// this->normal *= T(-1);
-			// }
-			
-			// template <class S, class T, uint N, uint V>
-			// bool Polygon<S,T,N,V>::isPointInside(euc::EuclideanPoint<T,N>& point) {
-			// 	return static_cast<S*>(this)->isPointInside(point);
-			// }
-
-			// template <class S, class T, uint N, uint V>
-			// euc::EuclideanPoint<T,N> Polygon<S,T,N,V>::computeCentroid() {
-			// 	return static_cast<S*>(this)->computeCentroid();
-			// }
-
-			// template <class S, class T, uint N, uint V>
-			// euc::EuclideanVector<T,N> Polygon<S,T,N,V>::computeNormal() {
-			// 	// Pass through to the static method
-			// 	return euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			// }
+			template <class S, class T, uint N, uint V>
+			void Polygon<S,T,N,V>::reverseVertexOrdering() {
+				euc::EuclideanPoint<T,N> v2[V];
+				for (uint i=0; i<V; i++) {
+					uint i2 = (V-1)-i;
+					v2[i2] = this->vertices[i];
+				}
+				for (uint i=0; i<V; i++) {
+					this->vertices[i] = v2[i];
+				}
+				this->normal *= T(-1);
+			}
 			
 			template <class S, class T, uint N, uint V>
-			T Polygon<S,T,N,V>::computeArea() {
-				return static_cast<S*>(this)->computeArea();
+			bool Polygon<S,T,N,V>::isPointInside(const euc::EuclideanPoint<T,N>& point) {
+				return static_cast<S*>(this)->isPointInside(point);
+			}
+
+			template <class S, class T, uint N, uint V>
+			euc::EuclideanPoint<T,N> Polygon<S,T,N,V>::getCentroid() {
+				return static_cast<S*>(this)->getCentroid();
+			}
+			
+			template <class S, class T, uint N, uint V>
+			T Polygon<S,T,N,V>::getArea() {
+				return static_cast<S*>(this)->getArea();
+			}
+			
+			template <class S, class T, uint N, uint V>
+			euc::EuclideanVector<T,N> Polygon<S,T,N,V>::getNormal() {
+				return static_cast<S*>(this)->getNormal();
 			}
 		}
 	}

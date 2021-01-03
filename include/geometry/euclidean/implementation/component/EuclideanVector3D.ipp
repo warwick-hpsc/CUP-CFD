@@ -7,7 +7,7 @@
  *
  * @section DESCRIPTION
  *
- * Contains the header level definitions for the EuclideanVector class.
+ * Contains the header level definitions for the EuclideanVector3D class.
  */
 
 #ifndef CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR3D_IPP_H

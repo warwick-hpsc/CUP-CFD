@@ -7,16 +7,15 @@
  *
  * @section DESCRIPTION
  *
- * Contains the declarations for the EuclideanVector3D class.
+ * Contains the declarations for the EuclideanVector2D class.
  */
 
-#ifndef CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR3D_INCLUDE_H
-#define CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR3D_INCLUDE_H
+#ifndef CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR2D_INCLUDE_H
+#define CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR2D_INCLUDE_H
 
 #include "Error.h"
 #include "MPIUtility.h"
 #include "EuclideanPoint.h"
-#include "Matrix.h"
 
 namespace cupcfd
 {
@@ -30,54 +29,16 @@ namespace cupcfd
 			 * This classes is also suitable for parallel communication via
 			 * the MPI interfaces.
 			 *
-			 * @tparam T The data type of the coordinate system
+			 * @tparam T Numerical type
 			 */
 			template <class T>
-			class EuclideanVector3D : public EuclideanVector<T,3>
+			class EuclideanVector2D : public EuclideanVector<T,2>
 			{
 				public:
-					EuclideanVector3D();
-					EuclideanVector3D(T a, T b, T c);
-					EuclideanVector3D(const EuclideanVector<T,3>& v);
-
-					/**
-					 * Compute the vector that is the cross product of this vector and another vector.
-					 * This is currently only defined for 3D Vectors, so is not a class function
-					 *
-					 * @param vec The vector to compute the cross product against
-					 *
-					 * @return The cross-product vector
-					 */
-					__attribute__((warn_unused_result))
-					EuclideanVector3D<T> crossProduct(const EuclideanVector3D<T>& vec);
-
-					/**
-					 * Rotate vector by specified radians about the X axis.
-					 *
-					 * @param radian The number of radians to rotate.
-					 */
-					void rotateXAxisRadian(T radian);
-
-					/**
-					 * Rotate vector by specified radians about the Y axis.
-					 *
-					 * @param radian The number of radians to rotate.
-					 */
-					void rotateYAxisRadian(T radian);
-
-					/**
-					 * Rotate vector by specified radians about the Z axis
-					 *
-					 * @param radian The number of radians to rotate.
-					 */
-					void rotateZAxisRadian(T radian);
-
+					EuclideanVector2D();
+					EuclideanVector2D(T a, T b);
+					EuclideanVector2D(const EuclideanVector<T,2>& v);
 			};
-
-
-			template <class T>
-			__attribute__((warn_unused_result))
-			EuclideanVector3D<T> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2);
 
 			/**
 			 * Compute whether two vectors intersect with one another between the provided points in 3D space.
@@ -98,8 +59,8 @@ namespace cupcfd
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			bool isVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-											const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4);
+			bool isVectorRangeIntersection(const EuclideanPoint<T,2>& p1, const EuclideanPoint<T,2>& p2,
+											const EuclideanPoint<T,2>& p3, const EuclideanPoint<T,2>& p4);
 	
 			/**
 			 * Compute the intersect of two lines defined by a range in 3D space, if it exists
@@ -123,9 +84,9 @@ namespace cupcfd
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2, 
-																		const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4, 
-																		EuclideanPoint<T,3>& intersectPoint);
+			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,2>& p1, const EuclideanPoint<T,2>& p2, 
+																		const EuclideanPoint<T,2>& p3, const EuclideanPoint<T,2>& p4, 
+																		EuclideanPoint<T,2>& intersectPoint);
 
 			/**
 			 * Test whether a point lies on a 3D line delinated by two other points
@@ -134,17 +95,12 @@ namespace cupcfd
 			 * @param x2 The second point of the line
 			 * @param p The point to test the position of
 			 *
-			 * @return Return true if the vectors intersect
+			 * @return Return true if point is on line
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-								const EuclideanPoint<T,3>& p);
-
-			template <class T, unsigned int N>
-			static Matrix<T,N,N> calculateRotationMatrix(
-								const EuclideanVector3D<T>& source, 
-								const EuclideanVector3D<T>& target);
+			bool isPointOnLine(const EuclideanPoint<T,2>& x1, const EuclideanPoint<T,2>& x2,
+								const EuclideanPoint<T,2>& p);
 
 		} // namespace euclidean
 	} // namespace geometry
@@ -152,7 +108,7 @@ namespace cupcfd
 
 // Include Header Level Definitions
 // ToDo: Would like to move friend functions into this file if the compiler errors are fixed.
-#include "EuclideanVector3D.ipp"
+#include "EuclideanVector2D.ipp"
 
 
 #endif

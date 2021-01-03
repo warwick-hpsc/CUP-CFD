@@ -862,14 +862,11 @@ namespace cupcfd
 
 				// Compute the area
 				for(I i = 0; i < nFaceLabels; i++) {
-					// faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[i],
-					// 																				vertexPos[i+1],
-					// 																				vertexPos[i+2],
-					// 																				vertexPos[i+3]);
-					faceArea[i] = cupcfd::geometry::shapes::Quadrilateral3D<T>::triangularAreaSum(vertexPos[(i*4)],
-																									vertexPos[(i*4)+1],
-																									vertexPos[(i*4)+2],
-																									vertexPos[(i*4)+3]);
+					cupcfd::geometry::shapes::Quadrilateral3D<T> quad(vertexPos[(i*4)],
+																	vertexPos[(i*4)+1],
+																	vertexPos[(i*4)+2],
+																	vertexPos[(i*4)+3]);
+					faceArea[i] = quad.getArea();
 				}
 
 				free(csrIndices);
@@ -962,7 +959,7 @@ namespace cupcfd
 				for(I i = 0; i < nFaceLabels; i++) {
 					// cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[i], vertexPos[i]+1, vertexPos[i]+2, vertexPos[i]+3);
 					cupcfd::geometry::shapes::Quadrilateral3D<T> shape(vertexPos[(i*4)], vertexPos[(i*4)+1], vertexPos[(i*4)+2], vertexPos[(i*4)+3]);
-					faceCenter[i] = shape.computeCentroid();
+					faceCenter[i] = shape.getCentroid();
 				}
 
 				free(csrIndices);

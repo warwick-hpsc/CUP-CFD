@@ -41,48 +41,10 @@ namespace cupcfd
 				this->vertices[0] = a;
 				this->vertices[1] = b;
 				this->vertices[2] = c;
-
-				// this->area = Triangle<S,T,N>::heronsFormula(a,b,c);
-				// this->centroid = (a+b+c)/T(3);
-				// this->normal = euc::EuclideanPlane3D<T>::calculateNormal(a, b, c);
-			}
-
-			template <class S, class T, uint N>
-			Triangle<S,T,N>::Triangle(const Triangle<S,T,N>& source) {
-				this->vertices[0] = source.vertices[0];
-				this->vertices[1] = source.vertices[1];
-				this->vertices[2] = source.vertices[2];
-
-				// this->area = source.area;
-				// this->centroid = source.centroid;
-				// this->normal = source.normal;
 			}
 
 			template <class S, class T, uint N>
 			Triangle<S,T,N>::~Triangle() {
-			}
-
-			template <class S, class T, uint N>
-			bool Triangle<S,T,N>::isPointInside(const euc::EuclideanPoint<T,N>& point) {
-				return static_cast<S*>(this)->isPointInside(point);
-			}
-		
-			template <class S, class T, uint N>
-			T Triangle<S,T,N>::computeArea() {
-				T area = Triangle<S,T,N>::heronsFormula(*this);
-				if (area == T(0.0)) {
-					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
-				}
-				if (std::isnan(area) || std::isnan(-area)) {
-					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_NAN_AREA)
-				}
-				return area;
-			}
-		
-			template <class S, class T, uint N>
-			euc::EuclideanPoint<T,N> Triangle<S,T,N>::computeCentroid() {
-				// Centroid located at arithmetic mean of vertices
-				return ((this->vertices[0] + this->vertices[1] + this->vertices[2]) / T(3.0));
 			}
 
 			template <class S, class T, uint N>

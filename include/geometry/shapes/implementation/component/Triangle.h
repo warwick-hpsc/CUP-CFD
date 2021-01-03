@@ -52,12 +52,7 @@ namespace cupcfd
 						  	const euc::EuclideanPoint<T,N>& b,
 						    const euc::EuclideanPoint<T,N>& c);
 
-					Triangle(const Triangle<S,T,N>& source);
-
 					~Triangle();
-
-					__attribute__((warn_unused_result))
-					bool isPointInside(const euc::EuclideanPoint<T,N>& p);
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
@@ -98,33 +93,6 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					static T heronsFormula(const Triangle<S,T,N>& tri);
 
-
-				// protected:
-					// No one else should be calling these expensive operations:
-
-					/**
-					 * Compute the area of this triangle
-					 *
-					 * @return Area
-					 */
-					__attribute__((warn_unused_result))
-					T computeArea();
-
-					/**
-					 * Compute the centre point of triangle
-					 *
-					 * @return Centroid point
-					 */
-					__attribute__((warn_unused_result))
-					euc::EuclideanPoint<T,N> computeCentroid();
-
-					/**
-					 * Compute the normal of triangle
-					 *
-					 * @return Normal vector
-					 */
-					__attribute__((warn_unused_result))
-					virtual euc::EuclideanVector3D<T> computeNormal() = 0;
 
 			};
 		}

@@ -111,6 +111,13 @@ namespace cupcfd
 			// 	return true;
 			// }
 
+			// === Concrete Methods ===
+
+			template <class T>
+			T Triangle3D<T>::computeArea() {
+				return Triangle<Triangle3D<T>,T,3>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
+			}
+
 			template <class T>
 			bool Triangle3D<T>::calculateIntersection(const euc::EuclideanPoint<T,3> v0, const euc::EuclideanVector<T,3> velocity, 
 														euc::EuclideanPoint<T,3>& intersection, 
@@ -164,106 +171,6 @@ namespace cupcfd
 
 				return true;
 			}
-			
-			// === Concrete Methods ===
-
-			template <class T>
-			bool Triangle3D<T>::isPointInside(const euc::EuclideanPoint<T,3>& p) {
-				// return isPointInsideCentroid(this->vertices[0], this->vertices[1], this->vertices[2], p);
-
-				// Does the point lie on the same plane as the Triangle Points?
-				euc::EuclideanPoint<T,3> a = this->vertices[0];
-				euc::EuclideanPoint<T,3> b = this->vertices[1];
-				euc::EuclideanPoint<T,3> c = this->vertices[2];
-				cupcfd::geometry::euclidean::EuclideanPlane3D<T> plane(a,b,c);
-				
-				if(!(plane.isPointOnPlane(p))) {
-					return false;
-				}
-				
-				// Does the point equal one of the triangle points - if so it counts as inside
-				if(p == a || p == b || p == c) {
-					return true;
-				}
-				
-				// If the point lies on one of the edges it counts as inside
-				if(isPointOnLine(a, b, p) || isPointOnLine(a, c, p) || isPointOnLine(b, c, p)) {
-				// if(euc::isPointOnLine(a, b, p) || euc::isPointOnLine(a, c, p) || euc::isPointOnLine(b, c, p)) {
-					return true;
-				}
-				
-				// Compute the centroid
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = this->computeCentroid();
-				// cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid = this->centroid;
-				
-				// Test the intersection of the ray ranging from the point to the centroid
-				// if it intersects any of the faces, then the point p lies on the opposite side
-				// of an edge to the centroid, and so must be outside
-				
-				bool abIntersect, acIntersect, bcIntersect;
-				
-				abIntersect = cupcfd::geometry::euclidean::isVectorRangeIntersection(p, centroid, a, b);
-				acIntersect = cupcfd::geometry::euclidean::isVectorRangeIntersection(p, centroid, a, c);
-				bcIntersect = cupcfd::geometry::euclidean::isVectorRangeIntersection(p, centroid, b, c);
-				
-				if(abIntersect || acIntersect || bcIntersect) {
-					// One of the edges was intersected, so must be outside
-					return false;
-				}
-				
-				// No intersections detected
-				return true;
-			}
-			
-			// template <class T>
-			// T Triangle3D<T>::computeAreaV2(Triangle3D<T>& tri) {
-			// 	T area = Triangle<Triangle3D<T>, T,3>::heronsFormula(tri);
-			// 	// T area = Triangle<T,3>::heronsFormula(tri);
-			// 	// T area = T(0);
-			// 	if (area == T(0.0)) {
-			// 		HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
-			// 	}
-			// 	if (std::isnan(area) || std::isnan(-area)) {
-			// 		HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_NAN_AREA)
-			// 	}
-			// 	return area;
-			// }
-			
-			// template <class T>
-			// T Triangle3D<T>::computeArea() {
-			// 	// T area = Triangle<T,3>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
-			// 	// if (area == T(0.0)) {
-			// 	// 	HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
-			// 	// }
-			// 	// if (std::isnan(area) || std::isnan(-area)) {
-			// 	// 	HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_NAN_AREA)
-			// 	// }
-			// 	// return area;
-
-			// 	T area = Triangle3D<T>::computeAreaV2(*this);
-			// 	return area;
-			// }
-
-			template <class T>
-			cupcfd::geometry::euclidean::EuclideanVector3D<T> Triangle3D<T>::computeNormal() {
-				return cupcfd::geometry::euclidean::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
-			}
-			
-			// template <class T>
-			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> Triangle3D<T>::computeCentroid() {
-			// 	// return Triangle3D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
-
-			// 	// ToDo: This could be moved up into a generic polygon method....
-			// 	// https://en.wikipedia.org/wiki/Centroid
-			// 	// https://en.wikipedia.org/wiki/Median_(triangle)
-			
-			// 	// Centroid located at arithmetic mean of three points
-			// 	euc::EuclideanPoint<T,3> a = this->vertices[0];
-			// 	euc::EuclideanPoint<T,3> b = this->vertices[1];
-			// 	euc::EuclideanPoint<T,3> c = this->vertices[2];
-			// 	return ((a + b + c) / T(3.0));
-			// }
-			
 		}
 	}
 }

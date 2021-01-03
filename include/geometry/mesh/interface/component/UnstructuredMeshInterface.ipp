@@ -1023,7 +1023,7 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanVector3D<T> centerFace1 = center - triFaceAPos;
 				
 				cupcfd::geometry::shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
-				cupcfd::geometry::euclidean::EuclideanVector3D<T> normalFace1 = face1.computeNormal();
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> normalFace1 = face1.getNormal();
 				
 				T face1Dot = normalFace1.dotProduct(centerFace1);
 								
