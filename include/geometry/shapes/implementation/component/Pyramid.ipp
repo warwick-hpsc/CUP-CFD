@@ -54,7 +54,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class P, class T>
-			inline bool Pyramid<P,T>::isPointInside(const euc::EuclideanPoint<T,3>& point) {
+			bool Pyramid<P,T>::isPointInside(const euc::EuclideanPoint<T,3>& point) {
 				// ToDo: This algorithm could be moved up to a more general level in Polyhedron.
 				// However, we would need to either (a) find a way to export the vertices (overhead of extra copies)
 				// or (b) store a general vertex member list (such as an array) at the Polyhedron level - however
@@ -154,7 +154,7 @@ namespace cupcfd
 				// === Volume = 1/3 Base Area * Height ===
 				
 				// (1) Compute Area of Base
-				T area = base.computeArea();
+				T area = base.getArea();
 				
 				// Compute Height as shortest distance from base plane
 				euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);

@@ -14,10 +14,11 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_POLYGON_IPP_H
 #define CUPCFD_GEOMETRY_SHAPES_POLYGON_IPP_H
 
-#include "EuclideanPlane3D.h"
 #include "EuclideanVector.h"
+#include "Triangle.h"
 
 namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
 
 namespace cupcfd
 {
@@ -51,8 +52,11 @@ namespace cupcfd
 					this->vertices[i] = source.vertices[i];
 				}
 				this->area     = source.area;
-				this->normal   = source.normal;
 				this->centroid = source.centroid;
+				this->normal   = source.normal;
+				this->areaComputed     = source.areaComputed;
+				this->centroidComputed = source.centroidComputed;
+				this->normalComputed   = source.normalComputed;
 			}
 			
 			template <class S, class T, uint N, uint V>
@@ -69,23 +73,18 @@ namespace cupcfd
 			}
 			
 			template <class S, class T, uint N, uint V>
-			bool Polygon<S,T,N,V>::isPointInside(const euc::EuclideanPoint<T,N>& point) {
+			auto Polygon<S,T,N,V>::isPointInside(const euc::EuclideanPoint<T,N>& point) {
 				return static_cast<S*>(this)->isPointInside(point);
 			}
 
 			template <class S, class T, uint N, uint V>
-			euc::EuclideanPoint<T,N> Polygon<S,T,N,V>::getCentroid() {
-				return static_cast<S*>(this)->getCentroid();
-			}
-			
-			template <class S, class T, uint N, uint V>
-			T Polygon<S,T,N,V>::getArea() {
+			auto Polygon<S,T,N,V>::getArea() {
 				return static_cast<S*>(this)->getArea();
 			}
-			
+
 			template <class S, class T, uint N, uint V>
-			euc::EuclideanVector<T,N> Polygon<S,T,N,V>::getNormal() {
-				return static_cast<S*>(this)->getNormal();
+			auto Polygon<S,T,N,V>::getCentroid() {
+				return static_cast<S*>(this)->getCentroid();
 			}
 		}
 	}

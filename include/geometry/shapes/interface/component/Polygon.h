@@ -29,7 +29,9 @@ namespace cupcfd
 			 * Top level interface for Polygon shapes.
 			 * Declares a set of common operations and/or members.
 			 *
-			 * Uses a CRTP design pattern to minimise/remove virtual overheads
+			 * Uses a CRTP design pattern to minimise/remove virtual overheads.
+			 * 'auto' return types force compile-time checking that derived 
+			 * classes have implemented functions.
 			 *
 			 * @tparam S The polygon specialisation
 			 * @tparam T Numerical type
@@ -74,23 +76,27 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this Polygon
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(const euc::EuclideanPoint<T,N>& point);
+					auto isPointInside(const euc::EuclideanPoint<T,N>& point);
 
 					__attribute__((warn_unused_result))
-					T getArea();
+					auto getArea();
 
 					__attribute__((warn_unused_result))
-					euc::EuclideanPoint<T,N> getCentroid();
-
-					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,N> getNormal();
+					auto getCentroid();
 
 				protected:
+					// This class contains all data needed/used by derived classes.
+					// Derived classes just implement new methods.
 					T area;
-					euc::EuclideanPoint<T,N> centroid;
-					euc::EuclideanVector<T,N> normal;
-			};
+					bool areaComputed = false;
 
+					euc::EuclideanPoint<T,N> centroid;
+					bool centroidComputed = false;
+
+					euc::EuclideanVector<T,N> normal;
+					bool normalComputed = false;
+
+			};
 		}
 	}
 }

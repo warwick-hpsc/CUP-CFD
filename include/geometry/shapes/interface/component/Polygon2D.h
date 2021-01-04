@@ -16,6 +16,9 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "Polygon.h"
+
+namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
 {
@@ -24,18 +27,17 @@ namespace cupcfd
 		namespace shapes
 		{
 			/**
-			 * Top level interface for 2D Polygon2D shapes.
+			 * Top level interface for Polygon shapes in a 2D space.
 			 * Declares a set of common operations and/or members.
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam P The implementation type of the Polygon2D
-			 * @tparam T The type of the spatial domain
-			 * @tparam N The dimension of the spatial domain that the shape exists in.
-			 * Note: We can define 2D objects in a high dimensions - e.g. a plane in a 3D space.
+			 * @tparam P The polygon specialisation
+			 * @tparam T Numerical type
+			 * @tparam V Number of vertices
 			 */
-			template <class P, class T>
-			class Polygon2D
+			template <class P, class T, uint V>
+			class Polygon2D : public Polygon<Polygon2D<P,T,V>, T, 2, V>
 			{
 				public:
 					// === Constructors/Deconstructors ===
@@ -65,13 +67,23 @@ namespace cupcfd
 					 */
 					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
 
+					__attribute__((warn_unused_result))
+					T getArea();
+
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,2> getCentroid();
+
+				protected:
 					/**
 					 * Compute the area of the Polygon2D
 					 *
 					 * @return Return the computed area of the Polygon2D.
 					 */
 					__attribute__((warn_unused_result))
-					inline T computeArea();
+					T computeArea();
+
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,2> computeCentroid();
 			};
 
 		}

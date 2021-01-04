@@ -98,8 +98,8 @@ namespace cupcfd
 				Triangle3D<T> tri2 = Triangle3D<T>(a, d, c);
 
 				// Compute the area of each triangle and sum them
-				T area = tri1.computeArea();
-				area = area + tri2.computeArea();
+				T area = tri1.getArea();
+				area = area + tri2.getArea();
 
 				return area;
 			}

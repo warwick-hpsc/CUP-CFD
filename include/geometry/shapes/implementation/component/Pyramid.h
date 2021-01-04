@@ -19,6 +19,8 @@
 #include "EuclideanPoint.h"
 #include "Quadrilateral3D.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -43,7 +45,7 @@ namespace cupcfd
 					 * The point that defines the apex of the pyramid/the vertex point
 					 * shared by all triangular faces
 					 */
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> apex;
+					euc::EuclideanPoint<T,3> apex;
 
 					/**
 					 * The polygon base that makes up the bottom face of the pyramid
@@ -62,8 +64,7 @@ namespace cupcfd
 					 * @param apex The point that defines the apex of the pyramid
 					 * @param base The polygon base of the pyramid.
 					 */
-					Pyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, 
-							const P& base);
+					Pyramid(const euc::EuclideanPoint<T,3>& apex, const P& base);
 
 					/**
 					 *
@@ -79,7 +80,7 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 				// protected:
 					/**
@@ -96,8 +97,7 @@ namespace cupcfd
 					 * @return The computed centroid
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
-					// virtual cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					euc::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

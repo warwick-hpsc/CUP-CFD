@@ -529,10 +529,10 @@ namespace cupcfd
 								const EuclideanVector3D<T>& target) {
 				EuclideanVector3D<T> v1(source);
 				v1.normalise();
-
 				EuclideanVector3D<T> v2(target);
 				v2.normalise();
 
+				// https://en.wikipedia.org/wiki/Transformation_matrix#Rotation_2
 				T cosine = v1.dotProduct(v2);
 				euc::EuclideanVector3D<T> axis;
 				T sine;
@@ -549,6 +549,7 @@ namespace cupcfd
 				} else {
 					axis = v1.crossProduct(v2);
 					sine = axis.length();
+					axis.normalise();
 				}
 				T oneMinusCosine = T(1) - cosine;
 

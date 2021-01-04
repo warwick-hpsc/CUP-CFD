@@ -92,19 +92,6 @@ namespace cupcfd
 									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
 									const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p);
 
-					/**
-					 * Compute the center of three points
-					 *
-					 * @param a Point 1 (2D)
-					 * @param b Point 2 (2D)
-					 * @param c Point 3 (2D)
-					 *
-					 * @return The point at the center of the three points
-					 */
-					// static inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-					// 																			cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-					// 																			cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c);
-
 					// === Concrete Methods ===
 
 					/**
@@ -143,15 +130,6 @@ namespace cupcfd
 					 */
 					//bool isPointInsideCrossProduct(cupcfd::geometry::euclidean::EuclideanPoint<T,N> p);
 
-				protected:
-					// T computeArea();
-
-					/**
-					 * Compute the center of three points that make up this triangle
-					 *
-					 * @return The point at the center of the three points
-					 */
-					// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> computeCentroid();
 			};
 		}
 	}

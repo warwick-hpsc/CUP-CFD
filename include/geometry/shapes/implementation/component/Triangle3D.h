@@ -9,7 +9,7 @@
  *
  * Description
  *
- * Declarations for the Triangle class
+ * Declarations for the Triangle3D class
  */
 
 #ifndef CUPCFD_GEOMETRY_SHAPES_TRIANGLE_3D_INCLUDE_H
@@ -17,6 +17,7 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "Polygon3D.h"
 #include "Triangle.h"
 
 namespace euc = cupcfd::geometry::euclidean;
@@ -37,6 +38,11 @@ namespace cupcfd
 			class Triangle3D : public Triangle<Triangle3D<T>, T, 3>
 			{
 				public:
+					// Because Triangle3D has no inheritance path back to
+					// Polygon3D, which contains useful methods, maintain 
+					// a Polygon3D member variable to get to those methods:
+					Polygon3D<Triangle3D<T>, T, 3> triAsPolygon3D;
+
 					// === Constructor/Deconstructors ===
 
 					/**
@@ -61,6 +67,12 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
+					__attribute__((warn_unused_result))
+					euc::EuclideanVector3D<T> getNormal();
+
+					__attribute__((warn_unused_result))
+					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
+
 					/**
 					 * Calculate intersection of a moving point with this triangle: intersection point, 
 					 * time to intersect, and whether it intersects the edge.
@@ -81,16 +93,6 @@ namespace cupcfd
 												T& timeToIntersect, 
 												bool* onEdge,
 												bool verbose) const;
-
-				// protected:
-					// static T computeAreaV2(Triangle3D<T>& tri);
-
-					/**
-					 * Compute the area of the Triangle
-					 *
-					 * @return Return the computed area of the Triangle.
-					 */
-					T computeArea();
 			};
 		}
 	}

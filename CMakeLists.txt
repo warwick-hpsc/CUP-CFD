@@ -476,7 +476,9 @@ endif(USE_HDF5)
 set(geometry_source_files
 	src/geometry/euclidean/implementation/component/EuclideanPoint.cpp
 	src/geometry/euclidean/implementation/component/EuclideanVector.cpp
+  src/geometry/euclidean/implementation/component/EuclideanVector2D.cpp
   src/geometry/euclidean/implementation/component/EuclideanVector3D.cpp
+  src/geometry/euclidean/implementation/component/Matrix.cpp
 	src/geometry/euclidean/implementation/component/EuclideanPlane3D.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshProperties.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshInterface.cpp
@@ -498,6 +500,7 @@ set(geometry_source_files
 	src/geometry/mesh/implementation/source/MeshSourceFileConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshSourceStructGenConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshConfigSourceJSON.cpp
+  src/geometry/shapes/interface/component/Polygon.cpp
 	src/geometry/shapes/interface/component/Polygon2D.cpp
 	src/geometry/shapes/interface/component/Polygon3D.cpp
 	src/geometry/shapes/implementation/component/Triangle.cpp

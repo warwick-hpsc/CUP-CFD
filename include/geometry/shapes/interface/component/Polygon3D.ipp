@@ -35,12 +35,15 @@ namespace cupcfd
 			: Polygon<Polygon3D<P,T,V>,T,3,V>::Polygon( (v)... )
 			{
 				static_assert(sizeof...(Args) == V, "Polygon constructor dimension does not match number of parameters");
-				if (!this->coplanar()) {
-					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
-				}
 
-				if (!this->verifyNoEdgesIntersect()) {
-					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+				if (this->numVertices > 3) {
+					if (!this->coplanar()) {
+						HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+					}
+
+					if (!this->verifyNoEdgesIntersect()) {
+						HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_LOGIC_ERROR);
+					}
 				}
 			}
 			
@@ -48,27 +51,6 @@ namespace cupcfd
 			Polygon3D<P,T,V>::~Polygon3D() {
 			}
 			
-			template <class P, class T, uint V>
-			T Polygon3D<P,T,V>::computeArea() {
-				T area = T(0);
-				euc::EuclideanPoint<T,3> v0 = this->vertices[0];
-				for (int i2=2; i2<V; i2++) {
-					const uint i1 = i2-1;
-					shapes::Triangle3D<T> t(v0, this->vertices[i1], this->vertices[i2]);
-					area += t.computeArea();
-				}
-				return area;
-			}
-			
-			template <class P, class T, uint V>
-			T Polygon3D<P,T,V>::getArea() {
-				if (!this->areaComputed) {
-					this->area = this->computeArea();
-					this->areaComputed = true;
-				}
-				return this->area;
-			}
-
 			template <class P, class T, uint V>
 			euc::EuclideanPoint<T,3> Polygon3D<P,T,V>::computeCentroid() {
 				// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
@@ -81,7 +63,7 @@ namespace cupcfd
 				//  3. YZ plane
 				// 'unwind' the projection to get the polygon centroid
 
-				T area = this->computeArea();
+				T area = this->getArea();
 
 				// 1. calculate centroid of XY projection
 				euc::EuclideanPoint<T,3> cXY(T(0), T(0), T(0));
@@ -131,6 +113,15 @@ namespace cupcfd
 				}
 
 				return centroid;
+			}
+
+			template <class P, class T, uint V>
+			T Polygon3D<P,T,V>::getArea() {
+				if (!this->areaComputed) {
+					this->area = this->computeArea();
+					this->areaComputed = true;
+				}
+				return this->area;
 			}
 
 			template <class P, class T, uint V>
@@ -210,6 +201,66 @@ namespace cupcfd
 				}
 				return true;
 			}
+
+			template <class P, class T, uint V>
+			void Polygon3D<P,T,V>::alignNormalWithVector(euc::EuclideanVector3D<T>& v) {
+				// Record original vertices:
+				euc::EuclideanPoint<T,3> vertices[V];
+				for (int i=0; i<V; i++) {
+					vertices[i] = this->vertices[i];
+				}
+
+				// Calculate rotation matrix:
+				euc::EuclideanVector3D<T> normal = euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+				normal.normalise();
+				euc::Matrix<T,3,3> rotMatrix2;
+				rotMatrix2 = euc::calculateRotationMatrix(normal, v);
+
+				// Apply rotation:
+				for (int i=0; i<V; i++) {
+					this->vertices[i] = rotMatrix2 * this->vertices[i];
+				}
+
+				euc::EuclideanVector3D<T> normalRotated = rotMatrix2 * normal;
+				normalRotated.normalise();
+
+				// Verify that rotation aligned polygon normal with Z-axis:
+				euc::EuclideanVector3D<T> normalActual = euc::EuclideanPlane3D<T>::calculateNormal(this->vertices[0], this->vertices[1], this->vertices[2]);
+				normalActual.normalise();
+				T cosine = v.dotProduct(normalActual);
+				if (cosine < T(0.9999)) {
+					// 'cosine' should be 1.0 exactly, but allow a tiny tolerance for floating-point
+
+					printf("Polygon rotation failed to align its normal with specified vector\n");
+
+					printf("Polygon vertices before:\n");
+					for (int i=0; i<V; i++) {
+						printf("V %d: [ %.3f %.3f %.3f ]\n", i, vertices[i].cmp[0], vertices[i].cmp[1], vertices[i].cmp[2]);
+					}
+					printf("Normal before: ");
+					normal.print(); std::cout << std::endl;
+					
+					printf("Polygon vertices after:\n");
+					for (int i=0; i<V; i++) {
+						printf("V %d: [ %.3f %.3f %.3f ]\n", i, this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
+					}
+					printf("Normal after: ");
+					normalActual.print(); std::cout << std::endl;
+					// printf("Normal rotated (should match above): ");
+					// normalRotated.print(); std::cout << std::endl;
+					printf("Cosine between normal and Z-axis = %.4f (%.1f degrees)\n", cosine, acos(cosine)/3.14157*180.0);
+
+					printf("Target vector: ");
+					v.print(); std::cout << std::endl;
+
+					printf("Rotation matrix: \n");
+					rotMatrix2.print(); std::cout << std::endl;
+
+					printf("\n");
+
+					HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
+				}
+			}
 			
 			// Probably an actual geometric term for 'polygon edges do not intersect':
 			// template <class S, class T, uint N, uint V>
@@ -220,60 +271,21 @@ namespace cupcfd
 				// normal becomes Z-axis, then only working in 2D and will 
 				// definitely find intersection point (unless parallel)
 
-				// Operate on copy of vertices:
+				euc::EuclideanVector3D<T> zAxis(T(0), T(0), T(1));
+
+				Polygon3D<P,T,V> copy(*this);
+				copy.alignNormalWithVector(zAxis);
+
 				euc::EuclideanPoint<T,3> vertices[V];
 				for (int i=0; i<V; i++) {
-					vertices[i] = this->vertices[i];
+					vertices[i] = copy.vertices[i];
 				}
-
-				// Calculate rotation matrix:
-				euc::EuclideanVector3D<T> normal = euc::EuclideanPlane3D<T>::calculateNormal(vertices[0], vertices[1], vertices[2]);
-				normal.normalise();
-				euc::EuclideanVector3D<T> zAxis(T(0), T(0), T(1));
-				euc::Matrix<T,3,3> rotMatrix2;
-				rotMatrix2 = euc::calculateRotationMatrix(normal, zAxis);
-
-				// Apply rotation:
-				for (int i=0; i<V; i++) {
-					vertices[i] = rotMatrix2 * this->vertices[i];
-				}
-				euc::EuclideanVector3D<T> normalRotated = rotMatrix2 * normal;
-
-				// Verify that rotation aligned polygon normal with Z-axis:
-				euc::EuclideanVector3D<T> normalActual = euc::EuclideanPlane3D<T>::calculateNormal(vertices[0], vertices[1], vertices[2]);
-				normalActual.normalise();
-				T cosine = zAxis.dotProduct(normalActual);
-				if (cosine < T(0.999)) {
-					// Ideally 'cosine' should be 1.0 exactly, but allow 
-					// a tiny tolerance for floating-point.
-					printf("Polygon rotation failed to align its normal with Z-axis\n");
-
-					printf("Polygon vertices before:\n");
-					for (int i=0; i<V; i++) {
-						printf("V %d: [ %.2f %.2f %.2f ]\n", i, this->vertices[i].cmp[0], this->vertices[i].cmp[1], this->vertices[i].cmp[2]);
-					}
-					
-					printf("Polygon vertices after:\n");
-					for (int i=0; i<V; i++) {
-						printf("V %d: [ %.2f %.2f %.2f ]\n", i, vertices[i].cmp[0], vertices[i].cmp[1], vertices[i].cmp[2]);
-					}
-					printf("Normal after: ");
-					normalActual.print(); std::cout << std::endl;
-					printf("Normal rotated (should match above): ");
-					normalRotated.print(); std::cout << std::endl;
-
-					printf("Rotation matrix: \n");
-					rotMatrix2.print(); std::cout << std::endl;
-
-					printf("\n");
-
-					HARD_CHECK_ECODE(cupcfd::error::E_ERROR);
-				}
-
+				
 				// Now have polygon rotated into 2D X-Y plane, scan for any 
 				// crossing edges. 
-				// Permute through all possible pairs of edges - maybe there is a better 
-				// way to scan, but this check is only performed once.
+				// Permute through all possible pairs of edges, except directly adjacent.
+				// Maybe there is a better way to scan, but 
+				// this check is only performed once so does it matter?
 				for (uint e1=1; e1<V; e1++) {
 					euc::EuclideanPoint<T,2> e1a(vertices[e1-1].cmp[0], vertices[e1-1].cmp[1]);
 					euc::EuclideanPoint<T,2> e1b(vertices[e1  ].cmp[0], vertices[e1  ].cmp[1]);
@@ -286,14 +298,14 @@ namespace cupcfd
 						euc::EuclideanPoint<T,2> intersectPoint(T(0.0), T(0.0));
 						cupcfd::error::eCodes status = euc::computeVectorRangeIntersection(e1a, e1b, e2a, e2b, intersectPoint);
 						if (status == cupcfd::error::E_SUCCESS) {
-							printf("Intersection detected!\n");
+							printf("Intersection detected between polygon edges!\n");
 
 							printf("Polygon vertices:\n");
 							for (int i=0; i<V; i++) {
 								printf("V %d: [ %.2f %.2f %.2f ]\n", i, vertices[i].cmp[0], vertices[i].cmp[1], vertices[i].cmp[2]);
 							}
 
-							printf("Edges:\n");
+							printf("Intersecting edges:\n");
 							e1a.print(); printf(" --> "); e1b.print(); printf("\n");
 							e2a.print(); printf(" --> "); e2b.print(); printf("\n");
 

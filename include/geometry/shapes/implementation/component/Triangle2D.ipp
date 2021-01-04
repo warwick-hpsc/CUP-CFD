@@ -128,18 +128,6 @@ namespace cupcfd
 				return true;
 			}
 			
-			// template <class T>
-			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-			// 																							cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-			// 																							cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c) {
-			// 	// ToDo: This could be moved up into a generic polygon method....
-			// 	// https://en.wikipedia.org/wiki/Centroid
-			// 	// https://en.wikipedia.org/wiki/Median_(triangle)
-			
-			// 	// Centroid located at arithmetic mean of three points
-			// 	return ((a + b + c) / T(3.0));
-			// }
-
 			// === Concrete Methods ===
 
 			template <class T>
@@ -147,18 +135,6 @@ namespace cupcfd
 				// Currently defaults to barycentric method
 				return this->isPointInsideBarycentric(this->vertices[0], this->vertices[1], this->vertices[2], p);
 			}
-
-			// template <class T>
-			// T Triangle2D<T>::computeArea() {
-			// 	// return Triangle<Triangle2D<T>,T,2>::heronsFormula(this->vertices[0], this->vertices[1], this->vertices[2]);
-			// 	Triangle<Triangle2D<T>,T,2>* t = (Triangle<Triangle2D<T>,T,2>*)this;
-			// 	return Triangle<Triangle2D<T>,T,2>::heronsFormula(*t);
-			// }
-			
-			// template <class T>
-			// inline cupcfd::geometry::euclidean::EuclideanPoint<T,2> Triangle2D<T>::computeCentroid() {
-			// 	return Triangle2D<T>::computeCentroid(this->vertices[0], this->vertices[1], this->vertices[2]);
-			// }
 		}
 	}
 }

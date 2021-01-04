@@ -16,8 +16,6 @@
 #define CUPCFD_GEOMETRY_SHAPES_TRIANGLE_INCLUDE_H
 
 #include "EuclideanPoint.h"
-#include "EuclideanVector.h"
-#include "EuclideanVector3D.h"
 
 #include "Polygon.h"
 
@@ -35,10 +33,9 @@ namespace cupcfd
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam S The triangle specialisation
+			 * @tparam S Triangle specialisation
 			 * @tparam T Numerical type
 			 * @tparam N Number of spatial dimensions
-			 * Note: We can define 2D objects in a high dimensions - e.g. a plane in a 3D space.
 			 */
 			template <class S, class T, uint N>
 			class Triangle : public Polygon<Triangle<S,T,N>, T, N, 3>
@@ -54,9 +51,17 @@ namespace cupcfd
 
 					~Triangle();
 
+					__attribute__((warn_unused_result))
+					T getArea();
+
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,N> getCentroid();
+
+					__attribute__((warn_unused_result))
+					auto isPointInside(const euc::EuclideanPoint<T,N>& p);
+
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param l1 Length of edge 1/3
 					 * @param l2 Length of edge 2/3
@@ -69,7 +74,6 @@ namespace cupcfd
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param a Triangle vertex 1/3
 					 * @param b Triangle vertex 2/3
@@ -84,7 +88,6 @@ namespace cupcfd
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param tri Triangle
 					 *
@@ -93,7 +96,10 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					static T heronsFormula(const Triangle<S,T,N>& tri);
 
+				protected:
+					T computeArea();
 
+					euc::EuclideanPoint<T,N> computeCentroid();
 			};
 		}
 	}

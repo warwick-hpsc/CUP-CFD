@@ -82,17 +82,6 @@ namespace cupcfd
 					euc::EuclideanVector<T,3> getNormal();
 
 				protected:
-					// area, centroid, and normal calculations are costly, and not always required, 
-					// so do not compute in a constructor. Instead, compute ONCE in a getter
-					bool areaComputed = false;
-					bool centroidComputed = false;
-					bool normalComputed = false;
-
-					/**
-					 * Compute the area of the polygon
-					 *
-					 * @return Return the computed area of the polygon.
-					 */
 					__attribute__((warn_unused_result))
 					T computeArea();
 
@@ -107,8 +96,13 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::geometry::euclidean::EuclideanVector3D<T> computeNormal();
 
+
+					void alignNormalWithVector(euc::EuclideanVector3D<T>& v);
+
+					__attribute__((warn_unused_result))
 					bool coplanar();
 
+					__attribute__((warn_unused_result))
 					bool verifyNoEdgesIntersect();
 
 			};
