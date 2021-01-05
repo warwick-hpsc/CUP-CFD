@@ -37,7 +37,7 @@ namespace cupcfd
 			 * @tparam N Number of spatial dimensions
 			 */
 			template <class T>
-			class Quadrilateral3D : public Polygon3D<Quadrilateral3D<T>, T, 4>
+			class Quadrilateral3D : public Polygon3D<T, 4>
 			{
 				public:
 					// === Constructors/Deconstructors ===
@@ -92,30 +92,6 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					Quadrilateral3D<T> * clone();
-
-					// === Static Methods ===
-
-					/**
-					 * Compute the area of a quadrilateral by using the sum of the triangular areas
-					 * that make up a quadrilateral
-					 * defined by four vertices a,b,c and d where edges exist between
-					 * (i) a and b
-					 * (ii) b and c
-					 * (iii) c and d
-					 * (iv) d and a
-					 *
-					 * @param a Vertex a
-					 * @param b Vertex b
-					 * @param c Vertex c
-					 * @param d Vertex d
-					 *
-					 * @return The area of the quadrilateral
-					 */
-					__attribute__((warn_unused_result))
-					static T triangularAreaSum(const euc::EuclideanPoint<T,3>& a,
-											   const euc::EuclideanPoint<T,3>& b,
-											   const euc::EuclideanPoint<T,3>& c,
-											   const euc::EuclideanPoint<T,3>& d);
 			};
 		}
 	}

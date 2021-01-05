@@ -19,6 +19,8 @@
 #include "EuclideanPlane3D.h"
 #include "Triangle3D.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -59,7 +61,7 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class T>
-			inline bool TriPrism<T>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
+			inline bool TriPrism<T>::isPointInside(euc::EuclideanPoint<T,3>& point) {
 				// ToDo: This algorithm could be moved up to a more general level in Polyhedron.
 				// However, we would need to either (a) find a way to export the vertices (overhead of extra copies)
 				// or (b) store a general vertex member list (such as an array) at the Polyhedron level - however
@@ -77,19 +79,14 @@ namespace cupcfd
 				// Repeat for all faces, and if 'inside' all of them, the point is inside the polygon
 				
 				double dotProd;
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> pointVector;
+				euc::EuclideanVector<T,3> pointVector;
 					
 				// Build 5 Faces from polygons as planes
 				// Ordering for each should be clockwise from inside, anti-clockwise from outside
 				// This assumes that the vertices for each face are coplanar, but this is a reasonable assumption
 				// since if they are not, then this is not really a triprism (since a Quadrilateral non coplanar = two triangular faces...)
-				cupcfd::geometry::euclidean::EuclideanPlane3D<T> facePlanes[5] = 
+				euc::EuclideanPlane3D<T> facePlanes[5] = 
 				{
-					// cupcfd::geometry::euclidean::EuclideanPlane3D<T>(verticesStore[0], verticesStore[1], verticesStore[2]), // Top Front, Top Left Back, Top Right Back
-					// cupcfd::geometry::euclidean::EuclideanPlane3D<T>(verticesStore[3], verticesStore[5], verticesStore[4]), // Bottom Front, Bottom Right Back, Bottom Left Back,
-					// cupcfd::geometry::euclidean::EuclideanPlane3D<T>(verticesStore[0], verticesStore[2], verticesStore[5]), // Top Front, Top Right Back, Bottom Right Back,
-					// cupcfd::geometry::euclidean::EuclideanPlane3D<T>(verticesStore[2], verticesStore[1], verticesStore[4]), // Top Right Back, Top Left Back, Bottom Left Back
-					// cupcfd::geometry::euclidean::EuclideanPlane3D<T>(verticesStore[1], verticesStore[0], verticesStore[3]), // Top Left Back, Top Front, Bottom Front
 					euc::EuclideanPlane3D<T>(this->top.vertices[0],    this->top.vertices[1],    this->top.vertices[2]),
 					euc::EuclideanPlane3D<T>(this->bottom.vertices[0], this->bottom.vertices[1], this->bottom.vertices[2]),
 					euc::EuclideanPlane3D<T>(this->top.vertices[0],    this->top.vertices[2],    this->bottom.vertices[2]),
@@ -135,69 +132,45 @@ namespace cupcfd
 			}
 
 			template <class T>
+			T TriPrism<T>::getVolume() {
+				if (!this->volumeComputed) {
+					this->volume = this->computeVolume();
+					this->volumeComputed = true;
+				}
+				return this->volume;
+			}
+
+			template <class T>
+			euc::EuclideanPoint<T,3> TriPrism<T>::getCentroid() {
+				if (!this->centroidComputed) {
+					this->centroid = this->computeCentroid();
+					this->centroidComputed = true;
+				}
+				return this->centroid;
+			}
+
+			template <class T>
 			T TriPrism<T>::computeVolume() {
-				// Clockwise from internal
-				// Triangle3D<T> base(this->verticesStore[3], this->verticesStore[5], this->verticesStore[4]);
-				
-				// Height * Base Area
-				// T volume = (this->verticesStore[0].cmp[2] - this->verticesStore[3].cmp[2]) * base.computeArea(); 
-				// T volume = (this->verticesStore[0].cmp[2] - this->verticesStore[3].cmp[2]) * base.area;
-				// T height = this->top.vertices[0].cmp[2] - this->bottom.vertices[0].cmp[2];
 				T height = (this->top.getCentroid() - this->bottom.getCentroid()).length();
-				// T height = (this->top.centroid - this->bottom.centroid).length();
-				// if(height < T(0)) {
-				// 	height *= T(-1);
-				// }
-
 				T volume = height * this->bottom.getArea();
-				// T volume = height * this->bottom.area;
-
-				// if(volume < 0) {
-				// 	// Quick sign fix - could also use abs
-				// 	volume *= T(-1);
-				// }
-
 				return volume;
 			}
 			
 			template <class T>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> TriPrism<T>::computeCentroid() {
+			euc::EuclideanPoint<T,3> TriPrism<T>::computeCentroid() {
 				// https://en.wikipedia.org/wiki/Centroid#Of_a_tetrahedron_and_n-dimensional_simplex
-				
-				// return ((T(1)/T(7)) * (this->verticesStore[0] + this->verticesStore[1] + 
-				// 					   this->verticesStore[2] + this->verticesStore[3] + 
-				// 					   this->verticesStore[4] + this->verticesStore[5]));
 				return T(1)/T(7) * (this->top.vertices[0]    + this->top.vertices[1]    + this->top.vertices[2] + 
 									this->bottom.vertices[0] + this->bottom.vertices[1] + this->bottom.vertices[2]);
 			}
 			
 			template <class T>
-			inline bool TriPrism<T>::isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {							
-				// ToDo: This can likely be condensed to a generic polygon method, using a getEdge method	  
-
-				bool tests[9];
-				// tests[0] = isPointOnLine(this->verticesStore[0], this->verticesStore[1], point);
-				// tests[1] = isPointOnLine(this->verticesStore[1], this->verticesStore[2], point);
-				// tests[2] = isPointOnLine(this->verticesStore[2], this->verticesStore[0], point);
-				// tests[3] = isPointOnLine(this->verticesStore[3], this->verticesStore[4], point);
-				// tests[4] = isPointOnLine(this->verticesStore[4], this->verticesStore[5], point);
-				// tests[5] = isPointOnLine(this->verticesStore[5], this->verticesStore[0], point);
-				// tests[6] = isPointOnLine(this->verticesStore[0], this->verticesStore[3], point);
-				// tests[7] = isPointOnLine(this->verticesStore[1], this->verticesStore[4], point);
-				// tests[8] = isPointOnLine(this->verticesStore[2], this->verticesStore[5], point);
-				tests[0] = isPointOnLine(this->top.vertices[0],    this->top.vertices[1],    point);
-				tests[1] = isPointOnLine(this->top.vertices[1],    this->top.vertices[2],    point);
-				tests[2] = isPointOnLine(this->top.vertices[2],    this->top.vertices[0],    point);
-				tests[3] = isPointOnLine(this->bottom.vertices[0], this->bottom.vertices[1], point);
-				tests[4] = isPointOnLine(this->bottom.vertices[1], this->bottom.vertices[2], point);
-				tests[5] = isPointOnLine(this->bottom.vertices[2], this->bottom.vertices[0], point);
-				tests[6] = isPointOnLine(this->top.vertices[0],    this->bottom.vertices[0], point);
-				tests[7] = isPointOnLine(this->top.vertices[1],    this->bottom.vertices[1], point);
-				tests[8] = isPointOnLine(this->top.vertices[2],    this->bottom.vertices[2], point);
-				
-				// Test if the point lies on each edge
-				for(int i = 0; i < 9; i++) {
-					if(tests[i]) {
+			inline bool TriPrism<T>::isPointOnEdge(const euc::EuclideanPoint<T,3>& point) {
+				for (int v1=0; v1<3; v1++) {
+					const int v2=(v1+1)%3;
+					if (isPointOnLine(this->top.vertices[v1], this->top.vertices[v2], point)) {
+						return true;
+					}
+					if (isPointOnLine(this->bottom.vertices[v1], this->bottom.vertices[v2], point)) {
 						return true;
 					}
 				}
@@ -206,11 +179,9 @@ namespace cupcfd
 			}
 			
 			template <class T>
-			inline bool TriPrism<T>::isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
-				// return (this->verticesStore[0] == point) || (this->verticesStore[1] == point) || (this->verticesStore[2] == point) ||
-				// 	   (this->verticesStore[3] == point) || (this->verticesStore[4] == point) || (this->verticesStore[5] == point);
+			inline bool TriPrism<T>::isPointOnVertex(const euc::EuclideanPoint<T,3>& point) {
 				for (int i=0; i<3; i++) {
-					if (this->top.vertices[i] == point || this->bottom.vertices[i] == point) {
+					if ( (this->top.vertices[i] == point) || (this->bottom.vertices[i] == point) ) {
 						return true;
 					}
 				}

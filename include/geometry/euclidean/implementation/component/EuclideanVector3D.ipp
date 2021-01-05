@@ -22,7 +22,6 @@
 // ToDo: Need to check for dangers of division by 0....
 
 namespace arth = cupcfd::utility::arithmetic::kernels;
-namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
 {
@@ -170,7 +169,7 @@ namespace cupcfd
 					#endif
 
 					// Test whether the point lies on the line
-					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(x3, x4, x1);
+					bool isIntersect = isPointOnLine(x3, x4, x1);
 					if(isIntersect) {
 						intersectPoint = x1;
 						return cupcfd::error::E_SUCCESS;
@@ -191,7 +190,7 @@ namespace cupcfd
 					#endif
 
 					// Test whether the point lies on the line
-					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(x1, x2, x3);
+					bool isIntersect = isPointOnLine(x1, x2, x3);
 					
 					if(isIntersect) {
 						intersectPoint = x3;
@@ -534,7 +533,7 @@ namespace cupcfd
 
 				// https://en.wikipedia.org/wiki/Transformation_matrix#Rotation_2
 				T cosine = v1.dotProduct(v2);
-				euc::EuclideanVector3D<T> axis;
+				EuclideanVector3D<T> axis;
 				T sine;
 				if (cosine == T(-1) || cosine == T(1)) {
 					// Cross Product will fail to find a rotation axis, because there
@@ -573,8 +572,9 @@ namespace cupcfd
 	}
 }
 
-template class cupcfd::geometry::euclidean::EuclideanVector3D<float>;
+namespace euc = cupcfd::geometry::euclidean;
 
-template class cupcfd::geometry::euclidean::EuclideanVector3D<double>;
+template class euc::EuclideanVector3D<float>;
+template class euc::EuclideanVector3D<double>;
 
 #endif

@@ -92,9 +92,9 @@ namespace cupcfd
 										   	const euc::EuclideanPoint<T,N>& b,
 											const euc::EuclideanPoint<T,N>& c)
 			{
-				cupcfd::geometry::euclidean::EuclideanVector<T,N> ab = b - a;
-				cupcfd::geometry::euclidean::EuclideanVector<T,N> ac = c - a;
-				cupcfd::geometry::euclidean::EuclideanVector<T,N> bc = c - b;
+				euc::EuclideanVector<T,N> ab = b - a;
+				euc::EuclideanVector<T,N> ac = c - a;
+				euc::EuclideanVector<T,N> bc = c - b;
 				return Triangle<S,T,N>::heronsFormula((b-a).length(), (c-a).length(), (c-b).length());
 			}
 			

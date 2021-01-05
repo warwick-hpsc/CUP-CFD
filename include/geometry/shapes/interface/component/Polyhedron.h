@@ -17,6 +17,8 @@
 
 #include "EuclideanPoint.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -47,15 +49,6 @@ namespace cupcfd
 			class Polyhedron
 			{
 				public:
-					// === Members ===
-
-					// int numEdges;
-					// int numVertices;
-					// int numFaces;
-
-					// cupcfd::geometry::euclidean::EuclideanPoint<T,3> centroid;
-					// T volume;
-
 					// === Constructors/Deconstructors ===
 
 					Polyhedron();
@@ -64,49 +57,42 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
-					/**
-					 * Get the number of edges in this polyhedron.
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The number of edges.
-					 */
-					// inline int getNumEdges();
-
-					/**
-					 * Get the number of vertices in this polyhedron.
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The number of vertices.
-					 */
-					// inline int getNumVertices();
-
 					// === Interface Methods ===
+
+					/**
+					 * Return volume of polyhedron, calculating if not known
+					 *
+					 * @return Polyhedron volume
+					 */
+					__attribute__((warn_unused_result))
+					auto getVolume();
+
+					/**
+					 * Return centroid of polyhedron, calculating if not known
+					 *
+					 * @return Polyhedron centroid
+					 */
+					__attribute__((warn_unused_result))
+					auto getCentroid();
 
 					/**
 					 * Determine whether the provided point is inside the polyhedron.
 					 * Edges/Faces/Vertices are treated as inside the polygon for this purpose.
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
 					 * @return Return true if point exists inside this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					auto isPointInside(euc::EuclideanPoint<T,3>& point);
 
-					/**
-					 * Compute the volume of this polyhedron
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The computed volume
-					 */
-					// inline T computeVolume();
+				protected:
+					// This class contains all data needed/used by derived classes, 
+					// derived classes just implement new methods. 
+					// This makes implementing operator=() much easier.
+					T volume;
+					bool volumeComputed = false;
+
+					euc::EuclideanPoint<T,3> centroid;
+					bool centroidComputed = false;
 			};
 
 			// These methods are equivalent to static, but we'll place them here since they're generic
@@ -115,9 +101,6 @@ namespace cupcfd
 			/**
 			 * Get an identifier for what type of polyhedron has the specified
 			 * number of vertices and faces
-			 *
-			 * @param nVertices Number of vertices
-			 * @param nFaces Number of faces
 			 *
 			 * @return An indentifier for the type of Polyhedron
 			 */

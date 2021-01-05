@@ -51,12 +51,28 @@ namespace cupcfd
 
 					~Triangle();
 
+					/**
+					 * Return area of triangle, calculating if not known
+					 *
+					 * @return Triangle area
+					 */
 					__attribute__((warn_unused_result))
 					T getArea();
 
+					/**
+					 * Return centroid of triangle, calculating if not known
+					 *
+					 * @return Triangle centroid
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,N> getCentroid();
 
+					/**
+					 * Determine whether the provided point is inside the Triangle.
+					 * Edges/Vertices are treated as inside the Triangle for this purpose.
+					 *
+					 * @return Return true if the point exists inside this Triangle
+					 */
 					__attribute__((warn_unused_result))
 					auto isPointInside(const euc::EuclideanPoint<T,N>& p);
 

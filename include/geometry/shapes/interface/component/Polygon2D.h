@@ -36,13 +36,15 @@ namespace cupcfd
 			 * @tparam T Numerical type
 			 * @tparam V Number of vertices
 			 */
-			template <class P, class T, uint V>
-			class Polygon2D : public Polygon<Polygon2D<P,T,V>, T, 2, V>
+			template <class T, uint V>
+			class Polygon2D : public Polygon<Polygon2D<T,V>, T, 2, V>
 			{
 				public:
 					// === Constructors/Deconstructors ===
 
 					Polygon2D();
+
+					Polygon2D(euc::EuclideanPoint<T,2> vertices[V]);
 
 					~Polygon2D();
 
@@ -55,7 +57,7 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this Polygon2D
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point);
+					bool isPointInside(const euc::EuclideanPoint<T,2>& point);
 
 					/**
 					 * Determine whether the provided point is inside the Polygon2D.
@@ -65,11 +67,21 @@ namespace cupcfd
 					 *
 					 * @return Return true if the point exists inside this Polygon2D
 					 */
-					//inline bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
+					//inline bool isPointInsideRayCasting(euc::EuclideanPoint<T,N>& point);
 
+					/**
+					 * Return area of polygon, calculating if not known
+					 *
+					 * @return Polygon area
+					 */
 					__attribute__((warn_unused_result))
 					T getArea();
 
+					/**
+					 * Return centroid of polygon, calculating if not known
+					 *
+					 * @return Polygon centroid
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,2> getCentroid();
 
@@ -82,6 +94,11 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					T computeArea();
 
+					/**
+					 * Compute the centroid of the Polygon2D
+					 *
+					 * @return Return the computed centroid of the Polygon2D.
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,2> computeCentroid();
 			};

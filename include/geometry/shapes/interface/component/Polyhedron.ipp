@@ -14,6 +14,8 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_POLYHEDRON_IPP_H
 #define CUPCFD_GEOMETRY_SHAPES_POLYHEDRON_IPP_H
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -32,30 +34,23 @@ namespace cupcfd
 
 			}
 
-			// === Concrete Methods ===
-			
-			// template <class P, class T>
-			// inline int Polyhedron<P,T>::getNumEdges() {
-			// 	return this->numEdges;
-			// }
-				
-			// template <class P, class T>		
-			// inline int Polyhedron<P,T>::getNumVertices() {
-			// 	return this->numVertices;
-			// }		
-
 			// === Interface Methods ===
 
 			template <class P, class T>
-			inline bool Polyhedron<P,T>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point) {
+			auto Polyhedron<P,T>::getVolume() {
+				return static_cast<P*>(this)->getVolume();
+			}
+
+			template <class P, class T>
+			auto Polyhedron<P,T>::getCentroid() {
+				return static_cast<P*>(this)->getCentroid();
+			}
+
+			template <class P, class T>
+			auto Polyhedron<P,T>::isPointInside(euc::EuclideanPoint<T,3>& point) {
 				return static_cast<P*>(this)->isPointInside(point);
 			}
 
-			// template <class P, class T>
-			// T Polyhedron<P,T>::computeVolume() {
-			// 	return static_cast<P*>(this)->computeVolume();
-			// }
-			
 			// Namespace non-class methods
 
 			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces) {

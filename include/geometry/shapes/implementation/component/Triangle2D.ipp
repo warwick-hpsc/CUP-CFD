@@ -32,50 +32,29 @@ namespace cupcfd
 			Triangle2D<T>::Triangle2D(const euc::EuclideanPoint<T,2>& a,
 								      const euc::EuclideanPoint<T,2>& b,
 								      const euc::EuclideanPoint<T,2>& c)
-			// :Polygon2D<Triangle2D<T>,T>() // Polygon2D constructor does nothing
 			: Triangle<Triangle2D<T>,T,2>(a,b,c)
 			{
-				// this->numVertices = 3;
-				// this->numEdges = 3;
-
-				// this->vertices[0] = a;
-				// this->vertices[1] = b;
-				// this->vertices[2] = c;
-
-				// this->centroid = computeCentroid();
-				// this->area = computeArea();
 			}
 			
 			template <class T>
 			Triangle2D<T>::Triangle2D(const Triangle2D& source)
-			// :Polygon2D<Triangle2D<T>,T>() // Polygon2D constructor does nothing
 			: Triangle<Triangle2D<T>,T,2>(source)
 			{
-				// this->numVertices = 3;
-				// this->numEdges = 3;
-			
-				// this->vertices[0] = source.vertices[0];
-				// this->vertices[1] = source.vertices[1];
-				// this->vertices[2] = source.vertices[2];
-
-				// this->centroid = source.centroid;
-				// this->area = source.area;
 			}
 
 			template <class T>
 			Triangle2D<T>::~Triangle2D()
 			{
-				// Nothing to do currently
 			}
 
 			// === Static Methods ===
 
 			template <class T>
 			bool Triangle2D<T>::isPointInsideBarycentric(
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& a,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& b,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& c,
-										const cupcfd::geometry::euclidean::EuclideanPoint<T,2>& p) {
+										const euc::EuclideanPoint<T,2>& a,
+										const euc::EuclideanPoint<T,2>& b,
+										const euc::EuclideanPoint<T,2>& c,
+										const euc::EuclideanPoint<T,2>& p) {
 				// Barycentric coordinates method
 				// www.drdobbs.com/database/triangle-intersection-tests/184404201
 				// https://www.youtube.com/watch?v=HYAgJN3x4GA

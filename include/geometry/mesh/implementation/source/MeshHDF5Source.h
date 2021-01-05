@@ -24,6 +24,8 @@
 #include "AdjacencyListCSR.h"
 #include "DistributedAdjacencyList.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -127,7 +129,7 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellVolume(T * cellVol, I nCellVol, I * cellLabels, I nCellLabels);
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels);
+					cupcfd::error::eCodes getCellCenter(euc::EuclideanPoint<T,3> * cellCenter, I nCellCenter, I * cellLabels, I nCellLabels);
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, I * cellLabels, I nCellLabels);
 					__attribute__((warn_unused_result))
@@ -145,13 +147,13 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceArea(T * faceLambda, I nFaceLambda, I * faceLabels, I nFaceLabels);
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels);
+					cupcfd::error::eCodes getFaceNormal(euc::EuclideanVector<T,3> * faceNormal, I nFaceNormal, I * faceLabels, I nFaceLabels);
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels);
+					cupcfd::error::eCodes getFaceCenter(euc::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, I * faceLabels, I nFaceLabels);
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  I * faceLabels, I nFaceLabels);
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels);
+					cupcfd::error::eCodes getVertexCoords(euc::EuclideanPoint<T,3> * vertCoords, I nVertCoords, I * vertexLabels, I nVertexLabels);
 					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, I * boundaryLabels, I nBoundaryLabels);
 					__attribute__((warn_unused_result))

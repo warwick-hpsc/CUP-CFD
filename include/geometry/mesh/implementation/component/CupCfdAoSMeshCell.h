@@ -36,6 +36,8 @@
 
 #include "EuclideanPoint.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -51,7 +53,7 @@ namespace cupcfd
 				public:
 					// === Members ===
 					/** Cell Center **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> center;
+					euc::EuclideanPoint<T,3> center;
 
 					/** Cell Volume **/
 					T vol;

@@ -402,7 +402,7 @@ namespace cupcfd
 					 * @param result A referenced vector object that will have its values modified to the
 					 * normalised vector
 					 */
-					void normalise(cupcfd::geometry::euclidean::EuclideanVector<T,N>& result);
+					void normalise(EuclideanVector<T,N>& result);
 
 
 					/**
@@ -412,7 +412,7 @@ namespace cupcfd
 					 * @return An orthagonal vector.
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanVector<T,N> computeOrthagonalVector();
+					EuclideanVector<T,N> computeOrthagonalVector();
 
 
 					/**
@@ -470,15 +470,17 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into this file if the compiler errors are fixed.
 #include "EuclideanVector.ipp"
 
-// Explicit instantiation declarations of class static variables:
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiDataTypeReg;
+namespace euc = cupcfd::geometry::euclidean;
 
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiDataTypeReg;
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype euc::EuclideanVector<float,3>::mpiType;
+extern template bool euc::EuclideanVector<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanVector<float,2>::mpiType;
+extern template bool euc::EuclideanVector<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype euc::EuclideanVector<double,3>::mpiType;
+extern template bool euc::EuclideanVector<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanVector<double,2>::mpiType;
+extern template bool euc::EuclideanVector<double,2>::mpiDataTypeReg;
 
 #endif

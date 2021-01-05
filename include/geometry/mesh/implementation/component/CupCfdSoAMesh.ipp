@@ -29,6 +29,8 @@
 #ifndef CUPCFD_GEOMETRY_MESH_CUPCFD_SOA_MESH_IPP_H
 #define CUPCFD_GEOMETRY_MESH_CUPCFD_SOA_MESH_IPP_H
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -36,12 +38,12 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			inline void CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				center = DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID);
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID) {
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID);
 			}
 			
@@ -116,7 +118,7 @@ namespace cupcfd
 
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			inline void CupCfdSoAMesh<I,T,L>::setCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID) = center;
 			}
 
@@ -182,12 +184,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			inline void CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm) {
 				norm = DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID) {
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID);
 			}
 
@@ -202,12 +204,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			inline void CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
 				center = DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID) {
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID);
 			}
 
@@ -232,22 +234,22 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) {
+			inline void CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
 				xpac = DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID) {
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) {
+			inline void CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
 				xnac = DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID) {
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID);
 			}
 
@@ -294,7 +296,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			inline void CupCfdSoAMesh<I,T,L>::setFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm) {
 				DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID) = norm;
 			}
 
@@ -304,7 +306,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			inline void CupCfdSoAMesh<I,T,L>::setFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
 				DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID) = center;
 			}
 
@@ -319,12 +321,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) {
+			inline void CupCfdSoAMesh<I,T,L>::setFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
 				DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID) = xpac;
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) {
+			inline void CupCfdSoAMesh<I,T,L>::setFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
 				DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID) = xnac;
 			}
 
@@ -404,12 +406,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
 				shear = DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID) {
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID);
 			}
 
@@ -474,7 +476,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
 				DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID) = shear;
 			}
 
@@ -594,22 +596,22 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
+			inline void CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
 				forceTangent = DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID) {
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
+			inline void CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
 				uvw = DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID) {
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID);
 			}
 
@@ -709,12 +711,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
+			inline void CupCfdSoAMesh<I,T,L>::setRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
 				DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID) = forceTangent;
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
+			inline void CupCfdSoAMesh<I,T,L>::setRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
 				DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID) = uvw;
 			}
 
@@ -754,17 +756,17 @@ namespace cupcfd
 			}
 			
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
+			inline void CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID, euc::EuclideanPoint<T,3>& pos) {
 				pos = DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID) {
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID);
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdSoAMesh<I,T,L>::setVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
+			inline void CupCfdSoAMesh<I,T,L>::setVertexPos(I vertexID, euc::EuclideanPoint<T,3>& pos) {
 				DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID) = pos;
 			}
 

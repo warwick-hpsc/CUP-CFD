@@ -336,7 +336,7 @@ namespace cupcfd
 					 * @return The point reached after following the vector from the origin point
 					 */
 					__attribute__((warn_unused_result))
-					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector)
+					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const EuclideanVector<T,N>& vector)
 					{
 						EuclideanPoint<T,N> result;
 
@@ -361,7 +361,7 @@ namespace cupcfd
 					 * @return The point reached after following the vector from the origin point
 					 */
 					__attribute__((warn_unused_result))
-					friend inline EuclideanPoint<T,N> operator+(const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
+					friend inline EuclideanPoint<T,N> operator+(const EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
@@ -433,9 +433,9 @@ namespace cupcfd
 					 * @return The vector for moving from origin to dest
 					 */
 					__attribute__((warn_unused_result))
-					friend inline cupcfd::geometry::euclidean::EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
+					friend inline EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
 					{
-						cupcfd::geometry::euclidean::EuclideanVector<T,N> result;
+						EuclideanVector<T,N> result;
 
 						for(uint i = 0; i < N; i++)
 						{
@@ -456,9 +456,9 @@ namespace cupcfd
 					 * @return The point at the start of the vector
 					 */
 					__attribute__((warn_unused_result))
-					friend inline cupcfd::geometry::euclidean::EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
+					friend inline EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
 					{
-						cupcfd::geometry::euclidean::EuclideanPoint<T,N> result;
+						EuclideanPoint<T,N> result;
 
 						for(uint i = 0; i < N; i++)
 						{
@@ -591,15 +591,17 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into here as well, although will need to fix compiler errors.
 #include "EuclideanPoint.ipp"
 
-// Explicit instantiation declarations of class static variables:
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiDataTypeReg;
+namespace euc = cupcfd::geometry::euclidean;
 
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiDataTypeReg;
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype euc::EuclideanPoint<float,3>::mpiType;
+extern template bool euc::EuclideanPoint<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanPoint<float,2>::mpiType;
+extern template bool euc::EuclideanPoint<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype euc::EuclideanPoint<double,3>::mpiType;
+extern template bool euc::EuclideanPoint<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanPoint<double,2>::mpiType;
+extern template bool euc::EuclideanPoint<double,2>::mpiDataTypeReg;
 
 #endif

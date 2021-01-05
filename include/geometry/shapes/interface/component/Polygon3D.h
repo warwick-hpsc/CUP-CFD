@@ -19,6 +19,8 @@
 #include "EuclideanVector3D.h"
 #include "Polygon.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -31,12 +33,11 @@ namespace cupcfd
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam P The polygon specialisation
 			 * @tparam T Numerical type
 			 * @tparam V Number of vertices
 			 */
-			template <class P, class T, uint V>
-			class Polygon3D : public Polygon<Polygon3D<P,T,V>, T, 3, V>
+			template <class T, uint V>
+			class Polygon3D : public Polygon<Polygon3D<T,V>, T, 3, V>
 			{
 				public:
 					// === Constructors/Deconstructors ===
@@ -58,50 +59,82 @@ namespace cupcfd
 					 * onto the same plane as the polygon (i.e. points that lie directly above or below
 					 * the polygon will consider 'inside').
 					 *
-					 * This is a generic interface should derived classes prefer to implement additional
-					 * methods.
-					 *
 					 * @return Return true if the point exists inside this polygon
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
-					// inline bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
-					// 									const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
-					// 									cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersect, 
-					// 									T& timeToIntersect, 
-					// 									bool verbose);
-
+					/**
+					 * Return area of polygon, calculating if not known
+					 *
+					 * @return Polygon area
+					 */
 					__attribute__((warn_unused_result))
 					T getArea();
 
+					/**
+					 * Return centroid of polygon, calculating if not known
+					 *
+					 * @return Polygon centroid
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,3> getCentroid();
 
+					/**
+					 * Return normal of polygon, calculating if not known
+					 *
+					 * @return Polygon normal
+					 */
 					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,3> getNormal();
+					euc::EuclideanVector3D<T> getNormal();
 
 				protected:
+					/**
+					 * Calculate area of polygon
+					 *
+					 * @return Polygon area
+					 */
 					__attribute__((warn_unused_result))
 					T computeArea();
 
+					/**
+					 * Calculate centroid of polygon
+					 *
+					 * @return Polygon centroid
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,3> computeCentroid();
 
 					/**
 					 * Compute the normal of the polygon. Direction will depend on ordering of vertices.
 					 *
-					 * @return Return the computed normal vector of the polygon.
+					 * @return Polygon normal
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanVector3D<T> computeNormal();
+					euc::EuclideanVector3D<T> computeNormal();
 
-
+					/**
+					 * Rotate this polygon to align normal with 'v'
+					 *
+					 * @param v Target vector for alignment
+					 */
 					void alignNormalWithVector(euc::EuclideanVector3D<T>& v);
 
+					/**
+					 * Check whether all vertices are coplanar
+					 *
+					 * @return True if coplanar
+					 */
 					__attribute__((warn_unused_result))
 					bool coplanar();
 
+					/**
+					 * Check whether any polygon edges intersect, indicating 
+					 * vertices are incorrectly ordered. Directly-connected
+					 * edges are not checked.
+					 *
+					 * @return True if no edges intersect
+					 */
 					__attribute__((warn_unused_result))
 					bool verifyNoEdgesIntersect();
 
@@ -128,7 +161,7 @@ namespace cupcfd
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			inline bool isVertexOrderClockwise(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& observation, cupcfd::geometry::euclidean::EuclideanPoint<T,3> * points, int nPoints);
+			inline bool isVertexOrderClockwise(const euc::EuclideanPoint<T,3>& observation, euc::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}
 }

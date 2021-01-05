@@ -20,25 +20,23 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
-			template <class P, class T, uint V>
-			Polygon2D<P,T,V>::Polygon2D() {
+			template <class T, uint V>
+			Polygon2D<T,V>::Polygon2D() {
+			}
+
+			template <class T, uint V>
+			Polygon2D<T,V>::Polygon2D(euc::EuclideanPoint<T,2> vertices[V]) {
+				for (int i=0; i<V; i++) {
+					this->vertices[i] = vertices[i];
+				}
 			}
 			
-			template <class P, class T, uint V>
-			Polygon2D<P,T,V>::~Polygon2D() {
+			template <class T, uint V>
+			Polygon2D<T,V>::~Polygon2D() {
 			}
-			
-			template <class P, class T, uint V>
-			bool Polygon2D<P,T,V>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,2>& point) {
-				return static_cast<P*>(this)->isPointInside(point);
-			}
-			
-			template <class P, class T, uint V>
-			T Polygon2D<P,T,V>::computeArea() {
-				return static_cast<P*>(this)->computeArea();
-			}
-			template <class P, class T, uint V>
-			T Polygon2D<P,T,V>::getArea() {
+
+			template <class T, uint V>
+			T Polygon2D<T,V>::getArea() {
 				if (!this->areaComputed) {
 					this->area = this->computeArea();
 					this->areaComputed = true;
@@ -46,8 +44,8 @@ namespace cupcfd
 				return this->area;
 			}
 
-			template <class P, class T, uint V>
-			euc::EuclideanPoint<T,2> Polygon2D<P,T,V>::computeCentroid() {
+			template <class T, uint V>
+			euc::EuclideanPoint<T,2> Polygon2D<T,V>::computeCentroid() {
 				// https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
 				euc::EuclideanPoint<T,2> centroid(T(0), T(0));
@@ -62,8 +60,8 @@ namespace cupcfd
 
 				return centroid;
 			}
-			template <class P, class T, uint V>
-			euc::EuclideanPoint<T,2> Polygon2D<P,T,V>::getCentroid() {
+			template <class T, uint V>
+			euc::EuclideanPoint<T,2> Polygon2D<T,V>::getCentroid() {
 				if (!this->centroidComputed) {
 					this->centroid = this->computeCentroid();
 					this->centroidComputed = true;

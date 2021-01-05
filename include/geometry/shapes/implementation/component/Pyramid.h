@@ -32,7 +32,6 @@ namespace cupcfd
 			 * of Pyramid shapes
 			 *
 			 * @tparam P Polygon specialisation
-			 * @tparam V Number of vertices in base polygon
 			 * @tparam T Datatype of the geometry
 			 */
 			template <class P, class T>
@@ -74,15 +73,49 @@ namespace cupcfd
 					// === Concrete Methods ===
 
 					/**
-					 * Determine whether the provided point is inside the polyhedron.
+					 * Determine whether the provided point is on an edge of the Pyramid
+					 *
+					 * @param point The point to test
+					 *
+					 * @return Return true if the point is on an edge of this Pyramid
+					 */
+					__attribute__((warn_unused_result))
+					bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
+
+					/**
+					 * Determine whether the provided point is on a vertex of the Pyramid
+					 *
+					 * @param point The point to test
+					 *
+					 * @return Return true if the point is on an edge of this Pyramid
+					 */
+					__attribute__((warn_unused_result))
+					bool isPointOnVertex(const euc::EuclideanPoint<T,3>& point);
+
+					/**
+					 * Determine whether the provided point is inside the Pyramid.
 					 * Edges/Faces/Vertices are treated as inside the polygon for this purpose.
 					 *
-					 * @return Return true if the point exists inside this polyhedron
+					 * @return Return true if the point exists inside this Pyramid
 					 */
 					__attribute__((warn_unused_result))
 					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
-				// protected:
+					/**
+					 * Return volume of Pyramid, calculating if not known
+					 *
+					 * @return Pyramid volume
+					 */
+					T getVolume();
+
+					/**
+					 * Return centroid of Pyramid, calculating if not known
+					 *
+					 * @return Pyramid centroid
+					 */
+					euc::EuclideanPoint<T,3> getCentroid();
+
+				protected:
 					/**
 					 * Compute the volume of the pyramid
 					 *

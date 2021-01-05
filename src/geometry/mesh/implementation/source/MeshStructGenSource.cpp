@@ -305,8 +305,7 @@ namespace cupcfd
 					euc::EuclideanPoint<T,3> brb = centers[i] + euc::EuclideanPoint<T,3>(dX, -dY, -dZ);
 
 					cupcfd::geometry::shapes::Hexahedron<T> cellShape(tlf, trf, blf, brf, tlb, trb, blb, brb);
-					cellVol[i] = cellShape.computeVolume();
-					// cellVol[i] = cellShape.volume;
+					cellVol[i] = cellShape.getVolume();
 				}
 
 				return cupcfd::error::E_SUCCESS;

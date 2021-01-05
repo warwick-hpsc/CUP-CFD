@@ -78,15 +78,26 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					auto isPointInside(const euc::EuclideanPoint<T,N>& point);
 
+					/**
+					 * Return area of polygon, calculating if not known
+					 *
+					 * @return Polygon area
+					 */
 					__attribute__((warn_unused_result))
 					auto getArea();
 
+					/**
+					 * Return centroid of polygon, calculating if not known
+					 *
+					 * @return Polygon centroid
+					 */
 					__attribute__((warn_unused_result))
 					auto getCentroid();
 
 				protected:
-					// This class contains all data needed/used by derived classes.
-					// Derived classes just implement new methods.
+					// This class contains all data needed/used by derived classes, 
+					// derived classes just implement new methods. 
+					// This makes implementing operator=() much easier.
 					T area;
 					bool areaComputed = false;
 

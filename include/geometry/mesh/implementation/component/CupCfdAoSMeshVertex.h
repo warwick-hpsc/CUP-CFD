@@ -38,6 +38,8 @@
 
 #include "EuclideanVector.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -51,7 +53,7 @@ namespace cupcfd
 					// === Members ===
 
 					/** Vertex position in euclidean space from origin of (0,0,0) **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> pos;
+					euc::EuclideanPoint<T,3> pos;
 
 					/**
 					 * Padding to increase class byte size - sizeof(char) * CUPCFD_AOS_MESH_VERTEX_PADDING

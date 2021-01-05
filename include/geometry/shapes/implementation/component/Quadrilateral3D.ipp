@@ -66,7 +66,7 @@ namespace cupcfd
 											    const euc::EuclideanPoint<T,3>& b,
 											    const euc::EuclideanPoint<T,3>& c,
 											    const euc::EuclideanPoint<T,3>& d)
-			: Polygon3D<Quadrilateral3D<T>, T, 4>(a, b, c, d)
+			: Polygon3D<T, 4>(a, b, c, d)
 			{
 			}
 
@@ -84,24 +84,6 @@ namespace cupcfd
 			template <class T>
 			Quadrilateral3D<T> * Quadrilateral3D<T>::clone() {
 				return new Quadrilateral3D(*this);
-			}
-
-			// === Static Methods ===
-
-			template <class T>
-			T Quadrilateral3D<T>::triangularAreaSum(const euc::EuclideanPoint<T,3>& a,
-												    const euc::EuclideanPoint<T,3>& b,
-													const euc::EuclideanPoint<T,3>& c,
-													const euc::EuclideanPoint<T,3>& d) {
-				// Decompose the Quadrilateral into Non-Overlapping Triangles
-				Triangle3D<T> tri1 = Triangle3D<T>(a, b, c);
-				Triangle3D<T> tri2 = Triangle3D<T>(a, d, c);
-
-				// Compute the area of each triangle and sum them
-				T area = tri1.getArea();
-				area = area + tri2.getArea();
-
-				return area;
 			}
 		}
 	}

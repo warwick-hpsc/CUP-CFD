@@ -13,8 +13,6 @@
 #ifndef CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR2D_IPP_H
 #define CUPCFD_GEOMETRY_EUCLIDEAN_VECTOR2D_IPP_H
 
-namespace euc = cupcfd::geometry::euclidean;
-
 namespace cupcfd
 {
 	namespace geometry
@@ -78,7 +76,7 @@ namespace cupcfd
 					// Therefore can only intersect if the point *is* the intersection point
 
 					// Test whether the point lies on the line
-					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(p3, p4, p1);
+					bool isIntersect = isPointOnLine(p3, p4, p1);
 					if(isIntersect) {
 						intersectPoint = p1;
 						return cupcfd::error::E_SUCCESS;
@@ -99,7 +97,7 @@ namespace cupcfd
 					#endif
 
 					// Test whether the point lies on the line
-					bool isIntersect = cupcfd::geometry::euclidean::isPointOnLine(p1, p2, p3);
+					bool isIntersect = isPointOnLine(p1, p2, p3);
 					
 					if(isIntersect) {
 						intersectPoint = p3;
@@ -205,8 +203,7 @@ namespace cupcfd
 	}
 }
 
-template class cupcfd::geometry::euclidean::EuclideanVector2D<float>;
-
-template class cupcfd::geometry::euclidean::EuclideanVector2D<double>;
+template class euc::EuclideanVector2D<float>;
+template class euc::EuclideanVector2D<double>;
 
 #endif

@@ -38,10 +38,13 @@ namespace cupcfd
 			class Triangle3D : public Triangle<Triangle3D<T>, T, 3>
 			{
 				public:
-					// Because Triangle3D has no inheritance path back to
-					// Polygon3D, which contains useful methods, maintain 
-					// a Polygon3D member variable to get to those methods:
-					Polygon3D<Triangle3D<T>, T, 3> triAsPolygon3D;
+					/**
+					 * Because Triangle3D has no inheritance path back to
+					 * Polygon3D, which contains useful methods, maintain 
+					 * a Polygon3D member variable to get to those methods:
+					 * Polygon3D<Triangle3D<T>, T, 3> triAsPolygon3D;
+					 */
+					Polygon3D<T, 3> triAsPolygon3D;
 
 					// === Constructor/Deconstructors ===
 
@@ -67,9 +70,20 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
+					/**
+					 * Return normal of triangle, calculating if not known
+					 *
+					 * @return Triangle normal
+					 */
 					__attribute__((warn_unused_result))
 					euc::EuclideanVector3D<T> getNormal();
 
+					/**
+					 * Determine whether the provided point is inside the Triangle.
+					 * Edges/Vertices are treated as inside the Triangle for this purpose.
+					 *
+					 * @return Return true if the point exists inside this Triangle
+					 */
 					__attribute__((warn_unused_result))
 					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 

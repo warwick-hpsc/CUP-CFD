@@ -56,36 +56,6 @@ namespace cupcfd
 					 *
 					 */
 					~Tetrahedron();
-
-					// === Concrete Methods ===
-
-					/**
-					 * Determine whether the provided point is on an edge of the polyhedron
-					 *
-					 * @param point The point to test
-					 *
-					 * @return Return true if the point is on an edge of this polyhedron
-					 */
-					__attribute__((warn_unused_result))
-					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
-
-					/**
-					 * Determine whether the provided point is on a vertex of the polyhedron
-					 *
-					 * @param point The point to test
-					 *
-					 * @return Return true if the point is on an edge of this polyhedron
-					 */
-					__attribute__((warn_unused_result))
-					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
-
-				// protected:
-					/**
-					 * Compute the centroid
-					 *
-					 * @return The computed centroid
-					 */
-					// cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

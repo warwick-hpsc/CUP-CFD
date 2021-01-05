@@ -22,8 +22,8 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
-			template <class P, class T, uint V>
-			T Polygon3D<P,T,V>::computeArea() {
+			template <class T, uint V>
+			T Polygon3D<T,V>::computeArea() {
 				T area = T(0);
 				euc::EuclideanPoint<T,3> v0 = this->vertices[0];
 				for (int i2=2; i2<V; i2++) {
@@ -35,11 +35,11 @@ namespace cupcfd
 			}
 
 			// Explicit Instantiation
-			template class Polygon3D<Quadrilateral3D<float>, float, 4>;
-			template class Polygon3D<Quadrilateral3D<double>, double, 4>;
+			template class Polygon3D<float, 4>;
+			template class Polygon3D<double, 4>;
+			template class Polygon3D<float, 3>;
+			template class Polygon3D<double, 3>;
 
-			template class Polygon3D<Triangle3D<float>, float, 3>;
-			template class Polygon3D<Triangle3D<double>, double, 3>;
 		}
 	}
 }

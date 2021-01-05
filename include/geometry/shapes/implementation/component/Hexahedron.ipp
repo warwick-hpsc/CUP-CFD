@@ -48,18 +48,6 @@ namespace cupcfd
 			 	this->f5 = cupcfd::geometry::shapes::Quadrilateral3D<T>(tlf, tlb, blb, blf);
 			 	this->f6 = cupcfd::geometry::shapes::Quadrilateral3D<T>(trf, trb, brb, brf);
 
-			 	// // Decompose Hexahedron into 5 tetrahedrons
-				// Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
-				// Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
-				// Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
-				// Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
-				// Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
-
-				// this->centroid = ((t1.volume * t1.centroid) + (t2.volume * t2.centroid) + (t3.volume * t3.centroid) + (t4.volume * t4.centroid) + (t5.volume * t5.centroid)) 
-				// 				/ (t1.volume + t2.volume + t3.volume + t4.volume + t5.volume);
-
-				// this->volume = t1.volume + t2.volume + t3.volume + t4.volume + t5.volume;
-
 			}
 
 			template <class T>
@@ -73,17 +61,67 @@ namespace cupcfd
 			{
 				// To ensure all face normals are facing away from centroid, 
 				// compute a crude centroid as arithmetic mean of quad centroids:
-
 			}
 
 			template <class T>
 			Hexahedron<T>::~Hexahedron() {
 			}
 
-			// === Static Methods ===
-
-
 			// === Concrete Methods ===
+
+			template <class T>
+			T Hexahedron<T>::getVolume() {
+				if (!this->volumeComputed) {
+					this->volume = this->computeVolume();
+					this->volumeComputed = true;
+				}
+				return this->volume;
+			}
+
+			template <class T>
+			euc::EuclideanPoint<T,3> Hexahedron<T>::getCentroid() {
+				if (!this->centroidComputed) {
+					this->centroid = this->computeCentroid();
+					this->centroidComputed = true;
+				}
+				return this->centroid;
+			}
+
+			template<class T>
+			T Hexahedron<T>::computeVolume() {
+				// General Case means we cannot assume it is a regular hexahedron.
+				// Divide the hexahedron into 5 tetrahedrons, and sum their volumes.
+				
+				// 5 Tetrahedrons
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
+				return t1.getVolume() + t2.getVolume() + t3.getVolume() + t4.getVolume() + t5.getVolume();
+			}
+			
+			template<class T>
+			euc::EuclideanPoint<T,3> Hexahedron<T>::computeCentroid() {
+				// ToDo: Is this correct for hexahedrons, or just cubes?.....
+				// return ((T(1)/T(8)) * (tlf + trf + blf + brf + tlb + trb + blb + brb));
+
+				// Update: apparently, centroid of a polyhedron is volume-weighted average of its non-overlapping tetrahedrons.
+				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
+				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
+				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
+				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
+				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
+
+				T totalVolume = t1.getVolume()+t2.getVolume()+t3.getVolume()+t4.getVolume()+t5.getVolume();
+
+				return (	  (t1.getVolume() * t1.getCentroid())
+							+ (t2.getVolume() * t2.getCentroid()) 
+							+ (t3.getVolume() * t3.getCentroid())
+							+ (t4.getVolume() * t4.getCentroid())
+							+ (t5.getVolume() * t5.getCentroid()) 	) 
+						/ totalVolume;
+ 			}
 
 			template<class T>
 			inline bool Hexahedron<T>::isPointInside(const euc::EuclideanPoint<T,3>& point) {
@@ -198,44 +236,6 @@ namespace cupcfd
 				return (tlf == point) || (trf == point) || (tlb == point) || (trb == point) ||
 					   (blf == point) || (brf == point) || (blb == point) || (brb == point);
 			}
-
-			template<class T>
-			T Hexahedron<T>::computeVolume() {
-				// General Case means we cannot assume it is a regular hexahedron
-				// Divide the hexahedron into tetrahedrons (triangular pyramids), and compute the volumes of
-				// those, then sum
-				
-				// 5 Tetrahedrons
-				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
-				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
-				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
-				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
-				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
-				return t1.computeVolume() + t2.computeVolume() + t3.computeVolume() + t4.computeVolume() + t5.computeVolume();
-			}
-			
-			template<class T>
-			euc::EuclideanPoint<T,3> Hexahedron<T>::computeCentroid() {
-				// ToDo: Is this correct for hexahedrons, or just cubes?.....
-				return ((T(1)/T(8)) * (tlf + trf + blf + brf + tlb + trb + blb + brb));
-
-				/*
-				// Update: apparently, centroid of a polyhedron is volume-weighted average of its non-overlapping tetrahedrons.
-				// 5 Tetrahedrons
-				Tetrahedron<T> t1(trb, Triangle3D<T>(brb, brf, blb));
-				Tetrahedron<T> t2(tlf, Triangle3D<T>(blf, blb, brf));
-				Tetrahedron<T> t3(trb, Triangle3D<T>(tlb, blb, tlf));
-				Tetrahedron<T> t4(brf, Triangle3D<T>(trf, tlf, trb));
-				Tetrahedron<T> t5(trb, Triangle3D<T>(tlf, blb, brf));
-
-				return (	  (t1.computeVolume()  * t1.computeCentroid())
-							+ (t2.computeVolume()  * t2.computeCentroid()) 
-							+ (t3.computeVolume()  * t3.computeCentroid())
-							+ (t4.computeVolume()  * t4.computeCentroid())
-							+ (t5.computeVolume()  * t5.computeCentroid()) 	) 
-						/ (t1.computeVolume()  + t2.computeVolume()  + t3.computeVolume()  + t4.computeVolume()  + t5.computeVolume() );
-				*/
- 			}
 		}
 	}
 }

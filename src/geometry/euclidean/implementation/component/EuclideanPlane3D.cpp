@@ -217,6 +217,7 @@ namespace cupcfd
 				normVec.cmp[0] = (u.cmp[1] * v.cmp[2]) - (u.cmp[2] * v.cmp[1]);
 				normVec.cmp[1] = (u.cmp[2] * v.cmp[0]) - (u.cmp[0] * v.cmp[2]);
 				normVec.cmp[2] = (u.cmp[0] * v.cmp[1]) - (u.cmp[1] * v.cmp[0]);
+				normVec.normalise();
 
 				return normVec;
 			}

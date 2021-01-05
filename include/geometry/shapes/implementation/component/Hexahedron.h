@@ -19,6 +19,9 @@
 #include "EuclideanPoint.h"
 #include "Quadrilateral3D.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -45,35 +48,35 @@ namespace cupcfd
 					// Could makes these a vertices array and enforce ordering internally
 
 					/** Top-Left Front Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> tlf;
+					euc::EuclideanPoint<T,3> tlf;
 
 					/** Top-Right Front Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> trf;
+					euc::EuclideanPoint<T,3> trf;
 
 					/** Bottom-Left Front Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> blf;
+					euc::EuclideanPoint<T,3> blf;
 
 					/** Bottom-Right Front Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> brf;
+					euc::EuclideanPoint<T,3> brf;
 
 					/** Top-Left Back Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> tlb;
+					euc::EuclideanPoint<T,3> tlb;
 
 					/** Top-Right Back Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> trb;
+					euc::EuclideanPoint<T,3> trb;
 
 					/** Bottom-Left Back Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> blb;
+					euc::EuclideanPoint<T,3> blb;
 
 					/** Bottom-Right Back Vertex **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> brb;
+					euc::EuclideanPoint<T,3> brb;
 
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f1;
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f2;
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f3;
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f4;
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f5;
-					cupcfd::geometry::shapes::Quadrilateral3D<T> f6;
+					shapes::Quadrilateral3D<T> f1;
+					shapes::Quadrilateral3D<T> f2;
+					shapes::Quadrilateral3D<T> f3;
+					shapes::Quadrilateral3D<T> f4;
+					shapes::Quadrilateral3D<T> f5;
+					shapes::Quadrilateral3D<T> f6;
 
 
 					// === Constructors/Deconstructors ===
@@ -93,32 +96,44 @@ namespace cupcfd
 					 * @param blb Bottom-left Back Vertex
 					 * @param brb Bottom-right Back Vertex
 					 */
-					Hexahedron(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& tlf,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& trf,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blf,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brf,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& tlb,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& trb,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blb,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb);
+					Hexahedron(const euc::EuclideanPoint<T,3>& tlf,
+							   const euc::EuclideanPoint<T,3>& trf,
+							   const euc::EuclideanPoint<T,3>& blf,
+							   const euc::EuclideanPoint<T,3>& brf,
+							   const euc::EuclideanPoint<T,3>& tlb,
+							   const euc::EuclideanPoint<T,3>& trb,
+							   const euc::EuclideanPoint<T,3>& blb,
+							   const euc::EuclideanPoint<T,3>& brb);
 
-					Hexahedron(const cupcfd::geometry::shapes::Quadrilateral3D<T>& f1,
-							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f2,
-							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f3,
-							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f4,
-							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f5,
-							   const cupcfd::geometry::shapes::Quadrilateral3D<T>& f6);
-
+					Hexahedron(const shapes::Quadrilateral3D<T>& f1,
+							   const shapes::Quadrilateral3D<T>& f2,
+							   const shapes::Quadrilateral3D<T>& f3,
+							   const shapes::Quadrilateral3D<T>& f4,
+							   const shapes::Quadrilateral3D<T>& f5,
+							   const shapes::Quadrilateral3D<T>& f6);
 
 					/**
 					 *
 					 */
 					~Hexahedron();
 
-
-					// === Static Methods ===
-
 					// === Concrete Methods ===
+
+					/**
+					 * Return volume of hexahedron, calculating if not known
+					 *
+					 * @return Hexahedron volume
+					 */
+					__attribute__((warn_unused_result))
+					T getVolume();
+
+					/**
+					 * Return centroid of hexahedron, calculating if not known
+					 *
+					 * @return Hexahedron centroid
+					 */
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,3> getCentroid();
 
 					/**
 					 * Determine whether the provided point is inside the polyhedron.
@@ -129,7 +144,7 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on an edge of the polyhedron
@@ -139,7 +154,7 @@ namespace cupcfd
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on a vertex of the polyhedron
@@ -149,9 +164,9 @@ namespace cupcfd
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointOnVertex(const euc::EuclideanPoint<T,3>& point);
 
-				// protected:
+				protected:
 					/**
 					 * Compute the volume of this polyhedron
 					 *
@@ -166,7 +181,7 @@ namespace cupcfd
 					 * @return The computed centroid
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					euc::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

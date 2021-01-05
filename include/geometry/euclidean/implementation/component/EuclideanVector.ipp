@@ -81,7 +81,7 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>	
-			cupcfd::geometry::euclidean::EuclideanVector<T,N> EuclideanVector<T,N>::computeOrthagonalVector() {
+			EuclideanVector<T,N> EuclideanVector<T,N>::computeOrthagonalVector() {
 				// Orthagonal Vector has a Dot Product of 0 with this Vector
 				// I.e. (u.x * v.x) + (u.y * v.y) + .... (u.n-1 * v.n-1) == 0
 				// Since we know u, pick 1 for all v components except one, and solve
@@ -117,7 +117,7 @@ namespace cupcfd
 				T coefficient = (sum * T(-1)) / this->cmp[index];
 				
 				// Create and return the vector
-				cupcfd::geometry::euclidean::EuclideanVector<T,N> result(T(1));
+				EuclideanVector<T,N> result(T(1));
 				result.cmp[index] = coefficient;
 				
 				return result;
