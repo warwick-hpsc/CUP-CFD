@@ -16,6 +16,8 @@
 #include <stdexcept>
 
 #include "Triangle.h"
+#include "Triangle2D.h"
+#include "Triangle3D.h"
 #include "EuclideanPoint.h"
 
 using namespace cupcfd::geometry::shapes;
@@ -32,7 +34,7 @@ BOOST_AUTO_TEST_CASE(heronsFormula_test1, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double,2> p3(3.3, 4.0);
 
 	// Test and Check
-	double area = Triangle<double,2>::heronsFormula(p1, p2, p3);
+	double area = Triangle<Triangle2D<double>, double,2>::heronsFormula(p1, p2, p3);
 	BOOST_TEST(area == 1.2);
 }
 
@@ -45,7 +47,7 @@ BOOST_AUTO_TEST_CASE(heronsFormula_test2, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double,2> p3(3.0, 12.0);
 
 	// Test and Check
-	double area = Triangle<double,2>::heronsFormula(p1, p2, p3);
+	double area = Triangle<Triangle2D<double>, double,2>::heronsFormula(p1, p2, p3);
 	BOOST_TEST(area == 12.0);
 }
 
@@ -58,7 +60,7 @@ BOOST_AUTO_TEST_CASE(areaHeronsFormula_test3,  * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double,3> p3(3.3, 4.0, 9.0);
 
 	// Test and Check
-	double area = Triangle<double,3>::heronsFormula(p1, p2, p3);
+	double area = Triangle<Triangle3D<double>, double,3>::heronsFormula(p1, p2, p3);
 	BOOST_TEST(area == 4.25683);
 }
 
@@ -71,6 +73,6 @@ BOOST_AUTO_TEST_CASE(areaHeronsFormula_test4,  * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double,3> p3(3.0, 12.0, 15.4);
 
 	// Test and Check
-	double area = Triangle<double,3>::heronsFormula(p1, p2, p3);
+	double area = Triangle<Triangle3D<double>, double,3>::heronsFormula(p1, p2, p3);
 	BOOST_TEST(area == 16.3126);
 }

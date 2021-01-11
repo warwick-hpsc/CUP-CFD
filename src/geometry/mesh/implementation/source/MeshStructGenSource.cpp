@@ -295,16 +295,23 @@ namespace cupcfd
 				T dZ = this->dSz/2;
 
 				for(I i = 0; i < nCellLabels; i++) {
-					euc::EuclideanPoint<T,3> tlf = centers[i] + euc::EuclideanPoint<T,3>(-dX, dY, dZ);
-					euc::EuclideanPoint<T,3> trf = centers[i] + euc::EuclideanPoint<T,3>(dX, dY, dZ);
-					euc::EuclideanPoint<T,3> tlb = centers[i] + euc::EuclideanPoint<T,3>(-dX, -dY, dZ);
-					euc::EuclideanPoint<T,3> trb = centers[i] + euc::EuclideanPoint<T,3>(dX, -dY, dZ);
-					euc::EuclideanPoint<T,3> blf = centers[i] + euc::EuclideanPoint<T,3>(-dX, dY, -dZ);
-					euc::EuclideanPoint<T,3> brf = centers[i] + euc::EuclideanPoint<T,3>(dX, dY, -dZ);
-					euc::EuclideanPoint<T,3> blb = centers[i] + euc::EuclideanPoint<T,3>(-dX, -dY, -dZ);
-					euc::EuclideanPoint<T,3> brb = centers[i] + euc::EuclideanPoint<T,3>(dX, -dY, -dZ);
+					euc::EuclideanPoint<T,3> tlf = centers[i] + euc::EuclideanVector<T,3>(-dX,  dY,  dZ);
+					euc::EuclideanPoint<T,3> trf = centers[i] + euc::EuclideanVector<T,3>( dX,  dY,  dZ);
+					euc::EuclideanPoint<T,3> tlb = centers[i] + euc::EuclideanVector<T,3>(-dX, -dY,  dZ);
+					euc::EuclideanPoint<T,3> trb = centers[i] + euc::EuclideanVector<T,3>( dX, -dY,  dZ);
+					euc::EuclideanPoint<T,3> blf = centers[i] + euc::EuclideanVector<T,3>(-dX,  dY, -dZ);
+					euc::EuclideanPoint<T,3> brf = centers[i] + euc::EuclideanVector<T,3>( dX,  dY, -dZ);
+					euc::EuclideanPoint<T,3> blb = centers[i] + euc::EuclideanVector<T,3>(-dX, -dY, -dZ);
+					euc::EuclideanPoint<T,3> brb = centers[i] + euc::EuclideanVector<T,3>( dX, -dY, -dZ);
+					
+					shapes::Quadrilateral3D<T> faceTop(tlf, trf, trb, tlb);
+					shapes::Quadrilateral3D<T> faceBottom(blf, brf, brb, blb);
+					shapes::Quadrilateral3D<T> faceFront(tlf, trf, brf, blf);
+					shapes::Quadrilateral3D<T> faceBack(tlb, trb, brb, blb);
+					shapes::Quadrilateral3D<T> faceLeft(tlf, tlb, blb, blf);
+					shapes::Quadrilateral3D<T> faceRight(trf, trb, brb, brf);
+					cupcfd::geometry::shapes::Hexahedron<T> cellShape(faceTop, faceBottom, faceFront, faceBack, faceRight, faceLeft);
 
-					cupcfd::geometry::shapes::Hexahedron<T> cellShape(tlf, trf, blf, brf, tlb, trb, blb, brb);
 					cellVol[i] = cellShape.getVolume();
 				}
 

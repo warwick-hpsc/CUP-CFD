@@ -40,6 +40,14 @@ namespace cupcfd
 					EuclideanVector3D(T a, T b, T c);
 					EuclideanVector3D(const EuclideanVector<T,3>& v);
 
+					operator EuclideanVector<T,3>() const  {
+						EuclideanVector<T,3> base;
+						for (uint i=0; i<3; i++) {
+							base.cmp[i] = this->cmp[i];
+						}
+						return base;
+					}
+
 					/**
 					 * Compute the vector that is the cross product of this vector and another vector.
 					 * This is currently only defined for 3D Vectors, so is not a class function
@@ -123,9 +131,9 @@ namespace cupcfd
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2, 
-																		const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4, 
-																		EuclideanPoint<T,3>& intersectPoint);
+			cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2, 
+																const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4, 
+																EuclideanPoint<T,3>& intersectPoint);
 
 			/**
 			 * Test whether a point lies on a 3D line delinated by two other points
@@ -141,8 +149,8 @@ namespace cupcfd
 			bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
 								const EuclideanPoint<T,3>& p);
 
-			template <class T, unsigned int N>
-			static Matrix<T,N,N> calculateRotationMatrix(
+			template <class T>
+			static Matrix<T,3,3> calculateRotationMatrix(
 								const EuclideanVector3D<T>& source, 
 								const EuclideanVector3D<T>& target);
 

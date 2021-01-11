@@ -31,20 +31,21 @@ namespace cupcfd
 									const P& base)
 			: apex(apex), base(base)
 			{
-				/*
+				euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
+				T height = plane.shortestDistance(apex);
+				if (height == T(0)) {
+					printf("Distance between apex and plane is zero\n");
+					printf("- apex: "); apex.print(); printf("\n");
+					printf("- base:\n");
+					base.print();
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+				}
+
 				// Invert base if its normal points inwards:
-				// T dp = this->base.normal.dotProduct(this->base.centroid - this->apex);
-				T dp = this->base.computeNormal().dotProduct(this->base.computeCentroid() - this->apex);
+				T dp = this->base.getNormal().dotProduct(this->base.getCentroid() - this->apex);
 				if (dp < T(0.0)) {
 					this->base.reverseVertexOrdering();
 				}
-				*/
-
-				// euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
-				// T height = plane.shortestDistance(this->apex);
-				// this->volume = (T(1.0)/T(3.0)) * this->base.area * height;
-
-				// this->centroid = this->base.centroid + (T(0.25) * (this->apex - this->base.centroid));
 			}
 
 			template <class P, class T>
@@ -209,6 +210,9 @@ namespace cupcfd
 				// Compute Height as shortest distance from base plane
 				euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
 				T height = plane.shortestDistance(apex);
+				if (height == T(0)) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+				}
 				
 				// (3) Compute and return volume
 				return (T(1.0)/T(3.0)) * area * height;

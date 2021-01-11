@@ -31,9 +31,8 @@ namespace cupcfd
 			/**
 			 * Class for storing TriPrism data.
 			 *
-			 * ToDo: Currently presumes that the non-triangular faces
-			 * have normals in the same plane and does not handle truncated prisms
-			 * (i.e. the top and bottom triangular faces are parallel)
+			 * ToDo: Generalise class, to accept any two identical Polygons as faces, 
+			 *       not just triangles.
 			 *
 			 * @tparam T Numerical type
 			 *
@@ -51,7 +50,8 @@ namespace cupcfd
 					// === Constructors/Deconstructors ===
 
 					/**
-					 * Construct a Triprism from the provided vertices
+					 * Construct a Triprism from the provided vertices. Assumes that 
+					 * edge exists between vertex i of Top and vertex i of Bottom.
 					 *
 					 * @param top Top Triangle
 					 * @param bottom Bottom Triangle

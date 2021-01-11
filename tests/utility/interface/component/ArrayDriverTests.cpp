@@ -65,9 +65,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test1)
 {
 	int source[11] = {1, 1, 1, 1, 2, 3, 3, 4, 4, 7, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 11, & count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 11, & count);
 	BOOST_CHECK_EQUAL(count, 3);
 }
 
@@ -76,9 +74,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test2)
 {
 	int source[14] = {1, 1, 1, 1, 2, 2, 3, 3, 4, 4, 7, 7, 325, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 14, & count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 14, & count);
 	BOOST_CHECK_EQUAL(count, 0);
 }
 
@@ -88,10 +84,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test3)
 	int source[11] = {7, 5, 3, 2, 15, 2, 7, 21, 100, 200, 150};
 	int sourceCmp[11] = {7, 5, 3, 2, 15, 2, 7, 21, 100, 200, 150};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 11, & count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
-
+	uniqueCount(source, 11, & count);
 	// Source should remain unmodified (non-destructive)
 	BOOST_CHECK_EQUAL_COLLECTIONS(source, source + 11, sourceCmp, sourceCmp + 11);
 	BOOST_CHECK_EQUAL(count, 7);
@@ -102,9 +95,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test4)
 {
 	int source[6] = {1, 2, 3, 4, 7, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 6, &count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 6, &count);
 	BOOST_CHECK_EQUAL(count, 6);
 }
 
@@ -113,9 +104,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test5)
 {
 	int source[11] = {1, 2, 2, 3, 3, 4, 4, 7, 7, 325, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 11, &count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 11, &count);
 	BOOST_CHECK_EQUAL(count, 1);
 }
 
@@ -124,9 +113,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test6)
 {
 	int source[11] = {1, 1, 2, 2, 3, 3, 4, 4, 7, 7, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 11, &count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 11, &count);
 	BOOST_CHECK_EQUAL(count, 1);
 }
 
@@ -135,9 +122,7 @@ BOOST_AUTO_TEST_CASE(uniqueCount_test7)
 {
 	int source[10] = {1, 1, 2, 2, 3, 3, 4, 4, 7, 325};
 	int count;
-	cupcfd::error::eCodes err = uniqueCount(source, 10, &count);
-
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	uniqueCount(source, 10, &count);
 	BOOST_CHECK_EQUAL(count, 2);
 }
 

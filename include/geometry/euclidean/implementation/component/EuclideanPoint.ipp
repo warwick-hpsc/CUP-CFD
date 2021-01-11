@@ -38,6 +38,20 @@ namespace cupcfd
 			}
 			
 			template <class T, unsigned int N>
+			inline bool EuclideanPoint<T,N>::approximateEquals(const EuclideanPoint<T,N>& p, float pct_tolerance) {
+				for(uint i = 0; i < N; i++) {
+					T v = this->cmp[i] / p.cmp[i];
+					if (v > T(1.0)+pct_tolerance) {
+						return false;
+					}
+					if (v < T(1.0)-pct_tolerance) {
+						return false;
+					}
+				}
+				return true;
+			}
+			
+			template <class T, unsigned int N>
 			inline void EuclideanPoint<T,N>::operator=(const EuclideanPoint<T,N>& source) {
 				for(uint i = 0; i < N; i++) {
 					this->cmp[i] = source.cmp[i];

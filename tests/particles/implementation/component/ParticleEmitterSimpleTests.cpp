@@ -64,10 +64,10 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
     dist::DistributionFixed<int,double> decayRate(0.1);
     dist::DistributionFixed<int,double> decayThreshold(10);
 
-    ParticleEmitterSimple<int,double> emitter(0, 10, 4, position, &rate, &angleXY, &angleRotation, &speed,
-    										  &accelerationX, &accelerationY, &accelerationZ,
-											  &jerkX, &jerkY, &jerkZ,
-											  &decayRate, &decayThreshold);
+    ParticleEmitterSimple<int,double> emitter(0, 10, 4, 0, position, &rate, &angleXY, &angleRotation, &speed,
+    										&accelerationX, &accelerationY, &accelerationZ,
+											&jerkX, &jerkY, &jerkZ,
+											&decayRate, &decayThreshold);
 
     BOOST_CHECK_EQUAL(emitter.localCellID, 0);
     BOOST_CHECK_EQUAL(emitter.globalCellID, 10);
@@ -102,7 +102,7 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
     dist::DistributionFixed<int,double> decayThreshold(10);
 
     // Rank is set to silly arbitrary value just to check it copies since we have no communicator
-    ParticleEmitterSimple<int,double> emitter(0, 10, 721, position, &rate, &angleXY, &angleRotation, &speed,
+    ParticleEmitterSimple<int,double> emitter(0, 10, 721, 0, position, &rate, &angleXY, &angleRotation, &speed,
 			  &accelerationX, &accelerationY, &accelerationZ,
 			  &jerkX, &jerkY, &jerkZ,
 			  &decayRate, &decayThreshold);
@@ -177,7 +177,7 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
 
     	BOOST_TEST(particles[i].getDecayRate() == decayRateCmp[i]);
 
-    	BOOST_CHECK_EQUAL(particles[i].rank, 721);
+    	BOOST_CHECK_EQUAL(particles[i].getRank(), 721);
     }
 
     free(particles);

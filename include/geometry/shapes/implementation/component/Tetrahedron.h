@@ -44,7 +44,12 @@ namespace cupcfd
 					// === Constructors/Deconstructors ===
 
 					/**
-					 * Build a Pyramid object.
+					 * Default constructor
+					 */
+					Tetrahedron();
+
+					/**
+					 * Build a Tetrahedron object.
 					 *
 					 * @param apex The point that defines the apex of pyramid
 					 * @param base The Triangle3D that defines the base of pyramid
@@ -56,6 +61,11 @@ namespace cupcfd
 					 *
 					 */
 					~Tetrahedron();
+
+					/**
+					 * Pretty-print to STDOUT
+					 */
+					void print();
 			};
 		}
 	}

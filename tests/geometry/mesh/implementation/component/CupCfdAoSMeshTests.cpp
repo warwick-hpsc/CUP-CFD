@@ -91,12 +91,10 @@ BOOST_AUTO_TEST_CASE(addVertex_test1)
 	for(int i = 0; i < 18; i++)
 	{
 		int localID;
-		status = mesh.getVertexID(vertLabel[i], &localID);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getVertexID(vertLabel[i], &localID);
 
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> point;
-		status = mesh.getVertexPos(localID, point);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getVertexPos(localID, point);
 		BOOST_CHECK_EQUAL(point.cmp[0], vertX[i]);
 		BOOST_CHECK_EQUAL(point.cmp[1], vertY[i]);
 		BOOST_CHECK_EQUAL(point.cmp[2], vertZ[i]);
@@ -147,8 +145,7 @@ BOOST_AUTO_TEST_CASE(addVertex_test2)
 	{
 		int localID = mesh.getVertexID(vertLabel[i]);
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> point(vertXNew[i], vertYNew[i], vertZNew[i]);
-		status = mesh.setVertexPos(localID, point);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.setVertexPos(localID, point);
 	}
 
 	// Test values correct
@@ -297,72 +294,56 @@ BOOST_AUTO_TEST_CASE(addRegion_test1)
 		RType typeTmp;
 		std::string sTmp;
 
-		status = mesh.getRegionType(localID, &typeTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionType(localID, &typeTmp);
 		BOOST_CHECK_EQUAL(typeTmp, rTypes[i]);
 
-		status = mesh.getRegionStd(localID, &bTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionStd(localID, &bTmp);
 		BOOST_CHECK_EQUAL(bTmp, std[i]);
 
-		status = mesh.getRegionFlux(localID, &bTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionFlux(localID, &bTmp);
 		BOOST_CHECK_EQUAL(bTmp, flux[i]);
 
-		status = mesh.getRegionAdiab(localID, &bTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionAdiab(localID, &bTmp);
 		BOOST_CHECK_EQUAL(bTmp, adiab[i]);
 
-		status = mesh.getRegionYLog(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionYLog(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, ylog[i]);
 
-		status = mesh.getRegionELog(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionELog(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, elog[i]);
 
-		status = mesh.getRegionDensity(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionDensity(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, density[i]);
 
-		status = mesh.getRegionTurbKE(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionTurbKE(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, turbKE[i]);
 
-		status = mesh.getRegionTurbDiss(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionTurbDiss(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, turbDiss[i]);
 
-		status = mesh.getRegionSplvl(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionSplvl(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, splvl[i]);
 
-		status = mesh.getRegionDen(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionDen(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, den[i]);
 
-		//status = mesh.getRegionName(localID, sTmp);
-		//BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		//mesh.getRegionName(localID, sTmp);
 		//BOOST_CHECK_EQUAL(dTmp, rName[i]);
 
-		status = mesh.getRegionR(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionR(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, r[i]);
 
-		status = mesh.getRegionT(localID, &dTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionT(localID, &dTmp);
 		BOOST_CHECK_EQUAL(dTmp, t[i]);
 
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> forceTangent;
-		status = mesh.getRegionForceTangent(localID, forceTangent);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionForceTangent(localID, forceTangent);
 		BOOST_CHECK_EQUAL(forceTangent.cmp[0], forceTanX[i]);
 		BOOST_CHECK_EQUAL(forceTangent.cmp[1], forceTanY[i]);
 		BOOST_CHECK_EQUAL(forceTangent.cmp[2], forceTanZ[i]);
 
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> uvw;
-		status = mesh.getRegionUVW(localID, uvw);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getRegionUVW(localID, uvw);
 		BOOST_CHECK_EQUAL(uvw.cmp[0], uvwX[i]);
 		BOOST_CHECK_EQUAL(uvw.cmp[1], uvwY[i]);
 		BOOST_CHECK_EQUAL(uvw.cmp[2], uvwZ[i]);
@@ -481,47 +462,20 @@ BOOST_AUTO_TEST_CASE(addRegion_test2)
 	{
 		int localID = mesh.getRegionID(rLabel[i]);
 
-		status = mesh.setRegionType(localID, rTypesNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionStd(localID, stdNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionYLog(localID, ylogNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionELog(localID, elogNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionDensity(localID, densityNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionTurbKE(localID, turbKENew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionTurbDiss(localID, turbDissNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionSplvl(localID, splvlNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionDen(localID, denNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionName(localID, rNameNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionFlux(localID, fluxNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionAdiab(localID, adiabNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionR(localID, rNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-		status = mesh.setRegionT(localID, tNew[i]);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.setRegionType(localID, rTypesNew[i]);
+		mesh.setRegionStd(localID, stdNew[i]);
+		mesh.setRegionYLog(localID, ylogNew[i]);
+		mesh.setRegionELog(localID, elogNew[i]);
+		mesh.setRegionDensity(localID, densityNew[i]);
+		mesh.setRegionTurbKE(localID, turbKENew[i]);
+		mesh.setRegionTurbDiss(localID, turbDissNew[i]);
+		mesh.setRegionSplvl(localID, splvlNew[i]);
+		mesh.setRegionDen(localID, denNew[i]);
+		mesh.setRegionName(localID, rNameNew[i]);
+		mesh.setRegionFlux(localID, fluxNew[i]);
+		mesh.setRegionAdiab(localID, adiabNew[i]);
+		mesh.setRegionR(localID, rNew[i]);
+		mesh.setRegionT(localID, tNew[i]);
 
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> forceTangent(forceTanXNew[i], forceTanYNew[i], forceTanZNew[i]);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> uvw(uvwXNew[i], uvwYNew[i], uvwZNew[i]);
@@ -949,26 +903,22 @@ BOOST_AUTO_TEST_CASE(addCell_test1)
 		int localID = mesh.getCellID(cellLabel[i]);
 
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> center;
-		status = mesh.getCellCenter(localID, center);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getCellCenter(localID, center);
 		BOOST_CHECK_EQUAL(center.cmp[0], cellCenterX[i]);
 		BOOST_CHECK_EQUAL(center.cmp[1], cellCenterY[i]);
 		BOOST_CHECK_EQUAL(center.cmp[2], cellCenterZ[i]);
 
 		double tTmp;
-		status = mesh.getCellVolume(localID, &tTmp);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		mesh.getCellVolume(localID, &tTmp);
 		BOOST_CHECK_EQUAL(tTmp, cellVol[i]);
 
 		// Check the ghost/local status of the cells is correct - done by cell label
 		bool local, ghost;
 
-		status = mesh.cellConnGraph->existsLocalNode(cellLabel[i], &local);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		local = mesh.cellConnGraph->existsLocalNode(cellLabel[i]);
 		BOOST_CHECK_EQUAL(local, cellLocal[i]);
 
-		status = mesh.cellConnGraph->existsGhostNode(cellLabel[i], &ghost);
-		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		ghost = mesh.cellConnGraph->existsGhostNode(cellLabel[i]);
 		BOOST_CHECK_EQUAL(ghost, cellGhost[i]);
 	}
 
@@ -1946,7 +1896,8 @@ BOOST_AUTO_TEST_CASE(finalize_test1)
 			int graphLocalID;
 
 			meshLocalID = mesh.getCellID(cellLabel[i]);
-			mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellLabel[i], &graphLocalID);
+			status = mesh.cellConnGraph->connGraph.getNodeLocalIndex(cellLabel[i], &graphLocalID);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(meshLocalID, graphLocalID);
 		}
 	}
@@ -2340,34 +2291,34 @@ BOOST_AUTO_TEST_CASE(buildPolyhedron_test1, * utf::tolerance(0.00001))
 		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Polyhedron Values to ensure it is correct
-		BOOST_TEST(shape->verticesStore[0].cmp[0] == 0.0);
-		BOOST_TEST(shape->verticesStore[0].cmp[1] == 0.0);
-		BOOST_TEST(shape->verticesStore[0].cmp[2] == 0.0);
+		BOOST_TEST(shape->top.vertices[0].cmp[0] == 0.0);
+		BOOST_TEST(shape->top.vertices[0].cmp[1] == 0.0);
+		BOOST_TEST(shape->top.vertices[0].cmp[2] == 0.0);
 
-		BOOST_TEST(shape->verticesStore[1].cmp[0] == 2.5);
-		BOOST_TEST(shape->verticesStore[1].cmp[1] == 5.0);
-		BOOST_TEST(shape->verticesStore[1].cmp[2] == 0.0);
+		BOOST_TEST(shape->top.vertices[1].cmp[0] == 2.5);
+		BOOST_TEST(shape->top.vertices[1].cmp[1] == 5.0);
+		BOOST_TEST(shape->top.vertices[1].cmp[2] == 0.0);
 
-		BOOST_TEST(shape->verticesStore[2].cmp[0] == 5.0);
-		BOOST_TEST(shape->verticesStore[2].cmp[1] == 0.0);
-		BOOST_TEST(shape->verticesStore[2].cmp[2] == 0.0);
+		BOOST_TEST(shape->top.vertices[2].cmp[0] == 5.0);
+		BOOST_TEST(shape->top.vertices[2].cmp[1] == 0.0);
+		BOOST_TEST(shape->top.vertices[2].cmp[2] == 0.0);
 
-		BOOST_TEST(shape->verticesStore[3].cmp[0] == 0.0);
-		BOOST_TEST(shape->verticesStore[3].cmp[1] == 0.0);
-		BOOST_TEST(shape->verticesStore[3].cmp[2] == 5.0);
+		BOOST_TEST(shape->bottom.vertices[0].cmp[0] == 0.0);
+		BOOST_TEST(shape->bottom.vertices[0].cmp[1] == 0.0);
+		BOOST_TEST(shape->bottom.vertices[0].cmp[2] == 5.0);
 
-		BOOST_TEST(shape->verticesStore[4].cmp[0] == 2.5);
-		BOOST_TEST(shape->verticesStore[4].cmp[1] == 5.0);
-		BOOST_TEST(shape->verticesStore[4].cmp[2] == 5.0);
+		BOOST_TEST(shape->bottom.vertices[1].cmp[0] == 2.5);
+		BOOST_TEST(shape->bottom.vertices[1].cmp[1] == 5.0);
+		BOOST_TEST(shape->bottom.vertices[1].cmp[2] == 5.0);
 
-		BOOST_TEST(shape->verticesStore[5].cmp[0] == 5.0);
-		BOOST_TEST(shape->verticesStore[5].cmp[1] == 0.0);
-		BOOST_TEST(shape->verticesStore[5].cmp[2] == 5.0);
+		BOOST_TEST(shape->bottom.vertices[5].cmp[0] == 5.0);
+		BOOST_TEST(shape->bottom.vertices[5].cmp[1] == 0.0);
+		BOOST_TEST(shape->bottom.vertices[5].cmp[2] == 5.0);
 
-		BOOST_TEST(shape->computeVolume() == 62.5);
-		BOOST_TEST(shape->computeCentroid().cmp[0] == 2.1428571);
-		BOOST_TEST(shape->computeCentroid().cmp[1] == 1.42857142);
-		BOOST_TEST(shape->computeCentroid().cmp[2] == 2.1428571);
+		BOOST_TEST(shape->getVolume() == 62.5);
+		BOOST_TEST(shape->getCentroid().cmp[0] == 2.1428571);
+		BOOST_TEST(shape->getCentroid().cmp[1] == 1.42857142);
+		BOOST_TEST(shape->getCentroid().cmp[2] == 2.1428571);
 	}
 }
 
@@ -2505,10 +2456,10 @@ BOOST_AUTO_TEST_CASE(buildPolyhedron_test2, * utf::tolerance(0.00001))
 		BOOST_TEST(shape->apex.cmp[1] == 2.5);
 		BOOST_TEST(shape->apex.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->computeVolume() == 41.6666667);
-		BOOST_TEST(shape->computeCentroid().cmp[0] == 2.5);
-		BOOST_TEST(shape->computeCentroid().cmp[1] == 2.5);
-		BOOST_TEST(shape->computeCentroid().cmp[2] == 1.25);
+		BOOST_TEST(shape->getVolume() == 41.6666667);
+		BOOST_TEST(shape->getCentroid().cmp[0] == 2.5);
+		BOOST_TEST(shape->getCentroid().cmp[1] == 2.5);
+		BOOST_TEST(shape->getCentroid().cmp[2] == 1.25);
 	}
 }
 
@@ -2639,10 +2590,10 @@ BOOST_AUTO_TEST_CASE(buildPolyhedron_test3, * utf::tolerance(0.00001))
 		BOOST_TEST(shape->apex.cmp[1] == 2.5);
 		BOOST_TEST(shape->apex.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->computeVolume() == 20.83333);
-		BOOST_TEST(shape->computeCentroid().cmp[0] == 3.125);
-		BOOST_TEST(shape->computeCentroid().cmp[1] == 1.875);
-		BOOST_TEST(shape->computeCentroid().cmp[2] == 1.25);
+		BOOST_TEST(shape->getVolume() == 20.83333);
+		BOOST_TEST(shape->getCentroid().cmp[0] == 3.125);
+		BOOST_TEST(shape->getCentroid().cmp[1] == 1.875);
+		BOOST_TEST(shape->getCentroid().cmp[2] == 1.25);
 	}
 }
 
@@ -2757,42 +2708,42 @@ BOOST_AUTO_TEST_CASE(buildPolyhedron_test4, * utf::tolerance(0.00001))
 		status = mesh.buildPolyhedron(0, &shape);
 		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		BOOST_TEST(shape->tlf.cmp[0] == 0.0);
-		BOOST_TEST(shape->tlf.cmp[1] == 0.0);
-		BOOST_TEST(shape->tlf.cmp[2] == 5.0);
+		// BOOST_TEST(shape->tlf.cmp[0] == 0.0);
+		// BOOST_TEST(shape->tlf.cmp[1] == 0.0);
+		// BOOST_TEST(shape->tlf.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->trf.cmp[0] == 0.0);
-		BOOST_TEST(shape->trf.cmp[1] == 5.0);
-		BOOST_TEST(shape->trf.cmp[2] == 5.0);
+		// BOOST_TEST(shape->trf.cmp[0] == 0.0);
+		// BOOST_TEST(shape->trf.cmp[1] == 5.0);
+		// BOOST_TEST(shape->trf.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->blf.cmp[0] == 0.0);
-		BOOST_TEST(shape->blf.cmp[1] == 0.0);
-		BOOST_TEST(shape->blf.cmp[2] == 0.0);
+		// BOOST_TEST(shape->blf.cmp[0] == 0.0);
+		// BOOST_TEST(shape->blf.cmp[1] == 0.0);
+		// BOOST_TEST(shape->blf.cmp[2] == 0.0);
 
-		BOOST_TEST(shape->brf.cmp[0] == 0.0);
-		BOOST_TEST(shape->brf.cmp[1] == 5.0);
-		BOOST_TEST(shape->brf.cmp[2] == 0.0);
+		// BOOST_TEST(shape->brf.cmp[0] == 0.0);
+		// BOOST_TEST(shape->brf.cmp[1] == 5.0);
+		// BOOST_TEST(shape->brf.cmp[2] == 0.0);
 
-		BOOST_TEST(shape->tlb.cmp[0] == 5.0);
-		BOOST_TEST(shape->tlb.cmp[1] == 0.0);
-		BOOST_TEST(shape->tlb.cmp[2] == 5.0);
+		// BOOST_TEST(shape->tlb.cmp[0] == 5.0);
+		// BOOST_TEST(shape->tlb.cmp[1] == 0.0);
+		// BOOST_TEST(shape->tlb.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->trb.cmp[0] == 5.0);
-		BOOST_TEST(shape->trb.cmp[1] == 5.0);
-		BOOST_TEST(shape->trb.cmp[2] == 5.0);
+		// BOOST_TEST(shape->trb.cmp[0] == 5.0);
+		// BOOST_TEST(shape->trb.cmp[1] == 5.0);
+		// BOOST_TEST(shape->trb.cmp[2] == 5.0);
 
-		BOOST_TEST(shape->blb.cmp[0] == 5.0);
-		BOOST_TEST(shape->blb.cmp[1] == 0.0);
-		BOOST_TEST(shape->blb.cmp[2] == 0.0);
+		// BOOST_TEST(shape->blb.cmp[0] == 5.0);
+		// BOOST_TEST(shape->blb.cmp[1] == 0.0);
+		// BOOST_TEST(shape->blb.cmp[2] == 0.0);
 
-		BOOST_TEST(shape->brb.cmp[0] == 5.0);
-		BOOST_TEST(shape->brb.cmp[1] == 5.0);
-		BOOST_TEST(shape->brb.cmp[2] == 0.0);
+		// BOOST_TEST(shape->brb.cmp[0] == 5.0);
+		// BOOST_TEST(shape->brb.cmp[1] == 5.0);
+		// BOOST_TEST(shape->brb.cmp[2] == 0.0);
 
-		BOOST_TEST(shape->computeVolume() == 125.0);
-		BOOST_TEST(shape->computeCentroid().cmp[0] == 2.5);
-		BOOST_TEST(shape->computeCentroid().cmp[1] == 2.5);
-		BOOST_TEST(shape->computeCentroid().cmp[2] == 2.5);
+		BOOST_TEST(shape->getVolume() == 125.0);
+		BOOST_TEST(shape->getCentroid().cmp[0] == 2.5);
+		BOOST_TEST(shape->getCentroid().cmp[1] == 2.5);
+		BOOST_TEST(shape->getCentroid().cmp[2] == 2.5);
 	}
 }
 

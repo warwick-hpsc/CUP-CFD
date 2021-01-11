@@ -15,7 +15,7 @@
 #define CUPCFD_GEOMETRY_SHAPES_POLYGON_2D_INCLUDE_H
 
 #include "EuclideanPoint.h"
-#include "EuclideanVector.h"
+#include "EuclideanVector2D.h"
 #include "Polygon.h"
 
 namespace euc = cupcfd::geometry::euclidean;
@@ -49,6 +49,16 @@ namespace cupcfd
 					~Polygon2D();
 
 					// === Concrete Methods ===
+
+					/**
+					 * Check whether any polygon edges intersect, indicating 
+					 * vertices are incorrectly ordered. Directly-connected
+					 * edges are not checked.
+					 *
+					 * @return True if no edges intersect
+					 */
+					__attribute__((warn_unused_result))
+					bool verifyNoEdgesIntersect();
 
 					/**
 					 * Determine whether the provided point is inside the Polygon2D.

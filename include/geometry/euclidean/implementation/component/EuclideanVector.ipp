@@ -70,7 +70,7 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>
-			inline bool EuclideanVector<T,N>::operator==(const EuclideanVector<T,N>& cmpVec) {
+			inline bool EuclideanVector<T,N>::operator==(const EuclideanVector<T,N>& cmpVec) const {
 				for(uint i = 0; i < N; i++) {
 					if(!(arth::isEqual(this->cmp[i], cmpVec.cmp[i]))) {
 						return false;
@@ -125,7 +125,7 @@ namespace cupcfd
 			
 			// ToDo: Need a better way of handling case where vectors are uniformally zero
 			template <class T, unsigned int N>
-			inline bool EuclideanVector<T,N>::isParallel(EuclideanVector<T,N>& cmpVec) {
+			inline bool EuclideanVector<T,N>::isParallel(const EuclideanVector<T,N>& cmpVec) const {
 				// If components are equal, then vector will always be parallel (colinear)
 				if(*this == cmpVec) {
 					return true;

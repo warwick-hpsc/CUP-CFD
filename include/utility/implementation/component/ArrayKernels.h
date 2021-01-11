@@ -14,6 +14,8 @@
 #ifndef CUPCFD_UTILITY_ARRAY_KERNELS_INCLUDE_H
 #define CUPCFD_UTILITY_ARRAY_KERNELS_INCLUDE_H
 
+#include "Error.h"
+
 namespace cupcfd
 {
 	namespace utility
@@ -34,8 +36,8 @@ namespace cupcfd
 			*
 			* @return Returns nothing
 			*/
-			// template <class I, class T>
-			// void add(T * source1, T * source2, T * dest, I nEle);
+			template <class I, class T>
+			void add(T * source1, T * source2, T * dest, I nEle);
 
 			/**
 			* Return the number of elements in the array that are unique (i.e. there exist no duplicates)
@@ -146,10 +148,11 @@ namespace cupcfd
 			* @tparam I The type of the indexing scheme
 			* @tparam T The type of the stored array data
 			*
-			* @return Returns nothing
+			* @return Error code if result array undersized
 			*/
-			// template <class I, class T>
-			// void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
+			template <class I, class T>
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult);
 
 
 			/**

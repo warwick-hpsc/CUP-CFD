@@ -14,6 +14,8 @@
 #ifndef CUPCFD_UTILITY_SORT_KERNELS_INCLUDE_H
 #define CUPCFD_UTILITY_SORT_KERNELS_INCLUDE_H
 
+#include "Error.h"
+
 namespace cupcfd
 {
 	namespace utility

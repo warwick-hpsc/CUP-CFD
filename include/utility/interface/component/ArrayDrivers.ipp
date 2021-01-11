@@ -122,32 +122,28 @@ namespace cupcfd
 			}
 
 
-			// template <class I, class T>
-			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele)
-			// {
-			// 	if (nSource1Ele != nSource2Ele) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
-			// 	}
+			template <class I, class T>
+			cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele) {
+				if (nSource1Ele != nSource2Ele) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
 
-			// 	kernels::add(source1, source2, source1, nSource1Ele);
+				kernels::add(source1, source2, source1, nSource1Ele);
+				return cupcfd::error::E_SUCCESS;
+			}
 
-			// 	return cupcfd::error::E_SUCCESS;
-			// }
+			template <class I, class T>
+			cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle) {
+				if (nSource1Ele != nSource2Ele) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
+				if (nSource1Ele != nDestEle) {
+					return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
+				}
 
-			// template <class I, class T>
-			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele, T * dest, I nDestEle)
-			// {
-			// 	if (nSource1Ele != nSource2Ele) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
-			// 	}
-			// 	if (nSource1Ele != nDestEle) {
-			// 		return cupcfd::error::E_ARRAY_MISMATCH_SIZE;
-			// 	}
-
-			// 	kernels::add(source1, source2, dest, nSource1Ele);
-
-			// 	return cupcfd::error::E_SUCCESS;
-			// }
+				kernels::add(source1, source2, dest, nSource1Ele);
+				return cupcfd::error::E_SUCCESS;
+			}
 
             template <class I, class T>
             cupcfd::error::eCodes distinctCount(T * source, I nEle, I * count) {
@@ -389,67 +385,59 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			// template <class I, class T>
-			// cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult)
-			// {
-			// 	bool sorted1;
-			// 	bool sorted2;
-			// 	T * source1Ptr = nullptr;
-			// 	T * source2Ptr = nullptr;
+			template <class I, class T>
+			cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult) {
+				bool sorted1;
+				bool sorted2;
+				T * source1Ptr = nullptr;
+				T * source2Ptr = nullptr;
+				cupcfd::error::eCodes status;
 
-			// 	// Error Check: result should be a nullptr (else we risk a memory leak by overwriting an active
-			// 	// pointer memory allocation).
+				// Error Check: result should be a nullptr (else we risk a memory leak by overwriting an active
+				// pointer memory allocation).
 
-			// 	// Kernel requires sorted arrays. Check if source1 is sorted.
-			//  sorted1 = cupcfd::utility::drivers::is_sorted(source1, nSource1);
+				// Kernel requires sorted arrays. Check if source1 is sorted.
+				sorted1 = cupcfd::utility::drivers::is_sorted(source1, nSource1);
 
-			// 	if(!sorted1)
-			// 	{
-			// 		source1Ptr = (T *) malloc(sizeof(T) * nSource1);
-			// 		cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
-			// 		cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
-			// 	}
-			// 	else
-			// 	{
-			// 		source1Ptr = source1;
-			// 	}
+				if(!sorted1) {
+					source1Ptr = (T *) malloc(sizeof(T) * nSource1);
+					cupcfd::utility::drivers::copy(source1, nSource1, source1Ptr, nSource1);
+					cupcfd::utility::drivers::merge_sort(source1Ptr, nSource1);
+				} else {
+					source1Ptr = source1;
+				}
 
-			// 	// Kernel requires sorted arrays. Check if source2 is sorted.
-			//  sorted2 = cupcfd::utility::drivers::is_sorted(source2, nSource2);
-			// 	if(!sorted2)
-			// 	{
-			// 		source2Ptr = (T *) malloc(sizeof(T) * nSource2);
-			// 		cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
-			// 		cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
-			// 	}
-			// 	else
-			// 	{
-			// 		source2Ptr = source2;
-			// 	}
+				// Kernel requires sorted arrays. Check if source2 is sorted.
+				sorted2 = cupcfd::utility::drivers::is_sorted(source2, nSource2);
+				if(!sorted2) {
+					source2Ptr = (T *) malloc(sizeof(T) * nSource2);
+					cupcfd::utility::drivers::copy(source2, nSource2, source2Ptr, nSource2);
+					cupcfd::utility::drivers::merge_sort(source2Ptr, nSource2);
+				} else {
+					source2Ptr = source2;
+				}
 
-			// 	// Need to allocate space for the result array, requiring us to know how many elements there
-			// 	// are in the distinct array.
-			// 	minusCount(source1Ptr, nSource1, source2Ptr, nSource2, nResult);
+				// Need to allocate space for the result array, requiring us to know how many elements there
+				// are in the distinct array.
+				minusCount(source1Ptr, nSource1, source2Ptr, nSource2, nResult);
 
-			// 	*result = (T* ) malloc(sizeof(T) * *nResult);
+				*result = (T* ) malloc(sizeof(T) * *nResult);
 
-			// 	// Compute the set minus array.
-			// 	kernels::minusArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
+				// Compute the set minus array.
+				status = kernels::minusArray(source1Ptr, nSource1, source2Ptr, nSource2, *result, *nResult);
+				CHECK_ECODE(status)
 
-			// 	// Cleanup
-			// 	// Result is not freed here, it is used to pass the results back to the caller
-			// 	if(source1Ptr != source1)
-			// 	{
-			// 		free(source1Ptr);
-			// 	}
+				// Cleanup
+				// Result is not freed here, it is used to pass the results back to the caller
+				if(source1Ptr != source1) {
+					free(source1Ptr);
+				}
+				if(source2Ptr != source2) {
+					free(source2Ptr);
+				}
 
-			// 	if(source2Ptr != source2)
-			// 	{
-			// 		free(source2Ptr);
-			// 	}
-
-			// 	return cupcfd::error::E_SUCCESS;
-			// }
+				return cupcfd::error::E_SUCCESS;
+			}
 
 			template <class I, class T>
 			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
@@ -498,6 +486,9 @@ namespace cupcfd
 
 				// Error Check: result should be a nullptr (else we risk a memory leak by overwriting an active
 				// pointer memory allocation).
+				if (*result != nullptr) {
+					return cupcfd::error::E_NOT_NULL_PTR;
+				}
 
 				// Kernel requires sorted arrays. Check if source1 is sorted.
 				sorted1 = cupcfd::utility::drivers::is_sorted(source1, nSource1);

@@ -93,8 +93,7 @@ BOOST_AUTO_TEST_CASE(resetResultStorage_test1)
 	cupcfd::error::eCodes status;
 
 	// Test Method
-	status = partitioner.resetResultStorage();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetResultStorage();
 	BOOST_CHECK_EQUAL(partitioner.result, static_cast<decltype(partitioner.result)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nResult, 0);
 }
@@ -116,9 +115,7 @@ BOOST_AUTO_TEST_CASE(resetResultStorage_test2)
 	BOOST_CHECK_EQUAL(partitioner.nResult, 4);
 
 	// Test Method
-	status = partitioner.resetResultStorage();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetResultStorage();
 	BOOST_CHECK_EQUAL(partitioner.result, static_cast<decltype(partitioner.result)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nResult, 0);
 }
@@ -133,9 +130,7 @@ BOOST_AUTO_TEST_CASE(setNodeStorage_test1)
 
 	int testStore[5] = {10, 20, 30, 40, 50};
 
-	status = partitioner.setNodeStorage(testStore, 5);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNodeStorage(testStore, 5);
 	// ToDo: This should use a getter function rather than internals
 	BOOST_CHECK_EQUAL_COLLECTIONS(testStore, testStore + 5, partitioner.nodes, partitioner.nodes + 5);
 }
@@ -152,8 +147,7 @@ BOOST_AUTO_TEST_CASE(resetNodeStorage_test1)
 	cupcfd::error::eCodes status;
 
 	// Test Method
-	status = partitioner.resetNodeStorage();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetNodeStorage();
 	BOOST_CHECK_EQUAL(partitioner.nodes, static_cast<decltype(partitioner.nodes)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nNodes, 0);
 }
@@ -175,9 +169,7 @@ BOOST_AUTO_TEST_CASE(resetNodeStorage_test2)
 	BOOST_CHECK_EQUAL(partitioner.nNodes, 4);
 
 	// Test Method
-	status = partitioner.resetNodeStorage();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetNodeStorage();
 	BOOST_CHECK_EQUAL(partitioner.nodes, static_cast<decltype(partitioner.nodes)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nNodes, 0);
 }
@@ -192,8 +184,7 @@ BOOST_AUTO_TEST_CASE(set_getNParts_test1)
 
 	BOOST_CHECK_EQUAL(partitioner.getNParts(), 0);
 
-	status = partitioner.setNParts(14);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.setNParts(14);
 	BOOST_CHECK_EQUAL(partitioner.getNParts(), 14);
 }
 

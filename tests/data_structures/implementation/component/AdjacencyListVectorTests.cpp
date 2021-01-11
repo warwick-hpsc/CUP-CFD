@@ -91,10 +91,8 @@ BOOST_AUTO_TEST_CASE(getNodeCount_test1)
 	status = graph.addEdge(20, 40);
 	status = graph.addEdge(20, 40);
 
-	int count;
-	status = graph.getNodeCount(&count);
+	int count = graph.getNodeCount();
 	BOOST_CHECK_EQUAL(count, 2);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 // === getNodes ===
@@ -125,12 +123,8 @@ BOOST_AUTO_TEST_CASE(getNodes_test1)
 BOOST_AUTO_TEST_CASE(getEdgeCount_test1)
 {
 	AdjacencyListVector<int, int> graph;
-	cupcfd::error::eCodes status;
 
-	int count;
-	status = graph.getEdgeCount(&count);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	int count = graph.getEdgeCount();
 	BOOST_CHECK_EQUAL(count, 0);
 }
 
@@ -145,8 +139,7 @@ BOOST_AUTO_TEST_CASE(getEdgeCount_test2)
 	status = graph.addNode(40);
 	status = graph.addEdge(20, 40);
 
-	status = graph.getEdgeCount(&count);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	count = graph.getEdgeCount();
 	BOOST_CHECK_EQUAL(count, 1);
 }
 
@@ -162,8 +155,7 @@ BOOST_AUTO_TEST_CASE(getEdgeCount_test3)
 	status = graph.addEdge(20, 40);
 	status = graph.addEdge(40, 20);
 
-	status = graph.getEdgeCount(&count);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	count = graph.getEdgeCount();
 	BOOST_CHECK_EQUAL(count, 2);
 }
 
@@ -184,8 +176,7 @@ BOOST_AUTO_TEST_CASE(getEdgeCount_test4)
 	status = graph.addEdge(80, 20);
 	status = graph.addEdge(20, 60);
 
-	status = graph.getEdgeCount(&count);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	count = graph.getEdgeCount();
 	BOOST_CHECK_EQUAL(count, 5);
 }
 
@@ -209,8 +200,7 @@ BOOST_AUTO_TEST_CASE(getEdgeCount_test5)
 	status = graph.addEdge(20, 60);
 	status = graph.addEdge(80, 20);
 
-	status = graph.getEdgeCount(&count);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	count = graph.getEdgeCount();
 	BOOST_CHECK_EQUAL(count, 5);
 }
 
@@ -284,9 +274,7 @@ BOOST_AUTO_TEST_CASE(existsNode_test1)
 	bool exists;
 
 	status = graph.addNode(20);
-	status = graph.existsNode(20, &exists);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(20);
 	BOOST_CHECK_EQUAL(exists, true);
 
 }
@@ -298,9 +286,7 @@ BOOST_AUTO_TEST_CASE(existsNode_test2)
 	cupcfd::error::eCodes status;
 	bool exists;
 
-	status = graph.existsNode(20, &exists);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(20);
 	BOOST_CHECK_EQUAL(exists, false);
 }
 
@@ -589,20 +575,16 @@ BOOST_AUTO_TEST_CASE(reset_test1)
 	BOOST_CHECK_EQUAL(graph.nNodes, 0);
 	BOOST_CHECK_EQUAL(graph.nEdges, 0);
 
-	status = graph.existsNode(20, &exists);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(20);
 	BOOST_CHECK_EQUAL(exists, false);
 
-	status = graph.existsNode(40, &exists);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(40);
 	BOOST_CHECK_EQUAL(exists, false);
 
-	status = graph.existsNode(60, &exists);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(60);
 	BOOST_CHECK_EQUAL(exists, false);
 
-	status = graph.existsNode(80, &exists);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	exists = graph.existsNode(80);
 	BOOST_CHECK_EQUAL(exists, false);
 
 	status = graph.existsEdge(20, 40, &exists);

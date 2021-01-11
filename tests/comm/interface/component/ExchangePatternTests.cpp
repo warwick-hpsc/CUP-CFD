@@ -33,24 +33,16 @@ namespace cupcfd
 		template <class T>
 		class ExchangePatternTest : public ExchangePattern<T>
 		{
-			void packSendBuffer(T * data, int nData)
-			{
-
+			cupcfd::error::eCodes packSendBuffer(T * data, int nData) {
 			}
 
-			void unpackRecvBuffer(T * data, int nData)
-			{
-
+			cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData) {
 			}
 
-			void exchangeStart(T * sourceData, int nData)
-			{
-
+			cupcfd::error::eCodes exchangeStart(T * sourceData, int nData) {
 			}
 
-			void exchangeStop(T * sinkData, int nData)
-			{
-
+			cupcfd::error::eCodes exchangeStop(T * sinkData, int nData) {
 			}
 		};
 	}

@@ -161,7 +161,7 @@ namespace cupcfd
 			 */
 			template <class T>
 			__attribute__((warn_unused_result))
-			inline bool isVertexOrderClockwise(const euc::EuclideanPoint<T,3>& observation, euc::EuclideanPoint<T,3> * points, int nPoints);
+			bool isVertexOrderClockwise(const euc::EuclideanPoint<T,3>& observation, euc::EuclideanPoint<T,3> * points, int nPoints);
 		}
 	}
 }

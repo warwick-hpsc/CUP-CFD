@@ -10,7 +10,8 @@
  * This class contains the implementation of the EuclideanVector3D class.
  */
 
-#include "EuclideanVector3D.h"
+#include "EuclideanPoint.h"
+#include "LineSegment3D.h"
 
 namespace cupcfd
 {
@@ -18,48 +19,49 @@ namespace cupcfd
 	{
 		namespace euclidean
 		{
-			// template <class T>
-			// EuclideanVector3D<T>::EuclideanVector3D(T a, T b, T c)
-			// {
-			// 	this->cmp[0] = a;
-			// 	this->cmp[1] = b;
-			// 	this->cmp[2] = c;
-			// }
 
-			// template <class T>
-			// EuclideanVector3D<T>::EuclideanVector3D(const EuclideanVector<T,3>& v) {
-			// 	this->cmp[0] = v.cmp[0];
-			// 	this->cmp[1] = v.cmp[1];
-			// 	this->cmp[2] = v.cmp[2];
-			// }
+			template <class T>
+			bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
+									  const EuclideanPoint<T,3>& p)
+			{
+				LineSegment3D<T> line(x1, x2);
+				return line.isPointOnLine(p);
+			}
 
-			// template <class T>
-			// EuclideanVector3D<T> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2) {
-			// 	EuclideanVector3D<T> v1(vec1);
-			// 	EuclideanVector3D<T> v2(vec2);
-			// 	return v1.crossProduct(v2);
-			// }
+			template <class T>
+			bool isVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
+											const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4)
+			{
+				// Needed to store result, but we discard it
+				EuclideanPoint<T,3> intersectPoint(T(0.0), T(0.0), T(0.0));
+				cupcfd::error::eCodes status = computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
+				
+				if(status == cupcfd::error::E_SUCCESS) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+
+			template <class T>
+			cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
+										 	  	  	  	  	  	  	const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4,
+																	EuclideanPoint<T,3>& intersectPoint)
+			{
+				LineSegment3D<T> line1(x1, x2);
+				LineSegment3D<T> line2(x3, x4);
+				return line1.lineIntersection(line2, intersectPoint);
+			}
 
 			// Explicit Instantiation
-			// ToDo: This is kind of brittle for template usage
-			// We could probably move everything to the header and avoid explicit instantiation entirely....
-			// template class EuclideanVector3D<float>;
-			// template EuclideanVector3D<float>::EuclideanVector3D(float x, float y, float z);
+			template bool isPointOnLine(const EuclideanPoint<double,3>&, const EuclideanPoint<double,3>&, const EuclideanPoint<double,3>&);
+			template bool isPointOnLine(const EuclideanPoint<float,3>&, const EuclideanPoint<float,3>&, const EuclideanPoint<float,3>&);
 
-			// template class EuclideanVector3D<double>;
-			// template EuclideanVector3D<double>::EuclideanVector3D(double x, double y, double z);
-
-			// template EuclideanVector3D<float> crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
-			// template EuclideanVector3D<double> crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);
+			template bool isVectorRangeIntersection(const EuclideanPoint<double,3>&, const EuclideanPoint<double,3>&,
+													const EuclideanPoint<double,3>&, const EuclideanPoint<double,3>&);
+			template bool isVectorRangeIntersection(const EuclideanPoint<float,3>&, const EuclideanPoint<float,3>&,
+													const EuclideanPoint<float,3>&, const EuclideanPoint<float,3>&);
 		}
 	}
 }
-
-// template class cupcfd::geometry::euclidean::EuclideanVector3D<float>;
-// template cupcfd::geometry::euclidean::EuclideanVector3D<float>::EuclideanVector3D(float x, float y, float z);
-
-// template class cupcfd::geometry::euclidean::EuclideanVector3D<double>;
-// template cupcfd::geometry::euclidean::EuclideanVector3D<double>::EuclideanVector3D(double x, double y, double z);
-
-// template cupcfd::geometry::euclidean::EuclideanVector3D<float> crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
-// template cupcfd::geometry::euclidean::EuclideanVector3D<double> crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);

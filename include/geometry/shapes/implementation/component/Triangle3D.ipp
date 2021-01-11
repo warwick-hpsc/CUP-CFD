@@ -63,38 +63,7 @@ namespace cupcfd
 
 			template <class T>
 			bool Triangle3D<T>::isPointInside(const euc::EuclideanPoint<T,3>& p) {
-				// return this->triAsPolygon3D.isPointInside(p);
-
-				// Alternative method: rotate into 2D plane, because 
-				// I don't trust floating-point rounding errors to not break 3D method:
-
-				// Does the point lie on the same plane as the Triangle?
-				euc::EuclideanPlane3D<T> plane(this->vertices[0], this->vertices[1], this->vertices[2]);
-				if(!(plane.isPointOnPlane(p))) {
-					return false;
-				}
-
-				Triangle3D<T> triCopy(*this);
-				euc::EuclideanPoint<T,3> pCopy(p);
-
-				// ToDo: potential optimisation: store rotation matrix and 'tri2d', instead 
-				//       of computing every time.
-				euc::EuclideanVector3D<T> zAxis(T(0), T(0), T(1));
-				euc::Matrix<T,3,3> rotMatrix2;
-				rotMatrix2 = euc::calculateRotationMatrix(triCopy.getNormal(), zAxis);
-				// Apply rotation:
-				for (int i=0; i<3; i++) {
-					triCopy.vertices[i] = rotMatrix2 * triCopy.vertices[i];
-				}
-				pCopy = rotMatrix2 * pCopy;
-
-				// Switch to 2D
-				euc::EuclideanPoint<T,2> v0(triCopy.vertices[0].cmp[0], triCopy.vertices[0].cmp[1]);
-				euc::EuclideanPoint<T,2> v1(triCopy.vertices[1].cmp[0], triCopy.vertices[1].cmp[1]);
-				euc::EuclideanPoint<T,2> v2(triCopy.vertices[2].cmp[0], triCopy.vertices[2].cmp[1]);
-				Triangle2D<T> tri2d(v0, v1, v2);
-				euc::EuclideanPoint<T,2> p2d(pCopy.cmp[0], pCopy.cmp[1]);
-				return tri2d.isPointInside(p2d);
+				return this->triAsPolygon3D.isPointInside(p);
 			}
 
 			template <class T>

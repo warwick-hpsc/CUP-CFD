@@ -287,9 +287,7 @@ namespace cupcfd
 			// Error Check built into addEdge
 			// If edge exists it will return the status code
 			status = this->buildGraph.addEdge(src, dst);
-			CHECK_ECODE(status)
-
-			return cupcfd::error::E_SUCCESS;
+			return status;
 		}
 
 		template <class I, class T>
@@ -301,9 +299,11 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			status = this->addEdge(src, dst);
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			CHECK_ECODE(status)
 
 			status = this->addEdge(dst, src);
+			if (status != cupcfd::error::E_SUCCESS) return status;
 			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
@@ -434,14 +434,14 @@ namespace cupcfd
 
 
 				// (a) Broadcast the ghost cell data from process i in the serial loop to all other processes so they know what cells we're looking for information on.
-				T * recvGhostData;
+				T * recvGhostData = nullptr;
 				I nRecvGhostData;
 				status = cupcfd::comm::Broadcast(ghostNodes, this->nLGhNodes, &recvGhostData, &nRecvGhostData, i, *(this->comm));
 				CHECK_ECODE(status)
 
 				// (b)/(c) Identify which cells in the ghost cell list are in the local cell list via a set intersect (uses equality on nodes, precaution if extended in future
 				//		   with custom operator)
-				T * intersect;
+				T * intersect = nullptr;
 				I nIntersect;
 				status = cupcfd::utility::drivers::intersectArray(localNodes, this->nLONodes, recvGhostData, nRecvGhostData, &intersect, &nIntersect);
 				CHECK_ECODE(status)

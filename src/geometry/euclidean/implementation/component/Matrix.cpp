@@ -50,9 +50,9 @@ namespace cupcfd
 
 			template <class T, unsigned int R, unsigned int C>
 			void Matrix<T,R,C>::print() {
-				for (int i=0; i<R; i++) {
+				for (uint i=0; i<R; i++) {
 					printf("|");
-					for (int j=0; j<C; j++) {
+					for (uint j=0; j<C; j++) {
 						printf(" %.3f", this->mat[i][j]);
 					}
 					printf(" |\n");

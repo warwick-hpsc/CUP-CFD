@@ -83,8 +83,6 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
-					// void reverseVertexOrdering();
-
 					/**
 					 * Copy the points from the provided plane to this object
 					 *
@@ -317,33 +315,20 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					static EuclideanVector3D<T> calculateNormal(const EuclideanPoint<T,3>& p1,
-																	const EuclideanPoint<T,3>& p2,
-																	const EuclideanPoint<T,3>& p3);
+																const EuclideanPoint<T,3>& p2,
+																const EuclideanPoint<T,3>& p3);
 
-					/**
-					 * Find the intersection point of a line and a plane, as per https://en.wikipedia.org/wiki/Line-plane_intersection
-					 * This is only applicable when the vector is not parallel to the plane.
-					 *
-					 * @param normal The normal of the intersection plane
-					 * @param p0 A point that lies on the plane
-					 * @param l The vector to test intersection with the plane
-					 * @param l0 A point not on the plane that the vector intersects (i.e. a point on the line following the vector)
-					 * @param result A referenced point object that will be updated to where the vector intersects the plane
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-					 * @retval cupcfd::error::E_EUC_VEC_PARALLEL The line is parallel with the plane and will never intersect
-					 * (or will intersect every point if it lies on the plane)
-					 */
-					__attribute__((warn_unused_result))
-					static cupcfd::error::eCodes linePlaneIntersection(EuclideanVector<T,3>& normal,
-																		const EuclideanPoint<T,3>& p0,
-																		const EuclideanVector<T,3>& l,
-																		const EuclideanPoint<T,3>& l0,
-																		EuclideanPoint<T,3>& result);
 				protected:
+					EuclideanVector3D<T> normal;
+					EuclideanVector3D<T> normalUnit;
+					bool computedNormal = false;
 
-				private:
+					EuclideanVector3D<T> v2;
+					EuclideanVector3D<T> v2unit;
+					T v2Length;
+
+					// Record last dot-product result for reuse (currently only linePlaneIntersection())
+					T dotP;
 
 			};
 		} // namespace euclidean

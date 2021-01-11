@@ -137,9 +137,9 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
-			// template <class I, class T>
-			 //__attribute__((warn_unused_result))
-			// cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele);
+			template <class I, class T>
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes add(T * source1, I nSource1Ele, T * source2, I nSource2Ele);
 
 			/**
 			 * Add two arrays: at each index an element from each array is summed.
@@ -158,9 +158,9 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
-			// template <class I, class T>
-			 //__attribute__((warn_unused_result))
-			// cupcfd::error::eCodes add(T * source1, I nSource1Ele,T * source2, I nSource2Ele, T * dest, I nDestEle);
+			template <class I, class T>
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes add(T * source1, I nSource1Ele,T * source2, I nSource2Ele, T * dest, I nDestEle);
 
 			/**
 			 * Calculate the number of distinct elements in an array (i.e. count the first instance, but ignore duplicates)
@@ -314,9 +314,9 @@ namespace cupcfd
 			 * @return An error status indicating the success or failure of the operation
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
-			// template <class I, class T>
-			 //__attribute__((warn_unused_result))
-			// cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult);
+			template <class I, class T>
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult);
 
 			/**
 			 * Computes the number of elements that is in the intersection of two arrays - i.e. those elements that are in

@@ -53,11 +53,9 @@ BOOST_AUTO_TEST_CASE(resetSubdomainWeights_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test Method
-	status = partitioner.resetSubdomainWeights();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetSubdomainWeights();
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
 }
@@ -67,8 +65,7 @@ BOOST_AUTO_TEST_CASE(resetSubdomainWeights_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
-
+	
 	// Setup
 	partitioner.tpwgts = (real_t *) malloc(sizeof(real_t) * 4);
 	partitioner.nTpwgts = 4;
@@ -76,9 +73,7 @@ BOOST_AUTO_TEST_CASE(resetSubdomainWeights_test2)
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 4);
 
 	// Test Method
-	status = partitioner.resetSubdomainWeights();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetSubdomainWeights();
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
 }
@@ -89,16 +84,11 @@ BOOST_AUTO_TEST_CASE(resetVertexEdgeWeights_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test Method
-	status = partitioner.resetVertexEdgeWeights();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetVertexEdgeWeights();
 	BOOST_CHECK_EQUAL(partitioner.vwgt, static_cast<decltype(partitioner.vwgt)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nVwgt, 0);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(partitioner.adjwgt, static_cast<decltype(partitioner.adjwgt)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nAdjwgt, 0);
 }
@@ -108,7 +98,6 @@ BOOST_AUTO_TEST_CASE(resetVertexEdgeWeights_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	partitioner.vwgt = (idx_t *) malloc(sizeof(idx_t) * 4);
@@ -122,13 +111,9 @@ BOOST_AUTO_TEST_CASE(resetVertexEdgeWeights_test2)
 	BOOST_CHECK_EQUAL(partitioner.nAdjwgt, 4);
 
 	// Test Method
-	status = partitioner.resetVertexEdgeWeights();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetVertexEdgeWeights();
 	BOOST_CHECK_EQUAL(partitioner.vwgt, static_cast<decltype(partitioner.vwgt)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nVwgt, 0);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(partitioner.adjwgt, static_cast<decltype(partitioner.adjwgt)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nAdjwgt, 0);
 }
@@ -139,11 +124,9 @@ BOOST_AUTO_TEST_CASE(resetVertexImbalanceWeights_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test Method
-	status = partitioner.resetVertexImbalanceWeights();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetVertexImbalanceWeights();
 	BOOST_CHECK_EQUAL(partitioner.ubvec, static_cast<decltype(partitioner.ubvec)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 0);
 }
@@ -153,7 +136,6 @@ BOOST_AUTO_TEST_CASE(resetVertexImbalanceWeights_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	partitioner.ubvec = (real_t *) malloc(sizeof(real_t) * 4);
@@ -162,9 +144,7 @@ BOOST_AUTO_TEST_CASE(resetVertexImbalanceWeights_test2)
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 4);
 
 	// Test Method
-	status = partitioner.resetVertexImbalanceWeights();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	partitioner.resetVertexImbalanceWeights();
 	BOOST_CHECK_EQUAL(partitioner.ubvec, static_cast<decltype(partitioner.ubvec)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 0);
 }
@@ -175,12 +155,9 @@ BOOST_AUTO_TEST_CASE(resetWorkArrays_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
-	// Test Method and check status
-	status = partitioner.resetWorkArrays();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	// Test Method
+	partitioner.resetWorkArrays();
 	BOOST_CHECK_EQUAL(partitioner.xadj, static_cast<decltype(partitioner.xadj)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nXAdj, 0);
 
@@ -196,7 +173,6 @@ BOOST_AUTO_TEST_CASE(resetWorkArrays_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	partitioner.xadj = (idx_t *) malloc(sizeof(idx_t) * 4);
@@ -210,10 +186,8 @@ BOOST_AUTO_TEST_CASE(resetWorkArrays_test2)
 
 	// ToDo: Also set communicator for test?
 
-	// Test Method and check status
-	status = partitioner.resetWorkArrays();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	// Test Method
+	partitioner.resetWorkArrays();
 	BOOST_CHECK_EQUAL(partitioner.xadj, static_cast<decltype(partitioner.xadj)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nXAdj, 0);
 
@@ -438,15 +412,12 @@ BOOST_AUTO_TEST_CASE(setNCon_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test and Check
-	status = partitioner.setNCon(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNCon(4);
+	BOOST_CHECK_EQUAL(partitioner.nCon, 4);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
-
 	BOOST_CHECK_EQUAL(partitioner.ubvec, static_cast<decltype(partitioner.ubvec)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 0);
 }
@@ -456,18 +427,14 @@ BOOST_AUTO_TEST_CASE(setNCon_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test and Check
-	status = partitioner.setNCon(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-	status = partitioner.setNCon(8);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNCon(4);
+	BOOST_CHECK_EQUAL(partitioner.nCon, 4);
+	partitioner.setNCon(8);
+	BOOST_CHECK_EQUAL(partitioner.nCon, 8);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
-
 	BOOST_CHECK_EQUAL(partitioner.ubvec, static_cast<decltype(partitioner.ubvec)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 0);
 }
@@ -477,7 +444,6 @@ BOOST_AUTO_TEST_CASE(setNCon_test3)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	// Sizes of these don't matter for this test, as long as they are set
@@ -488,12 +454,10 @@ BOOST_AUTO_TEST_CASE(setNCon_test3)
 	partitioner.nUbvec = 4;
 
 	// Test and Check
-	status = partitioner.setNCon(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNCon(4);
+	BOOST_CHECK_EQUAL(partitioner.nCon, 4);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
-
 	BOOST_CHECK_EQUAL(partitioner.ubvec, static_cast<decltype(partitioner.ubvec)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nUbvec, 0);
 }
@@ -504,12 +468,10 @@ BOOST_AUTO_TEST_CASE(setNparts_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test and Check
-	status = partitioner.setNParts(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNParts(4);
+	BOOST_CHECK_EQUAL(partitioner.nParts, 4);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
 }
@@ -519,15 +481,12 @@ BOOST_AUTO_TEST_CASE(setNparts_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test and Check
-	status = partitioner.setNParts(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-	status = partitioner.setNParts(8);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNParts(4);
+	BOOST_CHECK_EQUAL(partitioner.nParts, 4);
+	partitioner.setNParts(8);
+	BOOST_CHECK_EQUAL(partitioner.nParts, 8);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
 }
@@ -537,7 +496,6 @@ BOOST_AUTO_TEST_CASE(setNparts_test3)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerParmetis<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	// Sizes of these don't matter for this test, as long as they are set
@@ -545,9 +503,8 @@ BOOST_AUTO_TEST_CASE(setNparts_test3)
 	partitioner.nTpwgts = 4;
 
 	// Test and Check
-	status = partitioner.setNParts(4);
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
+	partitioner.setNParts(4);
+	BOOST_CHECK_EQUAL(partitioner.nCon, 4);
 	BOOST_CHECK_EQUAL(partitioner.tpwgts, static_cast<decltype(partitioner.tpwgts)>(nullptr));
 	BOOST_CHECK_EQUAL(partitioner.nTpwgts, 0);
 }

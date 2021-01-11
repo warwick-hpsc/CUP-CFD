@@ -155,15 +155,18 @@ namespace cupcfd
 			I adjNodeLocalIDX = this->nodeToIDX[dstNode];
 
 			// Search edge list for destination node and return existance (or lack thereof)
-			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, exists);
-			// I edgeIdx;
-			// status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), this->adjacencies[nodeLocalIDX].size(), adjNodeLocalIDX, &edgeIdx);
-			// if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
-			// 	// This error is ok, just means edge not found.
-			// 	*exists = false;
-			// } else {
+			I edgeIdx;
+			I numAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->adjacencies[nodeLocalIDX].size());
+			status = cupcfd::utility::drivers::linearSearch(&(this->adjacencies[nodeLocalIDX][0]), numAdj, adjNodeLocalIDX, &edgeIdx);
+			if (status == cupcfd::error::E_SUCCESS) {
+				*exists = true;
+			}
+			else if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+				*exists = false;
+			}
+			else {
 				CHECK_ECODE(status)
-			// }
+			}
 
 			return cupcfd::error::E_SUCCESS;
 		}

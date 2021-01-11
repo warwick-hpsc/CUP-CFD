@@ -33,8 +33,10 @@ namespace cupcfd
 			TriPrism<T>::TriPrism(const shapes::Triangle3D<T>& top, const shapes::Triangle3D<T>& bottom)
 			: top(top), bottom(bottom)
 			{
+				// ToDo: ensure that normals of Top and Bottom are parallel.
+
 				/*
-				// Flip either face if its normal points inwards:
+				// Invert either face if its normal points inwards:
 				T dp = this->top.getNormal().dotProduct(this->top.getCentroid() - this->bottom.getCentroid());
 				// T dp = this->top.normal.dotProduct(this->top.centroid - this->bottom.centroid);
 				if (dp < T(0.0)) {
@@ -46,11 +48,6 @@ namespace cupcfd
 					this->bottom.reverseVertexOrdering();
 				}
 				*/
-
-				// // this->centroid = this->computeCentroid();
-				// this->centroid =  T(1)/T(7) * (this->top.vertices[0]    + this->top.vertices[1]    + this->top.vertices[2] + 
-				// 							this->bottom.vertices[0] + this->bottom.vertices[1] + this->bottom.vertices[2]);
-				// this->volume = (this->top.centroid - this->bottom.centroid).length() * this->base.area;
 			}
 
 			template <class T>

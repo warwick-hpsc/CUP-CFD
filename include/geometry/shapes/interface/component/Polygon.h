@@ -65,9 +65,23 @@ namespace cupcfd
 					inline void operator=(const Polygon<S,T,N,V>& source);
 
 					/**
+					 * Verify that no two vertices have same coordinates
+					 *
+					 * @return Return true if all vertices are unique/distinct
+					 */
+					bool verifyVerticesUnique();
+
+					/**
 					 * Reverse vertex ordering, and flip normal
 					 */
 					void reverseVertexOrdering();
+
+					/**
+					 * Shift vertices in array by 'shift' amount.
+					 *
+					 * &param shift Number of array indexes to shift, positive or negative.
+					 */
+					void shiftVertices(int shift);
 
 					/**
 					 * Determine whether the provided point is inside the Polygon.
@@ -93,6 +107,11 @@ namespace cupcfd
 					 */
 					__attribute__((warn_unused_result))
 					auto getCentroid();
+
+					/**
+					 * Print vertices to STDOUT
+					 */
+					void print() const;
 
 				protected:
 					// This class contains all data needed/used by derived classes, 

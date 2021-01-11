@@ -1417,9 +1417,8 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 			
-
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedronV2(I cellID, shapes::Hexahedron<T> ** shape) {
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::Hexahedron<T> ** shape) {
 				// Error Check: Check that the provided cell ID is actually a Hexahedron
 				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);				
 				if(type != shapes::POLYHEDRON_HEXAHEDRON) {
@@ -1442,9 +1441,6 @@ namespace cupcfd
 
 				shapes::Quadrilateral3D<T> quads[6];
 				for(I i = 0; i  < 6; i++) {
-					// for(I j = 0; j < faceNVertices[i]; j++) {
-					// 	vertexID = this->getFaceVertex(cellLocalFaceID[i], j);
-					// }
 					I id0 = this->getFaceVertex(cellLocalFaceID[i], 0);
 					I id1 = this->getFaceVertex(cellLocalFaceID[i], 1);
 					I id2 = this->getFaceVertex(cellLocalFaceID[i], 2);
@@ -1457,266 +1453,10 @@ namespace cupcfd
 									this->getVertexPos(id3));
 				}
 
-				*shape = NULL;
+				// Don't worry about ordering or normal orientation - Hexahedron 
+				// constructor will handle that.
+				*shape = new shapes::Hexahedron<T>(quads[0], quads[1], quads[2], quads[3], quads[4], quads[5]);
 
-				return cupcfd::error::E_SUCCESS;
-			}
-			
-			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::Hexahedron<T> ** shape) {
-				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
-				// although we are going to expect that the vertices in order are connected by edges
-				
-				// For now, we will compute the relative positions of the points, but it
-				// would be far more efficient if we control the ordering so that it is just known
-				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
-				// This is complex, prone to error and inefficient otherwise
-				
-				// Error Check: Check that the provided cell ID is actually a Hexahedron
-				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
-								
-				if(type != shapes::POLYHEDRON_HEXAHEDRON) {
-					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
-				}
-				
-				// ToDo: Error Check - Check Cell is a locally owned cell
-							
-				// Since we validated it is a hexahedron, we can expect there are 6 faces
-				// Retrieve the Face Data from the mesh for the cell
-				
-				I cellLocalFaceID[6];
-				for(I i = 0; i  < 6; i++) {
-					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
-				}
-				
-				// Get the number of vertices for each face, and determine which
-				// is the base
-				I faceNVertices[6];
-				I baseID;
-				uint ptr = 0;
-				for(I i = 0; i  < 6; i++) {
-					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
-					ptr++;
-				}
-				
-				// Pick an arbitrary face as the base
-				baseID = cellLocalFaceID[0];
-				if(ptr != 6) {
-					return cupcfd::error::E_GEOMETRY_NFACE_MISMATCH;
-				}
-				
-				// Number of vertices including duplicates
-				const I nVertDup = 24; // (6*4)
-				
-				// Get the vertex IDs for each face
-				I faceVertexIDs[nVertDup];
-				ptr = 0;
-				for(I i = 0; i  < 6; i++) {
-					for(I j = 0; j < faceNVertices[i]; j++) {
-						faceVertexIDs[ptr] = this->getFaceVertex(cellLocalFaceID[i], j);
-						ptr++;
-					}
-				}
-				if(ptr != nVertDup) {
-					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
-				}
-				
-				// Reconstruct the edges
-				std::vector<I> edge1;
-				std::vector<I> edge2;
-				I tmpEdge1;
-				I tmpEdge2;
-				I numEdge1;
-				bool found;
-				// Loop over faces
-				ptr = 0;
-				for(I i = 0; i < 6; i++) {
-					// Loop over vertices within face (bar last)
-					for(I j = 0; j < faceNVertices[i] - 1; j++) {
-						// Get two edge vertices
-						tmpEdge1 = faceVertexIDs[ptr];
-						tmpEdge2 = faceVertexIDs[ptr+1];
-						ptr++;
-
-						// Search 
-						found = false;
-						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-						for(I k = 0; k < numEdge1; k++) {
-							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
-								found = true;
-							}
-						}
-						if(!found) {
-							edge1.push_back(tmpEdge1);
-							edge2.push_back(tmpEdge2);
-						}
-					}
-					
-					// Last edge that loops around
-					tmpEdge1 = faceVertexIDs[ptr];
-					tmpEdge2 = faceVertexIDs[(ptr - faceNVertices[i]) + 1];
-					ptr++;
-					found = false;
-					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-					for(I k = 0; k < numEdge1; k++) {
-						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
-							found = true;
-						}
-					}
-					if(!found) {
-						edge1.push_back(tmpEdge1);
-						edge2.push_back(tmpEdge2);
-					}
-				}
-				
-				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-				if(numEdge1 != (nVertDup/2)) {
-					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
-				}
-				
-			   	euc::EuclideanPoint<T,3> basePos[4];
-			   	
-				// Determine the relative positions of the vertices amongst one another, orient them
-				// Face 1
-				I baseFaceA = this->getFaceVertex(baseID, 0);
-				I baseFaceB = this->getFaceVertex(baseID, 1);
-				I baseFaceC = this->getFaceVertex(baseID, 2);
-				I baseFaceD = this->getFaceVertex(baseID, 3);
-
-				basePos[0] = this->getVertexPos(baseFaceA);
-				basePos[1] = this->getVertexPos(baseFaceB);
-				basePos[2] = this->getVertexPos(baseFaceC);
-				basePos[3] = this->getVertexPos(baseFaceD);
-				
-				// Find a vertex on the opposite face
-				I oppVertexID;
-				found = false;
-				for(I i = 0; i < nVertDup; i++) {
-					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD) {
-						oppVertexID = faceVertexIDs[i];
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
-				}
-				
-				// A vector from the opposite face to a point on the base face either traverses along an edge or goes through the hexahedron
-				// Test the ordering of the base face
-				bool isClockwise = shapes::isVertexOrderClockwise(this->getVertexPos(oppVertexID), basePos, 4);
-				
-				// Name scheme - t[op]/b[ottom], l[eft]/r[ight], f[ront]/b[ack]
-				I tlf, trf, blf, brf, tlb, trb, blb, brb;
-					
-				// Now we know the ordering, create the object
-				if(isClockwise) {
-					// Clockwise (base is in order of blf, brf, brb, blb)
-					blf = baseFaceA;
-					brf = baseFaceB;
-					brb = baseFaceC;
-					blb = baseFaceD;
-				}
-				else {
-					// Anti-Clockwise (base is in order of blf, blb, brb, brf)
-					blf = baseFaceA;
-					blb = baseFaceB;
-					brb = baseFaceC;
-					brf = baseFaceD;
-				}
-				
-				// Since this is a hexahedron, if we just find the non-base face vertex joined to each of the base vertices,
-				// we will know the labels for the opposite face
-				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-				for(I i = 0; i < numEdge1; i++) {
-					// === blf ===
-					if(edge1[i] == blf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != brf && edge2[i] != brb && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlf = edge2[i];
-						}
-					}	
-					
-					if(edge2[i] == blf) {
-						if(edge1[i] != brf && edge1[i] != brb && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlf = edge1[i];
-						}
-					}		
-					
-					// === brf ===
-					
-					if(edge1[i] == brf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brb && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trf = edge2[i];
-						}
-					}	
-	
-					if(edge2[i] == brf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brb && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trf = edge1[i];
-						}
-					}	
-					
-					// === brb ===
-					
-					if(edge1[i] == brb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brf && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trb = edge2[i];
-						}
-					}	
-			
-					if(edge2[i] == brb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brf && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trb = edge1[i];
-						}
-					}	
-					
-					// === blb ===
-					
-					if(edge1[i] == blb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brf && edge2[i] != brb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlb = edge2[i];
-						}
-					}
-
-					if(edge2[i] == blb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brf && edge1[i] != brb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlb = edge1[i];
-						}
-					}																			
-				} 
-					   
-				*shape = new shapes::Hexahedron<T>(this->getVertexPos(tlf),
-																	this->getVertexPos(trf),
-																	this->getVertexPos(blf),
-																	this->getVertexPos(brf),
-																	this->getVertexPos(tlb),
-																	this->getVertexPos(trb),
-																	this->getVertexPos(blb),
-																	this->getVertexPos(brb));
-				
 				return cupcfd::error::E_SUCCESS;
 			}
 			
@@ -2178,7 +1918,6 @@ namespace cupcfd
 					else if(pType == shapes::POLYHEDRON_HEXAHEDRON) {
 						shapes::Hexahedron<T> * shape4;
 						status = this->buildPolyhedron(i, &shape4);
-						// status = this->buildPolyhedronV2(i, &shape4);
 						CHECK_ECODE(status)
 						inside = shape4->isPointInside(point);						
 						delete shape4;

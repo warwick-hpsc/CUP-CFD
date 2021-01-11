@@ -150,7 +150,7 @@ namespace cupcfd
 					 *
 					 * @return Return true if the vectors have equal components
 					 */
-					inline bool operator==(const EuclideanVector<T,N>& cmpVec);
+					inline bool operator==(const EuclideanVector<T,N>& cmpVec) const;
 
 					/**
 					 * Add the two vectors together to obtain the vector that is the combination of the two
@@ -369,12 +369,7 @@ namespace cupcfd
 					 * @return The dot-product
 					 */
 					__attribute__((warn_unused_result))
-					T dotProduct(const EuclideanVector<T,N>& vec);
-
-
-					// ToDo: Specify float/double explicitly since length will always be floating-point, even
-					// for integer systems
-					// Can we add an extra template type for this to reduce code repetition?
+					T dotProduct(const EuclideanVector<T,N>& vec) const;
 
 					// ToDo: Could rename this from length to norm
 					/**
@@ -423,7 +418,7 @@ namespace cupcfd
 					 * @return Return true if the vector is parallel
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isParallel(EuclideanVector<T,N>& b);
+					inline bool isParallel(const EuclideanVector<T,N>& b) const;
 
 					/**
 					 * Print point data to stdout, useful for debugging

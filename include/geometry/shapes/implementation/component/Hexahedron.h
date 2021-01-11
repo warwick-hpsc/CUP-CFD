@@ -18,6 +18,7 @@
 #include "Polyhedron.h"
 #include "EuclideanPoint.h"
 #include "Quadrilateral3D.h"
+#include "Tetrahedron.h"
 
 namespace euc = cupcfd::geometry::euclidean;
 namespace shapes = cupcfd::geometry::shapes;
@@ -41,76 +42,23 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					// Stores Data as Points - Can reconstruct faces if needed
-
-					// ToDo: Might restructure things to be more consistent in naming
-					// to follow a generic polyhedron
-					// Could makes these a vertices array and enforce ordering internally
-
-					/** Top-Left Front Vertex **/
-					euc::EuclideanPoint<T,3> tlf;
-
-					/** Top-Right Front Vertex **/
-					euc::EuclideanPoint<T,3> trf;
-
-					/** Bottom-Left Front Vertex **/
-					euc::EuclideanPoint<T,3> blf;
-
-					/** Bottom-Right Front Vertex **/
-					euc::EuclideanPoint<T,3> brf;
-
-					/** Top-Left Back Vertex **/
-					euc::EuclideanPoint<T,3> tlb;
-
-					/** Top-Right Back Vertex **/
-					euc::EuclideanPoint<T,3> trb;
-
-					/** Bottom-Left Back Vertex **/
-					euc::EuclideanPoint<T,3> blb;
-
-					/** Bottom-Right Back Vertex **/
-					euc::EuclideanPoint<T,3> brb;
-
-					shapes::Quadrilateral3D<T> f1;
-					shapes::Quadrilateral3D<T> f2;
-					shapes::Quadrilateral3D<T> f3;
-					shapes::Quadrilateral3D<T> f4;
-					shapes::Quadrilateral3D<T> f5;
-					shapes::Quadrilateral3D<T> f6;
-
+					shapes::Quadrilateral3D<T> faces[6];
 
 					// === Constructors/Deconstructors ===
 
 					/**
-					 * Construct a hexahedron from the provided points.
-					 *
-					 * Positional information/ordering of the vertex is important since
-					 * it can be used for certain computation - e.g. direction of computed normals
-					 *
-					 * @param tlf Top-left Front Vertex
-					 * @param trf Top-right Front Vertex
-					 * @param blf Bottom-left Front Vertex
-					 * @param brf Bottom-right Front Vertex
-					 * @param tlb Top-left Back Vertex
-					 * @param trb Top-right Back Vertex
-					 * @param blb Bottom-left Back Vertex
-					 * @param brb Bottom-right Back Vertex
+					 * Construct a hexahedron from 6 appropriately-connected quadrilaterals. 
+					 * Ordering is not important, constructor will determine orientation.
+					 * Any faces with inward-pointing normals will be inverted.
+					 * It will also find face opposite f0, and shift vertex ordering 
+					 * so that vertex 0 of both faces are connected by an edge.
 					 */
-					Hexahedron(const euc::EuclideanPoint<T,3>& tlf,
-							   const euc::EuclideanPoint<T,3>& trf,
-							   const euc::EuclideanPoint<T,3>& blf,
-							   const euc::EuclideanPoint<T,3>& brf,
-							   const euc::EuclideanPoint<T,3>& tlb,
-							   const euc::EuclideanPoint<T,3>& trb,
-							   const euc::EuclideanPoint<T,3>& blb,
-							   const euc::EuclideanPoint<T,3>& brb);
-
-					Hexahedron(const shapes::Quadrilateral3D<T>& f1,
+					Hexahedron(const shapes::Quadrilateral3D<T>& f0,
+							   const shapes::Quadrilateral3D<T>& f1,
 							   const shapes::Quadrilateral3D<T>& f2,
 							   const shapes::Quadrilateral3D<T>& f3,
 							   const shapes::Quadrilateral3D<T>& f4,
-							   const shapes::Quadrilateral3D<T>& f5,
-							   const shapes::Quadrilateral3D<T>& f6);
+							   const shapes::Quadrilateral3D<T>& f5);
 
 					/**
 					 *
@@ -118,6 +66,15 @@ namespace cupcfd
 					~Hexahedron();
 
 					// === Concrete Methods ===
+
+					/**
+					 * Check that no two faces used to construct Hexahedron 
+					 * have same vertices.
+					 *
+					 * @return True if are faces are distinct, False if 
+					 * any two faces have same vertices.
+					 */
+					bool verifyFacesDistinct();
 
 					/**
 					 * Return volume of hexahedron, calculating if not known
@@ -144,7 +101,7 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(const euc::EuclideanPoint<T,3>& point);
+					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on an edge of the polyhedron
@@ -154,7 +111,7 @@ namespace cupcfd
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
+					bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on a vertex of the polyhedron
@@ -167,6 +124,20 @@ namespace cupcfd
 					inline bool isPointOnVertex(const euc::EuclideanPoint<T,3>& point);
 
 				protected:
+					// Stores Data as Points - Can reconstruct faces if needed
+
+					uint top_face_idx = 99;
+					uint bottom_face_idx = 99;
+
+					/**
+					 * Decomposition of hexahedron into 5 tetrahedrons
+					 */
+					shapes::Tetrahedron<T> tetra[5];
+
+					void detectOpposingFaces();
+
+					void orientFaceNormals();
+
 					/**
 					 * Compute the volume of this polyhedron
 					 *

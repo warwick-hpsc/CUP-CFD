@@ -113,23 +113,24 @@ BOOST_AUTO_TEST_CASE(FluxScalarDolfynFaceLoop_test1)
 
 
 	cupcfd::fvm::FluxScalarDolfynFaceLoop(*mesh,
-														PhiCell, nCells,
-														PhiBoundary, nBnds,
-														VisEff, nCells,
-														Au, nCells,
-														Su, nCells,
-														Den, nCells,
-														MassFlux, nFaces,
-														TE, nCells,
-														CpBoundary, nBnds,
-														visEffBoundary, nBnds,
-														RFace, nFaces * 2,
-														dPhidx, nCells,
-														SolveTurb, SolveEnthalpy,
-														sigma, sigma2, vislam,
-														ivar, VarT, Sigma_T, Prandtl,
-														VarTE, Sigma_k, VarED, Sigma_e,
-														Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
+										PhiCell, nCells,
+										PhiBoundary, nBnds,
+										VisEff, nCells,
+										Au, nCells,
+										Su, nCells,
+										Den, nCells,
+										MassFlux, nFaces,
+										TE, nCells,
+										CpBoundary, nBnds,
+										visEffBoundary, nBnds,
+										RFace, nFaces * 2,
+										dPhidx, nCells,
+										SolveTurb, SolveEnthalpy,
+										// sigma, sigma2, 
+										vislam,
+										ivar, VarT, Sigma_T, Prandtl,
+										VarTE, Sigma_k, VarED, Sigma_e,
+										Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
 
 
 

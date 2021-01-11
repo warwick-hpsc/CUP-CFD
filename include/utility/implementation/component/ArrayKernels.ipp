@@ -29,14 +29,12 @@ namespace cupcfd
 	{
 		namespace kernels
 		{
-			// template <class I, class T>
-			// void add(T * source1, T * source2, T * dest, I nEle)
-			// {
-			// 	for(I i = 0; i < nEle; i++)
-			// 	{
-			// 		dest[i] = source1[i] + source2[i];
-			// 	}
-			// }
+			template <class I, class T>
+			void add(T * source1, T * source2, T * dest, I nEle) {
+				for(I i = 0; i < nEle; i++) {
+					dest[i] = source1[i] + source2[i];
+				}
+			}
 
 			// Assume array is sorted and size 1 or greater
 			template <class I, class T>
@@ -196,23 +194,25 @@ namespace cupcfd
 				return count;
 			}
 
-			// template <class I, class T>
-			// void minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult)
-			// {
-			// 	I ptr = 0;
-
-			// 	for(I i = 0; i < nSource1; i++)
-			// 	{
-			// 		// Will use the kernel to skip the is_sorted error check in the driver since we already expect
-			// 		// it to be sorted.
-			// 		I index = cupcfd::utility::kernels::binarySearch(source2, nSource2, source1[i]);
-			// 		if(index < 0)
-			// 		{
-			// 			result[ptr] = source1[i];
-			// 			ptr++;
-			// 		}
-			// 	}
-			// }
+			template <class I, class T>
+			cupcfd::error::eCodes minusArray(T * source1, I nSource1, T * source2, I nSource2, T * result, I nResult) {
+				I ptr = 0;
+				I index;
+				cupcfd::error::eCodes status;
+				for(I i = 0; i < nSource1; i++) {
+					// Will use the kernel to skip the is_sorted error check in the driver since we already expect
+					// it to be sorted.
+					status = cupcfd::utility::kernels::binarySearch(source2, nSource2, source1[i], &index);
+					if (status == cupcfd::error::E_SEARCH_NOT_FOUND) {
+						if (ptr >= nResult) {
+							return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+						}
+						result[ptr] = source1[i];
+						ptr++;
+					}
+				}
+				return cupcfd::error::E_SUCCESS;
+			}
 
 			template <class I, class T>
 			I intersectCount(T * source1, I nSource1, T * source2, I nSource2) {

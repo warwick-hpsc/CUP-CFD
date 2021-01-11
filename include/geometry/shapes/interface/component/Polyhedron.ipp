@@ -51,6 +51,12 @@ namespace cupcfd
 				return static_cast<P*>(this)->isPointInside(point);
 			}
 
+			template <class P, class T>
+			void Polyhedron<P,T>::print() {
+				printf("- centroid: "); this->getCentroid().print(); printf("\n");
+				std::cout << "- volume: " << this->getVolume() << std::endl;
+			}
+
 			// Namespace non-class methods
 
 			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces) {

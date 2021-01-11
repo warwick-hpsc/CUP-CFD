@@ -45,8 +45,7 @@ BOOST_AUTO_TEST_CASE(driver_is_sorted_noduplicates)
 	int arr1[9] = {2, 3, 4, 6, 7, 10, 12, 13, 2003};
 	bool result = false;
 
-	cupcfd::error::eCodes err = is_sorted(arr1, 9, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	result = is_sorted(arr1, 9);
 	BOOST_CHECK_EQUAL(result, true);
 }
 
@@ -55,8 +54,7 @@ BOOST_AUTO_TEST_CASE(driver_is_sorted_duplicates)
 	int arr1[9] = {2, 2, 3, 4, 7, 10, 10, 13, 2003};
 	bool result = false;
 
-	cupcfd::error::eCodes err = is_sorted(arr1, 9, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	result = is_sorted(arr1, 9);
 	BOOST_CHECK_EQUAL(result, true);
 }
 
@@ -66,8 +64,7 @@ BOOST_AUTO_TEST_CASE(driver_is_not_sorted_first)
 	int arr1[9] = {2003, 3, 4, 6, 7, 10, 12, 13, 14};
 	bool result = true;
 
-	cupcfd::error::eCodes err = is_sorted(arr1, 9, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	result = is_sorted(arr1, 9);
 	BOOST_CHECK_EQUAL(result, false);
 }
 
@@ -77,8 +74,7 @@ BOOST_AUTO_TEST_CASE(driver_is_not_sorted_last)
 	int arr1[9] = {2, 3, 4, 6, 7, 10, 12, 2003, 14};
 	bool result = true;
 
-	cupcfd::error::eCodes err = is_sorted(arr1, 9, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	result = is_sorted(arr1, 9);
 	BOOST_CHECK_EQUAL(result, false);
 }
 
@@ -88,18 +84,8 @@ BOOST_AUTO_TEST_CASE(driver_is_not_sorted)
 	int arr1[9] = {16, 32, 3, 4, 12, 2013, 231, 5135, 32};
 	bool result = true;
 
-	cupcfd::error::eCodes err = is_sorted(arr1, 9, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+	result = is_sorted(arr1, 9);
 	BOOST_CHECK_EQUAL(result, false);
-}
-
-BOOST_AUTO_TEST_CASE(driver_is_sorted_invalid_size)
-{
-	int arr1[9] = {16, 32, 3, 4, 12, 2013, 231, 5135, 32};
-	bool result;
-
-	cupcfd::error::eCodes err = is_sorted(arr1, -1, &result);
-	BOOST_CHECK_EQUAL(err, cupcfd::error::E_ARRAY_SIZE_UNDERSIZED);
 }
 
 BOOST_AUTO_TEST_CASE(driver_merge_sort_index)

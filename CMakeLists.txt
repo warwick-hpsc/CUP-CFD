@@ -478,6 +478,7 @@ set(geometry_source_files
 	src/geometry/euclidean/implementation/component/EuclideanVector.cpp
   src/geometry/euclidean/implementation/component/EuclideanVector2D.cpp
   src/geometry/euclidean/implementation/component/EuclideanVector3D.cpp
+  src/geometry/euclidean/implementation/component/LineSegment3D.cpp
   src/geometry/euclidean/implementation/component/Matrix.cpp
 	src/geometry/euclidean/implementation/component/EuclideanPlane3D.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshProperties.cpp

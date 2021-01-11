@@ -24,8 +24,3 @@ namespace cupcfd
 		}
 	}
 }
-
-// Explicit Instantiation
-
-template class cupcfd::geometry::shapes::Quadrilateral3D<float>;
-template class cupcfd::geometry::shapes::Quadrilateral3D<double>;

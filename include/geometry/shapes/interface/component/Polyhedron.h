@@ -84,6 +84,11 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					auto isPointInside(euc::EuclideanPoint<T,3>& point);
 
+					/**
+					 * Print  STDOUT
+					 */
+					virtual void print();
+
 				protected:
 					// This class contains all data needed/used by derived classes, 
 					// derived classes just implement new methods. 

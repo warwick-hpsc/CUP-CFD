@@ -15,6 +15,7 @@
 #include <stdexcept>
 
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "Error.h"
 #include "Broadcast.h"
 #include <iostream>
@@ -419,11 +420,11 @@ BOOST_AUTO_TEST_CASE(operator_subtract_scalar_divide_test4,  * utf::tolerance(0.
 // Test 1: Check Cross-Product is computed correctly - 3D
 BOOST_AUTO_TEST_CASE(operator_crossproduct_test1, * utf::tolerance(0.0000000001))
 {
-	EuclideanVector<double,3> vec1(2.0, 3.0, 4.0);
-	EuclideanVector<double,3> vec2(3.5, 6.3, 19.7);
-	EuclideanVector<double,3> result;
+	EuclideanVector3D<double> vec1(2.0, 3.0, 4.0);
+	EuclideanVector3D<double> vec2(3.5, 6.3, 19.7);
+	EuclideanVector3D<double> result;
 
-	result = crossProduct(vec1, vec2);
+	result = vec1.crossProduct(vec2);
 
 	BOOST_TEST(result.cmp[0] == 33.9);
 	BOOST_TEST(result.cmp[1] == -25.4);
@@ -434,9 +435,9 @@ BOOST_AUTO_TEST_CASE(operator_crossproduct_test1, * utf::tolerance(0.0000000001)
 // Test 1: Rotate a vector 1 radian
 BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test1, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.4, -3.2, 5.6);
+	EuclideanVector3D<double> vec(1.4, -3.2, 5.6);
 
-	rotateXAxisRadian(1.0, vec);
+	vec.rotateXAxisRadian(1.0);
 
 	BOOST_TEST(vec.cmp[0] == 1.4);
 	BOOST_TEST(vec.cmp[1] == -6.4412);
@@ -446,9 +447,9 @@ BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test1, * utf::tolerance(0.00001))
 // Test 2: Rotate a vector 90 degrees/1.5708 radians
 BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test2, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(0.0,1.0,0.0);
+	EuclideanVector3D<double> vec(0.0,1.0,0.0);
 
-	rotateXAxisRadian(1.5708, vec);
+	vec.rotateXAxisRadian(1.5708);
 
 	BOOST_TEST(vec.cmp[0] == 0.0);
 	BOOST_TEST(vec.cmp[1] == 0.0);
@@ -458,9 +459,9 @@ BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test2, * utf::tolerance(0.00001))
 // Test 3: Rotate a vector -90 degrees/-1.5708 radians
 BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test3, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(0.0,1.0,0.0);
+	EuclideanVector3D<double> vec(0.0,1.0,0.0);
 
-	rotateXAxisRadian(-1.5708, vec);
+	vec.rotateXAxisRadian(-1.5708);
 
 	BOOST_TEST(vec.cmp[0] == 0.0);
 	BOOST_TEST(vec.cmp[1] == 0.0);
@@ -471,9 +472,9 @@ BOOST_AUTO_TEST_CASE(rotateXAxisRadian_test3, * utf::tolerance(0.00001))
 // Test 1:
 BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test1, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.4, -3.2, 5.6);
+	EuclideanVector3D<double> vec(1.4, -3.2, 5.6);
 
-	rotateYAxisRadian(1.0, vec);
+	vec.rotateYAxisRadian(1.0);
 
 	BOOST_TEST(vec.cmp[0] == 5.46866);
 	BOOST_TEST(vec.cmp[1] == -3.2);
@@ -483,9 +484,9 @@ BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test1, * utf::tolerance(0.00001))
 // Test 2: Rotate a vector 90 degrees/1.5708 radians
 BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test2, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.0,0.0,0.0);
+	EuclideanVector3D<double> vec(1.0,0.0,0.0);
 
-	rotateYAxisRadian(1.5708, vec);
+	vec.rotateYAxisRadian(1.5708);
 
 	BOOST_TEST(vec.cmp[0] == 0.0);
 	BOOST_TEST(vec.cmp[1] == 0.0);
@@ -495,9 +496,9 @@ BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test2, * utf::tolerance(0.00001))
 // Test 3: Rotate a vector -90 degrees/1.5708 radians
 BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test3, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.0,0.0,0.0);
+	EuclideanVector3D<double> vec(1.0,0.0,0.0);
 
-	rotateYAxisRadian(-1.5708, vec);
+	vec.rotateYAxisRadian(-1.5708);
 
 	BOOST_TEST(vec.cmp[0] == 0.0);
 	BOOST_TEST(vec.cmp[1] == 0.0);
@@ -508,9 +509,9 @@ BOOST_AUTO_TEST_CASE(rotateYAxisRadian_test3, * utf::tolerance(0.00001))
 // Test 1:
 BOOST_AUTO_TEST_CASE(rotateZAxisRadian_test1, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.4, 3.2, 5.6);
+	EuclideanVector3D<double> vec(1.4, 3.2, 5.6);
 
-	rotateZAxisRadian(1.0, vec);
+	vec.rotateZAxisRadian(1.0);
 
 	BOOST_TEST(vec.cmp[0] == -1.93629);
 	BOOST_TEST(vec.cmp[1] == 2.90703);
@@ -520,9 +521,9 @@ BOOST_AUTO_TEST_CASE(rotateZAxisRadian_test1, * utf::tolerance(0.00001))
 // Test 2: Rotate a unit vector
 BOOST_AUTO_TEST_CASE(rotateZAxisRadian_test2, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.0,0.0,0.0);
+	EuclideanVector3D<double> vec(1.0,0.0,0.0);
 
-	rotateZAxisRadian(1.5708, vec);
+	vec.rotateZAxisRadian(1.5708);
 
 	// Vector was pointing along X axis, should now be pointing up along Y-axis
 	BOOST_TEST(vec.cmp[0] == 0.0);
@@ -533,9 +534,9 @@ BOOST_AUTO_TEST_CASE(rotateZAxisRadian_test2, * utf::tolerance(0.00001))
 // Test 3: Rotate a unit vector
 BOOST_AUTO_TEST_CASE(rotateZAxisRadian_test3, * utf::tolerance(0.00001))
 {
-	EuclideanVector<double,3> vec(1.0,0.0,0.0);
+	EuclideanVector3D<double> vec(1.0,0.0,0.0);
 
-	rotateZAxisRadian(-1.5708, vec);
+	vec.rotateZAxisRadian(-1.5708);
 
 	// Vector was pointing along X axis, should now be pointing up along Y-axis
 	BOOST_TEST(vec.cmp[0] == 0.0);
@@ -963,9 +964,9 @@ BOOST_AUTO_TEST_CASE(computeVectorRangeIntersection_test7, * utf::tolerance(0.00
 
 	cupcfd::error::eCodes status = cupcfd::geometry::euclidean::computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-	BOOST_TEST(intersectPoint.cmp[0] == 4.0);
-	BOOST_TEST(intersectPoint.cmp[1] == 5.0);
-	BOOST_TEST(intersectPoint.cmp[2] == 6.0);
+	BOOST_TEST(intersectPoint.cmp[0] == 3.5);
+	BOOST_TEST(intersectPoint.cmp[1] == 4.5);
+	BOOST_TEST(intersectPoint.cmp[2] == 5.5);
 }
 
 // Test 8: Test two vectors that are parallel but never overlap
@@ -1006,9 +1007,9 @@ BOOST_AUTO_TEST_CASE(computeVectorRangeIntersection_test10, * utf::tolerance(0.0
 
 	cupcfd::error::eCodes status = cupcfd::geometry::euclidean::computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-	BOOST_TEST(intersectPoint.cmp[0] == 4.0);
-	BOOST_TEST(intersectPoint.cmp[1] == 5.0);
-	BOOST_TEST(intersectPoint.cmp[2] == 6.0);
+	BOOST_TEST(intersectPoint.cmp[0] == 3.5);
+	BOOST_TEST(intersectPoint.cmp[1] == 4.5);
+	BOOST_TEST(intersectPoint.cmp[2] == 5.5);
 }
 
 // Test 11: Both ranges are just the same point
@@ -1090,28 +1091,15 @@ BOOST_AUTO_TEST_CASE(computeVectorRangeIntersection_test18, * utf::tolerance(0.0
 
 	cupcfd::error::eCodes status = cupcfd::geometry::euclidean::computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-	BOOST_TEST(intersectPoint.cmp[0] == 3.5);
-	BOOST_TEST(intersectPoint.cmp[1] == 4.5);
-	BOOST_TEST(intersectPoint.cmp[2] == 5.5);
+	BOOST_TEST(intersectPoint.cmp[0] == 4.0);
+	BOOST_TEST(intersectPoint.cmp[1] == 5.0);
+	BOOST_TEST(intersectPoint.cmp[2] == 6.0);
 }
 
 // === DotProduct ===
-// Test 1: Test correct dot product compute with error code - 2D
+
+// Test 1: Test correct dot product - 2D
 BOOST_AUTO_TEST_CASE(dotproduct_test1, * utf::tolerance(0.01))
-{
-	EuclideanVector<double,2> vec1(2.0, 3.0);
-	EuclideanVector<double,2> vec2(3.5, 6.3);
-	double result;
-	cupcfd::error::eCodes status;
-
-	status = vec1.dotProduct(vec2, &result);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-	BOOST_TEST(result == 25.9);
-}
-
-// Test 2: Test correct dot product without error code - 2D
-BOOST_AUTO_TEST_CASE(dotproduct_test2, * utf::tolerance(0.01))
 {
 	EuclideanVector<double,2> vec1(2.0, 3.0);
 	EuclideanVector<double,2> vec2(3.5, 6.3);
@@ -1120,23 +1108,8 @@ BOOST_AUTO_TEST_CASE(dotproduct_test2, * utf::tolerance(0.01))
 	BOOST_TEST(result == 25.9);
 }
 
-
-// Test 3: Test correct dot product compute with error code - 3D
-BOOST_AUTO_TEST_CASE(dotproduct_test3, * utf::tolerance(0.01))
-{
-	EuclideanVector<double,3> vec1(2.0, 3.0, 4.0);
-	EuclideanVector<double,3> vec2(3.5, 6.3, 19.7);
-	double result;
-	cupcfd::error::eCodes status;
-
-	status = vec1.dotProduct(vec2, &result);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-	BOOST_TEST(result == 104.7);
-}
-
-// Test 4: Test correct dot product without error code - 3D
-BOOST_AUTO_TEST_CASE(dotproduct_test4, * utf::tolerance(0.01))
+// Test 2: Test correct dot product - 3D
+BOOST_AUTO_TEST_CASE(dotproduct_test2, * utf::tolerance(0.01))
 {
 	EuclideanVector<double,3> vec1(2.0, 3.0, 4.0);
 	EuclideanVector<double,3> vec2(3.5, 6.3, 19.7);
@@ -1146,42 +1119,20 @@ BOOST_AUTO_TEST_CASE(dotproduct_test4, * utf::tolerance(0.01))
 }
 
 // === length ===
-// Test 1: Test correct length compute with error code, double - 2D
+// Test 1: Test correct length compute, double - 2D
 BOOST_AUTO_TEST_CASE(length_test1, * utf::tolerance(0.00001))
 {
 	EuclideanVector<double,2> vec1(3.5, 6.3);
-	double length;
-	cupcfd::error::eCodes status;
-
-	status = vec1.length(&length);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	double length = vec1.length();
 	BOOST_TEST(length == 7.20694);
 }
 
-// Test 2: Test correct length compute with error code, double - 3D
+// Test 2: Test correct length compute, double - 3D
 BOOST_AUTO_TEST_CASE(length_test2, * utf::tolerance(0.0001))
 {
 	EuclideanVector<double,3> vec1(3.5, 6.3, 19.7);
-	double length;
-	cupcfd::error::eCodes status;
-
-	status = vec1.length(&length);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	double length = vec1.length();
 	BOOST_TEST(length == 20.9769);
-}
-
-// Test 3: Test correct length compute with error code, float - 2D
-BOOST_AUTO_TEST_CASE(length_test3, * utf::tolerance(0.00001))
-{
-
-}
-
-// Test 4: Test correct length compute with error code, float - 3D
-BOOST_AUTO_TEST_CASE(length_test4, * utf::tolerance(0.00001))
-{
-
 }
 
 // === normalise ===
@@ -1190,74 +1141,20 @@ BOOST_AUTO_TEST_CASE(normalise_test1, * utf::tolerance(0.000001))
 {
 	// Setup
 	EuclideanVector<double,2> vec(3.5, 6.3);
-	cupcfd::error::eCodes status;
-
-	status = vec.normalise();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	vec.normalise();
 	BOOST_TEST(vec.cmp[0] == 0.485643);
 	BOOST_TEST(vec.cmp[1] == 0.874157);
 }
 
-// Test 2: Test normalise that returns the vector - 2D
-// === normalise ===
-BOOST_AUTO_TEST_CASE(normalise_test2, * utf::tolerance(0.000001))
-{
-	// Setup
-	EuclideanVector<double,2> vec1(3.5, 6.3);
-	EuclideanVector<double,2> vec2;
-	cupcfd::error::eCodes status;
-
-	status = vec1.normalise(vec2);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-	// Source vec should be unchanged
-	BOOST_TEST(vec1.cmp[0] == 3.5);
-	BOOST_TEST(vec1.cmp[1] == 6.3);
-
-	// vec2 should contain the normalise vector
-	BOOST_TEST(vec2.cmp[0] == 0.485643);
-	BOOST_TEST(vec2.cmp[1] == 0.874157);
-}
-
-// Test 3: Test in-place normalisation - 3D
-BOOST_AUTO_TEST_CASE(normalise_test3, * utf::tolerance(0.00001))
+// Test 2: Test in-place normalisation - 3D
+BOOST_AUTO_TEST_CASE(normalise_test2, * utf::tolerance(0.00001))
 {
 	// Setup
 	EuclideanVector<double,3> vec(3.5, 6.3, 19.7);
-	cupcfd::error::eCodes status;
-
-	status = vec.normalise();
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	vec.normalise();
 	BOOST_TEST(vec.cmp[0] == 0.16685);
 	BOOST_TEST(vec.cmp[1] == 0.30033);
 	BOOST_TEST(vec.cmp[2] == 0.939129);
-}
-
-// Test 4: Test normalise that returns the vector - 3D
-// === normalise ===
-BOOST_AUTO_TEST_CASE(normalise_test4, * utf::tolerance(0.00001))
-{
-	// Setup
-	EuclideanVector<double,3> vec1(3.5, 6.3, 19.7);
-	EuclideanVector<double,3> vec2;
-	cupcfd::error::eCodes status;
-
-	status = vec1.normalise(vec2);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
-
-	// Source vec should be unchanged
-	BOOST_TEST(vec1.cmp[0] == 3.5);
-	BOOST_TEST(vec1.cmp[1] == 6.3);
-	BOOST_TEST(vec1.cmp[2] == 19.7);
-
-	// vec2 should contain the normalise vector
-	BOOST_TEST(vec2.cmp[0] == 0.16685);
-	BOOST_TEST(vec2.cmp[1] == 0.30033);
-	BOOST_TEST(vec2.cmp[2] == 0.939129);
 }
 
 // === computeOrthagonalVector ===

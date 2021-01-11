@@ -70,19 +70,11 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class T, unsigned int N>
-			T EuclideanVector<T,N>::dotProduct(const EuclideanVector<T,N>& vec) {
+			T EuclideanVector<T,N>::dotProduct(const EuclideanVector<T,N>& vec) const {
 				// https://en.wikipedia.org/wiki/Dot_product
 				T dotP = 0.0;
 				for(uint i = 0; i < N; i++) {
 					dotP += (this->cmp[i] * vec.cmp[i]);
-				}
-				// Ensure floating-point rounding errors do not produce an 
-				// invalid dot product value (must be in range [-1.0, 1.0])
-				if (dotP < T(-1)) {
-					dotP = T(-1);
-				}
-				else if (dotP > T(11)) {
-					dotP = T(1);
 				}
 				return dotP;
 			}
@@ -98,16 +90,13 @@ namespace cupcfd
 
 			template <class T, unsigned int N>
 			void EuclideanVector<T,N>::normalise() {
-				// T scalar;
-				// this->length(&scalar);
 				T scalar = this->length();
-				scalar = T(1.0) / scalar;
-
-				for(uint i = 0; i < N; i++) {
-					this->cmp[i] *= T(scalar);
+				if (scalar != T(0)) {
+					scalar = T(1.0) / scalar;
+					for(uint i = 0; i < N; i++) {
+						this->cmp[i] *= scalar;
+					}
 				}
-
-				// return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class T, unsigned int N>

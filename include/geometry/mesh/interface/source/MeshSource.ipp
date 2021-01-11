@@ -115,7 +115,11 @@ namespace cupcfd
 							// will add the node as a ghost node.
 							// ToDo: If this changes in the future we will need to revisit this.
 							status = (*graph)->addUndirectedEdge(faceCell1[i], faceCell2[i]);
-							CHECK_ECODE(status)
+							if (status == cupcfd::error::E_SUCCESS || status == cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS) {
+								continue;
+							} else {
+								CHECK_ECODE(status)
+							}
 						}
 					}
 

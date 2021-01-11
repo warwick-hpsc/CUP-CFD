@@ -70,15 +70,6 @@ namespace cupcfd
 									const euc::EuclideanPoint<T,3>& d);
 
 					/**
-					 * Construct a Quadrilateral that has a copy of the values stored
-					 * in the source object.
-					 *
-					 * @param source The Quadrilateral3D to copy the values from
-					 */
-					Quadrilateral3D(const Quadrilateral3D<T>& source);
-
-
-					/**
 					 * Deconstructor
 					 */
 					~Quadrilateral3D();
