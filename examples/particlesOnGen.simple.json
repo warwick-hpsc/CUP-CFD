@@ -27,7 +27,7 @@
 			"BenchmarkParticleSystem" : {
                 "BenchmarkName" : "ParticleSystemSimpleTest",
                 "Repetitions"   : 1,
-                "NTimesteps"    : 105,
+                "NTimesteps"    : 600,
                 "DtDistribution" : {"FixedDistribution" : {"value" : 0.13171}},
                 "ParticleSystemSimple" : {
                     "Emitters": [

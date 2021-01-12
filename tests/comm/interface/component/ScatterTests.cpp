@@ -41,6 +41,7 @@ BOOST_AUTO_TEST_CASE(Scatter1_test1)
 	int nRecv = 3;
 
 	cupcfd::error::eCodes err = Scatter(&bufferSend[0], nSend, &bufferRecv[0], nRecv, nRecv, comm, 0);
+	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
 
 	if(comm.rank == 0)
 	{
@@ -86,6 +87,7 @@ BOOST_AUTO_TEST_CASE(Scatter2_test1)
 	}
 
 	cupcfd::error::eCodes err = Scatter(bufferSend, nSend, bufferRecv, nRecv, sendCounts, 4, comm, 0);
+	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
 
 	if(comm.rank == 0)
 	{
@@ -133,6 +135,7 @@ BOOST_AUTO_TEST_CASE(Scatter3_test1)
 	int nRecv;
 
 	cupcfd::error::eCodes err = Scatter(bufferSend, nSend, &bufferRecv, &nRecv, pSend, 20, comm, 0);
+	BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
 
 	if(comm.rank == 0)
 	{

@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE(existsLocalNode_test1)
 
 	if(comm.rank == 0)
 	{
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(existsLocalNode_test2)
 	{
 		// Manually add a node directly
 		list.nodeDistType[10] = LOCAL;
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -101,7 +101,7 @@ BOOST_AUTO_TEST_CASE(existsLocalNode_test3)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = GHOST;
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(existsLocalNode_test4)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = LOCAL;
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -133,7 +133,7 @@ BOOST_AUTO_TEST_CASE(driver_existsGhostNode_test_empty)
 
 	if(comm.rank == 0)
 	{
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -148,7 +148,7 @@ BOOST_AUTO_TEST_CASE(driver_existsGhostNode_nonEmpty_notFound)
 	{
 		// Manually add a node directly
 		list.nodeDistType[10] = LOCAL;
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE(driver_existsGhostNode_nonEmpty_wrongType)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = LOCAL;
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(driver_existsGhostNode_nonEmpty_rightType)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = GHOST;
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(driver_existsNode_test_empty)
 
 	if(comm.rank == 0)
 	{
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -209,7 +209,7 @@ BOOST_AUTO_TEST_CASE(driver_existsNode_nonEmpty_notFound)
 	{
 		// Manually add a node directly
 		list.nodeDistType[10] = LOCAL;
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -224,7 +224,7 @@ BOOST_AUTO_TEST_CASE(driver_existsNode_nonEmpty_found_local)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = LOCAL;
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -239,7 +239,7 @@ BOOST_AUTO_TEST_CASE(driver_existsNode_nonEmpty_found_ghost)
 	{
 		// Manually add a node directly
 		list.nodeDistType[5] = GHOST;
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -257,11 +257,11 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_empty)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 1);
@@ -270,14 +270,14 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_empty)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 0);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -292,16 +292,16 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_addNodeTwice)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// First add should be successful
-		cupcfd::error::eCodes err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Second add should leave list unmodified and report correct error code.
-		err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
+		status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
 
 		// Check Local Owned Node Count
 		// Should only be 1 - i.e. not added twice but still exists once
@@ -311,14 +311,14 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_addNodeTwice)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 0);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -334,20 +334,20 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_addMultiple)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addLocalNode(10);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(10);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addLocalNode(12);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addLocalNode(2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 4);
@@ -356,68 +356,68 @@ BOOST_AUTO_TEST_CASE(driver_addLocalNode_test_addMultiple)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 0);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsNode(10, &found);
+		found = list.existsNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(10, &found);
+		found = list.existsLocalNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(10, &found);
+		found = list.existsGhostNode(10);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsNode(12, &found);
+		found = list.existsNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(12, &found);
+		found = list.existsLocalNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(12, &found);
+		found = list.existsGhostNode(12);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsNode(2, &found);
+		found = list.existsNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(2, &found);
+		found = list.existsLocalNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(2, &found);
+		found = list.existsGhostNode(2);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check a random non-existant node does not exist
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Test after trying to add a duplicate that a random node does not exist
-		err = list.addLocalNode(8);
+		status = list.addLocalNode(8);
 
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -435,11 +435,11 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_empty)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addGhostNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addGhostNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 0);
@@ -448,14 +448,14 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_empty)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 1);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -470,16 +470,16 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_addNodeTwice)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// First add should be successful
-		cupcfd::error::eCodes err = list.addGhostNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addGhostNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Second add should leave list unmodified and report correct error code.
-		err = list.addGhostNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
+		status = list.addGhostNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
 
 		// Check Local Owned Node Count
 		// Should only be 1 - i.e. not added twice but still exists once
@@ -489,14 +489,14 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_addNodeTwice)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 1);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -512,20 +512,20 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_addMultiple)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addGhostNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addGhostNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addGhostNode(10);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addGhostNode(10);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addGhostNode(12);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addGhostNode(12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addGhostNode(2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addGhostNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 0);
@@ -534,68 +534,68 @@ BOOST_AUTO_TEST_CASE(driver_addGhostNode_test_addMultiple)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 4);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(10, &found);
+		found = list.existsNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(10, &found);
+		found = list.existsLocalNode(10);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(10, &found);
+		found = list.existsGhostNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(12, &found);
+		found = list.existsNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(12, &found);
+		found = list.existsLocalNode(12);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(12, &found);
+		found = list.existsGhostNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(2, &found);
+		found = list.existsNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(2, &found);
+		found = list.existsLocalNode(2);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(2, &found);
+		found = list.existsGhostNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check a random non-existant node does not exist
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Test after trying to add a duplicate that a random node does not exist
-		err = list.addGhostNode(8);
+		status = list.addGhostNode(8);
 
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -613,11 +613,11 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_empty)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 0);
@@ -626,14 +626,14 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_empty)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 1);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -648,16 +648,16 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addNodeTwice)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// First add should be successful
-		cupcfd::error::eCodes err = list.addNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Second add should leave list unmodified and report correct error code.
-		err = list.addNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
+		status = list.addNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
 
 		// Check Local Owned Node Count
 		// Should only be 1 - i.e. not added twice but still exists once
@@ -667,14 +667,14 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addNodeTwice)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 1);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -690,20 +690,20 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addMultiple)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addNode(10);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addNode(10);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addNode(12);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addNode(12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addNode(2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 0);
@@ -712,68 +712,68 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addMultiple)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 4);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(10, &found);
+		found = list.existsNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(10, &found);
+		found = list.existsLocalNode(10);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(10, &found);
+		found = list.existsGhostNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(12, &found);
+		found = list.existsNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(12, &found);
+		found = list.existsLocalNode(12);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(12, &found);
+		found = list.existsGhostNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(2, &found);
+		found = list.existsNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(2, &found);
+		found = list.existsLocalNode(2);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(2, &found);
+		found = list.existsGhostNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check a random non-existant node does not exist
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Test after trying to add a duplicate that a random node does not exist
-		err = list.addNode(8);
+		status = list.addNode(8);
 
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -789,16 +789,16 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addNodeTwice_mixture)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// First add should be successful
-		cupcfd::error::eCodes err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Second add should leave list unmodified and report correct error code, even if it is of a different type
-		err = list.addGhostNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
+		status = list.addGhostNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS);
 
 		// Check Local Owned Node Count
 		// Should only be 1 - i.e. not added twice but still exists once
@@ -808,14 +808,14 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addNodeTwice_mixture)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 0);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -831,20 +831,20 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addMultiple_mixture)
 	if(comm.rank == 0)
 	{
 		// Check the node does not yet exist
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		cupcfd::error::eCodes err = list.addLocalNode(5);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = list.addLocalNode(5);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addGhostNode(10);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addGhostNode(10);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addGhostNode(12);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addGhostNode(12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addLocalNode(2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check Local Owned Node Count
 		BOOST_CHECK_EQUAL(list.nLONodes, 2);
@@ -853,68 +853,68 @@ BOOST_AUTO_TEST_CASE(driver_addNode_test_addMultiple_mixture)
 		BOOST_CHECK_EQUAL(list.nLGhNodes, 2);
 
 		// Check the node now exists
-		list.existsNode(5, &found);
+		found = list.existsNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(5, &found);
+		found = list.existsLocalNode(5);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(5, &found);
+		found = list.existsGhostNode(5);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsNode(10, &found);
+		found = list.existsNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(10, &found);
+		found = list.existsLocalNode(10);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(10, &found);
+		found = list.existsGhostNode(10);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(12, &found);
+		found = list.existsNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(12, &found);
+		found = list.existsLocalNode(12);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(12, &found);
+		found = list.existsGhostNode(12);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsNode(2, &found);
+		found = list.existsNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(2, &found);
+		found = list.existsLocalNode(2);
 		BOOST_CHECK_EQUAL(found, true);
 
-		list.existsGhostNode(2, &found);
+		found = list.existsGhostNode(2);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check a random non-existant node does not exist
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Test after trying to add a duplicate that a random node does not exist
-		err = list.addLocalNode(8);
+		status = list.addLocalNode(8);
 
-		list.existsNode(7, &found);
+		found = list.existsNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
 		// Check it exists as a local node and not a ghost node
-		list.existsLocalNode(7, &found);
+		found = list.existsLocalNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 
-		list.existsGhostNode(7, &found);
+		found = list.existsGhostNode(7);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -925,21 +925,25 @@ BOOST_AUTO_TEST_CASE(driver_existsEdge_srcNode_notfound)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
+	cupcfd::error::eCodes status;
 
 	bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Add an edge directly to the underlying data structure
-		list.buildGraph.addEdge(1, 2);
+		status = list.buildGraph.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Test for the edges existance via the distributed layer on top
-		cupcfd::error::eCodes err = list.existsEdge(3, 2, &found);
+		cupcfd::error::eCodes status = list.existsEdge(3, 2, &found);
 
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING);
 	}
 }
 
@@ -947,21 +951,25 @@ BOOST_AUTO_TEST_CASE(driver_existsEdge_dstNode_notfound)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
+	cupcfd::error::eCodes status;
 
 	bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Add an edge directly to the underlying data structure
-		list.buildGraph.addEdge(1, 2);
+		status = list.buildGraph.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Test for the edges existance via the distributed layer on top
-		cupcfd::error::eCodes err = list.existsEdge(1, 102, &found);
+		cupcfd::error::eCodes status = list.existsEdge(1, 102, &found);
 
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING);
 	}
 }
 
@@ -969,21 +977,25 @@ BOOST_AUTO_TEST_CASE(driver_existsEdge_notfound)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
+	cupcfd::error::eCodes status;
 
 	bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Add an edge directly to the underlying data structure
-		list.buildGraph.addEdge(1, 2);
+		status = list.buildGraph.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Test for the edges existance via the distributed layer on top
-		cupcfd::error::eCodes err = list.existsEdge(2, 1, &found);
+		cupcfd::error::eCodes status = list.existsEdge(2, 1, &found);
 
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -992,21 +1004,25 @@ BOOST_AUTO_TEST_CASE(driver_existsEdge_found)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
+	cupcfd::error::eCodes status;
 
 	bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Add an edge directly to the underlying data structure
-		list.buildGraph.addEdge(1, 2);
+		status = list.buildGraph.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Test for the edges existance via the distributed layer on top
-		cupcfd::error::eCodes err = list.existsEdge(1, 2, &found);
+		cupcfd::error::eCodes status = list.existsEdge(1, 2, &found);
 
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(found, true);
 	}
 }
@@ -1018,23 +1034,25 @@ BOOST_AUTO_TEST_CASE(driver_addEdge)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
 	bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addEdge(1, 2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.existsEdge(1, 2, &found);
+		status = list.existsEdge(1, 2, &found);
 		BOOST_CHECK_EQUAL(found, true);
 
 		// Edge should only exist in one direction
-		err = list.existsEdge(2, 1, &found);
+		status = list.existsEdge(2, 1, &found);
 		BOOST_CHECK_EQUAL(found, false);
 	}
 }
@@ -1043,29 +1061,28 @@ BOOST_AUTO_TEST_CASE(driver_addEdge_src_missing)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
-	bool found;
+	// bool found;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addEdge(3, 2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addEdge(3, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		bool exists;
-		err = list.existsGhostNode(3, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		exists = list.existsGhostNode(3);
 		BOOST_CHECK_EQUAL(exists, true);
 
-		err = list.existsLocalNode(3, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		exists = list.existsLocalNode(3);
 		BOOST_CHECK_EQUAL(exists, false);
 
-		err = list.existsEdge(3, 2, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.existsEdge(3, 2, &exists);
 		BOOST_CHECK_EQUAL(exists, true);
 	}
 }
@@ -1074,29 +1091,27 @@ BOOST_AUTO_TEST_CASE(driver_addEdge_dst_missing)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
-	bool found;
+	bool exists;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addEdge(1, 4);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addEdge(1, 4);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		bool exists;
-		err = list.existsGhostNode(4, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		exists = list.existsGhostNode(4);
 		BOOST_CHECK_EQUAL(exists, true);
 
-		err = list.existsLocalNode(4, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		exists = list.existsLocalNode(4);
 		BOOST_CHECK_EQUAL(exists, false);
 
-		err = list.existsEdge(1, 4, &exists);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.existsEdge(1, 4, &exists);
 		BOOST_CHECK_EQUAL(exists, true);
 	}
 }
@@ -1105,27 +1120,29 @@ BOOST_AUTO_TEST_CASE(driver_addEdge_alreadyExists)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
-	bool found;
+	bool exists;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addEdge(1, 2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.existsEdge(1, 2, &found);
-		BOOST_CHECK_EQUAL(found, true);
+		status = list.existsEdge(1, 2, &exists);
+		BOOST_CHECK_EQUAL(exists, true);
 
 		// Edge should only exist in one direction
-		err = list.existsEdge(2, 1, &found);
-		BOOST_CHECK_EQUAL(found, false);
+		status = list.existsEdge(2, 1, &exists);
+		BOOST_CHECK_EQUAL(exists, false);
 
-		err = list.addEdge(1, 2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS);
+		status = list.addEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS);
 	}
 }
 
@@ -1136,24 +1153,26 @@ BOOST_AUTO_TEST_CASE(driver_addUndirectedEdge)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
-	bool found;
+	bool exists;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.addUndirectedEdge(1, 2);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addUndirectedEdge(1, 2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.existsEdge(1, 2, &found);
-		BOOST_CHECK_EQUAL(found, true);
+		status = list.existsEdge(1, 2, &exists);
+		BOOST_CHECK_EQUAL(exists, true);
 
 		// Edge should only exist in one direction
-		err = list.existsEdge(2, 1, &found);
-		BOOST_CHECK_EQUAL(found, true);
+		status = list.existsEdge(2, 1, &exists);
+		BOOST_CHECK_EQUAL(exists, true);
 	}
 }
 
@@ -1161,25 +1180,27 @@ BOOST_AUTO_TEST_CASE(driver_addUndirectedEdge_opposite_direction)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> list(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
-	bool found;
+	bool exists;
 
 	if(comm.rank == 0)
 	{
-		list.addLocalNode(1);
-		list.addLocalNode(2);
+		status = list.addLocalNode(1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = list.addLocalNode(2);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Add the edge with src and dst reversed to prior test - should not change outcome.
-		err = list.addUndirectedEdge(2, 1);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		status = list.addUndirectedEdge(2, 1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-		err = list.existsEdge(1, 2, &found);
-		BOOST_CHECK_EQUAL(found, true);
+		status = list.existsEdge(1, 2, &exists);
+		BOOST_CHECK_EQUAL(exists, true);
 
 		// Edge should only exist in one direction
-		err = list.existsEdge(2, 1, &found);
-		BOOST_CHECK_EQUAL(found, true);
+		status = list.existsEdge(2, 1, &exists);
+		BOOST_CHECK_EQUAL(exists, true);
 	}
 }
 
@@ -1189,7 +1210,7 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	DistributedAdjacencyList<int, int> graph(comm);
-	cupcfd::error::eCodes err;
+	cupcfd::error::eCodes status;
 
 	// This function tests whether the final graph is constructed correctly
 	// A set of Nodes 1->40 are distributed across 4 processes for this test
@@ -1197,115 +1218,118 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 	// Add Local Nodes
 	if(comm.rank == 0)
 	{
-		graph.addLocalNode(1);
-		graph.addLocalNode(2);
-		graph.addLocalNode(3);
-		graph.addLocalNode(6);
-		graph.addLocalNode(7);
-		graph.addLocalNode(8);
-		graph.addLocalNode(9);
-		graph.addLocalNode(10);
-		graph.addLocalNode(11);
-		graph.addLocalNode(13);
-		graph.addLocalNode(18);
-		graph.addLocalNode(19);
-		graph.addLocalNode(21);
-		graph.addLocalNode(22);
-		graph.addLocalNode(28);
-		graph.addLocalNode(30);
-		graph.addLocalNode(31);
-		graph.addLocalNode(33);
-		graph.addLocalNode(36);
-		graph.addLocalNode(39);
+		status = graph.addLocalNode(1);
+		status = graph.addLocalNode(2);
+		status = graph.addLocalNode(3);
+		status = graph.addLocalNode(6);
+		status = graph.addLocalNode(7);
+		status = graph.addLocalNode(8);
+		status = graph.addLocalNode(9);
+		status = graph.addLocalNode(10);
+		status = graph.addLocalNode(11);
+		status = graph.addLocalNode(13);
+		status = graph.addLocalNode(18);
+		status = graph.addLocalNode(19);
+		status = graph.addLocalNode(21);
+		status = graph.addLocalNode(22);
+		status = graph.addLocalNode(28);
+		status = graph.addLocalNode(30);
+		status = graph.addLocalNode(31);
+		status = graph.addLocalNode(33);
+		status = graph.addLocalNode(36);
+		status = graph.addLocalNode(39);
 	}
 	else if(comm.rank == 1)
 	{
-		graph.addLocalNode(4);
-		graph.addLocalNode(5);
-		graph.addLocalNode(32);
-		graph.addLocalNode(34);
-		graph.addLocalNode(35);
-		graph.addLocalNode(26);
-		graph.addLocalNode(27);
+		status = graph.addLocalNode(4);
+		status = graph.addLocalNode(5);
+		status = graph.addLocalNode(32);
+		status = graph.addLocalNode(34);
+		status = graph.addLocalNode(35);
+		status = graph.addLocalNode(26);
+		status = graph.addLocalNode(27);
 	}
 	else if(comm.rank == 2)
 	{
-		graph.addLocalNode(20);
-		graph.addLocalNode(12);
-		graph.addLocalNode(17);
-		graph.addLocalNode(38);
-		graph.addLocalNode(23);
-		graph.addLocalNode(24);
-		graph.addLocalNode(25);
+		status = graph.addLocalNode(20);
+		status = graph.addLocalNode(12);
+		status = graph.addLocalNode(17);
+		status = graph.addLocalNode(38);
+		status = graph.addLocalNode(23);
+		status = graph.addLocalNode(24);
+		status = graph.addLocalNode(25);
 	}
 	else if(comm.rank == 3)
 	{
-		graph.addLocalNode(29);
-		graph.addLocalNode(37);
-		graph.addLocalNode(40);
-		graph.addLocalNode(14);
-		graph.addLocalNode(15);
-		graph.addLocalNode(16);
+		status = graph.addLocalNode(29);
+		status = graph.addLocalNode(37);
+		status = graph.addLocalNode(40);
+		status = graph.addLocalNode(14);
+		status = graph.addLocalNode(15);
+		status = graph.addLocalNode(16);
 	}
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Add Edges
 	if(comm.rank == 0)
 	{
-		graph.addUndirectedEdge(1, 3);	// Local
-		graph.addUndirectedEdge(2, 8);	// Local
-		graph.addUndirectedEdge(1, 9);	// Local
-		graph.addUndirectedEdge(6, 29);	// Process 0, 3
-		graph.addUndirectedEdge(1, 16);	// Process 0, 3
-		graph.addUndirectedEdge(28, 5);	// Process 0, 1
-		graph.addUndirectedEdge(36, 20);	// Process 0, 2
-		graph.addUndirectedEdge(7, 11);	// Local
-		graph.addUndirectedEdge(22, 40);	// Process 0, 3
-		graph.addUndirectedEdge(32, 18);	// Process 0, 1
-		graph.addUndirectedEdge(12, 19);	// Process 0, 2
-		graph.addUndirectedEdge(28, 23);	// Process 0, 2
-		graph.addUndirectedEdge(21, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(1, 3);	// Local
+		status = graph.addUndirectedEdge(2, 8);	// Local
+		status = graph.addUndirectedEdge(1, 9);	// Local
+		status = graph.addUndirectedEdge(6, 29);	// Process 0, 3
+		status = graph.addUndirectedEdge(1, 16);	// Process 0, 3
+		status = graph.addUndirectedEdge(28, 5);	// Process 0, 1
+		status = graph.addUndirectedEdge(36, 20);	// Process 0, 2
+		status = graph.addUndirectedEdge(7, 11);	// Local
+		status = graph.addUndirectedEdge(22, 40);	// Process 0, 3
+		status = graph.addUndirectedEdge(32, 18);	// Process 0, 1
+		status = graph.addUndirectedEdge(12, 19);	// Process 0, 2
+		status = graph.addUndirectedEdge(28, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(21, 23);	// Process 0, 2
 	}
 	else if(comm.rank == 1)
 	{
-		graph.addUndirectedEdge(28, 5);	// Process 0, 1
-		graph.addUndirectedEdge(18, 32);	// Process 0, 1
-		graph.addUndirectedEdge(5, 27);	// Local
-		graph.addUndirectedEdge(32, 5);	// Local
-		graph.addUndirectedEdge(26, 27);	// Local
-		graph.addUndirectedEdge(5, 38);	// Process 1, 2
-		graph.addUndirectedEdge(5, 37);	// Process 1, 3
-		graph.addUndirectedEdge(32, 15);	// Process 1, 3
+		status = graph.addUndirectedEdge(28, 5);	// Process 0, 1
+		status = graph.addUndirectedEdge(18, 32);	// Process 0, 1
+		status = graph.addUndirectedEdge(5, 27);	// Local
+		status = graph.addUndirectedEdge(32, 5);	// Local
+		status = graph.addUndirectedEdge(26, 27);	// Local
+		status = graph.addUndirectedEdge(5, 38);	// Process 1, 2
+		status = graph.addUndirectedEdge(5, 37);	// Process 1, 3
+		status = graph.addUndirectedEdge(32, 15);	// Process 1, 3
 	}
 	else if(comm.rank == 2)
 	{
-		graph.addUndirectedEdge(36, 20);	// Process 0, 2
-		graph.addUndirectedEdge(12, 19);	// Process 0, 2
-		graph.addUndirectedEdge(28, 23);	// Process 0, 2
-		graph.addUndirectedEdge(20, 23);	// Local
-		graph.addUndirectedEdge(23, 24);	// Local
-		graph.addUndirectedEdge(24, 25);	// Local
-		graph.addUndirectedEdge(5, 38);	// Process 1, 2
-		graph.addUndirectedEdge(23, 40);	// Process 2, 3
-		graph.addUndirectedEdge(21, 23);	// Process 0, 2
-		graph.addUndirectedEdge(14, 23);	// Process 2, 3
-		graph.addUndirectedEdge(12, 14);	// Process 2, 3
+		status = graph.addUndirectedEdge(36, 20);	// Process 0, 2
+		status = graph.addUndirectedEdge(12, 19);	// Process 0, 2
+		status = graph.addUndirectedEdge(28, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(20, 23);	// Local
+		status = graph.addUndirectedEdge(23, 24);	// Local
+		status = graph.addUndirectedEdge(24, 25);	// Local
+		status = graph.addUndirectedEdge(5, 38);	// Process 1, 2
+		status = graph.addUndirectedEdge(23, 40);	// Process 2, 3
+		status = graph.addUndirectedEdge(21, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(14, 23);	// Process 2, 3
+		status = graph.addUndirectedEdge(12, 14);	// Process 2, 3
 	}
 	else if(comm.rank == 3)
 	{
-		graph.addUndirectedEdge(6, 29);	// Process 0, 3
-		graph.addUndirectedEdge(1, 16);	// Process 0, 3
-		graph.addUndirectedEdge(22, 40);	// Process 0, 3
-		graph.addUndirectedEdge(37, 40);  // Local
-		graph.addUndirectedEdge(14, 16);	// Local
-		graph.addUndirectedEdge(16, 14);	// Local
-		graph.addUndirectedEdge(5, 37);	// Process 1, 3
-		graph.addUndirectedEdge(32, 15);	// Process 1, 3
-		graph.addUndirectedEdge(23, 40);	// Process 2, 3
-		graph.addUndirectedEdge(14, 23);	// Process 2, 3
-		graph.addUndirectedEdge(12, 14);	// Process 2, 3
+		status = graph.addUndirectedEdge(6, 29);	// Process 0, 3
+		status = graph.addUndirectedEdge(1, 16);	// Process 0, 3
+		status = graph.addUndirectedEdge(22, 40);	// Process 0, 3
+		status = graph.addUndirectedEdge(37, 40);  // Local
+		status = graph.addUndirectedEdge(14, 16);	// Local
+		status = graph.addUndirectedEdge(16, 14);	// Local
+		status = graph.addUndirectedEdge(5, 37);	// Process 1, 3
+		status = graph.addUndirectedEdge(32, 15);	// Process 1, 3
+		status = graph.addUndirectedEdge(23, 40);	// Process 2, 3
+		status = graph.addUndirectedEdge(14, 23);	// Process 2, 3
+		status = graph.addUndirectedEdge(12, 14);	// Process 2, 3
 	}
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-	graph.finalize();
+	status = graph.finalize();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	if(comm.rank == 0)
 	{
@@ -1315,7 +1339,8 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 		BOOST_CHECK_EQUAL(graph.nGGhNodes, 27);
 
 		int * ghostNodes = (int *) malloc(sizeof(int) * graph.nLGhNodes);
-		graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		status = graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[8] = {5, 12, 16, 20, 23, 29, 32, 40};
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 8, cmp, cmp + 8);
@@ -1376,7 +1401,8 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 		BOOST_CHECK_EQUAL(graph.nGGhNodes, 27);
 
 		int * ghostNodes = (int *) malloc(sizeof(int) * graph.nLGhNodes);
-		graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		status = graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[5] = {15, 18, 28, 37, 38};
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 5, cmp, cmp + 5);
@@ -1410,7 +1436,8 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 		BOOST_CHECK_EQUAL(graph.nGGhNodes, 27);
 
 		int * ghostNodes = (int *) malloc(sizeof(int) * graph.nLGhNodes);
-		graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		status = graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[7] = {5, 14, 19, 21, 28, 36, 40};
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 7, cmp, cmp + 7);
@@ -1446,7 +1473,8 @@ BOOST_AUTO_TEST_CASE(driver_finalize)
 		BOOST_CHECK_EQUAL(graph.nGGhNodes, 27);
 
 		int * ghostNodes = (int *) malloc(sizeof(int) * graph.nLGhNodes);
-		graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		status = graph.getGhostNodes(ghostNodes, graph.nLGhNodes);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[7] = {1, 5, 6, 12, 22, 23, 32};
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 7, cmp, cmp + 7);
@@ -1505,115 +1533,118 @@ BOOST_AUTO_TEST_CASE(buildSerialAdjacencyList_test1)
 	// Add Local Nodes
 	if(comm.rank == 0)
 	{
-		graph.addLocalNode(1);
-		graph.addLocalNode(2);
-		graph.addLocalNode(3);
-		graph.addLocalNode(6);
-		graph.addLocalNode(7);
-		graph.addLocalNode(8);
-		graph.addLocalNode(9);
-		graph.addLocalNode(10);
-		graph.addLocalNode(11);
-		graph.addLocalNode(13);
-		graph.addLocalNode(18);
-		graph.addLocalNode(19);
-		graph.addLocalNode(21);
-		graph.addLocalNode(22);
-		graph.addLocalNode(28);
-		graph.addLocalNode(30);
-		graph.addLocalNode(31);
-		graph.addLocalNode(33);
-		graph.addLocalNode(36);
-		graph.addLocalNode(39);
+		status = graph.addLocalNode(1);
+		status = graph.addLocalNode(2);
+		status = graph.addLocalNode(3);
+		status = graph.addLocalNode(6);
+		status = graph.addLocalNode(7);
+		status = graph.addLocalNode(8);
+		status = graph.addLocalNode(9);
+		status = graph.addLocalNode(10);
+		status = graph.addLocalNode(11);
+		status = graph.addLocalNode(13);
+		status = graph.addLocalNode(18);
+		status = graph.addLocalNode(19);
+		status = graph.addLocalNode(21);
+		status = graph.addLocalNode(22);
+		status = graph.addLocalNode(28);
+		status = graph.addLocalNode(30);
+		status = graph.addLocalNode(31);
+		status = graph.addLocalNode(33);
+		status = graph.addLocalNode(36);
+		status = graph.addLocalNode(39);
 	}
 	else if(comm.rank == 1)
 	{
-		graph.addLocalNode(4);
-		graph.addLocalNode(5);
-		graph.addLocalNode(32);
-		graph.addLocalNode(34);
-		graph.addLocalNode(35);
-		graph.addLocalNode(26);
-		graph.addLocalNode(27);
+		status = graph.addLocalNode(4);
+		status = graph.addLocalNode(5);
+		status = graph.addLocalNode(32);
+		status = graph.addLocalNode(34);
+		status = graph.addLocalNode(35);
+		status = graph.addLocalNode(26);
+		status = graph.addLocalNode(27);
 	}
 	else if(comm.rank == 2)
 	{
-		graph.addLocalNode(20);
-		graph.addLocalNode(12);
-		graph.addLocalNode(17);
-		graph.addLocalNode(38);
-		graph.addLocalNode(23);
-		graph.addLocalNode(24);
-		graph.addLocalNode(25);
+		status = graph.addLocalNode(20);
+		status = graph.addLocalNode(12);
+		status = graph.addLocalNode(17);
+		status = graph.addLocalNode(38);
+		status = graph.addLocalNode(23);
+		status = graph.addLocalNode(24);
+		status = graph.addLocalNode(25);
 	}
 	else if(comm.rank == 3)
 	{
-		graph.addLocalNode(29);
-		graph.addLocalNode(37);
-		graph.addLocalNode(40);
-		graph.addLocalNode(14);
-		graph.addLocalNode(15);
-		graph.addLocalNode(16);
+		status = graph.addLocalNode(29);
+		status = graph.addLocalNode(37);
+		status = graph.addLocalNode(40);
+		status = graph.addLocalNode(14);
+		status = graph.addLocalNode(15);
+		status = graph.addLocalNode(16);
 	}
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Add Edges
 	if(comm.rank == 0)
 	{
-		graph.addUndirectedEdge(1, 3);	// Local
-		graph.addUndirectedEdge(2, 8);	// Local
-		graph.addUndirectedEdge(1, 9);	// Local
-		graph.addUndirectedEdge(6, 29);	// Process 0, 3
-		graph.addUndirectedEdge(1, 16);	// Process 0, 3
-		graph.addUndirectedEdge(28, 5);	// Process 0, 1
-		graph.addUndirectedEdge(36, 20);	// Process 0, 2
-		graph.addUndirectedEdge(7, 11);	// Local
-		graph.addUndirectedEdge(22, 40);	// Process 0, 3
-		graph.addUndirectedEdge(32, 18);	// Process 0, 1
-		graph.addUndirectedEdge(12, 19);	// Process 0, 2
-		graph.addUndirectedEdge(28, 23);	// Process 0, 2
-		graph.addUndirectedEdge(21, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(1, 3);	// Local
+		status = graph.addUndirectedEdge(2, 8);	// Local
+		status = graph.addUndirectedEdge(1, 9);	// Local
+		status = graph.addUndirectedEdge(6, 29);	// Process 0, 3
+		status = graph.addUndirectedEdge(1, 16);	// Process 0, 3
+		status = graph.addUndirectedEdge(28, 5);	// Process 0, 1
+		status = graph.addUndirectedEdge(36, 20);	// Process 0, 2
+		status = graph.addUndirectedEdge(7, 11);	// Local
+		status = graph.addUndirectedEdge(22, 40);	// Process 0, 3
+		status = graph.addUndirectedEdge(32, 18);	// Process 0, 1
+		status = graph.addUndirectedEdge(12, 19);	// Process 0, 2
+		status = graph.addUndirectedEdge(28, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(21, 23);	// Process 0, 2
 	}
 	else if(comm.rank == 1)
 	{
-		graph.addUndirectedEdge(28, 5);	// Process 0, 1
-		graph.addUndirectedEdge(18, 32);	// Process 0, 1
-		graph.addUndirectedEdge(5, 27);	// Local
-		graph.addUndirectedEdge(32, 5);	// Local
-		graph.addUndirectedEdge(26, 27);	// Local
-		graph.addUndirectedEdge(5, 38);	// Process 1, 2
-		graph.addUndirectedEdge(5, 37);	// Process 1, 3
-		graph.addUndirectedEdge(32, 15);	// Process 1, 3
+		status = graph.addUndirectedEdge(28, 5);	// Process 0, 1
+		status = graph.addUndirectedEdge(18, 32);	// Process 0, 1
+		status = graph.addUndirectedEdge(5, 27);	// Local
+		status = graph.addUndirectedEdge(32, 5);	// Local
+		status = graph.addUndirectedEdge(26, 27);	// Local
+		status = graph.addUndirectedEdge(5, 38);	// Process 1, 2
+		status = graph.addUndirectedEdge(5, 37);	// Process 1, 3
+		status = graph.addUndirectedEdge(32, 15);	// Process 1, 3
 	}
 	else if(comm.rank == 2)
 	{
-		graph.addUndirectedEdge(36, 20);	// Process 0, 2
-		graph.addUndirectedEdge(12, 19);	// Process 0, 2
-		graph.addUndirectedEdge(28, 23);	// Process 0, 2
-		graph.addUndirectedEdge(20, 23);	// Local
-		graph.addUndirectedEdge(23, 24);	// Local
-		graph.addUndirectedEdge(24, 25);	// Local
-		graph.addUndirectedEdge(5, 38);	// Process 1, 2
-		graph.addUndirectedEdge(23, 40);	// Process 2, 3
-		graph.addUndirectedEdge(21, 23);	// Process 0, 2
-		graph.addUndirectedEdge(14, 23);	// Process 2, 3
-		graph.addUndirectedEdge(12, 14);	// Process 2, 3
+		status = graph.addUndirectedEdge(36, 20);	// Process 0, 2
+		status = graph.addUndirectedEdge(12, 19);	// Process 0, 2
+		status = graph.addUndirectedEdge(28, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(20, 23);	// Local
+		status = graph.addUndirectedEdge(23, 24);	// Local
+		status = graph.addUndirectedEdge(24, 25);	// Local
+		status = graph.addUndirectedEdge(5, 38);	// Process 1, 2
+		status = graph.addUndirectedEdge(23, 40);	// Process 2, 3
+		status = graph.addUndirectedEdge(21, 23);	// Process 0, 2
+		status = graph.addUndirectedEdge(14, 23);	// Process 2, 3
+		status = graph.addUndirectedEdge(12, 14);	// Process 2, 3
 	}
 	else if(comm.rank == 3)
 	{
-		graph.addUndirectedEdge(6, 29);	// Process 0, 3
-		graph.addUndirectedEdge(1, 16);	// Process 0, 3
-		graph.addUndirectedEdge(22, 40);	// Process 0, 3
-		graph.addUndirectedEdge(37, 40);  // Local
-		graph.addUndirectedEdge(14, 16);	// Local
-		graph.addUndirectedEdge(16, 14);	// Local
-		graph.addUndirectedEdge(5, 37);	// Process 1, 3
-		graph.addUndirectedEdge(32, 15);	// Process 1, 3
-		graph.addUndirectedEdge(23, 40);	// Process 2, 3
-		graph.addUndirectedEdge(14, 23);	// Process 2, 3
-		graph.addUndirectedEdge(12, 14);	// Process 2, 3
+		status = graph.addUndirectedEdge(6, 29);	// Process 0, 3
+		status = graph.addUndirectedEdge(1, 16);	// Process 0, 3
+		status = graph.addUndirectedEdge(22, 40);	// Process 0, 3
+		status = graph.addUndirectedEdge(37, 40);  // Local
+		status = graph.addUndirectedEdge(14, 16);	// Local
+		status = graph.addUndirectedEdge(16, 14);	// Local
+		status = graph.addUndirectedEdge(5, 37);	// Process 1, 3
+		status = graph.addUndirectedEdge(32, 15);	// Process 1, 3
+		status = graph.addUndirectedEdge(23, 40);	// Process 2, 3
+		status = graph.addUndirectedEdge(14, 23);	// Process 2, 3
+		status = graph.addUndirectedEdge(12, 14);	// Process 2, 3
 	}
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-	graph.finalize();
+	status = graph.finalize();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	AdjacencyListCSR<int, int> * serialGraph = nullptr;
 
@@ -1630,8 +1661,8 @@ BOOST_AUTO_TEST_CASE(buildSerialAdjacencyList_test1)
 		int nNodes;
 		int nEdges;
 
-		serialGraph->getNodeCount(&nNodes);
-		serialGraph->getEdgeCount(&nEdges);
+		nNodes = serialGraph->getNodeCount();
+		nEdges = serialGraph->getEdgeCount();
 
 		BOOST_CHECK_EQUAL(nNodes, 40);
 		BOOST_CHECK_EQUAL(nEdges, 54);
@@ -1643,8 +1674,10 @@ BOOST_AUTO_TEST_CASE(buildSerialAdjacencyList_test1)
 						   30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40};
 
 		int nodes[40];
-		serialGraph->getNodes(nodes, 40);
-		cupcfd::utility::drivers::merge_sort(nodes, 40);
+		status = serialGraph->getNodes(nodes, 40);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = cupcfd::utility::drivers::merge_sort(nodes, 40);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_CHECK_EQUAL_COLLECTIONS(nodes, nodes + 40, nodeCmp, nodeCmp + 40);
 
@@ -1661,14 +1694,18 @@ BOOST_AUTO_TEST_CASE(buildSerialAdjacencyList_test1)
 		int groupCount[40] = {3, 1, 1, 0, 5, 1, 1, 1, 1, 1, 2, 3, 1, 2, 1, 1, 2,
 							  1, 1, 6, 2, 1, 1, 2, 2, 1, 0, 0, 3, 0, 0, 0, 1, 2, 1, 0, 3};
 
-		serialGraph->getEdges(nodeEdge1, 54, nodeEdge2, 54);
+		status = serialGraph->getEdges(nodeEdge1, 54, nodeEdge2, 54);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int indexes[54];
 
 		// Reorder the edges so we can verify in a consistent order
-		cupcfd::utility::drivers::merge_sort_index(nodeEdge1, 54, indexes, 54);
-		cupcfd::utility::drivers::merge_sort(nodeEdge1, 54);
-		cupcfd::utility::drivers::sourceIndexReorder(nodeEdge2, 54, indexes, 54);
+		status = cupcfd::utility::drivers::merge_sort_index(nodeEdge1, 54, indexes, 54);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = cupcfd::utility::drivers::merge_sort(nodeEdge1, 54);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = cupcfd::utility::drivers::sourceIndexReorder(nodeEdge2, 54, indexes, 54);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// This gets them grouped, but not neccessarily in the same order (since merge sort may not have reordered
 		// edges if node1 was the same for multiple.
@@ -1676,7 +1713,8 @@ BOOST_AUTO_TEST_CASE(buildSerialAdjacencyList_test1)
 		int ptr = 0;
 		for(int i = 0; i < 40; i++)
 		{
-			cupcfd::utility::drivers::merge_sort(nodeEdge2 + ptr, groupCount[i]);
+			status = cupcfd::utility::drivers::merge_sort(nodeEdge2 + ptr, groupCount[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			ptr = ptr + groupCount[i];
 		}
 

@@ -64,10 +64,10 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
     dist::DistributionFixed<int,double> decayRate(0.1);
     dist::DistributionFixed<int,double> decayThreshold(10);
 
-    ParticleEmitterSimple<int,double> emitter(0, 10, 4, position, &rate, &angleXY, &angleRotation, &speed,
-    										  &accelerationX, &accelerationY, &accelerationZ,
-											  &jerkX, &jerkY, &jerkZ,
-											  &decayRate, &decayThreshold);
+    ParticleEmitterSimple<int,double> emitter(0, 10, 4, 0, position, &rate, &angleXY, &angleRotation, &speed,
+    										&accelerationX, &accelerationY, &accelerationZ,
+											&jerkX, &jerkY, &jerkZ,
+											&decayRate, &decayThreshold);
 
     BOOST_CHECK_EQUAL(emitter.localCellID, 0);
     BOOST_CHECK_EQUAL(emitter.globalCellID, 10);
@@ -87,6 +87,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2, * utf::tolerance(0.00001))
 // Test 1: Generate some particles with predictable values for testing
 BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
 {
+    cupcfd::error::eCodes status;
+
 	cupcfd::geometry::euclidean::EuclideanPoint<double, 3> position(2.0, 3.0, 4.0);
     dist::DistributionFixed<int,double> rate(2.3);
     dist::DistributionFixed<int,double> angleXY(-0.6);
@@ -102,7 +104,7 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
     dist::DistributionFixed<int,double> decayThreshold(10);
 
     // Rank is set to silly arbitrary value just to check it copies since we have no communicator
-    ParticleEmitterSimple<int,double> emitter(0, 10, 721, position, &rate, &angleXY, &angleRotation, &speed,
+    ParticleEmitterSimple<int,double> emitter(0, 10, 721, 0, position, &rate, &angleXY, &angleRotation, &speed,
 			  &accelerationX, &accelerationY, &accelerationZ,
 			  &jerkX, &jerkY, &jerkZ,
 			  &decayRate, &decayThreshold);
@@ -110,7 +112,8 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
     ParticleSimple<int,double> * particles;
     int nParticles;
 
-    emitter.generateParticles(&particles, &nParticles, 10.0);
+    status = emitter.generateParticles(&particles, &nParticles, 10.0);
+    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     // In 10 seconds, at rate of 2.3, expected 4 particles
     BOOST_CHECK_EQUAL(nParticles, 4);
@@ -177,13 +180,14 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
 
     	BOOST_TEST(particles[i].getDecayRate() == decayRateCmp[i]);
 
-    	BOOST_CHECK_EQUAL(particles[i].rank, 721);
+    	BOOST_CHECK_EQUAL(particles[i].getRank(), 721);
     }
 
     free(particles);
 
     // Do one more round to make sure the correct time is used from the previous run that overran
-    emitter.generateParticles(&particles, &nParticles, 1.6);
+    status = emitter.generateParticles(&particles, &nParticles, 1.6);
+    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     // Particle should be generated at 11.5, so expected travel time of 0.1
     // (Previous dt of 10 + this time period of 1.6 = 11.6 seconds elapsed)

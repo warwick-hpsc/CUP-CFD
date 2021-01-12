@@ -617,7 +617,7 @@ namespace cupcfd
 			for (I i = 0; i<iLimit; i++) {
 				ParticleSimple<I,T> * newParticles;
 				I nNewParticles = 0;
-				
+
 				status = this->emitters[i].generateParticles(&newParticles, &nNewParticles, dt);
 				CHECK_ECODE(status)
 				

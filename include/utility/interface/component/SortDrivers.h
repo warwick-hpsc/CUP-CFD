@@ -102,10 +102,7 @@ namespace cupcfd
 			 * @tparam I The type of the indexing scheme (integer based)
 			 * @tparam T The type of the stored array data
 			 *
-			 * @return An error status indicating the success or failure of the operation
-			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
-			 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The number of reported elements in nEle is too small
-			 * (i.e. < 0)
+			 * @return Return True if sorted
 			 */
 			template <class I, class T>
 			__attribute__((warn_unused_result))

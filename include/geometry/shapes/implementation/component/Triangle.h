@@ -16,10 +16,8 @@
 #define CUPCFD_GEOMETRY_SHAPES_TRIANGLE_INCLUDE_H
 
 #include "EuclideanPoint.h"
-#include "EuclideanVector.h"
 
-// #include "Polygon.h"
-#include "PolygonV2.h"
+#include "Polygon.h"
 
 namespace euc = cupcfd::geometry::euclidean;
 
@@ -35,13 +33,12 @@ namespace cupcfd
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam S The triangle specialisation
+			 * @tparam S Triangle specialisation
 			 * @tparam T Numerical type
 			 * @tparam N Number of spatial dimensions
-			 * Note: We can define 2D objects in a high dimensions - e.g. a plane in a 3D space.
 			 */
 			template <class S, class T, uint N>
-			class Triangle : public PolygonV2<Triangle<S,T,N>, T, N, 3>
+			class Triangle : public Polygon<Triangle<S,T,N>, T, N, 3>
 			{
 				public:
 					// === Constructors/Deconstructors ===
@@ -52,16 +49,35 @@ namespace cupcfd
 						  	const euc::EuclideanPoint<T,N>& b,
 						    const euc::EuclideanPoint<T,N>& c);
 
-					Triangle(const Triangle<S,T,N>& source);
-
 					~Triangle();
 
+					/**
+					 * Return area of triangle, calculating if not known
+					 *
+					 * @return Triangle area
+					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(const euc::EuclideanPoint<T,N>& p);
+					T getArea();
+
+					/**
+					 * Return centroid of triangle, calculating if not known
+					 *
+					 * @return Triangle centroid
+					 */
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,N> getCentroid();
+
+					/**
+					 * Determine whether the provided point is inside the Triangle.
+					 * Edges/Vertices are treated as inside the Triangle for this purpose.
+					 *
+					 * @return Return true if the point exists inside this Triangle
+					 */
+					__attribute__((warn_unused_result))
+					auto isPointInside(const euc::EuclideanPoint<T,N>& p);
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param l1 Length of edge 1/3
 					 * @param l2 Length of edge 2/3
@@ -74,7 +90,6 @@ namespace cupcfd
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param a Triangle vertex 1/3
 					 * @param b Triangle vertex 2/3
@@ -89,7 +104,6 @@ namespace cupcfd
 
 					/**
 					 * Compute the area of the triangle, using Heron's Formula
-					 * (https://en.wikipedia.org/wiki/Heron's_formula).
 					 *
 					 * @param tri Triangle
 					 *
@@ -98,34 +112,10 @@ namespace cupcfd
 					__attribute__((warn_unused_result))
 					static T heronsFormula(const Triangle<S,T,N>& tri);
 
-
-				// protected:
-					// No one else should be calling these expensive operations:
-
-					/**
-					 * Compute the area of this triangle
-					 *
-					 * @return Area
-					 */
-					__attribute__((warn_unused_result))
+				protected:
 					T computeArea();
 
-					/**
-					 * Compute the centre point of triangle
-					 *
-					 * @return Centroid point
-					 */
-					__attribute__((warn_unused_result))
 					euc::EuclideanPoint<T,N> computeCentroid();
-
-					/**
-					 * Compute the normal of triangle
-					 *
-					 * @return Normal vector
-					 */
-					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,N> computeNormal();
-
 			};
 		}
 	}

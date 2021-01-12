@@ -29,78 +29,104 @@ namespace cupcfd
 			 * Top level interface for Polygon shapes.
 			 * Declares a set of common operations and/or members.
 			 *
-			 * Uses a CRTP design pattern to minimise/remove virtual overheads
+			 * Uses a CRTP design pattern to minimise/remove virtual overheads.
+			 * 'auto' return types force compile-time checking that derived 
+			 * classes have implemented functions.
 			 *
 			 * @tparam S The polygon specialisation
 			 * @tparam T Numerical type
 			 * @tparam N Number of spatial dimensions
+			 * @tparam V Number of vertices
 			 */
-			template <class S, class T, uint N>
+			template <class S, class T, uint N, uint V>
 			class Polygon
 			{
 				public:
 					// === Members ===
-
-					int numVertices;
-					int numEdges;
-					T area;
-					euc::EuclideanPoint<T,N> centroid;
-					euc::EuclideanVector<T,N> normal;
+					const int numVertices = V;
+					euc::EuclideanPoint<T,N> vertices[V];
 
 					// === Constructors/Deconstructors ===
 
 					Polygon();
 
-					virtual ~Polygon() = 0;
+					template<class...Args>
+					Polygon(Args...v);
+
+					virtual ~Polygon();
 
 					// === Concrete Methods ===
 
 					/**
-					 * Get the number of vertices in this Polygon
+					 * Copys the data from the source to this object
 					 *
-					 * @return The number of vertices this Polygon has
+					 * @param source The Polygon to copy from
 					 */
-					// virtual int getNumVertices() = 0;
+					inline void operator=(const Polygon<S,T,N,V>& source);
 
 					/**
-					 * Get the number of edges in this Polygon
+					 * Verify that no two vertices have same coordinates
 					 *
-					 * @return The number of edges this Polygon has
+					 * @return Return true if all vertices are unique/distinct
 					 */
-					// virtual int getNumEdges() = 0;
+					bool verifyVerticesUnique();
+
+					/**
+					 * Reverse vertex ordering, and flip normal
+					 */
+					void reverseVertexOrdering();
+
+					/**
+					 * Shift vertices in array by 'shift' amount.
+					 *
+					 * &param shift Number of array indexes to shift, positive or negative.
+					 */
+					void shiftVertices(int shift);
 
 					/**
 					 * Determine whether the provided point is inside the Polygon.
 					 * Edges/Vertices are treated as inside the Polygon for this purpose.
 					 *
-					 * @return Return whether the point exists inside this Polygon
-					 * @retval true The point is inside the Polygon
-					 * @retval false The point is outside the Polygon
+					 * @return Return true if the point exists inside this Polygon
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(euc::EuclideanPoint<T,N>& point);
+					auto isPointInside(const euc::EuclideanPoint<T,N>& point);
 
 					/**
-					 * Determine whether the provided point is inside the Polygon.
-					 * Edges/Vertices are treated as inside the Polygon for this purposes.
+					 * Return area of polygon, calculating if not known
 					 *
-					 * This method uses a ray casting technique to test whether the point is inside the Polygon.
-					 *
-					 * @return Return whether the point exists inside this Polygon
-					 * @retval true The point is inside the Polygon
-					 * @retval false The point is outside the Polygon
-					 */
-					//bool isPointInsideRayCasting(cupcfd::geometry::euclidean::EuclideanPoint<T,N>& point);
-
-					/**
-					 * Compute the area of the Polygon
-					 *
-					 * @return Return the computed area of the Polygon.
+					 * @return Polygon area
 					 */
 					__attribute__((warn_unused_result))
-					T computeArea();
+					auto getArea();
+
+					/**
+					 * Return centroid of polygon, calculating if not known
+					 *
+					 * @return Polygon centroid
+					 */
+					__attribute__((warn_unused_result))
+					auto getCentroid();
+
+					/**
+					 * Print vertices to STDOUT
+					 */
+					void print() const;
+
+				protected:
+					// This class contains all data needed/used by derived classes, 
+					// derived classes just implement new methods. 
+					// This makes implementing operator=() much easier.
+					T area;
+					bool areaComputed = false;
+
+					euc::EuclideanPoint<T,N> centroid;
+					bool centroidComputed = false;
+
+					euc::EuclideanVector<T,N> normal;
+					bool normalComputed = false;
+
 			};
-
 		}
 	}
 }

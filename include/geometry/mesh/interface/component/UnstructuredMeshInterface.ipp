@@ -64,12 +64,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			void UnstructuredMeshInterface<M,I,T,L>::getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				static_cast<M*>(this)->getCellCenter(cellID, center);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getCellCenter(I cellID) {
+			euc::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getCellCenter(I cellID) {
 				return static_cast<M*>(this)->getCellCenter(cellID);
 			}
 
@@ -134,7 +134,7 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			void UnstructuredMeshInterface<M,I,T,L>::setCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				static_cast<M*>(this)->setCellCenter(cellID, center);
 			}
 
@@ -145,7 +145,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::addCell(L cellLabel,
-														   cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
+														   euc::EuclideanPoint<T,3>& center,
 														   T vol,
 														   bool isLocal) {
 				return static_cast<M*>(this)->addCell(cellLabel, center, vol, isLocal);
@@ -207,12 +207,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			void UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID, euc::EuclideanVector3D<T>& norm) {
 				static_cast<M*>(this)->getFaceNorm(faceID, norm);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID) {
+			euc::EuclideanVector3D<T> UnstructuredMeshInterface<M,I,T,L>::getFaceNorm(I faceID) {
 				return static_cast<M*>(this)->getFaceNorm(faceID);
 			}
 			
@@ -227,12 +227,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			void UnstructuredMeshInterface<M,I,T,L>::getFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
 				static_cast<M*>(this)->getFaceCenter(faceID, center);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceCenter(I faceID) {
+			euc::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceCenter(I faceID) {
 				return static_cast<M*>(this)->getFaceCenter(faceID);
 			}
 
@@ -257,22 +257,22 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) {
+			void UnstructuredMeshInterface<M,I,T,L>::getFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
 				static_cast<M*>(this)->getFaceXpac(faceID, xpac);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceXpac(I faceID) {
+			euc::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceXpac(I faceID) {
 				return static_cast<M*>(this)->getFaceXpac(faceID);
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) {
+			void UnstructuredMeshInterface<M,I,T,L>::getFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
 				static_cast<M*>(this)->getFaceXnac(faceID, xnac);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceXnac(I faceID) {
+			euc::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getFaceXnac(I faceID) {
 				return static_cast<M*>(this)->getFaceXnac(faceID);
 			}
 
@@ -312,7 +312,7 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm) {
+			void UnstructuredMeshInterface<M,I,T,L>::setFaceNorm(I faceID, euc::EuclideanVector3D<T>& norm) {
 				static_cast<M*>(this)->setFaceNorm(faceID, norm);
 			}
 
@@ -322,7 +322,7 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center) {
+			void UnstructuredMeshInterface<M,I,T,L>::setFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
 				static_cast<M*>(this)->setFaceCenter(faceID, center);
 			}
 
@@ -337,12 +337,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac) {
+			void UnstructuredMeshInterface<M,I,T,L>::setFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
 				static_cast<M*>(this)->setFaceXpac(faceID, xpac);
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac) {
+			void UnstructuredMeshInterface<M,I,T,L>::setFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
 				static_cast<M*>(this)->setFaceXnac(faceID, xnac);
 			}
 
@@ -358,11 +358,11 @@ namespace cupcfd
 						L cell2OrBoundaryLabel,
 						bool isBoundary,
 						T lambda,
-						cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm,
+						euc::EuclideanVector3D<T>& norm,
 						L * vertexLabels, I nVertexLabels,
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac,
-						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac,
+						euc::EuclideanPoint<T,3>& center,
+						euc::EuclideanPoint<T,3>& xpac,
+						euc::EuclideanPoint<T,3>& xnac,
 						T rlencos,
 						T area) {
 				return static_cast<M*>(this)->addFace(faceLabel, cell1Label, cell2OrBoundaryLabel, isBoundary, lambda,
@@ -450,12 +450,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
+			void UnstructuredMeshInterface<M,I,T,L>::getBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
 				static_cast<M*>(this)->getBoundaryShear(boundaryID, shear);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getBoundaryShear(I boundaryID) {
+			euc::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getBoundaryShear(I boundaryID) {
 				return static_cast<M*>(this)->getBoundaryShear(boundaryID);
 			}
 
@@ -520,7 +520,7 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear) {
+			void UnstructuredMeshInterface<M,I,T,L>::setBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
 				static_cast<M*>(this)->setBoundaryShear(boundaryID, shear);
 			}
 
@@ -657,22 +657,22 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
+			void UnstructuredMeshInterface<M,I,T,L>::getRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
 				static_cast<M*>(this)->getRegionForceTangent(regionID, forceTangent);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getRegionForceTangent(I regionID) {
+			euc::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getRegionForceTangent(I regionID) {
 				return static_cast<M*>(this)->getRegionForceTangent(regionID);
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
+			void UnstructuredMeshInterface<M,I,T,L>::getRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
 				static_cast<M*>(this)->getRegionUVW(regionID, uvw);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getRegionUVW(I regionID) {
+			euc::EuclideanVector<T,3> UnstructuredMeshInterface<M,I,T,L>::getRegionUVW(I regionID) {
 				return static_cast<M*>(this)->getRegionUVW(regionID);
 			}
 
@@ -772,12 +772,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent) {
+			void UnstructuredMeshInterface<M,I,T,L>::setRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
 				static_cast<M*>(this)->setRegionForceTangent(regionID, forceTangent);
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw) {
+			void UnstructuredMeshInterface<M,I,T,L>::setRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
 				static_cast<M*>(this)->setRegionUVW(regionID, uvw);
 			}
 
@@ -822,8 +822,8 @@ namespace cupcfd
 								T den,
 								T r,
 								T t,
-								cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
-								cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
+								euc::EuclideanVector<T,3>& forceTangent,
+								euc::EuclideanVector<T,3>& uvw,
 								std::string& regionName) {
 				return static_cast<M*>(this)->addRegion(regionLabel, type, std, flux, adiab, ylog, elog,
 														density, turbKE, turbDiss, splvl, den, r, t, forceTangent, uvw, regionName);
@@ -847,22 +847,22 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
+			void UnstructuredMeshInterface<M,I,T,L>::getVertexPos(I vertexID, euc::EuclideanPoint<T,3>& pos) {
 				static_cast<M*>(this)->getVertexPos(vertexID, pos);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::euclidean::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getVertexPos(I vertexID) {
+			euc::EuclideanPoint<T,3> UnstructuredMeshInterface<M,I,T,L>::getVertexPos(I vertexID) {
 				return static_cast<M*>(this)->getVertexPos(vertexID);
 			}
 
 			template <class M, class I, class T, class L>
-			void UnstructuredMeshInterface<M,I,T,L>::setVertexPos(I vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
+			void UnstructuredMeshInterface<M,I,T,L>::setVertexPos(I vertexLabel, euc::EuclideanPoint<T,3>& pos) {
 				static_cast<M*>(this)->setVertexPos(vertexLabel, pos);
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::addVertex(L vertexLabel, euc::EuclideanPoint<T,3>& pos) {
 				return static_cast<M*>(this)->addVertex(vertexLabel, pos);
 			}
 
@@ -877,17 +877,17 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::geometry::shapes::PolyhedronType UnstructuredMeshInterface<M,I,T,L>::getCellPolyhedronType(I cellID) {
+			shapes::PolyhedronType UnstructuredMeshInterface<M,I,T,L>::getCellPolyhedronType(I cellID) {
 				I nVertices = this->getCellNVertices(cellID);
 				I nFaces = this->getCellNFaces(cellID);
 
 				// Get the Cell Type
-				return cupcfd::geometry::shapes::findPolyhedronType(nVertices, nFaces);
+				return shapes::findPolyhedronType(nVertices, nFaces);
 			}
 			
 
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, cupcfd::geometry::shapes::TriPrism<T> ** shape) {
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::TriPrism<T> ** shape) {
 				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
 				// although we are going to expect that the vertices in order are connected by edges
 				
@@ -897,9 +897,9 @@ namespace cupcfd
 				// This is complex, prone to error and inefficient otherwise
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
-				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
+				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
 								
-				if(type != cupcfd::geometry::shapes::POLYHEDRON_TRIPRISM) {
+				if(type != shapes::POLYHEDRON_TRIPRISM) {
 					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
 				}
 				
@@ -1010,20 +1010,20 @@ namespace cupcfd
 				// internal, else it is anticlockwise
 				
 				// Face 1
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> center = this->getCellCenter(cellID);
+				euc::EuclideanPoint<T,3> center = this->getCellCenter(cellID);
 								
 				I triFaceA = this->getFaceVertex(triFaceLabels[0], 0);
 				I triFaceB = this->getFaceVertex(triFaceLabels[0], 1);
 				I triFaceC = this->getFaceVertex(triFaceLabels[0], 2);
 				
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triFaceAPos = this->getVertexPos(triFaceA);
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triFaceBPos = this->getVertexPos(triFaceB);
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> triFaceCPos = this->getVertexPos(triFaceC);
+				euc::EuclideanPoint<T,3> triFaceAPos = this->getVertexPos(triFaceA);
+				euc::EuclideanPoint<T,3> triFaceBPos = this->getVertexPos(triFaceB);
+				euc::EuclideanPoint<T,3> triFaceCPos = this->getVertexPos(triFaceC);
 				
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> centerFace1 = center - triFaceAPos;
+				euc::EuclideanVector3D<T> centerFace1 = center - triFaceAPos;
 				
-				cupcfd::geometry::shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> normalFace1 = face1.computeNormal();
+				shapes::Triangle3D<T> face1(triFaceAPos, triFaceBPos, triFaceCPos);
+				euc::EuclideanVector3D<T> normalFace1 = face1.getNormal();
 				
 				T face1Dot = normalFace1.dotProduct(centerFace1);
 								
@@ -1084,7 +1084,7 @@ namespace cupcfd
 
 				// ToDo: Error Check - should check all 6 vertices were set
 
-				// *shape = new cupcfd::geometry::shapes::TriPrism<T>(this->getVertexPos(tf), 
+				// *shape = new shapes::TriPrism<T>(this->getVertexPos(tf), 
 				// 													this->getVertexPos(tlb), 
 				// 													this->getVertexPos(trb), 
 				// 													this->getVertexPos(bf), 
@@ -1092,13 +1092,13 @@ namespace cupcfd
 				// 													this->getVertexPos(brb));
 				shapes::Triangle3D<T> top(this->getVertexPos(tf), this->getVertexPos(tlb), this->getVertexPos(trb));
 				shapes::Triangle3D<T> bottom(this->getVertexPos(bf), this->getVertexPos(blb), this->getVertexPos(brb));
-				*shape = new cupcfd::geometry::shapes::TriPrism<T>(top, bottom);
+				*shape = new shapes::TriPrism<T>(top, bottom);
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, cupcfd::geometry::shapes::QuadPyramid<T> ** shape) {
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::QuadPyramid<T> ** shape) {
 				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
 				// although we are going to expect that the vertices in order are connected by edges
 				
@@ -1108,9 +1108,9 @@ namespace cupcfd
 				// This is complex, prone to error and inefficient otherwise
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
-				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
+				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
 								
-				if(type != cupcfd::geometry::shapes::POLYHEDRON_QUADPYRAMID) {
+				if(type != shapes::POLYHEDRON_QUADPYRAMID) {
 					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
 				}
 				
@@ -1210,7 +1210,7 @@ namespace cupcfd
 				}
 				
 				I apex;
-			   	cupcfd::geometry::euclidean::EuclideanPoint<T,3> basePos[4];
+			   	euc::EuclideanPoint<T,3> basePos[4];
 			   	
 				// Determine the relative positions of the vertices amongst one another, orient them
 				// Face 1
@@ -1240,8 +1240,8 @@ namespace cupcfd
 				// Vector from Apex to base must go through internal of shape
 				// Therefore, determine the ordering of the base vertices when looking from the apex point (i.e. ordering from internal)
 				
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> apexPos = this->getVertexPos(apex);
-				bool isClockwise = cupcfd::geometry::shapes::isVertexOrderClockwise(apexPos, basePos, 4);
+				euc::EuclideanPoint<T,3> apexPos = this->getVertexPos(apex);
+				bool isClockwise = shapes::isVertexOrderClockwise(apexPos, basePos, 4);
 				
 				// Now we know the ordering, create the object
 				if(isClockwise) {
@@ -1259,7 +1259,7 @@ namespace cupcfd
 			}
 			
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, cupcfd::geometry::shapes::Tetrahedron<T> ** shape) {
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::Tetrahedron<T> ** shape) {
 				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
 				// although we are going to expect that the vertices in order are connected by edges
 				
@@ -1269,9 +1269,9 @@ namespace cupcfd
 				// This is complex, prone to error and inefficient otherwise
 				
 				// Error Check: Check that the provided cell ID is actually a TriPrism
-				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
+				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
 								
-				if(type != cupcfd::geometry::shapes::POLYHEDRON_TETRAHEDRON) {
+				if(type != shapes::POLYHEDRON_TETRAHEDRON) {
 					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
 				}
 				
@@ -1371,7 +1371,7 @@ namespace cupcfd
 				}
 				
 				I apex;
-			   	cupcfd::geometry::euclidean::EuclideanPoint<T,3> basePos[3];
+			   	euc::EuclideanPoint<T,3> basePos[3];
 			   	
 				// Determine the relative positions of the vertices amongst one another, orient them
 				// Face 1
@@ -1399,8 +1399,8 @@ namespace cupcfd
 				// Vector from Apex to base must go through internal of shape
 				// Therefore, determine the ordering of the base vertices when looking from the apex point (i.e. ordering from internal)
 				
-				cupcfd::geometry::euclidean::EuclideanPoint<T,3> apexPos = this->getVertexPos(apex);
-				bool isClockwise = cupcfd::geometry::shapes::isVertexOrderClockwise(apexPos, basePos, 3);
+				euc::EuclideanPoint<T,3> apexPos = this->getVertexPos(apex);
+				bool isClockwise = shapes::isVertexOrderClockwise(apexPos, basePos, 3);
 				
 				// Now we know the ordering, create the object
 				if(isClockwise) {
@@ -1418,260 +1418,45 @@ namespace cupcfd
 			}
 			
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, cupcfd::geometry::shapes::Hexahedron<T> ** shape) {
-				// ToDo: We don't currently enforce any ordering (clockwise/anti-clockwise) at the interface level,
-				// although we are going to expect that the vertices in order are connected by edges
-				
-				// For now, we will compute the relative positions of the points, but it
-				// would be far more efficient if we control the ordering so that it is just known
-				// or at the very least (compute their relative positions only once in the UnstructuredMesh)
-				// This is complex, prone to error and inefficient otherwise
-				
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::buildPolyhedron(I cellID, shapes::Hexahedron<T> ** shape) {
 				// Error Check: Check that the provided cell ID is actually a Hexahedron
-				cupcfd::geometry::shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);
-								
-				if(type != cupcfd::geometry::shapes::POLYHEDRON_HEXAHEDRON) {
+				shapes::PolyhedronType type = this->getCellPolyhedronType(cellID);				
+				if(type != shapes::POLYHEDRON_HEXAHEDRON) {
 					return cupcfd::error::E_GEOMETRY_POLYHEDRON_MISMATCH;
 				}
-				
-				// ToDo: Error Check - Check Cell is a locally owned cell
-							
-				// Since we validated it is a hexahedron, we can expect there are 6 faces
-				// Retrieve the Face Data from the mesh for the cell
-				
+
 				I cellLocalFaceID[6];
 				for(I i = 0; i  < 6; i++) {
 					this->getCellFaceID(cellID, i, cellLocalFaceID + i);
 				}
-				
-				// Get the number of vertices for each face, and determine which
-				// is the base
+
 				I faceNVertices[6];
-				I baseID;
-				uint ptr = 0;
 				for(I i = 0; i  < 6; i++) {
 					faceNVertices[i] = this->getFaceNVertices(cellLocalFaceID[i]);
-					ptr++;
+					if (faceNVertices[i] != 4) {
+						// Each face should be a quadrilateral!
+						return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
+					}
 				}
-				
-				// Pick an arbitrary face as the base
-				baseID = cellLocalFaceID[0];
-				if(ptr != 6) {
-					return cupcfd::error::E_GEOMETRY_NFACE_MISMATCH;
-				}
-				
-				// Number of vertices including duplicates
-				const I nVertDup = 24; // (6*4)
-				
-				// Get the vertex IDs for each face
-				I faceVertexIDs[nVertDup];
-				ptr = 0;
+
+				shapes::Quadrilateral3D<T> quads[6];
 				for(I i = 0; i  < 6; i++) {
-					for(I j = 0; j < faceNVertices[i]; j++) {
-						faceVertexIDs[ptr] = this->getFaceVertex(cellLocalFaceID[i], j);
-						ptr++;
-					}
-				}
-				if(ptr != nVertDup) {
-					return cupcfd::error::E_GEOMETRY_NVERT_MISMATCH;
-				}
-				
-				// Reconstruct the edges
-				std::vector<I> edge1;
-				std::vector<I> edge2;
-				I tmpEdge1;
-				I tmpEdge2;
-				I numEdge1;
-				bool found;
-				// Loop over faces
-				ptr = 0;
-				for(I i = 0; i < 6; i++) {
-					// Loop over vertices within face (bar last)
-					for(I j = 0; j < faceNVertices[i] - 1; j++) {
-						// Get two edge vertices
-						tmpEdge1 = faceVertexIDs[ptr];
-						tmpEdge2 = faceVertexIDs[ptr+1];
-						ptr++;
+					I id0 = this->getFaceVertex(cellLocalFaceID[i], 0);
+					I id1 = this->getFaceVertex(cellLocalFaceID[i], 1);
+					I id2 = this->getFaceVertex(cellLocalFaceID[i], 2);
+					I id3 = this->getFaceVertex(cellLocalFaceID[i], 3);
 
-						// Search 
-						found = false;
-						numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-						for(I k = 0; k < numEdge1; k++) {
-							if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
-								found = true;
-							}
-						}
-						if(!found) {
-							edge1.push_back(tmpEdge1);
-							edge2.push_back(tmpEdge2);
-						}
-					}
-					
-					// Last edge that loops around
-					tmpEdge1 = faceVertexIDs[ptr];
-					tmpEdge2 = faceVertexIDs[(ptr - faceNVertices[i]) + 1];
-					ptr++;
-					found = false;
-					numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-					for(I k = 0; k < numEdge1; k++) {
-						if((edge1[k] == tmpEdge1 && edge2[k] == tmpEdge2) || (edge2[k] == tmpEdge1 && edge1[k] == tmpEdge2)) {
-							found = true;
-						}
-					}
-					if(!found) {
-						edge1.push_back(tmpEdge1);
-						edge2.push_back(tmpEdge2);
-					}
+					quads[i] = shapes::Quadrilateral3D<T>(
+									this->getVertexPos(id0),
+									this->getVertexPos(id1),
+									this->getVertexPos(id2),
+									this->getVertexPos(id3));
 				}
-				
-				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-				if(numEdge1 != (nVertDup/2)) {
-					return cupcfd::error::E_GEOMETRY_NEDGE_MISMATCH;
-				}
-				
-			   	cupcfd::geometry::euclidean::EuclideanPoint<T,3> basePos[4];
-			   	
-				// Determine the relative positions of the vertices amongst one another, orient them
-				// Face 1
-				I baseFaceA = this->getFaceVertex(baseID, 0);
-				I baseFaceB = this->getFaceVertex(baseID, 1);
-				I baseFaceC = this->getFaceVertex(baseID, 2);
-				I baseFaceD = this->getFaceVertex(baseID, 3);
 
-				basePos[0] = this->getVertexPos(baseFaceA);
-				basePos[1] = this->getVertexPos(baseFaceB);
-				basePos[2] = this->getVertexPos(baseFaceC);
-				basePos[3] = this->getVertexPos(baseFaceD);
-				
-				// Find a vertex on the opposite face
-				I oppVertexID;
-				found = false;
-				for(I i = 0; i < nVertDup; i++) {
-					if(faceVertexIDs[i] != baseFaceA && faceVertexIDs[i] != baseFaceB && faceVertexIDs[i] != baseFaceC && faceVertexIDs[i] != baseFaceD) {
-						oppVertexID = faceVertexIDs[i];
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
-				}
-				
-				// A vector from the opposite face to a point on the base face either traverses along an edge or goes through the hexahedron
-				// Test the ordering of the base face
-				bool isClockwise = cupcfd::geometry::shapes::isVertexOrderClockwise(this->getVertexPos(oppVertexID), basePos, 4);
-				
-				// Name scheme - t[op]/b[ottom], l[eft]/r[ight], f[ront]/b[ack]
-				I tlf, trf, blf, brf, tlb, trb, blb, brb;
-					
-				// Now we know the ordering, create the object
-				if(isClockwise) {
-					// Clockwise (base is in order of blf, brf, brb, blb)
-					blf = baseFaceA;
-					brf = baseFaceB;
-					brb = baseFaceC;
-					blb = baseFaceD;
-				}
-				else {
-					// Anti-Clockwise (base is in order of blf, blb, brb, brf)
-					blf = baseFaceA;
-					blb = baseFaceB;
-					brb = baseFaceC;
-					brf = baseFaceD;
-				}
-				
-				// Since this is a hexahedron, if we just find the non-base face vertex joined to each of the base vertices,
-				// we will know the labels for the opposite face
-				numEdge1 = cupcfd::utility::drivers::safeConvertSizeT<I>(edge1.size());
-				for(I i = 0; i < numEdge1; i++) {
-					// === blf ===
-					if(edge1[i] == blf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != brf && edge2[i] != brb && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlf = edge2[i];
-						}
-					}	
-					
-					if(edge2[i] == blf) {
-						if(edge1[i] != brf && edge1[i] != brb && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlf = edge1[i];
-						}
-					}		
-					
-					// === brf ===
-					
-					if(edge1[i] == brf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brb && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trf = edge2[i];
-						}
-					}	
-	
-					if(edge2[i] == brf) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brb && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trf = edge1[i];
-						}
-					}	
-					
-					// === brb ===
-					
-					if(edge1[i] == brb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brf && edge2[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trb = edge2[i];
-						}
-					}	
-			
-					if(edge2[i] == brb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brf && edge1[i] != blb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							trb = edge1[i];
-						}
-					}	
-					
-					// === blb ===
-					
-					if(edge1[i] == blb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge2[i] != blf && edge2[i] != brf && edge2[i] != brb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlb = edge2[i];
-						}
-					}
+				// Don't worry about ordering or normal orientation - Hexahedron 
+				// constructor will handle that.
+				*shape = new shapes::Hexahedron<T>(quads[0], quads[1], quads[2], quads[3], quads[4], quads[5]);
 
-					if(edge2[i] == blb) {
-						// ToDo: We could probably do this is a nicer way/more compressed code
-						if(edge1[i] != blf && edge1[i] != brf && edge1[i] != brb) {
-							// Must be the top face linked vertex - these functions naturally assume that the stored
-							// mesh is correct....
-							tlb = edge1[i];
-						}
-					}																			
-				} 
-					   
-				*shape = new cupcfd::geometry::shapes::Hexahedron<T>(this->getVertexPos(tlf),
-																	this->getVertexPos(trf),
-																	this->getVertexPos(blf),
-																	this->getVertexPos(brf),
-																	this->getVertexPos(tlb),
-																	this->getVertexPos(trb),
-																	this->getVertexPos(blb),
-																	this->getVertexPos(brb));
-				
 				return cupcfd::error::E_SUCCESS;
 			}
 			
@@ -1977,7 +1762,7 @@ namespace cupcfd
 					CHECK_ECODE(status)
 
 					// Face Normal
-					euc::EuclideanVector<T,3> * fNorm = (euc::EuclideanVector<T,3> *) malloc(sizeof(euc::EuclideanVector<T,3>) * nFaceLabelsDistinct);
+					euc::EuclideanVector3D<T> * fNorm = (euc::EuclideanVector3D<T> *) malloc(sizeof(euc::EuclideanVector3D<T>) * nFaceLabelsDistinct);
 					status = data.getFaceNormal(fNorm, nFaceLabelsDistinct, faceLabelsDistinct, nFaceLabelsDistinct);
 					CHECK_ECODE(status)
 
@@ -2080,7 +1865,7 @@ namespace cupcfd
 			}
 			
 			template <class M, class I, class T, class L>
-			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::findCellID(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point, 
+			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::findCellID(euc::EuclideanPoint<T,3>& point, 
 																					  I * localCellID,
 																					  I * globalCellID) {
 				// Loop over and test each locally owned cell until we find the cell the point is located in (if any on this rank)
@@ -2105,39 +1890,39 @@ namespace cupcfd
 					I nFaces = this->getCellNFaces(i);
 	
 					// Get the Cell Type
-					cupcfd::geometry::shapes::PolyhedronType pType = cupcfd::geometry::shapes::findPolyhedronType(nVertices, nFaces);
+					shapes::PolyhedronType pType = shapes::findPolyhedronType(nVertices, nFaces);
 	
 					bool inside;
 					
-					if(pType == cupcfd::geometry::shapes::POLYHEDRON_TETRAHEDRON) {
-						cupcfd::geometry::shapes::Tetrahedron<T> * shape1;
+					if(pType == shapes::POLYHEDRON_TETRAHEDRON) {
+						shapes::Tetrahedron<T> * shape1;
 						status = this->buildPolyhedron(i, &shape1);
 						CHECK_ECODE(status)
 						inside = shape1->isPointInside(point);
 						delete shape1;
 					}
-					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_QUADPYRAMID) {
-						cupcfd::geometry::shapes::QuadPyramid<T> * shape2;
+					else if(pType == shapes::POLYHEDRON_QUADPYRAMID) {
+						shapes::QuadPyramid<T> * shape2;
 						status = this->buildPolyhedron(i, &shape2);
 						CHECK_ECODE(status)
 						inside = shape2->isPointInside(point);
 						delete shape2;
 					}
-					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_TRIPRISM) {
-						cupcfd::geometry::shapes::TriPrism<T> * shape3;
+					else if(pType == shapes::POLYHEDRON_TRIPRISM) {
+						shapes::TriPrism<T> * shape3;
 						status = this->buildPolyhedron(i, &shape3);
 						CHECK_ECODE(status)
 						inside = shape3->isPointInside(point);
 						delete shape3;
 					}
-					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_HEXAHEDRON) {
-						cupcfd::geometry::shapes::Hexahedron<T> * shape4;
-						status = this->buildPolyhedron(i, &shape4);																
+					else if(pType == shapes::POLYHEDRON_HEXAHEDRON) {
+						shapes::Hexahedron<T> * shape4;
+						status = this->buildPolyhedron(i, &shape4);
 						CHECK_ECODE(status)
 						inside = shape4->isPointInside(point);						
 						delete shape4;
 					}
-					else if(pType == cupcfd::geometry::shapes::POLYHEDRON_UNKNOWN) {
+					else if(pType == shapes::POLYHEDRON_UNKNOWN) {
 						return cupcfd::error::E_ERROR;
 					}
 					else {

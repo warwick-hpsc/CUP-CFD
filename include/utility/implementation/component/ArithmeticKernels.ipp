@@ -36,19 +36,21 @@ namespace cupcfd
 					return val == target;
 				}
 
-				// inline bool isEqual(float val, float target, float tolerance)
-				// {
-				// 	return val == target;
-				// }
+				inline bool isEqual(float val, float target, float tolerance)
+				{
+					float diff = std::fabs(val - target);
+					return (diff <= tolerance);
+				}
 
 				inline bool isEqual(double val, double target) {
 					return val == target;
 				}
 
-				// inline bool isEqual(double val, double target, double tolerance)
-				// {
-				// 	return val == target;
-				// }
+				inline bool isEqual(double val, double target, double tolerance)
+				{
+					double diff = std::fabs(val - target);
+					return (diff <= tolerance);
+				}
 
 				inline double sqrtWr(double val) {
 					return sqrt(val);

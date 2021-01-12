@@ -88,7 +88,7 @@
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dvdxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> dwdxac;
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> xpn;
-			cupcfd::geometry::euclidean::EuclideanVector<T,3> norm;
+			cupcfd::geometry::euclidean::EuclideanVector3D<T> norm;
 
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> center1;
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> center2;
@@ -394,7 +394,7 @@
 						// T rDotProduct;
 						T du, dv, dw, dp, dn;
 
-						cupcfd::geometry::euclidean::EuclideanVector<T,3> xn;
+						cupcfd::geometry::euclidean::EuclideanVector3D<T> xn;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> un;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> tauNN;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> us;
@@ -441,7 +441,7 @@
 
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> uw;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> un;
-						cupcfd::geometry::euclidean::EuclideanVector<T,3> xn;
+						cupcfd::geometry::euclidean::EuclideanVector3D<T> xn;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> up;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> ut;
 						cupcfd::geometry::euclidean::EuclideanVector<T,3> tauNT;

@@ -59,18 +59,11 @@ namespace cupcfd
 
 					/**
 					 * Constructor - Sets the dimensional coordinates of the point to zero.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 */
 					EuclideanPoint();
 
 					/**
 					 * Constructor - Duplicate another EuclideanPoint
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 * @param point The point to duplicate
 					 *
 					 */
@@ -78,9 +71,6 @@ namespace cupcfd
 
 					/**
 					 * Constructor - Sets dimensional coordinates of the point to those provided
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @param cmp An array of distances from the origin 0 in each of the dimensions
 					 */
@@ -98,9 +88,6 @@ namespace cupcfd
 					 *
 					 * @param source The point to copy the values from
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return Returns nothing
 					 */
 					inline void operator=(const EuclideanPoint<T,N>& source);
@@ -109,9 +96,6 @@ namespace cupcfd
 					 * Set both values of the coordinate to a fixed scalar
 					 *
 					 * @param source The scalar to set the values to
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return Returns nothing
 					 */
@@ -125,27 +109,23 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether the two points are equal - this is determined
+					 * @return True if the two points are equal - this is determined
 					 * by whether all of the cartesian locations are equivalent
-					 * @retval true The points are equal
-					 * @retval false The points are not equal
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator==(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
-						for(uint i = 0; i < N; i++)
-						{
-							if(!(cupcfd::utility::arithmetic::kernels::isEqual(point1.cmp[i], point2.cmp[i])))
-							{
+						for(uint i = 0; i < N; i++) {
+							if(!(cupcfd::utility::arithmetic::kernels::isEqual(point1.cmp[i], point2.cmp[i]))) {
 								return false;
 							}
 						}
 
 						return true;
 					}
+
+					__attribute__((warn_unused_result))
+					inline bool approximateEquals(const EuclideanPoint<T,N>& p, float pct_tolerance);
 
 					/**
 					 * Compare two points to see if they are not equivalent (they have different coordinates in one
@@ -154,13 +134,8 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether the two points are not equal - this is determined
+					 * @return True if the two points are not equal - this is determined
 					 * by whether all of the cartesian locations are equivalent
-					 * @retval true The points are not equal
-					 * @retval false The points are equal
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator!=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
@@ -175,26 +150,18 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether point1 is less than point2.
-					 * @retval true point1 is less than to point 2
-					 * @retval false point1 is not less than to point 2
+					 * @return True if point1 is less than point2.
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator<(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
 
-						for(uint i = N-1; i >= 0; i--)
-						{
-							if(point1.cmp[i] < point2.cmp[i])
-							{
+						for (uint i=N; i>0; i--) {
+							if(point1.cmp[i-1] < point2.cmp[i-1]) {
 								return true;
 							}
 						}
-
 						return false;
 					}
 
@@ -205,31 +172,20 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether point1 is less than point2.
-					 * @retval true point1 is less than or equal to point 2
-					 * @retval false point1 is not less than or equal to point 2
+					 * @return True if point1 is less than point2.
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator<=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(uint i = N-1; i >= 0; i--)
-						{
-							if(point1.cmp[i] < point2.cmp[i])
-							{
+						for (uint i=N; i>0; i--) {
+							if(point1.cmp[i-1] < point2.cmp[i-1]) {
 								return true;
 							}
-
-							if(point1.cmp[i] > point2.cmp[i])
-							{
+							if(point1.cmp[i-1] > point2.cmp[i-1]) {
 								return false;
 							}
 						}
-
-						// Only reached if all are equal
 						return true;
 					}
 
@@ -241,26 +197,18 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether point1 is greater than point2.
-					 * @retval true point1 is greater than point 2
-					 * @retval false point1 is not greater than point 2
+					 * @return True if point1 is greater than point2.
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator>(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
 
-						for(uint i = N-1; i >= 0; i--)
-						{
-							if(point1.cmp[i] > point2.cmp[i])
-							{
+						for (uint i=N; i>0; i--) {
+							if(point1.cmp[i-1] > point2.cmp[i-1]) {
 								return true;
 							}
 						}
-
 						return false;
 					}
 
@@ -272,31 +220,20 @@ namespace cupcfd
 					 * @param point1 The first source point
 					 * @param point2 The second source point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return A boolean indicating whether point1 is greater than or equal to point2.
-					 * @retval true point1 is greater than or equal to point 2
-					 * @retval false point1 is not greater than or equal to point 2
+					 * @return True if point1 is greater than or equal to point2.
 					 */
 					__attribute__((warn_unused_result))
 					friend inline bool operator>=(const EuclideanPoint<T,N>& point1, const EuclideanPoint<T,N>& point2)
 					{
 						// ToDo: Tolerance checks?
-						for(uint i = N-1; i >= 0; i--)
-						{
-							if(point1.cmp[i] > point2.cmp[i])
-							{
+						for (uint i=N; i>0; i--) {
+							if(point1.cmp[i-1] > point2.cmp[i-1]) {
 								return true;
 							}
-
-							if(point1.cmp[i] < point2.cmp[i])
-							{
+							if(point1.cmp[i-1] < point2.cmp[i-1]) {
 								return false;
 							}
 						}
-
-						// Only reached if all are equal
 						return true;
 					}
 
@@ -306,9 +243,6 @@ namespace cupcfd
 					 * @param point1 The first point
 					 * @param point2 The second point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The sum of thw two points
 					 */
 					__attribute__((warn_unused_result))
@@ -316,8 +250,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = point1.cmp[i] + point2.cmp[i];
 						}
 
@@ -330,18 +263,14 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param vector The vector to follow
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
 					__attribute__((warn_unused_result))
-					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector)
+					friend inline EuclideanPoint<T,N> operator+(const EuclideanPoint<T,N>& point, const EuclideanVector<T,N>& vector)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = point.cmp[i] + vector.cmp[i];
 						}
 
@@ -355,18 +284,14 @@ namespace cupcfd
 					 * @param vector The vector to follow
 					 * @param point The origin point
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point reached after following the vector from the origin point
 					 */
 					__attribute__((warn_unused_result))
-					friend inline EuclideanPoint<T,N> operator+(const cupcfd::geometry::euclidean::EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
+					friend inline EuclideanPoint<T,N> operator+(const EuclideanVector<T,N>& vector, const EuclideanPoint<T,N>& point)
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = vector.cmp[i] + point.cmp[i];
 						}
 
@@ -379,9 +304,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar to shift the point by in all dimensions
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The shifted point
 					 */
 					__attribute__((warn_unused_result))
@@ -389,8 +311,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = point.cmp[i] + scalar;
 						}
 
@@ -403,9 +324,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar to shift the point by in all dimensions
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The shifted point
 					 */
 					__attribute__((warn_unused_result))
@@ -413,8 +331,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = scalar + point.cmp[i];
 						}
 
@@ -427,18 +344,14 @@ namespace cupcfd
 					 * @param start The origin position
 					 * @param end The destination position
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector for moving from origin to dest
 					 */
 					__attribute__((warn_unused_result))
-					friend inline cupcfd::geometry::euclidean::EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
+					friend inline EuclideanVector<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanPoint<T,N>& start)
 					{
-						cupcfd::geometry::euclidean::EuclideanVector<T,N> result;
+						EuclideanVector<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = end.cmp[i] - start.cmp[i];
 						}
 
@@ -450,18 +363,14 @@ namespace cupcfd
 					 *
 					 * @param end The point at the end of the vector
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point at the start of the vector
 					 */
 					__attribute__((warn_unused_result))
-					friend inline cupcfd::geometry::euclidean::EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
+					friend inline EuclideanPoint<T,N> operator-(const EuclideanPoint<T,N>& end, const EuclideanVector<T,N>& vec)
 					{
-						cupcfd::geometry::euclidean::EuclideanPoint<T,N> result;
+						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = end.cmp[i] - vec.cmp[i];
 						}
 
@@ -474,9 +383,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar factor
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point of the new location
 					 */
 					__attribute__((warn_unused_result))
@@ -484,8 +390,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = point.cmp[i] * scalar;
 						}
 
@@ -498,9 +403,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar factor
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point of the new location
 					 */
 					__attribute__((warn_unused_result))
@@ -508,8 +410,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = scalar * point.cmp[i];
 						}
 
@@ -522,9 +423,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar factor
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point of the new location
 					 */
 					__attribute__((warn_unused_result))
@@ -532,8 +430,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = point.cmp[i] / scalar;
 						}
 
@@ -546,9 +443,6 @@ namespace cupcfd
 					 * @param point The origin point
 					 * @param scalar The scalar factor
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The point of the new location
 					 */
 					__attribute__((warn_unused_result))
@@ -556,8 +450,7 @@ namespace cupcfd
 					{
 						EuclideanPoint<T,N> result;
 
-						for(uint i = 0; i < N; i++)
-						{
+						for(uint i = 0; i < N; i++) {
 							result.cmp[i] = scalar / point.cmp[i];
 						}
 
@@ -591,15 +484,17 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into here as well, although will need to fix compiler errors.
 #include "EuclideanPoint.ipp"
 
-// Explicit instantiation declarations of class static variables:
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<float,2>::mpiDataTypeReg;
+namespace euc = cupcfd::geometry::euclidean;
 
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanPoint<double,2>::mpiDataTypeReg;
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype euc::EuclideanPoint<float,3>::mpiType;
+extern template bool euc::EuclideanPoint<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanPoint<float,2>::mpiType;
+extern template bool euc::EuclideanPoint<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype euc::EuclideanPoint<double,3>::mpiType;
+extern template bool euc::EuclideanPoint<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanPoint<double,2>::mpiType;
+extern template bool euc::EuclideanPoint<double,2>::mpiDataTypeReg;
 
 #endif

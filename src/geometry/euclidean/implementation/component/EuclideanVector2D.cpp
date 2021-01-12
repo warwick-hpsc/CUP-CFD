@@ -1,4 +1,4 @@
-/**
+/*
  * @file
  * @author University of Warwick
  * @version 1.0
@@ -7,17 +7,16 @@
  *
  * @section DESCRIPTION
  *
- * Description
- *
+ * This class contains the implementation of the EuclideanVector2D class.
  */
 
-#include "PolygonV2.h"
+#include "EuclideanVector2D.h"
 
 namespace cupcfd
 {
 	namespace geometry
 	{
-		namespace shapes
+		namespace euclidean
 		{
 
 		}

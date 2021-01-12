@@ -11,15 +11,12 @@
  *
  */
 
-#include "Polygon.h"
-
 namespace cupcfd
 {
 	namespace geometry
 	{
 		namespace shapes
 		{
-
 		}
 	}
 }

@@ -9,7 +9,7 @@
  *
  * Description
  *
- * Declarations for the Triangle class
+ * Declarations for the Triangle3D class
  */
 
 #ifndef CUPCFD_GEOMETRY_SHAPES_TRIANGLE_3D_INCLUDE_H
@@ -17,7 +17,10 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "Polygon3D.h"
 #include "Triangle.h"
+
+namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
 {
@@ -35,15 +38,23 @@ namespace cupcfd
 			class Triangle3D : public Triangle<Triangle3D<T>, T, 3>
 			{
 				public:
+					/**
+					 * Because Triangle3D has no inheritance path back to
+					 * Polygon3D, which contains useful methods, maintain 
+					 * a Polygon3D member variable to get to those methods:
+					 * Polygon3D<Triangle3D<T>, T, 3> triAsPolygon3D;
+					 */
+					Polygon3D<T, 3> triAsPolygon3D;
+
 					// === Constructor/Deconstructors ===
 
 					/**
 					 * Constructor - Build a triangle using the three provided points
 					 * as vertices.
 					 */
-					Triangle3D(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& a,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& b,
-							   const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& c);
+					Triangle3D(const euc::EuclideanPoint<T,3>& a,
+							   const euc::EuclideanPoint<T,3>& b,
+							   const euc::EuclideanPoint<T,3>& c);
 
 					/**
 					 * Copy Constructor
@@ -60,16 +71,21 @@ namespace cupcfd
 					// === Concrete Methods ===
 
 					/**
-					 * Determine whether a point lies within the three points of the triangle.
-					 * Triangle edges/vertices are treated as inside the triangle for this purpose.
+					 * Return normal of triangle, calculating if not known
 					 *
-					 * Points that do not lie on the same plane as the triangle will not be treated as
-					 * inside, even if directly above or below.
-					 *
-					 * @return True if the point lies inside the triangle vertices
+					 * @return Triangle normal
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointInside(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& p);
+					euc::EuclideanVector3D<T> getNormal();
+
+					/**
+					 * Determine whether the provided point is inside the Triangle.
+					 * Edges/Vertices are treated as inside the Triangle for this purpose.
+					 *
+					 * @return Return true if the point exists inside this Triangle
+					 */
+					__attribute__((warn_unused_result))
+					bool isPointInside(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Calculate intersection of a moving point with this triangle: intersection point, 
@@ -85,38 +101,12 @@ namespace cupcfd
 					 * @return True if the ray intersects
 					 */
 					__attribute__((warn_unused_result))
-					bool calculateIntersection(const cupcfd::geometry::euclidean::EuclideanPoint<T,3> v0, 
-                                                const cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity, 
-												cupcfd::geometry::euclidean::EuclideanPoint<T,3>& intersection, 
+					bool calculateIntersection(const euc::EuclideanPoint<T,3> v0, 
+                                                const euc::EuclideanVector<T,3> velocity, 
+												euc::EuclideanPoint<T,3>& intersection, 
 												T& timeToIntersect, 
 												bool* onEdge,
 												bool verbose) const;
-
-				// protected:
-					// static T computeAreaV2(Triangle3D<T>& tri);
-
-					/**
-					 * Compute the area of the Triangle
-					 *
-					 * @return Return the computed area of the Triangle.
-					 */
-					// T computeArea();
-
-					/**
-					 * Compute the normal of the triangle.
-					 *
-					 * If the dimensionality is 2, then this is treated as a 3D polygon with a z component of 0.
-					 *
-					 * @return Return the computed normal vector of the triangle.
-					 */
-					//  cupcfd::geometry::euclidean::EuclideanVector<T,3> computeNormal();
-
-					/**
-					 * Compute the center of three points that make up this triangle
-					 *
-					 * @return The point at the center of the three points
-					 */
-					// inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
 			};
 		}
 	}

@@ -37,12 +37,16 @@ BOOST_AUTO_TEST_CASE(setup)
 
     MPI_Init(&argc, &argv);
 
+    cupcfd::error::eCodes status;
+
 	// Need to register point, vector MPI datatype since the particle MPI datatype depends on them
 	cupcfd::geometry::euclidean::EuclideanPoint<double, 3> point;
-	point.registerMPIType();
+	status = point.registerMPIType();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> vector;
-	vector.registerMPIType();
+	status = vector.registerMPIType();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 // === Constructor ===
@@ -53,7 +57,8 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 1.1, 1.2);
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(2.1, 2.2, 2.3);
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(3.4, 4.5, 5.6);
-	ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 102, 5, 16.7, 4.3, 0.01);
+	uint pID=0, cellID=102, rank=5;
+	ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 16.7, 4.3, 0.01);
 
 	BOOST_TEST(particle.pos.cmp[0] == 0.12);
 	BOOST_TEST(particle.pos.cmp[1] == 0.11);
@@ -70,8 +75,8 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
 	BOOST_TEST(particle.jerk.cmp[0] == 3.4);
 	BOOST_TEST(particle.jerk.cmp[1] == 4.5);
 	BOOST_TEST(particle.jerk.cmp[2] == 5.6);
-	BOOST_TEST(particle.cellGlobalID == 102);
-	BOOST_TEST(particle.rank == 5);
+	BOOST_TEST(particle.getCellGlobalID() == 102);
+	BOOST_TEST(particle.getRank() == 5);
 	BOOST_TEST(particle.decayLevel == 16.7);
 	BOOST_TEST(particle.decayRate == 4.3);
 	BOOST_TEST(particle.travelDt == 0.01);
@@ -189,11 +194,13 @@ BOOST_AUTO_TEST_CASE(updatePosition_test1, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
+		uint pID=0, cellID=0, rank=5;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.01);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// Check new position is correct
 		// Should have moved to another location within the cell
@@ -240,11 +247,13 @@ BOOST_AUTO_TEST_CASE(updatePosition_test2, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// In 0.1 dt, should intend to cross a cell boundary from Global Cell 0 to Global Cell 1
 		// Check particle is positioned at boundary
@@ -289,11 +298,13 @@ BOOST_AUTO_TEST_CASE(updatePosition_test3, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 1, 0, 1.0, 0.0, 0.3);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.3);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// In 0.1 dt, should intend to cross a cell boundary from Global Cell 0 to Global Cell 1
 		// Check particle is positioned at boundary
@@ -308,7 +319,8 @@ BOOST_AUTO_TEST_CASE(updatePosition_test3, * utf::tolerance(0.00001))
 		BOOST_CHECK_EQUAL(localFaceID, 2);
 
 		// Call again, but without changing the CellID - it should not advance or give the wrong face ID
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle.inflightPos.cmp[0] == 0.40);
 		BOOST_TEST(particle.inflightPos.cmp[1] == 0.11);
 		BOOST_TEST(particle.inflightPos.cmp[2] == 0.14);
@@ -347,11 +359,13 @@ BOOST_AUTO_TEST_CASE(updatePosition_test4, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		// In 0.1 dt, should intend to cross a cell boundary from Global Cell 0 to Global Cell 1
 		// Check particle is positioned at boundary
@@ -366,7 +380,8 @@ BOOST_AUTO_TEST_CASE(updatePosition_test4, * utf::tolerance(0.00001))
 		BOOST_CHECK_EQUAL(localFaceID, 1);
 
 		// call again, but without changing the CellID - it should not advance or give the wrong face ID
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(dt == 0.0);
 		BOOST_CHECK_EQUAL(localFaceID, 1);
 	}
@@ -401,11 +416,13 @@ BOOST_AUTO_TEST_CASE(updateVelocityAtomic_test1, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
-		double dt;
-		int localFaceID;
-		particle.updateVelocityAtomic(*mesh, 0, 100.0);
+		// double dt;
+		// int localFaceID;
+		status = particle.updateVelocityAtomic(*mesh, 0, 100.0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_TEST(particle.velocity.cmp[0] == 1.0);
 		BOOST_TEST(particle.velocity.cmp[1] == 0.0);
@@ -449,11 +466,13 @@ BOOST_AUTO_TEST_CASE(updateVelocityAtomic_test2, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 1.2, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
-		double dt;
-		int localFaceID;
-		particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		// double dt;
+		// int localFaceID;
+		status = particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_TEST(particle.velocity.cmp[0] == 1.0);
 		BOOST_TEST(particle.velocity.cmp[1] == 2.4);
@@ -497,9 +516,11 @@ BOOST_AUTO_TEST_CASE(updateVelocityAtomic_test3, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 1.2, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.2, -0.1, 0.3);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
-		particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		status = particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_TEST(particle.velocity.cmp[0] == 1.0);
 		BOOST_TEST(particle.velocity.cmp[1] == 2.4);
@@ -513,7 +534,8 @@ BOOST_AUTO_TEST_CASE(updateVelocityAtomic_test3, * utf::tolerance(0.00001))
 		BOOST_TEST(particle.jerk.cmp[1] == -0.1);
 		BOOST_TEST(particle.jerk.cmp[2] == 0.3);
 
-		particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		status = particle.updateVelocityAtomic(*mesh, 0, 2.0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_TEST(particle.velocity.cmp[0] == 1.8);
 		BOOST_TEST(particle.velocity.cmp[1] == 4.4);
@@ -560,17 +582,20 @@ BOOST_AUTO_TEST_CASE(updateNonBoundaryFace_test1, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.1);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.1);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 0);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 0);
 
 		// Test and Check
-		particle.updateNonBoundaryFace(*mesh, localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 1);
-		BOOST_CHECK_EQUAL(particle.rank, 0);
+		status = particle.updateNonBoundaryFace(*mesh, localFaceID);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 1);
+		BOOST_CHECK_EQUAL(particle.getRank(), 0);
 	}
 }
 
@@ -602,31 +627,37 @@ BOOST_AUTO_TEST_CASE(updateNonBoundaryFace_test2, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(1.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 0, 0, 1.0, 0.0, 0.3);
+		uint pID=0, cellID=0, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 1.0, 0.0, 0.3);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 0);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 0);
 		BOOST_TEST(particle.inflightPos.cmp[0] == 0.20);
 		BOOST_TEST(particle.inflightPos.cmp[1] == 0.11);
 		BOOST_TEST(particle.inflightPos.cmp[2] == 0.14);
 
 		// Test and Check
-		particle.updateNonBoundaryFace(*mesh, localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 1);
-		BOOST_CHECK_EQUAL(particle.rank, 0);
+		status = particle.updateNonBoundaryFace(*mesh, localFaceID);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 1);
+		BOOST_CHECK_EQUAL(particle.getRank(), 0);
 
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle.inflightPos.cmp[0] == 0.40);
 		BOOST_TEST(particle.inflightPos.cmp[1] == 0.11);
 		BOOST_TEST(particle.inflightPos.cmp[2] == 0.14);
 
-		particle.updateNonBoundaryFace(*mesh, localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 2);
-		BOOST_CHECK_EQUAL(particle.rank, 0);
+		status = particle.updateNonBoundaryFace(*mesh, localFaceID);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 2);
+		BOOST_CHECK_EQUAL(particle.getRank(), 0);
 
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle.inflightPos.cmp[0] == 0.42);
 		BOOST_TEST(particle.inflightPos.cmp[1] == 0.11);
 		BOOST_TEST(particle.inflightPos.cmp[2] == 0.14);
@@ -661,20 +692,23 @@ BOOST_AUTO_TEST_CASE(updateNonBoundaryFace_test3, * utf::tolerance(0.00001))
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity(0.0, 0.0, 1.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
-		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, 24, 0, 0.0, 1.0, 0.3);
+		uint pID=0, cellID=24, rank=0;
+		ParticleSimple<int,double> particle(pos, velocity, acceleration, jerk, pID, cellID, rank, 0.0, 1.0, 0.3);
 
 		double dt;
 		int localFaceID;
-		particle.updatePositionAtomic(*mesh, &dt, &localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 24);
+		status = particle.updatePositionAtomic(*mesh, &dt, &localFaceID, false);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 24);
 		BOOST_TEST(particle.inflightPos.cmp[0] == 0.97);
 		BOOST_TEST(particle.inflightPos.cmp[1] == 0.86);
 		BOOST_TEST(particle.inflightPos.cmp[2] == 0.2);
 
 		// Test and Check that the correct cell/rank are identified
-		particle.updateNonBoundaryFace(*mesh, localFaceID);
-		BOOST_CHECK_EQUAL(particle.cellGlobalID, 49);
-		BOOST_CHECK_EQUAL(particle.rank, 1);
+		status = particle.updateNonBoundaryFace(*mesh, localFaceID);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		BOOST_CHECK_EQUAL(particle.getCellGlobalID(), 49);
+		BOOST_CHECK_EQUAL(particle.getRank(), 1);
 	}
 }
 
@@ -702,12 +736,14 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Create a new particle and place it directly on a wall boundary
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> acceleration(0.0, 0.0, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> jerk(0.0, 0.0, 0.0);
+		uint cellID=24, rank=0;
 
 		// Test reflection in X-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos1(0.0, 0.12, 0.034);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity1(-5.6, 0.0, 0.0);
-		ParticleSimple<int,double> particle1(pos1, velocity1, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle1.updateBoundaryFaceWall(*mesh, 0, 0);
+		ParticleSimple<int,double> particle1(pos1, velocity1, acceleration, jerk, 0, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle1.updateBoundaryFaceWall(*mesh, 0, 0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle1.velocity.cmp[0] == 5.6);
 		BOOST_TEST(particle1.velocity.cmp[1] == 0.0);
 		BOOST_TEST(particle1.velocity.cmp[2] == 0.0);
@@ -716,8 +752,9 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Test reflection in Y-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos2(0.12, 0.0, 0.034);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity2(0.0, -3.4, 0.0);
-		ParticleSimple<int,double> particle2(pos2, velocity2, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle2.updateBoundaryFaceWall(*mesh, 0, 150);
+		ParticleSimple<int,double> particle2(pos2, velocity2, acceleration, jerk, 1, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle2.updateBoundaryFaceWall(*mesh, 0, 150);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle2.velocity.cmp[0] == 0.0);
 		BOOST_TEST(particle2.velocity.cmp[1] == 3.4);
 		BOOST_TEST(particle2.velocity.cmp[2] == 0.0);
@@ -725,8 +762,9 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Test reflection in Z-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos3(0.12, 0.1131, 0.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity3(0.1, 1.2, -6.2);
-		ParticleSimple<int,double> particle3(pos3, velocity3, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle3.updateBoundaryFaceWall(*mesh, 0, 300);
+		ParticleSimple<int,double> particle3(pos3, velocity3, acceleration, jerk, 2, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle3.updateBoundaryFaceWall(*mesh, 0, 300);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle3.velocity.cmp[0] == 0.1);
 		BOOST_TEST(particle3.velocity.cmp[1] == 1.2);
 		BOOST_TEST(particle3.velocity.cmp[2] == 6.2);
@@ -734,8 +772,9 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Test reflection in X-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos4(2.0, 0.12, 0.034);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity4(5.6, 0.0, 0.0);
-		ParticleSimple<int,double> particle4(pos4, velocity4, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle4.updateBoundaryFaceWall(*mesh, 0, 1);
+		ParticleSimple<int,double> particle4(pos4, velocity4, acceleration, jerk, 3, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle4.updateBoundaryFaceWall(*mesh, 0, 1);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle4.velocity.cmp[0] == -5.6);
 		BOOST_TEST(particle4.velocity.cmp[1] == 0.0);
 		BOOST_TEST(particle4.velocity.cmp[2] == 0.0);
@@ -743,8 +782,9 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Test reflection in Y-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos5(0.12, 2.0, 0.034);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity5(0.0, 3.4, 0.0);
-		ParticleSimple<int,double> particle5(pos5, velocity5, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle5.updateBoundaryFaceWall(*mesh, 0, 155);
+		ParticleSimple<int,double> particle5(pos5, velocity5, acceleration, jerk, 4, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle5.updateBoundaryFaceWall(*mesh, 0, 155);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle5.velocity.cmp[0] == 0.0);
 		BOOST_TEST(particle5.velocity.cmp[1] == -3.4);
 		BOOST_TEST(particle5.velocity.cmp[2] == 0.0);
@@ -752,8 +792,9 @@ BOOST_AUTO_TEST_CASE(updateBoundaryFaceWall_test1, * utf::tolerance(0.00001))
 		// Test reflection in Z-axis
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> pos6(0.12, 0.1131, 2.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> velocity6(0.1, 1.2, 6.2);
-		ParticleSimple<int,double> particle6(pos6, velocity6, acceleration, jerk, 0, 0, 1.0, 0.0, 0.01);
-		particle3.updateBoundaryFaceWall(*mesh, 0, 325);
+		ParticleSimple<int,double> particle6(pos6, velocity6, acceleration, jerk, 5, cellID, rank, 1.0, 0.0, 0.01);
+		status = particle3.updateBoundaryFaceWall(*mesh, 0, 325);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_TEST(particle3.velocity.cmp[0] == 0.1);
 		BOOST_TEST(particle3.velocity.cmp[1] == 1.2);
 		BOOST_TEST(particle3.velocity.cmp[2] == -6.2);
@@ -879,27 +920,31 @@ BOOST_AUTO_TEST_CASE(BroadcastParticles_test1)
 
 	if(comm.rank == 0)
 	{
+		uint pID=0, cellID=5, rank=2;
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> a(1.0, 2.0, 3.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> b(4.0, 5.0, 6.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> c(7.0, 8.0, 9.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> d(10.0, 11.0, 12.0);
-		ParticleSimple<int, double> particle2(a, b, c, d, 5, 2, 7.9, 2.3, 0.0);
+		ParticleSimple<int, double> particle2(a, b, c, d, pID, cellID, rank, 7.9, 2.3, 0.0);
 
+		pID=1, cellID=15, rank=8;
 		cupcfd::geometry::euclidean::EuclideanPoint<double,3> f(11.0, 12.0, 13.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> g(14.0, 15.0, 16.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> h(17.0, 18.0, 19.0);
 		cupcfd::geometry::euclidean::EuclideanVector<double,3> i(110.0, 111.0, 112.0);
-		ParticleSimple<int, double> particle3(f, g, h, i, 15, 8, 8.7, 0.563, 0.0);
+		ParticleSimple<int, double> particle3(f, g, h, i, pID, cellID, rank, 8.7, 0.563, 0.0);
 
 		ParticleSimple<int, double> particles[2] = {particle2, particle3};
 
-		cupcfd::comm::Broadcast(particles, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(particles, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else
 	{
 		ParticleSimple<int, double> recvParticles[2];
 
-		cupcfd::comm::Broadcast(recvParticles, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(recvParticles, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_CHECK_EQUAL(recvParticles[0].pos.cmp[0], 1.0);
 		BOOST_CHECK_EQUAL(recvParticles[0].pos.cmp[1], 2.0);
@@ -913,8 +958,8 @@ BOOST_AUTO_TEST_CASE(BroadcastParticles_test1)
 		BOOST_CHECK_EQUAL(recvParticles[0].jerk.cmp[0], 10.0);
 		BOOST_CHECK_EQUAL(recvParticles[0].jerk.cmp[1], 11.0);
 		BOOST_CHECK_EQUAL(recvParticles[0].jerk.cmp[2], 12.0);
-		BOOST_CHECK_EQUAL(recvParticles[0].cellGlobalID, 5);
-		BOOST_CHECK_EQUAL(recvParticles[0].rank, 2);
+		BOOST_CHECK_EQUAL(recvParticles[0].getCellGlobalID(), 5);
+		BOOST_CHECK_EQUAL(recvParticles[0].getRank(), 2);
 		BOOST_CHECK_EQUAL(recvParticles[0].decayLevel, 7.9);
 		BOOST_CHECK_EQUAL(recvParticles[0].decayRate, 2.3);
 
@@ -930,8 +975,8 @@ BOOST_AUTO_TEST_CASE(BroadcastParticles_test1)
 		BOOST_CHECK_EQUAL(recvParticles[1].jerk.cmp[0], 110.0);
 		BOOST_CHECK_EQUAL(recvParticles[1].jerk.cmp[1], 111.0);
 		BOOST_CHECK_EQUAL(recvParticles[1].jerk.cmp[2], 112.0);
-		BOOST_CHECK_EQUAL(recvParticles[1].cellGlobalID, 15);
-		BOOST_CHECK_EQUAL(recvParticles[1].rank, 8);
+		BOOST_CHECK_EQUAL(recvParticles[1].getCellGlobalID(), 15);
+		BOOST_CHECK_EQUAL(recvParticles[1].getRank(), 8);
 		BOOST_CHECK_EQUAL(recvParticles[1].decayLevel, 8.7);
 		BOOST_CHECK_EQUAL(recvParticles[1].decayRate, 0.563);
 	}
@@ -948,8 +993,11 @@ BOOST_AUTO_TEST_CASE(cleanup)
 	// Cleanup these MPI datatypes
 	cupcfd::geometry::euclidean::EuclideanPoint<double, 3> point;
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> vector;
-	point.deregisterMPIType();
-	vector.deregisterMPIType();
+	cupcfd::error::eCodes status;
+	status = point.deregisterMPIType();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	status = vector.deregisterMPIType();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     MPI_Finalize();
 }

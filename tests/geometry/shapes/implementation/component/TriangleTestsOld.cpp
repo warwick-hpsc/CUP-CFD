@@ -252,9 +252,9 @@ BOOST_AUTO_TEST_CASE(areaHeronsFormula_test4,  * utf::tolerance(0.00001))
 	BOOST_TEST(area == 16.3126);
 }
 
-// === computeArea ===
+// === getArea ===
 // Test 1: Test the area is computed correctly - 2D
-BOOST_AUTO_TEST_CASE(computeArea_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test1, * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
@@ -263,12 +263,12 @@ BOOST_AUTO_TEST_CASE(computeArea_test1, * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle<double,2> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 1.2);
 }
 
 // Test 2: Test the area is computed correctly - 2D
-BOOST_AUTO_TEST_CASE(computeArea_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test2, * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
@@ -277,12 +277,12 @@ BOOST_AUTO_TEST_CASE(computeArea_test2, * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle<double,2> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 12.0);
 }
 
 // Test 3: Test the area is computed correctly - 3D
-BOOST_AUTO_TEST_CASE(computeArea_test3,  * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test3,  * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,3> p1(3.0, 4.0, 8.0);
@@ -291,12 +291,12 @@ BOOST_AUTO_TEST_CASE(computeArea_test3,  * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle<double,3> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 4.25683);
 }
 
 // Test 4: Test the area is computed correctly - 3D
-BOOST_AUTO_TEST_CASE(computeArea_test4,  * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test4,  * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,3> p1(3.0, 4.0, 8.9);
@@ -305,14 +305,14 @@ BOOST_AUTO_TEST_CASE(computeArea_test4,  * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle<double,3> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 16.3126);
 }
 
-// === computeNormal ===
+// === getNormal ===
 // Test 1: Compute the correct normal, and check that the direction is as expected for anticlockwise
 // vertices from origin
-BOOST_AUTO_TEST_CASE(computeNormal_test1,  * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getNormal_test1,  * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double,3> p1(0.0, 0.0, 2.0);
 	euc::EuclideanPoint<double,3> p2(5.0, 0.0, 2.0);
@@ -321,7 +321,7 @@ BOOST_AUTO_TEST_CASE(computeNormal_test1,  * utf::tolerance(0.00001))
 	Triangle<double,3> shape(p1, p2, p3);
 
 	euc::EuclideanVector<double,3> normalCmp(0.0,0.0,1.0);
-	euc::EuclideanVector<double,3> normal = shape.computeNormal();
+	euc::EuclideanVector<double,3> normal = shape.getNormal();
 
 	BOOST_TEST(normal.cmp[0] == normalCmp[0]);
 	BOOST_TEST(normal.cmp[1] == normalCmp[1]);
@@ -330,7 +330,7 @@ BOOST_AUTO_TEST_CASE(computeNormal_test1,  * utf::tolerance(0.00001))
 
 // Test 2: Compute the correct normal, and check that the direction is as expected for clockwise vertices
 // from origin
-BOOST_AUTO_TEST_CASE(computeNormal_test2,  * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getNormal_test2,  * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double,3> p1(0.0, 5.0, 2.0);
 	euc::EuclideanPoint<double,3> p2(5.0, 0.0, 2.0);
@@ -339,7 +339,7 @@ BOOST_AUTO_TEST_CASE(computeNormal_test2,  * utf::tolerance(0.00001))
 	Triangle<double,3> shape(p1, p2, p3);
 
 	euc::EuclideanVector<double,3> normalCmp(0.0,0.0,-1.0);
-	euc::EuclideanVector<double,3> normal = shape.computeNormal();
+	euc::EuclideanVector<double,3> normal = shape.getNormal();
 
 	BOOST_TEST(normal.cmp[0] == normalCmp[0]);
 	BOOST_TEST(normal.cmp[1] == normalCmp[1]);
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(computeNormal_test2,  * utf::tolerance(0.00001))
 }
 
 // Test 3: Test correct normal for a 2D triangle translated into a 3D space with a Z component of 0.
-BOOST_AUTO_TEST_CASE(computeNormal_test3,  * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getNormal_test3,  * utf::tolerance(0.00001))
 {
 
 }

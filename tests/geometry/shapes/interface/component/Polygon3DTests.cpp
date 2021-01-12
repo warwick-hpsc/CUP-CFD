@@ -25,35 +25,6 @@ namespace utf = boost::unit_test;
 // Note we only test static methods in this tester since many methods just passthrough
 // to an inheriting class (CRTP)
 
-// === computedArea ===
-// Test 1: Compute Area Clockwise from Origin
-BOOST_AUTO_TEST_CASE(computArea_test1, * utf::tolerance(0.00001))
-{
-	// Setup
-	euc::EuclideanPoint<double,3> points[3];
-	points[0] = euc::EuclideanPoint<double,3>(3.0, 4.0, 8.0);
-	points[1] = euc::EuclideanPoint<double,3>(3.15, 12.0, 14.0);
-	points[2] = euc::EuclideanPoint<double,3>(3.3, 4.0, 9.0);
-
-	// Test and Check
-	double area = computeArea(points, 3);
-	BOOST_TEST(area == 4.25683);
-}
-
-// Test 2: Compute Area Anti-Clockwise from Origin
-BOOST_AUTO_TEST_CASE(computeArea_test2, * utf::tolerance(0.00001))
-{
-	// Setup
-	euc::EuclideanPoint<double,3> points[3];
-	points[0] = euc::EuclideanPoint<double,3>(3.3, 4.0, 9.0);
-	points[1] = euc::EuclideanPoint<double,3>(3.15, 12.0, 14.0);
-	points[2] = euc::EuclideanPoint<double,3>(3.0, 4.0, 8.0);
-
-	// Test and Check
-	double area = computeArea(points, 3);
-	BOOST_TEST(area == 4.25683);
-}
-
 // === isVertexOrderClockwise ===
 // Test 1: AntiClockwise from Origin
 BOOST_AUTO_TEST_CASE(isVertexOrderClockwise_test1, * utf::tolerance(0.00001))

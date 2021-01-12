@@ -20,6 +20,9 @@
 #include "Quadrilateral3D.h"
 #include "Pyramid.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -42,35 +45,13 @@ namespace cupcfd
 					 * @param apex The point that defines the apex of the pyramid
 					 * @param quad The Quadrilateral3D base of the pyramid
 					 */
-					QuadPyramid(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& apex, 
-								const cupcfd::geometry::shapes::Quadrilateral3D<T>& quad);
+					QuadPyramid(const euc::EuclideanPoint<T,3>& apex, 
+								const shapes::Quadrilateral3D<T>& quad);
 
 					/**
 					 *
 					 */
 					~QuadPyramid();
-
-					// === Concrete Methods ===
-
-					/**
-					 * Determine whether the provided point is on an edge of the polyhedron
-					 *
-					 * @param point The point to test
-					 *
-					 * @return Return true if the point is on an edge of this polyhedron
-					 */
-					__attribute__((warn_unused_result))
-					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
-
-					/**
-					 * Determine whether the provided point is on a vertex of the polyhedron
-					 *
-					 * @param point The point to test
-					 *
-					 * @return Return true if the point is on an edge of this polyhedron
-					 */
-					__attribute__((warn_unused_result))
-					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
 			};
 		}
 	}

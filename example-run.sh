@@ -12,6 +12,4 @@ if [ -d tt_results ]; then
 	rm -r tt_results
 fi
 
-# mpirun -n 2 xterm -fa 'Monospace' -fs 14 -e gdb ../build/cupcfd
-mpirun -n 2 xterm -fa 'Monospace' -fs 12 -e gdb ../build/cupcfd
-
+mpirun -n 4 ../build/cupcfd

@@ -69,15 +69,8 @@ namespace cupcfd
 
 			// === Concrete Methods ===
 
-			// template <class T, unsigned int N>
-			// void EuclideanVector<T,N>::dotProduct(const EuclideanVector<T,N>& vec, T * scalar) {
-			// 	// https://en.wikipedia.org/wiki/Dot_product
-
-			// 	*scalar = this->dotProduct(vec);
-			// }
-
 			template <class T, unsigned int N>
-			T EuclideanVector<T,N>::dotProduct(const EuclideanVector<T,N>& vec) {
+			T EuclideanVector<T,N>::dotProduct(const EuclideanVector<T,N>& vec) const {
 				// https://en.wikipedia.org/wiki/Dot_product
 				T dotP = 0.0;
 				for(uint i = 0; i < N; i++) {
@@ -96,22 +89,17 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>
-			// cupcfd::error::eCodes EuclideanVector<T,N>::normalise() {
 			void EuclideanVector<T,N>::normalise() {
-				// T scalar;
-				// this->length(&scalar);
 				T scalar = this->length();
-				scalar = T(1.0) / scalar;
-
-				for(uint i = 0; i < N; i++) {
-					this->cmp[i] *= T(scalar);
+				if (scalar != T(0)) {
+					scalar = T(1.0) / scalar;
+					for(uint i = 0; i < N; i++) {
+						this->cmp[i] *= scalar;
+					}
 				}
-
-				// return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class T, unsigned int N>
-			// cupcfd::error::eCodes EuclideanVector<T,N>::normalise(EuclideanVector<T,N>& result) {
 			void EuclideanVector<T,N>::normalise(EuclideanVector<T,N>& result) {
 				// T scalar;
 				// this->length(&scalar);
@@ -209,17 +197,6 @@ namespace cupcfd
 				return cupcfd::error::E_SUCCESS;
 			}
 
-			template <class T>
-			EuclideanVector<T,3> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2) {
-				EuclideanVector<T,3> result;
-
-                result.cmp[0] = (vec1.cmp[1] * vec2.cmp[2]) - (vec1.cmp[2] * vec2.cmp[1]);
-                result.cmp[1] = (vec1.cmp[2] * vec2.cmp[0]) - (vec1.cmp[0] * vec2.cmp[2]);
-                result.cmp[2] = (vec1.cmp[0] * vec2.cmp[1]) - (vec1.cmp[1] * vec2.cmp[0]);
-
-                return result;
-			}
-
 			// Explicit Instantiation
 			// ToDo: This is kind of brittle for template usage
 			// We could probably move everything to the header and avoid explicit instantiation entirely....
@@ -234,9 +211,6 @@ namespace cupcfd
 
 			template class EuclideanVector<double, 3>;
 			template EuclideanVector<double, 3>::EuclideanVector(double x, double y, double z);
-
-			template EuclideanVector<float,3> cupcfd::geometry::euclidean::crossProduct<float>(const EuclideanVector<float,3>& vec1, const EuclideanVector<float,3>& vec2);
-			template EuclideanVector<double,3> cupcfd::geometry::euclidean::crossProduct<double>(const EuclideanVector<double,3>& vec1, const EuclideanVector<double,3>& vec2);
 		}
 	}
 }

@@ -39,6 +39,7 @@ using namespace cupcfd::comm::mpi;
 BOOST_AUTO_TEST_CASE(ExchangeMPIIsendIrecv_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
+    cupcfd::error::eCodes status;
 
     MPI_Request * requests;
     int nRequests;
@@ -50,12 +51,13 @@ BOOST_AUTO_TEST_CASE(ExchangeMPIIsendIrecv_test1)
 		int recvBuf[1];
 
 
-		ExchangeMPIIsendIrecv(sendBuf, 1,
+		status = ExchangeMPIIsendIrecv(sendBuf, 1,
 							  recvBuf, 1,
 							  tRanks, 1,
 							  1, comm.comm, &requests, &nRequests);
-
-		WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[1] = {10};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(recvBuf, recvBuf + 1, cmp, cmp + 1);
@@ -68,12 +70,13 @@ BOOST_AUTO_TEST_CASE(ExchangeMPIIsendIrecv_test1)
 		int recvBuf[2];
 
 
-		ExchangeMPIIsendIrecv(sendBuf, 2,
+		status = ExchangeMPIIsendIrecv(sendBuf, 2,
 							  recvBuf, 2,
 							  tRanks, 2,
 							  1, comm.comm, &requests, &nRequests);
-
-		WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[2] = {1, 30};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(recvBuf, recvBuf + 2, cmp, cmp + 2);
@@ -86,12 +89,13 @@ BOOST_AUTO_TEST_CASE(ExchangeMPIIsendIrecv_test1)
 		int recvBuf[2];
 
 
-		ExchangeMPIIsendIrecv(sendBuf, 2,
+		status = ExchangeMPIIsendIrecv(sendBuf, 2,
 							  recvBuf, 2,
 							  tRanks, 2,
 							  1, comm.comm, &requests, &nRequests);
-
-		WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[2] = {20, 50};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(recvBuf, recvBuf + 2, cmp, cmp + 2);
@@ -103,12 +107,13 @@ BOOST_AUTO_TEST_CASE(ExchangeMPIIsendIrecv_test1)
 		int recvBuf[2];
 
 
-		ExchangeMPIIsendIrecv(sendBuf, 1,
+		status = ExchangeMPIIsendIrecv(sendBuf, 1,
 							  recvBuf, 1,
 							  tRanks, 1,
 							  1, comm.comm, &requests, &nRequests);
-
-		WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+		status = WaitallMPI(requests, nRequests);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		int cmp[1] = {40};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(recvBuf, recvBuf + 1, cmp, cmp + 1);

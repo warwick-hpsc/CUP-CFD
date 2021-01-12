@@ -48,9 +48,11 @@ BOOST_AUTO_TEST_CASE(constructor_test1)
     cupcfd::partitioner::PartitionerNaiveConfig<int,int> partConfig;
 	cupcfd::geometry::mesh::MeshSourceStructGenConfig<int,double> meshSourceConfig(10, 20, 20, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	cupcfd::geometry::mesh::MeshConfig<int,double,int> meshConfig(partConfig, meshSourceConfig);
+	cupcfd::error::eCodes status;
 
 	cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int> * meshPtr;
-	meshConfig.buildUnstructuredMesh(&meshPtr, comm);
+	status = meshConfig.buildUnstructuredMesh(&meshPtr, comm);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS); 
 	std::shared_ptr<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>> sharedPtr(meshPtr);
 
 	BenchmarkKernels<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>, int, double, int> benchmark("KernelBench",sharedPtr, 1000);
@@ -66,13 +68,16 @@ BOOST_AUTO_TEST_CASE(runBenchmark_test1)
     cupcfd::partitioner::PartitionerNaiveConfig<int,int> partConfig;
 	cupcfd::geometry::mesh::MeshSourceStructGenConfig<int,double> meshSourceConfig(10, 20, 21, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	cupcfd::geometry::mesh::MeshConfig<int,double,int> meshConfig(partConfig, meshSourceConfig);
+	cupcfd::error::eCodes status;
 
 	cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int> * meshPtr;
-	meshConfig.buildUnstructuredMesh(&meshPtr, comm);
+	status = meshConfig.buildUnstructuredMesh(&meshPtr, comm);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	std::shared_ptr<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>> sharedPtr(meshPtr);
 
 	BenchmarkKernels<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>, int, double, int> benchmark("KernelBench",sharedPtr, 1000);
-	benchmark.runBenchmark();
+	status = benchmark.runBenchmark();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 

@@ -16,6 +16,7 @@
 #include <iostream>
 
 namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
 
 namespace cupcfd
 {
@@ -30,20 +31,21 @@ namespace cupcfd
 									const P& base)
 			: apex(apex), base(base)
 			{
-				/*
+				euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
+				T height = plane.shortestDistance(apex);
+				if (height == T(0)) {
+					printf("Distance between apex and plane is zero\n");
+					printf("- apex: "); apex.print(); printf("\n");
+					printf("- base:\n");
+					base.print();
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+				}
+
 				// Invert base if its normal points inwards:
-				// T dp = this->base.normal.dotProduct(this->base.centroid - this->apex);
-				T dp = this->base.computeNormal().dotProduct(this->base.computeCentroid() - this->apex);
+				T dp = this->base.getNormal().dotProduct(this->base.getCentroid() - this->apex);
 				if (dp < T(0.0)) {
 					this->base.reverseVertexOrdering();
 				}
-				*/
-
-				// euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
-				// T height = plane.shortestDistance(this->apex);
-				// this->volume = (T(1.0)/T(3.0)) * this->base.area * height;
-
-				// this->centroid = this->base.centroid + (T(0.25) * (this->apex - this->base.centroid));
 			}
 
 			template <class P, class T>
@@ -52,9 +54,41 @@ namespace cupcfd
 			}
 
 			// === Concrete Methods ===
+			
+			template <class P, class T>
+			bool Pyramid<P,T>::isPointOnEdge(const euc::EuclideanPoint<T,3>& point) {							
+				// ToDo: This can likely be condensed to a generic polygon method, using a getEdge method	  
+				
+				for (int i=0; i<base.numVertices; i++) {
+					if (isPointOnLine(this->apex, this->base.vertices[i], point)) {
+						return true;
+					}
+				}
+				for (int v1=0; v1<base.numVertices; v1++) {
+					const int v2 = (v1+1)%base.numVertices;
+					if (isPointOnLine(this->base.vertices[v1], this->base.vertices[v2], point)) {
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			
+			template <class P, class T>
+			inline bool Pyramid<P,T>::isPointOnVertex(const euc::EuclideanPoint<T,3>& point) {
+				if (point == this->apex) {
+					return true;
+				}
+				for (int v=0; v<base.numVertices; v++) {
+					if (this->base.vertices[v] == point) { 
+						return true;
+					}
+				}
+				return false;
+			}
 
 			template <class P, class T>
-			inline bool Pyramid<P,T>::isPointInside(const euc::EuclideanPoint<T,3>& point) {
+			bool Pyramid<P,T>::isPointInside(const euc::EuclideanPoint<T,3>& point) {
 				// ToDo: This algorithm could be moved up to a more general level in Polyhedron.
 				// However, we would need to either (a) find a way to export the vertices (overhead of extra copies)
 				// or (b) store a general vertex member list (such as an array) at the Polyhedron level - however
@@ -82,7 +116,7 @@ namespace cupcfd
 				// Bases, but any higher and this would need to be tested.
 				 
 				// Polygon must always have at least three vertices
-				cupcfd::geometry::euclidean::EuclideanPlane3D<T> basePlane(base.vertices[0], base.vertices[1], base.vertices[2]);
+				euc::EuclideanPlane3D<T> basePlane(base.vertices[0], base.vertices[1], base.vertices[2]);
 
 				// Create Point Vector
 				pointVector = base.vertices[0] - point;
@@ -121,8 +155,7 @@ namespace cupcfd
 					}
 					*/
 
-					// cupcfd::geometry::shapes::Triangle3D<T> face(facePlane.p1, facePlane.p2, facePlane.p3);
-					cupcfd::geometry::shapes::Triangle3D<T> face(this->apex, this->base.vertices[(i+1)%nv], this->base.vertices[i]);
+					shapes::Triangle3D<T> face(this->apex, this->base.vertices[(i+1)%nv], this->base.vertices[i]);
 
 					// (2a) Create a vector to the first point on the face
 					pointVector = base.vertices[i] - point;
@@ -150,15 +183,36 @@ namespace cupcfd
 			}
 
 			template <class P, class T>
+			T Pyramid<P,T>::getVolume() {
+				if (!this->volumeComputed) {
+					this->volume = this->computeVolume();
+					this->volumeComputed = true;
+				}
+				return this->volume;
+			}
+
+			template <class P, class T>
+			euc::EuclideanPoint<T,3> Pyramid<P,T>::getCentroid() {
+				if (!this->centroidComputed) {
+					this->centroid = this->computeCentroid();
+					this->centroidComputed = true;
+				}
+				return this->centroid;
+			}
+
+			template <class P, class T>
 			T Pyramid<P,T>::computeVolume() {
 				// === Volume = 1/3 Base Area * Height ===
 				
 				// (1) Compute Area of Base
-				T area = base.computeArea();
+				T area = base.getArea();
 				
 				// Compute Height as shortest distance from base plane
 				euc::EuclideanPlane3D<T> plane(this->base.vertices[0], this->base.vertices[1], this->base.vertices[2]);
 				T height = plane.shortestDistance(apex);
+				if (height == T(0)) {
+					HARD_CHECK_ECODE(cupcfd::error::E_GEOMETRY_ZERO_AREA)
+				}
 				
 				// (3) Compute and return volume
 				return (T(1.0)/T(3.0)) * area * height;
@@ -166,10 +220,10 @@ namespace cupcfd
 			
 			template <class P, class T>
 			euc::EuclideanPoint<T,3> Pyramid<P,T>::computeCentroid() {
-				// https://en.wikipedia.org/wiki/Centroid/#Of_a_cone_or_pyramid
+				// https://en.wikipedia.org/wiki/Centroid#Of_a_cone_or_pyramid
 				// Centroid = 1/4 the distance from the base centroid to the apex
 				
-				euc::EuclideanPoint<T,3> baseCentroid = this->base.computeCentroid();
+				euc::EuclideanPoint<T,3> baseCentroid = this->base.getCentroid();
 				euc::EuclideanVector<T,3> baseCentroidToApex = this->apex - baseCentroid;
 		
 				return baseCentroid + (T(0.25) * baseCentroidToApex);

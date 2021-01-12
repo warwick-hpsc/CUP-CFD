@@ -51,7 +51,8 @@ BOOST_AUTO_TEST_CASE(Gather_test1)
 		rcv[6] = 0;
 		rcv[7] = 0;
 
-		cupcfd::error::eCodes err = Gather(buf, 2, rcv, 8, 2, 0, comm);
+		cupcfd::error::eCodes status = Gather(buf, 2, rcv, 8, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 8, cmp, cmp + 8);
 	}
 	else if(comm.rank == 1)
@@ -62,7 +63,8 @@ BOOST_AUTO_TEST_CASE(Gather_test1)
 		buf[0] = 102;
 		buf[1] = 7;
 
-		cupcfd::error::eCodes err = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		cupcfd::error::eCodes status = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 2)
 	{
@@ -72,7 +74,8 @@ BOOST_AUTO_TEST_CASE(Gather_test1)
 		buf[0] = 9;
 		buf[1] = 2;
 
-		cupcfd::error::eCodes err = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		cupcfd::error::eCodes status = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 3)
 	{
@@ -82,7 +85,8 @@ BOOST_AUTO_TEST_CASE(Gather_test1)
 		buf[0] = 11;
 		buf[1] = 13;
 
-		cupcfd::error::eCodes err = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		cupcfd::error::eCodes status = Gather(buf, 2, rcv, 0, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 }
 
@@ -101,7 +105,8 @@ BOOST_AUTO_TEST_CASE(AllGather_test1)
 		buf[0] = 65;
 		buf[1] = 1054;
 
-		cupcfd::error::eCodes err = AllGather(buf, 2, rcv, 8, 2, comm);
+		cupcfd::error::eCodes status = AllGather(buf, 2, rcv, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 8, cmp, cmp + 8);
 	}
 	else if(comm.rank == 1)
@@ -109,7 +114,8 @@ BOOST_AUTO_TEST_CASE(AllGather_test1)
 		buf[0] = 102;
 		buf[1] = 7;
 
-		cupcfd::error::eCodes err = AllGather(buf, 2, rcv, 8, 2, comm);
+		cupcfd::error::eCodes status = AllGather(buf, 2, rcv, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 8, cmp, cmp + 8);
 	}
 	else if(comm.rank == 2)
@@ -117,7 +123,8 @@ BOOST_AUTO_TEST_CASE(AllGather_test1)
 		buf[0] = 9;
 		buf[1] = 2;
 
-		cupcfd::error::eCodes err = AllGather(buf, 2, rcv, 8, 2, comm);
+		cupcfd::error::eCodes status = AllGather(buf, 2, rcv, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 8, cmp, cmp + 8);
 	}
 	else if(comm.rank == 3)
@@ -125,7 +132,8 @@ BOOST_AUTO_TEST_CASE(AllGather_test1)
 		buf[0] = 11;
 		buf[1] = 13;
 
-		cupcfd::error::eCodes err = AllGather(buf, 2, rcv, 8, 2, comm);
+		cupcfd::error::eCodes status = AllGather(buf, 2, rcv, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 8, cmp, cmp + 8);
 	}
 }
@@ -141,7 +149,8 @@ BOOST_AUTO_TEST_CASE(GatherV1_test1)
 		int buf[3] = {65, 1054, 16};
 		int * rcv = nullptr;
 		int * rcvCounts = nullptr;
-		cupcfd::error::eCodes err = GatherV(buf, 3, rcv, 0, rcvCounts, 0, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 3, rcv, 0, rcvCounts, 0, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 1)
 	{
@@ -150,7 +159,8 @@ BOOST_AUTO_TEST_CASE(GatherV1_test1)
 		int rcv[15] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		int cmp[15] = {65, 1054, 16, 102, 7, 98, 76, 51, 97, 76, 14, 56, 98, 90, 43};
 
-		cupcfd::error::eCodes err = GatherV(buf, 5, rcv, 15, rcvCounts, 15, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 5, rcv, 15, rcvCounts, 15, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
 	}
 	else if(comm.rank == 2)
@@ -158,14 +168,16 @@ BOOST_AUTO_TEST_CASE(GatherV1_test1)
 		int buf[1] = {97};
 		int * rcv = nullptr;
 		int * rcvCounts = nullptr;
-		cupcfd::error::eCodes err = GatherV(buf, 1, rcv, 0, rcvCounts, 0, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 1, rcv, 0, rcvCounts, 0, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 3)
 	{
 		int buf[6] = {76, 14, 56, 98, 90, 43};
 		int * rcv = nullptr;
 		int * rcvCounts = nullptr;
-		cupcfd::error::eCodes err = GatherV(buf, 6, rcv, 0, rcvCounts, 0, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 6, rcv, 0, rcvCounts, 0, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 }
 
@@ -186,7 +198,8 @@ BOOST_AUTO_TEST_CASE(GatherV2_test1)
 	if(comm.rank == 0)
 	{
 		int buf[3] = {65, 1054, 16};
-		cupcfd::error::eCodes err = GatherV(buf, 3, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 3, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 1)
 	{
@@ -194,8 +207,8 @@ BOOST_AUTO_TEST_CASE(GatherV2_test1)
 		int cmp[15] = {65, 1054, 16, 102, 7, 98, 76, 51, 97, 76, 14, 56, 98, 90, 43};
 		int cmp2[4] = {3, 5, 1, 6};
 
-		cupcfd::error::eCodes err = GatherV(buf, 5, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = GatherV(buf, 5, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(nRcv, 15);
 		BOOST_CHECK_EQUAL(nRecvCounts, 4);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
@@ -204,12 +217,14 @@ BOOST_AUTO_TEST_CASE(GatherV2_test1)
 	else if(comm.rank == 2)
 	{
 		int buf[1] = {97};
-		cupcfd::error::eCodes err = GatherV(buf, 1, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 1, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else if(comm.rank == 3)
 	{
 		int buf[6] = {76, 14, 56, 98, 90, 43};
-		cupcfd::error::eCodes err = GatherV(buf, 6, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		cupcfd::error::eCodes status = GatherV(buf, 6, &rcv, &nRcv, &rcvCounts, &nRecvCounts, 1, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	if(rcv != NULL && rcv != nullptr)
@@ -237,28 +252,32 @@ BOOST_AUTO_TEST_CASE(AllGatherV_test1)
 	{
 		int buf[3] = {65, 1054, 16};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 3, rcv, 0, rcvCounts, 0, comm);
+		cupcfd::error::eCodes status = AllGatherV(buf, 3, rcv, 0, rcvCounts, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
 	}
 	else if(comm.rank == 1)
 	{
 		int buf[5] = {102, 7, 98, 76, 51};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 5, rcv, 15, rcvCounts, 15, comm);
+		cupcfd::error::eCodes status = AllGatherV(buf, 5, rcv, 15, rcvCounts, 15, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
 	}
 	else if(comm.rank == 2)
 	{
 		int buf[1] = {97};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 1, rcv, 0, rcvCounts, 0, comm);
+		cupcfd::error::eCodes status = AllGatherV(buf, 1, rcv, 0, rcvCounts, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
 	}
 	else if(comm.rank == 3)
 	{
 		int buf[6] = {76, 14, 56, 98, 90, 43};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 6, rcv, 0, rcvCounts, 0, comm);
+		cupcfd::error::eCodes status = AllGatherV(buf, 6, rcv, 0, rcvCounts, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
 	}
 }
@@ -282,8 +301,8 @@ BOOST_AUTO_TEST_CASE(AllGatherV2_test1)
 	{
 		int buf[3] = {65, 1054, 16};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 3, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = AllGatherV(buf, 3, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(nRcv, 15);
 		BOOST_CHECK_EQUAL(nRcvCounts, 4);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
@@ -293,8 +312,8 @@ BOOST_AUTO_TEST_CASE(AllGatherV2_test1)
 	{
 		int buf[5] = {102, 7, 98, 76, 51};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 5, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = AllGatherV(buf, 5, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(nRcv, 15);
 		BOOST_CHECK_EQUAL(nRcvCounts, 4);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
@@ -304,8 +323,8 @@ BOOST_AUTO_TEST_CASE(AllGatherV2_test1)
 	{
 		int buf[1] = {97};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 1, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = AllGatherV(buf, 1, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(nRcv, 15);
 		BOOST_CHECK_EQUAL(nRcvCounts, 4);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);
@@ -315,8 +334,8 @@ BOOST_AUTO_TEST_CASE(AllGatherV2_test1)
 	{
 		int buf[6] = {76, 14, 56, 98, 90, 43};
 
-		cupcfd::error::eCodes err = AllGatherV(buf, 6, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
-		BOOST_CHECK_EQUAL(err, cupcfd::error::E_SUCCESS);
+		cupcfd::error::eCodes status = AllGatherV(buf, 6, &rcv, &nRcv, &rcvCounts, &nRcvCounts, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(nRcv, 15);
 		BOOST_CHECK_EQUAL(nRcvCounts, 4);
 	    BOOST_CHECK_EQUAL_COLLECTIONS(rcv, rcv + 15, cmp, cmp + 15);

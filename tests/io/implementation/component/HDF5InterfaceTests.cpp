@@ -54,8 +54,10 @@ BOOST_AUTO_TEST_CASE(openFile_test1)
 {
 	HDF5Record record("/TestGroup1", "TestDataSetInt1D", false);
 	HDF5Access access("../tests/io/data/TestReadSource.h5", record);
+	cupcfd::error::eCodes status;
 
-	access.openFile();
+	status = access.openFile();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 // Test 2: Test an missing file raises an error code
@@ -189,10 +191,11 @@ BOOST_AUTO_TEST_CASE(readData_full_test1)
 {
 	HDF5Record record("/TestGroup1", "TestDataSetInt1D", false);
 	HDF5Access access("../tests/io/data/TestReadSource.h5", record);
+	cupcfd::error::eCodes status;
 
 	int result[20];
-
-	access.readData(result);
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int cmp[20] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13, 14, 15, 16, 17, 18, 19};
 
@@ -207,8 +210,10 @@ BOOST_AUTO_TEST_CASE(readData_full_test2)
 	HDF5Access access("../tests/io/data/TestReadSource.h5", record);
 
 	int result[80];
+	cupcfd::error::eCodes status;
 
-	access.readData(result);
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int cmp[80] = {100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110,
 				   111, 112, 113, 114, 115, 116, 117, 118, 119, 120,
@@ -231,7 +236,9 @@ BOOST_AUTO_TEST_CASE(readData_full_test3)
 
 	int result[15];
 
-	access.readData(result);
+	cupcfd::error::eCodes status;
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Data will be truncated
 	int cmp[15] = {200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214};
@@ -248,7 +255,9 @@ BOOST_AUTO_TEST_CASE(readData_full_test4)
 
 	int result[24];
 
-	access.readData(result);
+	cupcfd::error::eCodes status;
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Data will be truncated
 	int cmp[24] = {301, 302, 303, 304, 305, 306, 307, 308, 309, 310,311, 312,
@@ -266,7 +275,9 @@ BOOST_AUTO_TEST_CASE(readData_full_test5)
 
 	int result[11];
 
-	access.readData(result);
+	cupcfd::error::eCodes status;
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Data will be truncated
 	int cmp[11] = {400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410};
@@ -282,7 +293,9 @@ BOOST_AUTO_TEST_CASE(readData_full_test6)
 
 	int result[14];
 
-	access.readData(result);
+	cupcfd::error::eCodes status;
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Data will be truncated
 	int cmp[14] = {500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511, 512, 513};
@@ -331,7 +344,9 @@ BOOST_AUTO_TEST_CASE(readData_full_test18)
 
 	double result[14];
 
-	access.readData(result);
+	cupcfd::error::eCodes status;
+	status = access.readData(result);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Data will be truncated
 	double cmp[14] = {500.32, 501.523, 502.626, 503.6236, 504.10562, 505.3215,
@@ -359,7 +374,9 @@ BOOST_AUTO_TEST_CASE(readData_indexed_test1)
 
 	int result[6];
 
-	access.readData(result, properties);
+	cupcfd::error::eCodes status;
+	status = access.readData(result, properties);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int cmp[6] = {0, 4, 9, 13, 17, 19};
 

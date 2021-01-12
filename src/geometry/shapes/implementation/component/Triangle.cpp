@@ -12,9 +12,6 @@
 
 #include "Triangle.h"
 
-namespace arth = cupcfd::utility::arithmetic::kernels;
-namespace euc = cupcfd::geometry::euclidean;
-
 namespace cupcfd
 {
 	namespace geometry

@@ -25,6 +25,8 @@
 
 #include <iostream>
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -310,7 +312,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
 					__attribute__((warn_unused_result))
-					virtual cupcfd::error::eCodes getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, L * cellLabels, I nCellLabels) = 0;
+					virtual cupcfd::error::eCodes getCellCenter(euc::EuclideanPoint<T,3> * cellCenter, I nCellCenter, L * cellLabels, I nCellLabels) = 0;
 
 					/**
 					 * Get the labels of the faces attached to specified cells, stored in a CSR format.
@@ -481,7 +483,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
 					__attribute__((warn_unused_result))
-					virtual cupcfd::error::eCodes getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal,
+					virtual cupcfd::error::eCodes getFaceNormal(euc::EuclideanVector<T,3> * faceNormal, I nFaceNormal,
 																	 L * faceLabels, I nFaceLabels) = 0;
 
 					/**
@@ -499,7 +501,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
 					__attribute__((warn_unused_result))
-					virtual cupcfd::error::eCodes getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, L * faceLabels, I nFaceLabels) = 0;
+					virtual cupcfd::error::eCodes getFaceCenter(euc::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, L * faceLabels, I nFaceLabels) = 0;
 
 					/**
 					 * Get the vertex labels associated with a face in a CSR format.
@@ -524,7 +526,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SOURCE_MISSING This data is missing from the source
 					 */
 					__attribute__((warn_unused_result))
-					virtual cupcfd::error::eCodes getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, L * vertexLabels, I nVertexLabels) = 0;
+					virtual cupcfd::error::eCodes getVertexCoords(euc::EuclideanPoint<T,3> * vertCoords, I nVertCoords, L * vertexLabels, I nVertexLabels) = 0;
 
 					/**
 					 *

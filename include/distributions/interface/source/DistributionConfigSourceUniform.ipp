@@ -34,6 +34,25 @@ namespace cupcfd
 		{
 		
 		}
+		
+		// === Concrete Methods ===
+		
+		template <class I, class T>
+		cupcfd::error::eCodes DistributionConfigSourceUniform<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig) {
+			cupcfd::error::eCodes status;
+			
+			T lBound, uBound;
+			
+			status = this->getLBound(&lBound);
+			CHECK_ECODE(status)
+			
+			status = this->getUBound(&uBound);
+			CHECK_ECODE(status)
+					
+			*distConfig = new DistributionConfigUniform<I,T>(lBound, uBound);
+			
+			return cupcfd::error::E_SUCCESS;
+		}
 	}
 }
 

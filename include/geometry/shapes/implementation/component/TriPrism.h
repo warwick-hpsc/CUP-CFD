@@ -19,6 +19,7 @@
 #include "Polyhedron.h"
 #include "Triangle3D.h"
 
+namespace euc = cupcfd::geometry::euclidean;
 namespace shapes = cupcfd::geometry::shapes;
 
 namespace cupcfd
@@ -30,9 +31,8 @@ namespace cupcfd
 			/**
 			 * Class for storing TriPrism data.
 			 *
-			 * ToDo: Currently presumes that the non-triangular faces
-			 * have normals in the same plane and does not handle truncated prisms
-			 * (i.e. the top and bottom triangular faces are parallel)
+			 * ToDo: Generalise class, to accept any two identical Polygons as faces, 
+			 *       not just triangles.
 			 *
 			 * @tparam T Numerical type
 			 *
@@ -50,7 +50,8 @@ namespace cupcfd
 					// === Constructors/Deconstructors ===
 
 					/**
-					 * Construct a Triprism from the provided vertices
+					 * Construct a Triprism from the provided vertices. Assumes that 
+					 * edge exists between vertex i of Top and vertex i of Bottom.
 					 *
 					 * @param top Top Triangle
 					 * @param bottom Bottom Triangle
@@ -72,7 +73,7 @@ namespace cupcfd
 					 * @return Return true if the point exists inside this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointInside(euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on an edge of the polyhedron
@@ -82,7 +83,7 @@ namespace cupcfd
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on a vertex of the polyhedron
@@ -92,10 +93,23 @@ namespace cupcfd
 					 * @return Return true if the point is on an edge of this polyhedron
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					inline bool isPointOnVertex(const euc::EuclideanPoint<T,3>& point);
 
-				// protected:
+					/**
+					 * Return volume of TriPrisim, calculating if not known
+					 *
+					 * @return TriPrisim volume
+					 */
+					T getVolume();
 
+					/**
+					 * Return centroid of TriPrisim, calculating if not known
+					 *
+					 * @return TriPrisim centroid
+					 */
+					euc::EuclideanPoint<T,3> getCentroid();
+
+				protected:
 					/**
 					 * Compute the volume of this polyhedron
 					 *
@@ -110,7 +124,7 @@ namespace cupcfd
 					 * @return The computed centroid
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					euc::EuclideanPoint<T,3> computeCentroid();
 
 			};
 		}

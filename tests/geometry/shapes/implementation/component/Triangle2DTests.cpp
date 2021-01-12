@@ -32,8 +32,7 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
 
 	Triangle2D<double> shape(p1, p2, p3);
 
-	BOOST_CHECK_EQUAL(shape.nVertices, 3);
-	BOOST_CHECK_EQUAL(shape.nEdges, 3);
+	BOOST_CHECK_EQUAL(shape.numVertices, 3);
 	BOOST_CHECK_EQUAL(shape.vertices[0].cmp[0], p1.cmp[0]);
 	BOOST_CHECK_EQUAL(shape.vertices[0].cmp[1], p1.cmp[1]);
 	BOOST_CHECK_EQUAL(shape.vertices[1].cmp[0], p2.cmp[0]);
@@ -52,8 +51,7 @@ BOOST_AUTO_TEST_CASE(constructor_test2, * utf::tolerance(0.00001))
 	Triangle2D<double> shape(p1, p2, p3);
 	Triangle2D<double> shape2(shape);
 
-	BOOST_CHECK_EQUAL(shape2.nVertices, 3);
-	BOOST_CHECK_EQUAL(shape2.nEdges, 3);
+	BOOST_CHECK_EQUAL(shape2.numVertices, 3);
 	BOOST_CHECK_EQUAL(shape2.vertices[0].cmp[0], p1.cmp[0]);
 	BOOST_CHECK_EQUAL(shape2.vertices[0].cmp[1], p1.cmp[1]);
 	BOOST_CHECK_EQUAL(shape2.vertices[1].cmp[0], p2.cmp[0]);
@@ -197,30 +195,16 @@ BOOST_AUTO_TEST_CASE(isPointInsideBarycentric_static_test9, * utf::tolerance(0.0
 	BOOST_CHECK_EQUAL(inside, true);
 }
 
-// === computeCentroid (static) ===
-// Test 1: Correctly compute the center from three points
+// === getCentroid ===
+// Test 1: Correctly compute the center for the triangles points
 BOOST_AUTO_TEST_CASE(computeCenter_test1, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
 	euc::EuclideanPoint<double,2> p2(4.0, 12.0);
 	euc::EuclideanPoint<double,2> p3(3.3, 15.0);
 
-	cupcfd::geometry::euclidean::EuclideanPoint<double,2> center = Triangle2D<double>::computeCentroid(p1, p2, p3);
-
-	BOOST_TEST(center.cmp[0] == 3.433333);
-	BOOST_TEST(center.cmp[1] == 10.333333);
-}
-
-// === computeCentroid (nonstatic) ===
-// Test 1: Correctly compute the center for the triangles points
-BOOST_AUTO_TEST_CASE(computeCenter_test2, * utf::tolerance(0.00001))
-{
-	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
-	euc::EuclideanPoint<double,2> p2(4.0, 12.0);
-	euc::EuclideanPoint<double,2> p3(3.3, 15.0);
-
 	Triangle2D<double> shape(p1,p2,p3);
-	cupcfd::geometry::euclidean::EuclideanPoint<double,2> center = shape.computeCentroid();
+	cupcfd::geometry::euclidean::EuclideanPoint<double,2> center = shape.getCentroid();
 	BOOST_TEST(center.cmp[0] == 3.433333);
 	BOOST_TEST(center.cmp[1] == 10.333333);
 }
@@ -378,9 +362,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test9, * utf::tolerance(0.00001))
 	BOOST_CHECK_EQUAL(inside, true);
 }
 
-// === computeArea ===
+// === getArea ===
 // Test 1: Test the area is computed correctly - 2D
-BOOST_AUTO_TEST_CASE(computeArea_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test1, * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
@@ -389,12 +373,12 @@ BOOST_AUTO_TEST_CASE(computeArea_test1, * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle2D<double> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 1.2);
 }
 
 // Test 2: Test the area is computed correctly - 2D
-BOOST_AUTO_TEST_CASE(computeArea_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getArea_test2, * utf::tolerance(0.00001))
 {
 	// Setup
 	euc::EuclideanPoint<double,2> p1(3.0, 4.0);
@@ -403,6 +387,6 @@ BOOST_AUTO_TEST_CASE(computeArea_test2, * utf::tolerance(0.00001))
 
 	// Test and Check
 	Triangle2D<double> shape(p1, p2, p3);
-	double area = shape.computeArea();
+	double area = shape.getArea();
 	BOOST_TEST(area == 12.0);
 }

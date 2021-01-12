@@ -30,6 +30,7 @@
 #define CUPCFD_FVM_UVW_INCLUDE_H
 
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "UnstructuredMeshInterface.h"
 
 namespace cupcfd

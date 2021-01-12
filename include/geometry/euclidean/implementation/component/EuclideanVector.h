@@ -60,17 +60,11 @@ namespace cupcfd
 
 					/**
 					 * Default constructor. Sets all vector values to zero.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
 					EuclideanVector();
 
 					/**
 					 * Constructor. Sets all vector values to the scalar.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
 					EuclideanVector(T scalar);
 
@@ -78,18 +72,12 @@ namespace cupcfd
 					 * Constructor. Sets the components to matching values of the provided params
 					 *
 					 * @param src A list of parameters to initialise the vector components
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
 					template<class...Args>
 					EuclideanVector(Args...src);
 
 					/**
 					 * Default Deconstructor
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
 					~EuclideanVector();
 
@@ -102,9 +90,6 @@ namespace cupcfd
 					 *
 					 * @param source The source vector to copy from
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return Nothing
 					 */
 					inline void operator=(const EuclideanVector<T,N>& source);
@@ -113,9 +98,6 @@ namespace cupcfd
 					 * Sets each component of this vector to the scalar value
 					 *
 					 * @param scalar The value to set each vector component to
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return Nothing
 					 */
@@ -126,9 +108,6 @@ namespace cupcfd
 					 *
 					 * @param source The source vector to add
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return Nothing
 					 */
 					inline void operator+=(const EuclideanVector<T,N>& source);
@@ -137,9 +116,6 @@ namespace cupcfd
 					 * Adds the scalar value to each component of this vector
 					 *
 					 * @param scalar The value to add to all three components
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return Nothing
 					 */
@@ -150,9 +126,6 @@ namespace cupcfd
 					 *
 					 * @param source The source vector to multiply with
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return Nothing
 					 */
 					inline void operator*=(const EuclideanVector<T,N>& source);
@@ -161,9 +134,6 @@ namespace cupcfd
 					 * Multiply the scalar value with each component of this vector, overwriting this vector
 					 *
 					 * @param scalar The value to multiply with all three components
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return Nothing
 					 */
@@ -178,23 +148,15 @@ namespace cupcfd
 					 *
 					 * @param cmpVec This vector to compare against
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return Whether the vectors have equal components
-					 * @retval true Each vector has the same dimensional values
-					 * @retval false One or more dimensional values differ between the vectors
+					 * @return Return true if the vectors have equal components
 					 */
-					inline bool operator==(const EuclideanVector<T,N>& cmpVec);
+					inline bool operator==(const EuclideanVector<T,N>& cmpVec) const;
 
 					/**
 					 * Add the two vectors together to obtain the vector that is the combination of the two
 					 *
 					 * @param vec1 The first source vector to add
 					 * @param vec2 The second source vector to add
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return The combined vector
 					 */
@@ -217,9 +179,6 @@ namespace cupcfd
 					 * @param vec The source vector
 					 * @param scalar The scalar to add
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector with the scalar added
 					 */
 					__attribute__((warn_unused_result))
@@ -240,9 +199,6 @@ namespace cupcfd
 					 *
 					 * @param vec The source vector
 					 * @param scalar The scalar to add
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return The vector with the scalar added
 					 */
@@ -265,9 +221,6 @@ namespace cupcfd
 					 * @param vec1 The vector to subtract from
 					 * @param vec2 The vector to subtract
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The displacement vector that is vec1 - vec2
 					 */
 					__attribute__((warn_unused_result))
@@ -288,9 +241,6 @@ namespace cupcfd
 					 *
 					 * @param vec The source vector
 					 * @param scalar The scalar to subtract
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return The vector with the scalar subtracted
 					 */
@@ -313,9 +263,6 @@ namespace cupcfd
 					 * @param vec The source vector
 					 * @param scalar The scalar to subtract
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector with the scalar subtracted
 					 */
 					__attribute__((warn_unused_result))
@@ -337,9 +284,6 @@ namespace cupcfd
 					 * @param vec The source vector
 					 * @param scalar The scalar to multiply by
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector scaled up by the scalar multiplier
 					 */
 					friend inline EuclideanVector<T,N> operator*(const EuclideanVector<T,N>& vec, T scalar)
@@ -359,9 +303,6 @@ namespace cupcfd
 					 *
 					 * @param vec The source vector
 					 * @param scalar The scalar to multiply by
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return The vector scaled up by the scalar multiplier
 					 */
@@ -384,9 +325,6 @@ namespace cupcfd
 					 * @param vec The source vector
 					 * @param scalar The scalar to divide by
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector divided up by the scalar
 					 */
 					__attribute__((warn_unused_result))
@@ -408,9 +346,6 @@ namespace cupcfd
 					 * @param vec The source vector
 					 * @param scalar The scalar to divide by
 					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
 					 * @return The vector divided up by the scalar
 					 */
 					__attribute__((warn_unused_result))
@@ -430,43 +365,17 @@ namespace cupcfd
 					 * Compute the dot-product of this vector and another vector
 					 *
 					 * @param vec The vector to compute the dot-product against
-					 * @param scalar A pointer to the location where the dot-product result will be stored
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-					 */
-					// __attribute__((warn_unused_result))
-					// cupcfd::error::eCodes dotProduct(const EuclideanVector<T,N>& vec, T * scalar);
-
-					/**
-					 * Compute the dot-product of this vector and another vector
-					 *
-					 * @param vec The vector to compute the dot-product against
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return The dot-product
 					 */
 					__attribute__((warn_unused_result))
-					T dotProduct(const EuclideanVector<T,N>& vec);
-
-
-					// ToDo: Specify float/double explicitly since length will always be floating-point, even
-					// for integer systems
-					// Can we add an extra template type for this to reduce code repetition?
+					T dotProduct(const EuclideanVector<T,N>& vec) const;
 
 					// ToDo: Could rename this from length to norm
 					/**
 					 * Compute the distance covered by this vector
 					 *
 					 * @param length A pointer to the location updated by the function to contain the distance of the vector.
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 *
 					 * @return length
 					 */
@@ -477,9 +386,6 @@ namespace cupcfd
 					 * Compute the normalised (length 1 in same direction) vector of an input vector.
 					 * This method updates the vector in place, meaning that the result are only valid
 					 * for floating-type vectors (since the value will lie between 0 and 1)
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
 					void normalise();
 
@@ -490,11 +396,8 @@ namespace cupcfd
 					 *
 					 * @param result A referenced vector object that will have its values modified to the
 					 * normalised vector
-					 *
-					 * @tparam T The data type of the coordinate system
-					 * @tparam N The dimension of the coordinate space (e.g. 2 for 2D, 3 for 3D...)
 					 */
-					void normalise(cupcfd::geometry::euclidean::EuclideanVector<T,N>& result);
+					void normalise(EuclideanVector<T,N>& result);
 
 
 					/**
@@ -504,7 +407,7 @@ namespace cupcfd
 					 * @return An orthagonal vector.
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::geometry::euclidean::EuclideanVector<T,N> computeOrthagonalVector();
+					EuclideanVector<T,N> computeOrthagonalVector();
 
 
 					/**
@@ -512,12 +415,10 @@ namespace cupcfd
 					 *
 					 * @param cmpVec The vector to compare against
 					 *
-					 * @return Whether the vector is parallel or not
-					 * @retval true The vectors are parallel
-					 * @retval false The vectors are not parallel
+					 * @return Return true if the vector is parallel
 					 */
 					__attribute__((warn_unused_result))
-					inline bool isParallel(EuclideanVector<T,N>& b);
+					inline bool isParallel(const EuclideanVector<T,N>& b) const;
 
 					/**
 					 * Print point data to stdout, useful for debugging
@@ -550,145 +451,11 @@ namespace cupcfd
 			 * @param b Second point
 			 * @param c Third point
 			 *
-			 * @tparam T The datatype of the points
-			 * @tparam N The dimensionality of the points
-			 *
-			 * @return A bool indiciating whether they are colinear or not
-			 * @retval true They are colinear
-			 * @retval false They are not colinear
+			 * @return Return true if they are colinear
 			 */
 			template <class T, unsigned int N>
 			__attribute__((warn_unused_result))
 			bool colinearPoints(EuclideanPoint<T,N> a, EuclideanPoint<T,N> b, EuclideanPoint<T,N> c);
-
-			/**
-			 * Compute the vector that is the cross product of this vector and another vector.
-			 * This is currently only defined for 3D Vectors, so is not a class function
-			 *
-			 * @param vec The vector to compute the cross product against
-			 *
-			 * @tparam T The data type of the coordinate system
-			 *
-			 * @return The cross-product vector
-			 */
-			template <class T>
-			__attribute__((warn_unused_result))
-			EuclideanVector<T,3> crossProduct(const EuclideanVector<T,3>& vec1, const EuclideanVector<T,3>& vec2);
-
-			/**
-			 * Rotate a 3D vector some amount of radians about the X axis.
-			 * Vector is updated in-place.
-			 *
-			 * @param radian The number of radians to rotate.
-			 * Positive: If Facing from negative to positive on X-Axis, goes anti-clockwise
-			 * Negative: If Facing from negative to positive on X-Axis, goes clockwise
-			 * @param vec The vector to rotate
-			 *
-			 * @return Nothing
-			 */
-			template <class T>
-			inline void rotateXAxisRadian(T radian, EuclideanVector<T,3>& vec);
-
-			/**
-			 * Rotate a 3D vector some amount of radians about the Y axis.
-			 * Vector is updated in-place.
-			 *
-			 * @param radian The number of radians to rotate.
-			 * Positive: If Facing from negative to positive on Y-Axis, goes anti-clockwise
-			 * Negative: If Facing from negative to positive on Y-Axis, goes clockwise
-			 * @param vec The vector to rotate
-			 *
-			 * @return Nothing
-			 */
-			template <class T>
-			inline void rotateYAxisRadian(T radian, EuclideanVector<T,3>& vec);
-
-			/**
-			 * Rotate a 3D vector some amount of radians about the Z axis
-			 * Vector is updated in-place.
-			 *
-			 * @param radian The number of radians to rotate.
-			 * Positive: If Facing from negative to positive on Z-Axis, goes anti-clockwise
-			 * Negative: If Facing from negative to positive on Z-Axis, goes clockwise
-			 * @param vec The vector to rotate
-			 *
-			 * @return Nothing
-			 */
-			template <class T>
-			inline void rotateZAxisRadian(T radian,  EuclideanVector<T,3>& vec);
-
-			/**
-			 * Compute whether two vectors intersect with one another between the provided points in 3D space.
-			 *
-			 * If the vectors are colinear and overlap in the point range (partially or fully), this is considered as intersecting.
-			 *
-			 * If the vectors are not coplanar, they are not considered as intersecting (they must meet in all three dimensions)
-			 *
-			 * If the lines would intersect, but the intersection point is not in both of the ranges of x1->x2 and x3->x4, they
-			 * are not considered as intersecting
-			 *
-			 * @param x1 The origin point of the first vector
-			 * @param x2 The destination point of the first vector
-			 * @param x3 The origin point of the second vector
-			 * @param x4 The destination point of the second vector
-			 *
-			 * @tparam T The data type of the coordinate system
-			 *
-			 * @return Whether the vectors intersect or not
-			 * @retval true The vectors intersect
-			 * @retval false The vectors do not intersect, or they intersect outside the range of the points.
-			 */
-			template <class T>
-			__attribute__((warn_unused_result))
-			inline bool isVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-											 	const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4);
-
-
-			/**
-			 * Compute the intersect of two lines defined by a range in 3D space, if it exists
-			 *
-			 * If the vectors are colinear and overlap in the point range (partially or fully), this is considered as intersecting.
-			 *
-			 * If the vectors are not coplanar, they are not considered as intersecting (they must meet in all three dimensions)
-			 *
-			 * If the lines would intersect, but the intersection point is not in both of the ranges of x1->x2 and x3->x4, they
-			 * are not considered as intersecting
-			 *
-			 * @param x1 The origin point of the first vector
-			 * @param x2 The destination point of the first vector
-			 * @param x3 The origin point of the second vector
-			 * @param x4 The destination point of the second vector
-			 * @param intersectPoint A reference to the point object that will be overwritten with the result, if it exists
-			 *
-			 * @tparam T The data type of the coordinate system
-			 *
-			 * @return An error status indicating the success or failure of the operation
-			 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-			 * @retval cupcfd::error::E_GEOMETRY_NO_INTERSECT No intersection exists
-			 */
-			template <class T>
-			__attribute__((warn_unused_result))
-			inline cupcfd::error::eCodes computeVectorRangeIntersection(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2, 
-																		const EuclideanPoint<T,3>& x3, const EuclideanPoint<T,3>& x4, 
-																		EuclideanPoint<T,3>& intersectPoint);
-
-			/**
-			 * Test whether a point lies on a 3D line delinated by two other points
-			 *
-			 * @param x1 The first point of the line
-			 * @param x2 The second point of the line
-			 * @param p The point to test the position of
-			 *
-			 * @tparam T The data type of the coordinate system
-			 *
-			 * @return Whether the vectors intersect or not
-			 * @retval true The vectors intersect
-			 * @retval false The vectors do not intersect, or they intersect outside the range of the points.
-			 */
-			template <class T>
-			__attribute__((warn_unused_result))
-			inline bool isPointOnLine(const EuclideanPoint<T,3>& x1, const EuclideanPoint<T,3>& x2,
-									  const EuclideanPoint<T,3>& p);
 
 		} // namespace euclidean
 	} // namespace geometry
@@ -698,15 +465,17 @@ namespace cupcfd
 // ToDo: Would like to move friend functions into this file if the compiler errors are fixed.
 #include "EuclideanVector.ipp"
 
-// Explicit instantiation declarations of class static variables:
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<float,2>::mpiDataTypeReg;
+namespace euc = cupcfd::geometry::euclidean;
 
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,3>::mpiDataTypeReg;
-extern template MPI_Datatype cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiType;
-extern template bool cupcfd::geometry::euclidean::EuclideanVector<double,2>::mpiDataTypeReg;
+// Explicit instantiation declarations of class static variables:
+extern template MPI_Datatype euc::EuclideanVector<float,3>::mpiType;
+extern template bool euc::EuclideanVector<float,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanVector<float,2>::mpiType;
+extern template bool euc::EuclideanVector<float,2>::mpiDataTypeReg;
+
+extern template MPI_Datatype euc::EuclideanVector<double,3>::mpiType;
+extern template bool euc::EuclideanVector<double,3>::mpiDataTypeReg;
+extern template MPI_Datatype euc::EuclideanVector<double,2>::mpiType;
+extern template bool euc::EuclideanVector<double,2>::mpiDataTypeReg;
 
 #endif

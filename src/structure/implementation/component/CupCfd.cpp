@@ -94,7 +94,7 @@ namespace cupcfd
 						else {
 							// Run Benchmark
 							status = fvmBench->runBenchmark();
-							CHECK_ECODE(status);
+							HARD_CHECK_ECODE(status);
 							delete(fvmBench);
 						}
 
@@ -125,7 +125,7 @@ namespace cupcfd
 						}
 						else {
 							status = exchangeBench->runBenchmark();
-							CHECK_ECODE(status)
+							HARD_CHECK_ECODE(status)
 							delete(exchangeBench);
 						}
 
@@ -157,7 +157,7 @@ namespace cupcfd
 						}
 						else {
 							status = linearSolverBench->runBenchmark();
-							CHECK_ECODE(status)
+							HARD_CHECK_ECODE(status)
 							delete(linearSolverBench);
 						}
 
@@ -190,7 +190,7 @@ namespace cupcfd
 						}
 						else {
 							status = benchmarkParticleSystem->runBenchmark();
-							CHECK_ECODE(status)
+							HARD_CHECK_ECODE(status)
 							delete(benchmarkParticleSystem);
 						}
 

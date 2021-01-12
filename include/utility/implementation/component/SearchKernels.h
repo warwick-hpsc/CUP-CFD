@@ -16,6 +16,8 @@
 #ifndef CUPCFD_UTILITY_SEARCH_KERNELS_INCLUDE_H
 #define CUPCFD_UTILITY_SEARCH_KERNELS_INCLUDE_H
 
+#include "Error.h"
+
 namespace cupcfd
 {
  	namespace utility

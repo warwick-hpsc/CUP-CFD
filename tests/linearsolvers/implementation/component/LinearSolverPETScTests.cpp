@@ -47,13 +47,16 @@ BOOST_AUTO_TEST_CASE(constructor_test1)
 	// Create a simple SparseMatrix
 	cupcfd::data_structures::SparseMatrixCOO<int, double> matrix(8, 8, 0);
 
+	cupcfd::error::eCodes status;
+
 	int rows[13] = {0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 6, 7};
 	int cols[13] = {0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7};
 	double vals[13] = {0.1, 0.2, 0.1, 0.05, 0.07, 0.09, 0.06, 0.1, 0.15, 0.23, 0.11, 0.13, 0.09};
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -92,6 +95,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+	cupcfd::error::eCodes status;
+
 	// Create a simple SparseMatrix
 	cupcfd::data_structures::SparseMatrixCOO<int, double> matrix(8, 8, 0);
 
@@ -103,7 +108,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -114,7 +120,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -125,7 +132,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -136,7 +144,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -188,7 +197,8 @@ BOOST_AUTO_TEST_CASE(resetVectorX_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -200,8 +210,7 @@ BOOST_AUTO_TEST_CASE(resetVectorX_test1)
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and Check
-	status = solver.resetVectorX();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	solver.resetVectorX();
 
 	if(solver.x != PETSC_NULL)
 	{
@@ -228,7 +237,8 @@ BOOST_AUTO_TEST_CASE(resetVectorB_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -240,8 +250,7 @@ BOOST_AUTO_TEST_CASE(resetVectorB_test1)
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and Check
-	status = solver.resetVectorB();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	solver.resetVectorB();
 
 	if(solver.b != PETSC_NULL)
 	{
@@ -267,7 +276,8 @@ BOOST_AUTO_TEST_CASE(resetMatrixA_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -278,8 +288,7 @@ BOOST_AUTO_TEST_CASE(resetMatrixA_test1)
 	status = solver.setup(matrix);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
-	status = solver.resetMatrixA();
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	solver.resetMatrixA();
 }
 
 // ============== setupVectorX ===================
@@ -298,7 +307,8 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -308,6 +318,7 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test1)
 
 	// Test and Check
 	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Workaround - seems OK to compare these in C++,
 	// but BOOST doesn't like making the comparison
@@ -318,8 +329,6 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test1)
 
 	PetscInt cmp[2] = {0, 8};
 	BOOST_CHECK_EQUAL_COLLECTIONS(cmp, cmp + 2, solver.xRanges, solver.xRanges + 2);
-
-	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 // Test 2: Check Vector is created if a suitable row size is set - parallel
@@ -339,7 +348,8 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -350,7 +360,8 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -361,7 +372,8 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -372,7 +384,8 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -383,6 +396,7 @@ BOOST_AUTO_TEST_CASE(setupVectorX_test2)
 
 	// Test and Check
 	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Workaround - seems OK to compare these in C++,
 	// but BOOST doesn't like making the comparison
@@ -414,7 +428,8 @@ BOOST_AUTO_TEST_CASE(setupVectorB_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -456,7 +471,8 @@ BOOST_AUTO_TEST_CASE(setupVectorB_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -467,7 +483,8 @@ BOOST_AUTO_TEST_CASE(setupVectorB_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -478,7 +495,8 @@ BOOST_AUTO_TEST_CASE(setupVectorB_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -489,7 +507,8 @@ BOOST_AUTO_TEST_CASE(setupVectorB_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -533,7 +552,8 @@ BOOST_AUTO_TEST_CASE(setupMatrixA_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -571,7 +591,8 @@ BOOST_AUTO_TEST_CASE(setupMatrixA_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -582,7 +603,8 @@ BOOST_AUTO_TEST_CASE(setupMatrixA_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -593,7 +615,8 @@ BOOST_AUTO_TEST_CASE(setupMatrixA_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -604,7 +627,8 @@ BOOST_AUTO_TEST_CASE(setupMatrixA_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -642,7 +666,8 @@ BOOST_AUTO_TEST_CASE(setup_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -676,7 +701,8 @@ BOOST_AUTO_TEST_CASE(setup_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -687,7 +713,8 @@ BOOST_AUTO_TEST_CASE(setup_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -698,7 +725,8 @@ BOOST_AUTO_TEST_CASE(setup_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -709,7 +737,8 @@ BOOST_AUTO_TEST_CASE(setup_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -747,13 +776,15 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorX(2.5);
@@ -785,7 +816,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -796,7 +828,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -807,7 +840,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -818,14 +852,17 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorX(2.5);
@@ -856,13 +893,15 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test3)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], matvals[i]);
+		status = matrix.setElement(rows[i], cols[i], matvals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int indices[4] = {2, 5, 3, 7};
 	double vals[4] = {0.5, 0.3, 0.6, 0.1};
@@ -907,7 +946,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test4)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -918,7 +958,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test4)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -929,7 +970,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test4)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -940,14 +982,16 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test4)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Check they are actually local rows
 	PetscInt rangeCmp[5] = {0, 2, 4, 6, 8};
@@ -1044,7 +1088,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test5)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1055,7 +1100,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test5)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1066,7 +1112,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test5)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1077,14 +1124,16 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorX_test5)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Check they are actually local rows
 	PetscInt rangeCmp[5] = {0, 2, 4, 6, 8};
@@ -1193,13 +1242,15 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorB();
+	status = solver.setupVectorB();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorB(2.5);
@@ -1231,7 +1282,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1242,7 +1294,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1253,7 +1306,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1264,14 +1318,16 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorB();
+	status = solver.setupVectorB();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorB(2.5);
@@ -1302,13 +1358,15 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test3)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], matvals[i]);
+		status = matrix.setElement(rows[i], cols[i], matvals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorB();
+	status = solver.setupVectorB();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int indices[4] = {2, 5, 3, 7};
 	double vals[4] = {0.5, 0.3, 0.6, 0.1};
@@ -1353,7 +1411,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test4)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1364,7 +1423,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test4)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1375,7 +1435,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test4)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1386,14 +1447,16 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test4)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorB();
+	status = solver.setupVectorB();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Check they are actually local rows
 	PetscInt rangeCmp[5] = {0, 2, 4, 6, 8};
@@ -1490,7 +1553,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test5)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1501,7 +1565,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test5)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1512,7 +1577,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test5)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1523,14 +1589,16 @@ BOOST_AUTO_TEST_CASE(set_getValuesVectorB_test5)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorB();
+	status = solver.setupVectorB();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Check they are actually local rows
 	PetscInt rangeCmp[5] = {0, 2, 4, 6, 8};
@@ -1637,7 +1705,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesMatrixA_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -1681,7 +1750,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesMatrixA_test1)
 	for(int i = 0; i < 8; i++)
 	{
 		// Set the values so they register as 'non-zero' for copies
-		resultMatrix.setElement(resultRows[i], resultCols[i], 0.0);
+		status = resultMatrix.setElement(resultRows[i], resultCols[i], 0.0);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	// Setup the Matrix
@@ -1700,7 +1770,8 @@ BOOST_AUTO_TEST_CASE(set_getValuesMatrixA_test1)
 	for(int i = 0; i < 64; i++)
 	{
 		double val;
-		resultMatrix.getElement(resultRowsCmp[i], resultColsCmp[i], &val);
+		status = resultMatrix.getElement(resultRowsCmp[i], resultColsCmp[i], &val);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL(resultValsCmp[i], val);
 	}
 }
@@ -1727,13 +1798,15 @@ BOOST_AUTO_TEST_CASE(clearVectorX_test1)
 
 	for(int i = 0; i < 13; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorX(2.5);
@@ -1774,7 +1847,8 @@ BOOST_AUTO_TEST_CASE(clearVectorX_test2)
 
 		for(int i = 0; i < 5; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1785,7 +1859,8 @@ BOOST_AUTO_TEST_CASE(clearVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1796,7 +1871,8 @@ BOOST_AUTO_TEST_CASE(clearVectorX_test2)
 
 		for(int i = 0; i < 3; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1807,14 +1883,16 @@ BOOST_AUTO_TEST_CASE(clearVectorX_test2)
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
 
 	// Setup
-	solver.setupVectorX();
+	status = solver.setupVectorX();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	// Test and check
 	status = solver.setValuesVectorX(2.5);
@@ -1850,7 +1928,8 @@ BOOST_AUTO_TEST_CASE(solve_test1, * utf::tolerance(0.00001))
 
 	for(int i = 0; i < 8; i++)
 	{
-		matrix.setElement(rows[i], cols[i], vals[i]);
+		status = matrix.setElement(rows[i], cols[i], vals[i]);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 
 	LinearSolverPETSc<cupcfd::data_structures::SparseMatrixCOO<int, double>, int, double> solver(comm, PETSC_KSP_CGAMG, 1E-6, 1E-6, matrix);
@@ -1903,7 +1982,8 @@ BOOST_AUTO_TEST_CASE(solve_test2, * utf::tolerance(0.00001))
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -1914,7 +1994,8 @@ BOOST_AUTO_TEST_CASE(solve_test2, * utf::tolerance(0.00001))
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -1925,7 +2006,8 @@ BOOST_AUTO_TEST_CASE(solve_test2, * utf::tolerance(0.00001))
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -1936,7 +2018,8 @@ BOOST_AUTO_TEST_CASE(solve_test2, * utf::tolerance(0.00001))
 
 		for(int i = 0; i < 2; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -1991,7 +2074,8 @@ BOOST_AUTO_TEST_CASE(solve_test3, * utf::tolerance(0.00001))
 
 		for(int i = 0; i < 8; i++)
 		{
-			matrix.setElement(rows[i], cols[i], vals[i]);
+			status = matrix.setElement(rows[i], cols[i], vals[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 

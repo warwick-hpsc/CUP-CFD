@@ -73,7 +73,7 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorX() {
+		void LinearSolverPETSc<C,I,T>::resetVectorX() {
 			if(this->x != PETSC_NULL) {
 				VecDestroy(&(this->x));
 				this->x = PETSC_NULL;
@@ -85,13 +85,11 @@ namespace cupcfd
 				// that PETSc has freed it, in which case we just set this to nullptr.
 				this->xRanges = nullptr;
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetVectorB() {
+		void LinearSolverPETSc<C,I,T>::resetVectorB() {
 			if(this->b != PETSC_NULL) {
 				VecDestroy(&(this->b));
 				this->b = PETSC_NULL;
@@ -103,12 +101,10 @@ namespace cupcfd
 				// that PETSc has freed it, in which case we just set this to nullptr.
 				this->bRanges = nullptr;
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::resetMatrixA() {
+		void LinearSolverPETSc<C,I,T>::resetMatrixA() {
 			if(this->a != PETSC_NULL) {
 				MatDestroy(&(this->a));
 				this->a = PETSC_NULL;
@@ -122,8 +118,6 @@ namespace cupcfd
 				// otherwise this would be a memory leak.
 				this->aRanges = nullptr;
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 
@@ -320,22 +314,10 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::reset() {
-			cupcfd::error::eCodes status;
-
-			// Reset Vector X
-			status = this->resetVectorX();
-			CHECK_ECODE(status)
-
-			// Reset Vector B
-			status = this->resetVectorB();
-			CHECK_ECODE(status)
-
-			// Reset Matrix A
-			status = this->resetMatrixA();
-			CHECK_ECODE(status)
-
-			return cupcfd::error::E_SUCCESS;
+		void LinearSolverPETSc<C,I,T>::reset() {
+			this->resetVectorX();
+			this->resetVectorB();
+			this->resetMatrixA();
 		}
 
 		// === Pure Virtual Inherited Methods ===
@@ -343,12 +325,10 @@ namespace cupcfd
 
 		template <class C, class I, class T>
 		cupcfd::error::eCodes LinearSolverPETSc<C,I,T>::setupVectorX() {
-			cupcfd::error::eCodes status;
 			PetscErrorCode err;
 
 			// Reset any current vectors
-			status = this->resetVectorX();
-			CHECK_ECODE(status)
+			this->resetVectorX();
 
 			if(this->comm.size == 1) {
 				// === Comm Size is set to 1 - Serial Linear Solver ===

@@ -12,6 +12,8 @@
  * Definitions for the ParticleEmitterSimple Class
  */
 
+#include "EuclideanVector3D.h"
+
 #include "ParticleEmitterSimple.h"
 #include "Polyhedron.h"
 #include "Distribution.h"
@@ -175,19 +177,22 @@ namespace cupcfd
 
 			// Generate each particle
 			for(I i = 0; i < *nParticles; i++) {
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> velocity(T(1),T(0),T(0));
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> acceleration(accelerationX[i],accelerationY[i],accelerationZ[i]);
-				cupcfd::geometry::euclidean::EuclideanVector<T,3> jerk(jerkX[i],jerkY[i],jerkZ[i]);
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> velocity(T(1),T(0),T(0));
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> acceleration(accelerationX[i],accelerationY[i],accelerationZ[i]);
+				cupcfd::geometry::euclidean::EuclideanVector3D<T> jerk(jerkX[i],jerkY[i],jerkZ[i]);
 
 				// Build some velocity vectors from the speed + angles
 				// Angle unit vector on XY plane
-				rotateZAxisRadian(angleXY[i], velocity);
+				velocity.rotateZAxisRadian(angleXY[i]);
 
 				// Rotate Vector into/out of Z plane
-				rotateYAxisRadian(angleRotation[i], velocity);
+				velocity.rotateYAxisRadian(angleRotation[i]);
 
 				// Adjust the length of the vector to match the provided speed
 				T length = velocity.length();
+				if (length == T(0)) {
+					return cupcfd::error::E_GEOMETRY_LOGIC_ERROR;
+				}
 				velocity = (speed[i]/length) * velocity;
 
 				(*particles)[i] = ParticleSimple<I,T>(

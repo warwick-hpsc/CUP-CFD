@@ -57,7 +57,9 @@ if ( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
   elseif ("${COMPILER}" STREQUAL "clang")
     #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wno-narrowing -Wno-undefined-var-template -Wno-delete-abstract-non-virtual-dtor -Wno-pointer-bool-conversion -Wno-dynamic-class-memaccess -Werror")
     #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wextra -Wno-narrowing -Wno-undefined-var-template -Wno-delete-abstract-non-virtual-dtor -Wno-pointer-bool-conversion -Wno-dynamic-class-memaccess -Werror")
-    set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wall -Werror")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wall -Wextra -Wunused -Werror")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Weverything -Werror")
+    set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wunused-value -Wunused-parameter -Wunused-variable -Werror")
   elseif ("${COMPILER}" STREQUAL "gnu")
     #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Werror -Wno-narrowing")
     #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Werror -Wno-narrowing -Wunused")
@@ -474,6 +476,10 @@ endif(USE_HDF5)
 set(geometry_source_files
 	src/geometry/euclidean/implementation/component/EuclideanPoint.cpp
 	src/geometry/euclidean/implementation/component/EuclideanVector.cpp
+  src/geometry/euclidean/implementation/component/EuclideanVector2D.cpp
+  src/geometry/euclidean/implementation/component/EuclideanVector3D.cpp
+  src/geometry/euclidean/implementation/component/LineSegment3D.cpp
+  src/geometry/euclidean/implementation/component/Matrix.cpp
 	src/geometry/euclidean/implementation/component/EuclideanPlane3D.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshProperties.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshInterface.cpp
@@ -495,6 +501,7 @@ set(geometry_source_files
 	src/geometry/mesh/implementation/source/MeshSourceFileConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshSourceStructGenConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshConfigSourceJSON.cpp
+  src/geometry/shapes/interface/component/Polygon.cpp
 	src/geometry/shapes/interface/component/Polygon2D.cpp
 	src/geometry/shapes/interface/component/Polygon3D.cpp
 	src/geometry/shapes/implementation/component/Triangle.cpp

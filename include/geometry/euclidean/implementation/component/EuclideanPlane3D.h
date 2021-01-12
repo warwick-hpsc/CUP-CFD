@@ -15,9 +15,8 @@
 
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "Error.h"
-
-namespace euc = cupcfd::geometry::euclidean;
 
 namespace cupcfd
 {
@@ -38,16 +37,16 @@ namespace cupcfd
 					// === Members ==
 
 					/** First distinct member point of plane **/
-					euc::EuclideanPoint<T,3> p1;
+					EuclideanPoint<T,3> p1;
 
 					/** Second distinct member point of plane **/
-					euc::EuclideanPoint<T,3> p2;
+					EuclideanPoint<T,3> p2;
 
 					/** Third distinct member point of plane **/
-					euc::EuclideanPoint<T,3> p3;
+					EuclideanPoint<T,3> p3;
 
 					/** Normal **/
-					// euc::EuclideanVector<T,3> normal;
+					// EuclideanVector<T,3> normal;
 
 					/** Plane Scalar Equation ax + by + cz + d = 0, a coefficient **/
 					T a;
@@ -73,9 +72,9 @@ namespace cupcfd
 					 * @param p2 Point 2 on the plane
 					 * @param p3 Point 3 on the plane
 					 */
-					EuclideanPlane3D(const euc::EuclideanPoint<T,3>& p1,
-									 const euc::EuclideanPoint<T,3>& p2,
-									 const euc::EuclideanPoint<T,3>& p3);
+					EuclideanPlane3D(const EuclideanPoint<T,3>& p1,
+									 const EuclideanPoint<T,3>& p2,
+									 const EuclideanPoint<T,3>& p3);
 
 					/**
 					 * Deconstructor
@@ -83,8 +82,6 @@ namespace cupcfd
 					~EuclideanPlane3D();
 
 					// === Concrete Methods ===
-
-					// void reverseVertexOrdering();
 
 					/**
 					 * Copy the points from the provided plane to this object
@@ -208,7 +205,7 @@ namespace cupcfd
 					 * @return The normal vector of the plane
 					 */
 					__attribute__((warn_unused_result))
-					euc::EuclideanVector<T,3> getNormal();
+					EuclideanVector3D<T> getNormal();
 
 					/**
 					 * Compute the equation of the plane ax + by + cz + d = 0
@@ -234,7 +231,7 @@ namespace cupcfd
 					 * @retval false The point does not lie on the plane
 					 */
 					__attribute__((warn_unused_result))
-					bool isPointOnPlane(const euc::EuclideanPoint<T,3>& point);
+					bool isPointOnPlane(const EuclideanPoint<T,3>& point);
 
 
 					/**
@@ -247,7 +244,7 @@ namespace cupcfd
 					 * the normal
 					 */
 					__attribute__((warn_unused_result))
-					euc::EuclideanPoint<T,3> computeProjectedPoint(const euc::EuclideanPoint<T,3>& point);
+					EuclideanPoint<T,3> computeProjectedPoint(const EuclideanPoint<T,3>& point);
 
 					/**
 					 * Test whether a vector is parallel to this plane
@@ -259,7 +256,7 @@ namespace cupcfd
 					 * @retval false The vector path is not parallel to this plane
 					 */
 					__attribute__((warn_unused_result))
-					bool isVectorParallel(const euc::EuclideanVector<T,3>& vec);
+					bool isVectorParallel(const EuclideanVector<T,3>& vec);
 
 					/**
 					 * Test whether the vector is parallel to the plane and exists inside the plane.
@@ -272,8 +269,8 @@ namespace cupcfd
 					 * @retval false The vector is not parallel OR the line does not lie on the plane
 					 */
 					__attribute__((warn_unused_result))
-					bool isVectorParallelInPlane(const euc::EuclideanVector<T,3>& vec,
-												 const euc::EuclideanPoint<T,3>& l0);
+					bool isVectorParallelInPlane(const EuclideanVector<T,3>& vec,
+												 const EuclideanPoint<T,3>& l0);
 
 					/**
 					 * Find the intersection point of a line and a plane, as per https://en.wikipedia.org/wiki/Line-plane_intersection
@@ -289,9 +286,9 @@ namespace cupcfd
 					 * (or will intersect every point if it lies on the plane)
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes linePlaneIntersection(const euc::EuclideanVector<T,3>& l,
-																const euc::EuclideanPoint<T,3>& l0,
-																euc::EuclideanPoint<T,3>& result);
+					cupcfd::error::eCodes linePlaneIntersection(const EuclideanVector<T,3>& l,
+																const EuclideanPoint<T,3>& l0,
+																EuclideanPoint<T,3>& result);
 
 					/**
 					 * Compute the shortest distance (i.e. perpendicular distance) to a point from this plane.
@@ -301,7 +298,7 @@ namespace cupcfd
 					 * @return The shortest distance to the point from the plane.
 					 */
 					__attribute__((warn_unused_result))
-					T shortestDistance(const euc::EuclideanPoint<T,3>& p);
+					T shortestDistance(const EuclideanPoint<T,3>& p);
 
 					// === Static Methods ===
 
@@ -317,34 +314,21 @@ namespace cupcfd
 					 * @return A vector containing the values for the normal vector of this plane
 					 */
 					__attribute__((warn_unused_result))
-					static euc::EuclideanVector<T,3> calculateNormal(const euc::EuclideanPoint<T,3>& p1,
-																	const euc::EuclideanPoint<T,3>& p2,
-																	const euc::EuclideanPoint<T,3>& p3);
+					static EuclideanVector3D<T> calculateNormal(const EuclideanPoint<T,3>& p1,
+																const EuclideanPoint<T,3>& p2,
+																const EuclideanPoint<T,3>& p3);
 
-					/**
-					 * Find the intersection point of a line and a plane, as per https://en.wikipedia.org/wiki/Line-plane_intersection
-					 * This is only applicable when the vector is not parallel to the plane.
-					 *
-					 * @param normal The normal of the intersection plane
-					 * @param p0 A point that lies on the plane
-					 * @param l The vector to test intersection with the plane
-					 * @param l0 A point not on the plane that the vector intersects (i.e. a point on the line following the vector)
-					 * @param result A referenced point object that will be updated to where the vector intersects the plane
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
-					 * @retval cupcfd::error::E_EUC_VEC_PARALLEL The line is parallel with the plane and will never intersect
-					 * (or will intersect every point if it lies on the plane)
-					 */
-					__attribute__((warn_unused_result))
-					static cupcfd::error::eCodes linePlaneIntersection(euc::EuclideanVector<T,3>& normal,
-																		const euc::EuclideanPoint<T,3>& p0,
-																		const euc::EuclideanVector<T,3>& l,
-																		const euc::EuclideanPoint<T,3>& l0,
-																		euc::EuclideanPoint<T,3>& result);
 				protected:
+					EuclideanVector3D<T> normal;
+					EuclideanVector3D<T> normalUnit;
+					bool computedNormal = false;
 
-				private:
+					EuclideanVector3D<T> v2;
+					EuclideanVector3D<T> v2unit;
+					T v2Length;
+
+					// Record last dot-product result for reuse (currently only linePlaneIntersection())
+					T dotP;
 
 			};
 		} // namespace euclidean

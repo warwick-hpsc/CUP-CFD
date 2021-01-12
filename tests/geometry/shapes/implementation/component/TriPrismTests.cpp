@@ -17,6 +17,7 @@
 #include <stdexcept>
 
 #include "TriPrism.h"
+#include "Triangle3D.h"
 #include "EuclideanPoint.h"
 
 using namespace cupcfd::geometry::shapes;
@@ -34,47 +35,49 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> blb(0.0, 0.0, 0.0);
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> brb(5.0, 0.0, 0.0);
 
-	TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	// TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	Triangle3D<double> triTop(tf, trb, tlb);
+	Triangle3D<double> triBottom(bf, blb, brb);
+	TriPrism<double> shape(triTop, triBottom);
 
-	BOOST_CHECK_EQUAL(shape.nVertices, 6);
-	BOOST_CHECK_EQUAL(shape.nFaces, 5);
-	BOOST_CHECK_EQUAL(shape.nEdges, 9);
-	BOOST_TEST(shape.verticesStore[0].cmp[0] == 2.5);
-	BOOST_TEST(shape.verticesStore[0].cmp[1] == 5.0);
-	BOOST_TEST(shape.verticesStore[0].cmp[2] == 12.0);
-	BOOST_TEST(shape.verticesStore[1].cmp[0] == 0.0);
-	BOOST_TEST(shape.verticesStore[1].cmp[1] == 0.0);
-	BOOST_TEST(shape.verticesStore[1].cmp[2] == 12.0);
-	BOOST_TEST(shape.verticesStore[2].cmp[0] == 5.0);
-	BOOST_TEST(shape.verticesStore[2].cmp[1] == 0.0);
-	BOOST_TEST(shape.verticesStore[2].cmp[2] == 12.0);
-	BOOST_TEST(shape.verticesStore[3].cmp[0] == 2.5);
-	BOOST_TEST(shape.verticesStore[3].cmp[1] == 5.0);
-	BOOST_TEST(shape.verticesStore[3].cmp[2] == 0.0);
-	BOOST_TEST(shape.verticesStore[4].cmp[0] == 0.0);
-	BOOST_TEST(shape.verticesStore[4].cmp[1] == 0.0);
-	BOOST_TEST(shape.verticesStore[4].cmp[2] == 0.0);
-	BOOST_TEST(shape.verticesStore[5].cmp[0] == 5.0);
-	BOOST_TEST(shape.verticesStore[5].cmp[1] == 0.0);
-	BOOST_TEST(shape.verticesStore[5].cmp[2] == 0.0);
+	BOOST_TEST(shape.top.vertices[0].cmp[0] == 2.5);
+	BOOST_TEST(shape.top.vertices[0].cmp[0] == 2.5);
+	BOOST_TEST(shape.top.vertices[0].cmp[1] == 5.0);
+	BOOST_TEST(shape.top.vertices[0].cmp[2] == 12.0);
+	BOOST_TEST(shape.top.vertices[2].cmp[0] == 0.0);
+	BOOST_TEST(shape.top.vertices[2].cmp[1] == 0.0);
+	BOOST_TEST(shape.top.vertices[2].cmp[2] == 12.0);
+	BOOST_TEST(shape.top.vertices[1].cmp[0] == 5.0);
+	BOOST_TEST(shape.top.vertices[1].cmp[1] == 0.0);
+	BOOST_TEST(shape.top.vertices[1].cmp[2] == 12.0);
+
+	BOOST_TEST(shape.bottom.vertices[0].cmp[0] == 2.5);
+	BOOST_TEST(shape.bottom.vertices[0].cmp[1] == 5.0);
+	BOOST_TEST(shape.bottom.vertices[0].cmp[2] == 0.0);
+	BOOST_TEST(shape.bottom.vertices[1].cmp[0] == 0.0);
+	BOOST_TEST(shape.bottom.vertices[1].cmp[1] == 0.0);
+	BOOST_TEST(shape.bottom.vertices[1].cmp[2] == 0.0);
+	BOOST_TEST(shape.bottom.vertices[2].cmp[0] == 5.0);
+	BOOST_TEST(shape.bottom.vertices[2].cmp[1] == 0.0);
+	BOOST_TEST(shape.bottom.vertices[2].cmp[2] == 0.0);
 }
 
-// === computeCentroid ===
+// === getCentroid ===
 // Test 1: Correctly compute centroid
-BOOST_AUTO_TEST_CASE(computeCentroid_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getCentroid_test1, * utf::tolerance(0.00001))
 {
 
 }
 
-// === computeVolume ===
+// === getVolume ===
 // Test 1: Correctly compute volume
-BOOST_AUTO_TEST_CASE(computeVolume_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test1, * utf::tolerance(0.00001))
 {
 
 }
 
 // Test 2: Correctly compute volume of oblique triprism
-BOOST_AUTO_TEST_CASE(computeVolume_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test2, * utf::tolerance(0.00001))
 {
 
 }
@@ -175,7 +178,9 @@ BOOST_AUTO_TEST_CASE(isPointOnEdge_test1, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> blb(0.0, 0.0, 0.0);
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> brb(5.0, 0.0, 0.0);
 
-	TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	Triangle3D<double> triTop(tf, trb, tlb);
+	Triangle3D<double> triBottom(bf, blb, brb);
+	TriPrism<double> shape(triTop, triBottom);
 	euc::EuclideanPoint<double, 3> point(1.24, 4.9, 12.0);
 
 	bool onEdge = shape.isPointOnEdge(point);
@@ -192,7 +197,9 @@ BOOST_AUTO_TEST_CASE(isPointOnEdge_test2, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> blb(0.0, 0.0, 0.0);
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> brb(5.0, 0.0, 0.0);
 
-	TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	Triangle3D<double> triTop(tf, trb, tlb);
+	Triangle3D<double> triBottom(bf, blb, brb);
+	TriPrism<double> shape(triTop, triBottom);
 	euc::EuclideanPoint<double, 3> point(4.78, 0.0, 12.0);
 
 	bool onEdge = shape.isPointOnEdge(point);
@@ -211,7 +218,9 @@ BOOST_AUTO_TEST_CASE(isPointOnVertex_test1, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> blb(0.0, 0.0, 0.0);
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> brb(5.0, 0.0, 0.0);
 
-	TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	Triangle3D<double> triTop(tf, trb, tlb);
+	Triangle3D<double> triBottom(bf, blb, brb);
+	TriPrism<double> shape(triTop, triBottom);
 	euc::EuclideanPoint<double, 3> point(4.78, 0.0, 12.0);
 
 	bool onEdge = shape.isPointOnVertex(point);
@@ -229,7 +238,9 @@ BOOST_AUTO_TEST_CASE(isPointOnVertex_test2, * utf::tolerance(0.00001))
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> blb(0.0, 0.0, 0.0);
 	cupcfd::geometry::euclidean::EuclideanPoint<double,3> brb(5.0, 0.0, 0.0);
 
-	TriPrism<double> shape(tf, tlb, trb, bf, blb, brb);
+	Triangle3D<double> triTop(tf, trb, tlb);
+	Triangle3D<double> triBottom(bf, blb, brb);
+	TriPrism<double> shape(triTop, triBottom);
 	euc::EuclideanPoint<double, 3> point(5.0, 0.0, 12.0);
 
 	bool onEdge = shape.isPointOnVertex(point);

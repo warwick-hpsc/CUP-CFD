@@ -99,7 +99,7 @@ BOOST_AUTO_TEST_CASE(sgn_test3)
 // Test 4: Test negative double
 BOOST_AUTO_TEST_CASE(sgn_test4)
 {
-	int val = -4.3;
+	double val = -4.3;
 	int result = sgn(val);
 	BOOST_CHECK_EQUAL(result, -1);
 }
@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(sgn_test4)
 // Test 5: Test zero double
 BOOST_AUTO_TEST_CASE(sgn_test5)
 {
-	int val = 0.0;
+	double val = 0.0;
 	int result = sgn(val);
 	BOOST_CHECK_EQUAL(result, 0);
 }
@@ -115,7 +115,7 @@ BOOST_AUTO_TEST_CASE(sgn_test5)
 // Test 6: Test positive double
 BOOST_AUTO_TEST_CASE(sgn_test6)
 {
-	int val = 4.3;
+	double val = 4.3;
 	int result = sgn(val);
 	BOOST_CHECK_EQUAL(result, 1);
 }
