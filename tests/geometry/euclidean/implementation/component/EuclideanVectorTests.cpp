@@ -1022,6 +1022,7 @@ BOOST_AUTO_TEST_CASE(computeVectorRangeIntersection_test11, * utf::tolerance(0.0
 	EuclideanPoint<double,3> intersectPoint;
 
 	cupcfd::error::eCodes status = cupcfd::geometry::euclidean::computeVectorRangeIntersection(x1, x2, x3, x4, intersectPoint);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_TEST(intersectPoint.cmp[0] == 3.0);
 	BOOST_TEST(intersectPoint.cmp[1] == 4.0);
 	BOOST_TEST(intersectPoint.cmp[2] == 5.0);
@@ -1294,13 +1295,15 @@ BOOST_AUTO_TEST_CASE(MPIVectorBroadcast)
 		EuclideanVector<double,3> vecs[2] = {EuclideanVector<double,3>(3.5, 6.3, 19.7),
 											 EuclideanVector<double,3>(3.0, 4.5, 6.7)};
 
-		cupcfd::comm::Broadcast(vecs, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(vecs, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else
 	{
 		EuclideanVector<double,3> recvVecs[2];
 
-		cupcfd::comm::Broadcast(recvVecs, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(recvVecs, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_CHECK_EQUAL(recvVecs[0].cmp[0], 3.5);
 		BOOST_CHECK_EQUAL(recvVecs[0].cmp[1], 6.3);

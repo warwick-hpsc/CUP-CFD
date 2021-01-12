@@ -50,17 +50,7 @@ namespace cupcfd
  				// (2) Array is sorted. Run binarySearch kernel.
  				// ================================================================
  				// status = cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
- 				cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
-
- 				 // ===============================================================
- 				// (3) Check whether value was found in binarySearch kernel.
- 				// ================================================================
-
- 				if(*index == -1) {
-					return cupcfd::error::E_SEARCH_NOT_FOUND;
- 				} else {
-					return cupcfd::error::E_SEARCH_SUCCESS;
- 				}
+ 				return cupcfd::utility::kernels::binarySearch(source, nEle, target, index);
  			}
 
 		} // namespace drivers

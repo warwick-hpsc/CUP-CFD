@@ -50,7 +50,8 @@ BOOST_AUTO_TEST_CASE(getMeshSourceConfig_test1)
 	cupcfd::error::eCodes status;
 
 	MeshSourceConfig<int,double,int> * meshSourceConfig;
-	configFile.getMeshSourceConfig(&meshSourceConfig);
+	status = configFile.getMeshSourceConfig(&meshSourceConfig);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	if(meshSourceConfig == nullptr) {
 		// Don't want nullptr's
 		BOOST_CHECK_EQUAL(1,0);

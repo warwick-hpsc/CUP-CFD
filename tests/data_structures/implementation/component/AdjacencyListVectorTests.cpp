@@ -83,8 +83,8 @@ BOOST_AUTO_TEST_CASE(getNodeCount_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	status = graph.addNode(20);
 	status = graph.addNode(40);
@@ -101,8 +101,8 @@ BOOST_AUTO_TEST_CASE(getNodes_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	status = graph.addNode(20);
 	status = graph.addNode(40);
@@ -283,7 +283,6 @@ BOOST_AUTO_TEST_CASE(existsNode_test1)
 BOOST_AUTO_TEST_CASE(existsNode_test2)
 {
 	AdjacencyListVector<int, int> graph;
-	cupcfd::error::eCodes status;
 	bool exists;
 
 	exists = graph.existsNode(20);
@@ -296,8 +295,8 @@ BOOST_AUTO_TEST_CASE(addEdge_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	status = graph.addNode(20);
 	status = graph.addNode(40);
@@ -310,8 +309,8 @@ BOOST_AUTO_TEST_CASE(addEdge_test2)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	status = graph.addNode(20);
 	status = graph.addNode(40);
@@ -325,8 +324,8 @@ BOOST_AUTO_TEST_CASE(addEdge_test3)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	// Setup
 	status = graph.addNode(20);
@@ -344,8 +343,8 @@ BOOST_AUTO_TEST_CASE(addEdge_test4)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 
 	// Setup
 	status = graph.addNode(20);
@@ -363,7 +362,7 @@ BOOST_AUTO_TEST_CASE(existsEdge_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
+	// int idx;
 	bool exists;
 
 	status = graph.addNode(20);
@@ -385,7 +384,7 @@ BOOST_AUTO_TEST_CASE(existsEdge_test2)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
+	// int idx;
 	bool exists;
 
 	status = graph.addNode(20);
@@ -401,7 +400,7 @@ BOOST_AUTO_TEST_CASE(existsEdge_test3)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
+	// int idx;
 	bool exists;
 
 	status = graph.addNode(20);
@@ -426,8 +425,8 @@ BOOST_AUTO_TEST_CASE(getAdjacentNodeCount_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 	int count;
 
 	status = graph.addNode(20);
@@ -436,38 +435,38 @@ BOOST_AUTO_TEST_CASE(getAdjacentNodeCount_test1)
 	status = graph.addNode(80);
 	status = graph.addNode(100);
 
-	graph.getAdjacentNodeCount(20, &count);
+	status = graph.getAdjacentNodeCount(20, &count);
 	BOOST_CHECK_EQUAL(count, 0);
 
 	status = graph.addEdge(20, 40);
-	graph.getAdjacentNodeCount(20, &count);
+	status = graph.getAdjacentNodeCount(20, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 1);
-	graph.getAdjacentNodeCount(40, &count);
+	status = graph.getAdjacentNodeCount(40, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 0);
 
 	status = graph.addEdge(20, 60);
-	graph.getAdjacentNodeCount(20, &count);
+	status = graph.getAdjacentNodeCount(20, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 2);
-	graph.getAdjacentNodeCount(60, &count);
+	status = graph.getAdjacentNodeCount(60, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 0);
 
 	status = graph.addEdge(20, 80);
-	graph.getAdjacentNodeCount(20, &count);
+	status = graph.getAdjacentNodeCount(20, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 3);
-	graph.getAdjacentNodeCount(80, &count);
+	status = graph.getAdjacentNodeCount(80, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 0);
 
 	status = graph.addEdge(20, 100);
-	graph.getAdjacentNodeCount(20, &count);
+	status = graph.getAdjacentNodeCount(20, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 4);
-	graph.getAdjacentNodeCount(100, &count);
+	status = graph.getAdjacentNodeCount(100, &count);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL(count, 0);
 }
@@ -477,8 +476,8 @@ BOOST_AUTO_TEST_CASE(getAdjacentNodeCount_test2)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
+	// int idx;
+	// bool exists;
 	int count;
 
 	status = graph.addNode(20);
@@ -494,9 +493,9 @@ BOOST_AUTO_TEST_CASE(getAdjacentNodes_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
-	bool exists;
-	int count;
+	// int idx;
+	// bool exists;
+	// int count;
 
 	// Setup
 	int nodes[4] = {20, 40, 60, 80};
@@ -536,9 +535,9 @@ BOOST_AUTO_TEST_CASE(reset_test1)
 {
 	AdjacencyListVector<int, int> graph;
 	cupcfd::error::eCodes status;
-	int idx;
+	// int idx;
 	bool exists;
-	int count;
+	// int count;
 
 	// Setup
 	int nodes[4] = {20, 40, 60, 80};
