@@ -45,6 +45,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+
     // Create a default empty pattern
     cupcfd::comm::ExchangePatternOneSidedNonBlocking<int> pattern;
 
@@ -66,7 +68,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[2] = {4, 5};
     	int rankSend[2] = {1, 1};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -104,7 +107,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[4] = {6, 7, 9, 10};
     	int rankSend[4] = {0, 0, 2, 2};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -147,7 +151,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[5] = {12, 14, 11, 15, 13};
     	int rankSend[5] = {1, 3, 1, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -184,7 +189,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[2] = {16, 17};
     	int rankSend[2] = {2, 2};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -226,6 +232,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+
     // Create a default empty pattern
     cupcfd::comm::ExchangePatternOneSidedNonBlocking<int> pattern;
 
@@ -247,7 +255,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
     	int exchangeIDXSend[2] = {4, 5};
     	int rankSend[2] = {1, 1};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -277,7 +286,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 2, rAdjncyCmp, rAdjncyCmp + 2);
 
 	    int data[7] = {42, 52, 12, 32, 1032, 201, 876};
-	    pattern.packSendBuffer(data, 7);
+	    status = pattern.packSendBuffer(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {32, 1032};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
@@ -290,7 +300,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
     	int exchangeIDXSend[4] = {6, 7, 9, 10};
     	int rankSend[4] = {0, 0, 2, 2};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -321,7 +332,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {20, 30, 40 ,50 ,60 ,70 ,80, 90, 100};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[4] = {20, 30, 50, 60};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 4, sendBufferCmp, sendBufferCmp + 4);
@@ -338,7 +350,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
     	int exchangeIDXSend[5] = {12, 14, 11, 15, 13};
     	int rankSend[5] = {1, 3, 1, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 
     	// Check the data has been set up correctly
@@ -370,7 +383,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {120, 130, 140 ,150 ,160 ,170 ,180, 190, 200};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[5] = {150, 140, 160, 120, 130};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 5, sendBufferCmp, sendBufferCmp + 5);
@@ -383,7 +397,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
     	int exchangeIDXSend[2] = {16, 17};
     	int rankSend[2] = {2, 2};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -413,7 +428,8 @@ BOOST_AUTO_TEST_CASE(packSendBuffer_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 3, rAdjncyCmp, rAdjncyCmp + 3);
 
 	    int data[8] = {220, 230, 240 ,250 ,260 ,270 ,280, 290};
-	    pattern.packSendBuffer(data, 8);
+	    status = pattern.packSendBuffer(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {240, 250};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
@@ -432,6 +448,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+
     // Create a default empty pattern
     cupcfd::comm::ExchangePatternOneSidedNonBlocking<int> pattern;
 
@@ -453,7 +471,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
     	int exchangeIDXSend[2] = {4, 5};
     	int rankSend[2] = {1, 1};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -483,13 +502,16 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 2, rAdjncyCmp, rAdjncyCmp + 2);
 
 	    int data[7] = {42, 52, 12, 32, 1032, 201, 876};
-	    pattern.packSendBuffer(data, 7);
+	    status = pattern.packSendBuffer(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {32, 1032};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
 
-	    pattern.exchangeStart(data, 7);
-	    pattern.exchangeStop(data, 7);
+	    status = pattern.exchangeStart(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    int dataCmp[7] = {42, 52, 12, 32, 1032, 20, 30};
@@ -503,7 +525,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
     	int exchangeIDXSend[4] = {6, 7, 9, 10};
     	int rankSend[4] = {0, 0, 2, 2};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -534,13 +557,16 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {20, 30, 40 ,50 ,60 ,70 ,80, 90, 100};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[4] = {20, 30, 50, 60};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 4, sendBufferCmp, sendBufferCmp + 4);
 
-	    pattern.exchangeStart(data, 9);
-	    pattern.exchangeStop(data, 9);
+	    status = pattern.exchangeStart(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 4, 5, 12, 11
@@ -559,7 +585,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
     	int exchangeIDXSend[5] = {12, 14, 11, 15, 13};
     	int rankSend[5] = {1, 3, 1, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -590,13 +617,16 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {120, 130, 140 ,150 ,160 ,170 ,180, 190, 200};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[5] = {150, 140, 160, 120, 130};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 5, sendBufferCmp, sendBufferCmp + 5);
 
-	    pattern.exchangeStart(data, 9);
-	    pattern.exchangeStop(data, 9);
+	    status = pattern.exchangeStart(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 9, 10, 16, 17
@@ -611,7 +641,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
     	int exchangeIDXSend[2] = {16, 17};
     	int rankSend[2] = {2, 2};
 
-    	pattern.init(comm, exchangeIDX, 8, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 8, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -641,13 +672,16 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 3, rAdjncyCmp, rAdjncyCmp + 3);
 
 	    int data[8] = {220, 230, 240 ,250 ,260 ,270 ,280, 290};
-	    pattern.packSendBuffer(data, 8);
+	    status = pattern.packSendBuffer(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {240, 250};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
 
-	    pattern.exchangeStart(data, 8);
-	    pattern.exchangeStop(data, 8);
+	    status = pattern.exchangeStart(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 13, 14, 15
@@ -664,6 +698,8 @@ BOOST_AUTO_TEST_CASE(exchange_test1)
 BOOST_AUTO_TEST_CASE(exchange_test2)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
+
+    cupcfd::error::eCodes status;
 
     // Create a default empty pattern
     cupcfd::comm::ExchangePatternOneSidedNonBlocking<int> pattern;
@@ -686,7 +722,8 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
     	int exchangeIDXSend[2] = {4, 5};
     	int rankSend[2] = {1, 1};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -716,13 +753,16 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 2, rAdjncyCmp, rAdjncyCmp + 2);
 
 	    int data[7] = {42, 52, 12, 32, 1032, 201, 876};
-	    pattern.packSendBuffer(data, 7);
+	    status = pattern.packSendBuffer(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {32, 1032};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
 
-	    pattern.exchangeStart(data, 7);
-	    pattern.exchangeStop(data, 7);
+	    status = pattern.exchangeStart(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 7);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    int dataCmp[7] = {42, 52, 12, 32, 1032, 20, 30};
@@ -737,7 +777,8 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
     	int exchangeIDXSend[6] = {6, 7, 9, 10, 6, 7};
     	int rankSend[6] = {0, 0, 2, 2, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 6, rankSend, 6);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 6, rankSend, 6);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 3);
@@ -768,13 +809,16 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {20, 30, 40 ,50 ,60 ,70 ,80, 90, 100};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[6] = {20, 30, 50, 60, 20, 30};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 6, sendBufferCmp, sendBufferCmp + 6);
 
-	    pattern.exchangeStart(data, 9);
-	    pattern.exchangeStop(data, 9);
+	    status = pattern.exchangeStart(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 4, 5, 12, 11
@@ -793,7 +837,8 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
     	int exchangeIDXSend[5] = {12, 14, 11, 15, 13};
     	int rankSend[5] = {1, 3, 1, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -824,13 +869,16 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 4, rAdjncyCmp, rAdjncyCmp + 4);
 
 	    int data[9] = {120, 130, 140 ,150 ,160 ,170 ,180, 190, 200};
-	    pattern.packSendBuffer(data, 9);
+	    status = pattern.packSendBuffer(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[5] = {150, 140, 160, 120, 130};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 5, sendBufferCmp, sendBufferCmp + 5);
 
-	    pattern.exchangeStart(data, 9);
-	    pattern.exchangeStop(data, 9);
+	    status = pattern.exchangeStart(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 9);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 9, 10, 16, 17
@@ -845,7 +893,8 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
     	int exchangeIDXSend[2] = {16, 17};
     	int rankSend[2] = {2, 2};
 
-    	pattern.init(comm, exchangeIDX, 10, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 10, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -875,13 +924,16 @@ BOOST_AUTO_TEST_CASE(exchange_test2)
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.rAdjncy , pattern.rAdjncy + 5, rAdjncyCmp, rAdjncyCmp + 5);
 
 	    int data[8] = {220, 230, 240 ,250 ,260 ,270 ,280, 290};
-	    pattern.packSendBuffer(data, 8);
+	    status = pattern.packSendBuffer(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    int sendBufferCmp[2] = {240, 250};
 	    BOOST_CHECK_EQUAL_COLLECTIONS(pattern.sendBuffer , pattern.sendBuffer + 2, sendBufferCmp, sendBufferCmp + 2);
 
-	    pattern.exchangeStart(data, 8);
-	    pattern.exchangeStop(data, 8);
+	    status = pattern.exchangeStart(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
+	    status = pattern.exchangeStop(data, 8);
+	    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	    // Check that the data buffer has been updated with the contents of the recvBuffer in the correct locations
 	    // Receiving values for exchange indexes 13, 14, 15

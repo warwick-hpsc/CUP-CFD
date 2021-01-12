@@ -29,12 +29,14 @@ namespace cupcfd
 					return cupcfd::error::E_NO_DATA;
 				}
 
+				cupcfd::error::eCodes status;
 				int mpi_err;
 				MPI_Datatype dType;
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
 				T dummy;
-				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				CHECK_ECODE(status)
 				#pragma GCC diagnostic pop
 
 				// MPI Broadcast

@@ -36,7 +36,7 @@ namespace cupcfd
 					// Call parent constructor but do nothing else.
 				}
 
-				cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
+				cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph __attribute__((unused)), I nParts __attribute__((unused)))
 				{
 					return cupcfd::error::E_SUCCESS;
 				}
@@ -90,7 +90,6 @@ BOOST_AUTO_TEST_CASE(resetResultStorage_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test Method
 	partitioner.resetResultStorage();
@@ -106,7 +105,6 @@ BOOST_AUTO_TEST_CASE(resetResultStorage_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	partitioner.result = (int *) malloc(sizeof(int) * 4);
@@ -126,7 +124,6 @@ BOOST_AUTO_TEST_CASE(setNodeStorage_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	int testStore[5] = {10, 20, 30, 40, 50};
 
@@ -144,7 +141,6 @@ BOOST_AUTO_TEST_CASE(resetNodeStorage_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Test Method
 	partitioner.resetNodeStorage();
@@ -160,7 +156,6 @@ BOOST_AUTO_TEST_CASE(resetNodeStorage_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	// Setup
 	partitioner.nodes = (int *) malloc(sizeof(int) * 4);
@@ -180,7 +175,6 @@ BOOST_AUTO_TEST_CASE(set_getNParts_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 	PartitionerInterfaceTest<int,int> partitioner(comm);
-	cupcfd::error::eCodes status;
 
 	BOOST_CHECK_EQUAL(partitioner.getNParts(), 0);
 

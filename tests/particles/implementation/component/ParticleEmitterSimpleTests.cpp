@@ -87,6 +87,8 @@ BOOST_AUTO_TEST_CASE(constructor_test2, * utf::tolerance(0.00001))
 // Test 1: Generate some particles with predictable values for testing
 BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
 {
+    cupcfd::error::eCodes status;
+
 	cupcfd::geometry::euclidean::EuclideanPoint<double, 3> position(2.0, 3.0, 4.0);
     dist::DistributionFixed<int,double> rate(2.3);
     dist::DistributionFixed<int,double> angleXY(-0.6);
@@ -110,7 +112,8 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
     ParticleSimple<int,double> * particles;
     int nParticles;
 
-    emitter.generateParticles(&particles, &nParticles, 10.0);
+    status = emitter.generateParticles(&particles, &nParticles, 10.0);
+    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     // In 10 seconds, at rate of 2.3, expected 4 particles
     BOOST_CHECK_EQUAL(nParticles, 4);
@@ -183,7 +186,8 @@ BOOST_AUTO_TEST_CASE(generateParticles_test1, * utf::tolerance(0.00001))
     free(particles);
 
     // Do one more round to make sure the correct time is used from the previous run that overran
-    emitter.generateParticles(&particles, &nParticles, 1.6);
+    status = emitter.generateParticles(&particles, &nParticles, 1.6);
+    BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     // Particle should be generated at 11.5, so expected travel time of 0.1
     // (Previous dt of 10 + this time period of 1.6 = 11.6 seconds elapsed)

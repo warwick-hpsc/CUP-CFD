@@ -230,7 +230,7 @@ BOOST_AUTO_TEST_CASE(allReduceAdd_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
-    int root = 1;
+    // int root = 1;
 	int nSend = 4;
 	int nRecv = 4;
     int rcv[4] = {0, 0, 0, 0};
@@ -277,7 +277,7 @@ BOOST_AUTO_TEST_CASE(allReduceMultiply_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
-    int root = 1;
+    // int root = 1;
 	int nSend = 4;
 	int nRecv = 4;
     int rcv[4] = {0, 0, 0, 0};
@@ -323,7 +323,7 @@ BOOST_AUTO_TEST_CASE(allReduceMin_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
-    int root = 1;
+    // int root = 1;
 	int nSend = 4;
 	int nRecv = 4;
     int rcv[4] = {0, 0, 0, 0};
@@ -369,7 +369,7 @@ BOOST_AUTO_TEST_CASE(allReduceMax_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
-    int root = 1;
+    // int root = 1;
 	int nSend = 4;
 	int nRecv = 4;
     int rcv[4] = {0, 0, 0, 0};

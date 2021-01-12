@@ -74,10 +74,11 @@ BOOST_AUTO_TEST_CASE(GradientPhiGaussDolfyn_test1)
 
 	// Won't bother populating the data arrays for now
 
-	GradientPhiGaussDolfyn(*mesh, 1, phiCell, mesh->properties.lTCells,
+	status = GradientPhiGaussDolfyn(*mesh, 1, phiCell, mesh->properties.lTCells,
 			phiBoundary, mesh->properties.lTCells,
 			dPhidxCell, mesh->properties.lTCells,
 			dPhidxoCell, mesh->properties.lTCells);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	free(phiCell);
 	free(phiBoundary);

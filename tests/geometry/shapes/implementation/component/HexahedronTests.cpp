@@ -550,7 +550,7 @@ BOOST_AUTO_TEST_CASE(isPointOnEdge_test1, * utf::tolerance(0.00001))
 
 	bool onEdge = shape.isPointOnEdge(point);
 
-	// BOOST_CHECK_EQUAL(onEdge, false);
+	BOOST_CHECK_EQUAL(onEdge, false);
 }
 
 // Test 2: Test point that is on an edge

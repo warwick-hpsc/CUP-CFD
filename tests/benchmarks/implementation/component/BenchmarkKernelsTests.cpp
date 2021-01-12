@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE(runBenchmark_test1)
 	std::shared_ptr<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>> sharedPtr(meshPtr);
 
 	BenchmarkKernels<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>, int, double, int> benchmark("KernelBench",sharedPtr, 1000);
-	benchmark.runBenchmark();
+	status = benchmark.runBenchmark();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 
 

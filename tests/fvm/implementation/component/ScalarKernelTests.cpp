@@ -67,12 +67,12 @@ BOOST_AUTO_TEST_CASE(FluxScalarDolfynFaceLoop_test1)
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	int nCells = mesh->properties.lTCells;
-	int nOwnedCells = mesh->properties.lOCells;
-	int nGhostCells = mesh->properties.lGhCells;
+	// int nOwnedCells = mesh->properties.lOCells;
+	// int nGhostCells = mesh->properties.lGhCells;
 	int nBnds = mesh->properties.lBoundaries;
 	int nFaces = mesh->properties.lFaces;
-	int nRegions = mesh->properties.lRegions;
-	int repetitions = 1000;
+	// int nRegions = mesh->properties.lRegions;
+	// int repetitions = 1000;
 
 	double * PhiCell = (double *) malloc(sizeof(double) * nCells);
 	double * VisEff = (double *) malloc(sizeof(double) * nCells);
@@ -91,8 +91,8 @@ BOOST_AUTO_TEST_CASE(FluxScalarDolfynFaceLoop_test1)
 
 	bool SolveTurb = true;
 	bool SolveEnthalpy = false;
-	double sigma = 1.0;
-	double sigma2 = 1.2;
+	// double sigma = 1.0;
+	// double sigma2 = 1.2;
 	double vislam = 1.3;
 	int ivar = 1;
 	int VarT = 2;
@@ -112,7 +112,7 @@ BOOST_AUTO_TEST_CASE(FluxScalarDolfynFaceLoop_test1)
 	// Won't bother populating the data arrays for now
 
 
-	cupcfd::fvm::FluxScalarDolfynFaceLoop(*mesh,
+	status = cupcfd::fvm::FluxScalarDolfynFaceLoop(*mesh,
 										PhiCell, nCells,
 										PhiBoundary, nBnds,
 										VisEff, nCells,
@@ -131,7 +131,7 @@ BOOST_AUTO_TEST_CASE(FluxScalarDolfynFaceLoop_test1)
 										ivar, VarT, Sigma_T, Prandtl,
 										VarTE, Sigma_k, VarED, Sigma_e,
 										Sigma_s, Schmidt, GammaBlend, Small, Large, TMCmu);
-
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 
 

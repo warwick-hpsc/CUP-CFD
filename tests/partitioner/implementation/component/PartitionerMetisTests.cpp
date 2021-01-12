@@ -76,7 +76,8 @@ BOOST_AUTO_TEST_CASE(partition_test1)
 
 		for(int i = 0; i < nLocalNodes; i ++)
 		{
-			graph.addLocalNode(localNodes[i]);
+			status = graph.addLocalNode(localNodes[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
@@ -86,7 +87,8 @@ BOOST_AUTO_TEST_CASE(partition_test1)
 
 		for(int i = 0; i < nLocalNodes; i ++)
 		{
-			graph.addLocalNode(localNodes[i]);
+			status = graph.addLocalNode(localNodes[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
@@ -96,7 +98,8 @@ BOOST_AUTO_TEST_CASE(partition_test1)
 
 		for(int i = 0; i < nLocalNodes; i ++)
 		{
-			graph.addLocalNode(localNodes[i]);
+			status = graph.addLocalNode(localNodes[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
@@ -106,7 +109,8 @@ BOOST_AUTO_TEST_CASE(partition_test1)
 
 		for(int i = 0; i < nLocalNodes; i ++)
 		{
-			graph.addLocalNode(localNodes[i]);
+			status = graph.addLocalNode(localNodes[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
@@ -117,49 +121,54 @@ BOOST_AUTO_TEST_CASE(partition_test1)
 	{
 		int edgeNode1[13] = {1, 2, 1, 6, 1, 28, 36, 7, 22, 32, 12, 28, 21};
 		int edgeNode2[13] = {3, 8, 9, 29, 16, 5, 20, 11, 40, 18, 19, 23, 23};
-		int nEdges = 13;
+		nEdges = 13;
 
 		for(int i = 0; i < nEdges; i++)
 		{
-			graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			status = graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 1)
 	{
 		int edgeNode1[8] = {28, 18, 5, 32, 26, 5, 5, 32};
 		int edgeNode2[8] = {5, 32, 27, 5, 27, 38, 37, 15};
-		int nEdges = 8;
+		nEdges = 8;
 
 		for(int i = 0; i < nEdges; i++)
 		{
-			graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			status = graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 2)
 	{
 		int edgeNode1[11] = {36, 12, 28, 20, 23, 24, 5, 23, 21, 14, 12};
 		int edgeNode2[11] = {20, 19, 23, 23, 24, 25, 38, 40, 23, 23, 14};
-		int nEdges = 11;
+		nEdges = 11;
 
 		for(int i = 0; i < nEdges; i++)
 		{
-			graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			status = graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 	else if(comm.rank == 3)
 	{
 		int edgeNode1[11] = {6, 1, 22, 37, 14, 16, 5, 32, 23, 14, 12};
 		int edgeNode2[11] = {29, 16, 40, 40, 16, 14, 37, 15, 40, 23, 14};
-		int nEdges = 11;
+		nEdges = 11;
 
 		for(int i = 0; i < nEdges; i++)
 		{
-			graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			status = graph.addUndirectedEdge(edgeNode1[i], edgeNode2[i]);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		}
 	}
 
 	// Finalize before use
-	graph.finalize();
+	status = graph.finalize();
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	PartitionerMetis<int, int> * partitioner = new PartitionerMetis<int, int>(graph, 4, 1);
 	status = partitioner->partition();

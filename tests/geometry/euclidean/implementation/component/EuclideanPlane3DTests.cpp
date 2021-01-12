@@ -150,7 +150,6 @@ BOOST_AUTO_TEST_CASE(normal_test2, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double,3> p2(18.6, 17.4, 33.9);
 	euc::EuclideanPoint<double,3> p3(15.3, 6.7, 41.7);
 	euc::EuclideanVector3D<double> norm;
-	cupcfd::error::eCodes status;
 
 	norm = euc::EuclideanPlane3D<double>::calculateNormal(p1, p2, p3);
 
@@ -172,7 +171,6 @@ BOOST_AUTO_TEST_CASE(computeScalarPlaneEquation_test1, * utf::tolerance(0.00001)
 	euc::EuclideanPoint<double,3> p2(18.6, 17.4, 33.9);
 	euc::EuclideanPoint<double,3> p3(15.3, 6.7, 41.7);
 	euc::EuclideanPlane3D<double> plane(p1, p2, p3);
-	cupcfd::error::eCodes status;
 	double a, b, c, d;
 
 	plane.computeScalarPlaneEquation(&a, &b, &c, &d);

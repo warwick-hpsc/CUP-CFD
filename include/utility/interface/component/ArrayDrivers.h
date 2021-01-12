@@ -84,7 +84,8 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			void uniqueCount(T * source, I nSourceEle, I * count);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes uniqueCount(T * source, I nSourceEle, I * count);
 
 			/**
 			 * Retrieve the elements that are unique in an array (i.e. there exist no duplicates)
