@@ -108,9 +108,7 @@ namespace cupcfd
 
 
 			// Copy the communicator
-			std::cout << "ExchangePattern::init() copying comm ..." << std::endl;
 			this->comm = comm;
-			std::cout << "ExchangePattern::init() comm complete" << std::endl;
 
 			// Copy and store in maps
 			for(int i = 0; i < nMapLocalToExchangeIDX; i++) {
@@ -229,6 +227,7 @@ namespace cupcfd
 					printf("ERROR: idx=%d >= comm.size=%d\n", idx, comm.size);
 					CHECK_ECODE(cupcfd::error::E_ERROR)
 				}
+				sendCount[idx] = this->sXAdj[i+1] - this->sXAdj[i];
 			}
 
 			status = cupcfd::comm::AllToAll(sendCount, comm.size, recvCount, comm.size, 1, comm);
