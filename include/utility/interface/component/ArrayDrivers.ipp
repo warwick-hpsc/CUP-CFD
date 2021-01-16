@@ -19,6 +19,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <random>
+#include <typeinfo>
 
 #include "Error.h"
 #include "ArrayKernels.h"

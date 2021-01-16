@@ -77,19 +77,19 @@ namespace cupcfd
 					status = fvmBenchJSON.buildBenchmarkConfig(&fvmBenchConfig);
 
 					if(status != cupcfd::error::E_SUCCESS) {
-						std::cout << "Cannot Parse a Kernel Benchmark Config at " << jsonFilePath << ". Skipping.\n";
+						std::cout << "Cannot Parse a Kernel Benchmark Config at " << jsonFilePath << ". Skipping." << std::endl;
 					}
 					else {
 						// Build Finite Volume Kernel Benchmark
 						if(comm.rank == 0) {
-							std::cout << "Building Kernel Benchmark\n";
+							std::cout << "Building Kernel Benchmark" << std::endl;
 						}
 
 						cupcfd::benchmark::BenchmarkKernels<M,I,T,L> * fvmBench;
 						status = fvmBenchConfig->buildBenchmark(&fvmBench, meshPtr);
 
 						if(status != cupcfd::error::E_SUCCESS) {
-							std::cout << "Error Encountered: Failed to build Kernel Benchmark with current configuration. Please check the provided configuration is correct.\n";
+							std::cout << "Error Encountered: Failed to build Kernel Benchmark with current configuration. Please check the provided configuration is correct." << std::endl;
 						}
 						else {
 							// Run Benchmark
@@ -109,19 +109,19 @@ namespace cupcfd
 					status = exchangeBenchJSON.buildBenchmarkConfig(&exchangeBenchConfig);
 
 					if(status != cupcfd::error::E_SUCCESS) {
-						std::cout << "Cannot Parse a Exchange Benchmark Config at " << jsonFilePath << ". Skipping.\n";
+						std::cout << "Cannot Parse a Exchange Benchmark Config at " << jsonFilePath << ". Skipping." << std::endl;
 					}
 					else {
 						// Build Exchange Benchmark Based on Mesh Connectivity Graph
 						if(comm.rank == 0) {
-							std::cout << "Building Exchange Benchmark\n";
+							std::cout << "Building Exchange Benchmark" << std::endl;
 						}
 
 						cupcfd::benchmark::BenchmarkExchange<I, T> * exchangeBench;
 						status = exchangeBenchConfig->buildBenchmark(&exchangeBench, *(meshPtr->cellConnGraph));
 
 						if(status != cupcfd::error::E_SUCCESS) {
-							std::cout << "Error Encountered: Failed to build Exchange Benchmark with current configuration. Please check the provided configuration is correct.\n";
+							std::cout << "Error Encountered: Failed to build Exchange Benchmark with current configuration. Please check the provided configuration is correct." << std::endl;
 						}
 						else {
 							status = exchangeBench->runBenchmark();
@@ -138,7 +138,7 @@ namespace cupcfd
 				// Could make it an option in a config? (Would need to know it before building the object however)
 				if(benchmarkConfigData.isMember("BenchmarkLinearSolver")) {
 					if(comm.rank == 0) {
-						std::cout << "Building Linear Solver Benchmark\n";
+						std::cout << "Building Linear Solver Benchmark" << std::endl;
 					}
 
 					cupcfd::benchmark::BenchmarkConfigLinearSolverJSON<cupcfd::data_structures::SparseMatrixCSR<I,T>,I,T> linearSolverBenchJSON(benchmarkConfigData["BenchmarkLinearSolver"]);
@@ -146,14 +146,14 @@ namespace cupcfd
 					status = linearSolverBenchJSON.buildBenchmarkConfig(&linearSolverBenchConfig);
 
 					if(status != cupcfd::error::E_SUCCESS) {
-						std::cout << "Cannot Parse a Linear Solver Benchmark Config at " << jsonFilePath << ". Skipping.\n";
+						std::cout << "Cannot Parse a Linear Solver Benchmark Config at " << jsonFilePath << ". Skipping." << std::endl;
 					}
 					else {
 						cupcfd::benchmark::BenchmarkLinearSolver<cupcfd::data_structures::SparseMatrixCSR<I,T>,I,T> * linearSolverBench;
 						status = linearSolverBenchConfig->buildBenchmark(&linearSolverBench);
 
 						if(status != cupcfd::error::E_SUCCESS) {
-							std::cout << "Error Encountered: Failed to build Linear Solver Benchmark with current configuration. Please check the provided configuration is correct.\n";
+							std::cout << "Error Encountered: Failed to build Linear Solver Benchmark with current configuration. Please check the provided configuration is correct." << std::endl;
 						}
 						else {
 							status = linearSolverBench->runBenchmark();
@@ -168,7 +168,7 @@ namespace cupcfd
 				// === Particle Benchmarks ===
 				if(benchmarkConfigData.isMember("BenchmarkParticleSystem")) {
 					if(comm.rank == 0) {
-						std::cout << "Building Simple Particle Benchmark\n";
+						std::cout << "Building Simple Particle Benchmark" << std::endl;
 					}
 
 					// Test for a Particle Simple System Benchmark
@@ -179,14 +179,14 @@ namespace cupcfd
 					status = particleSystemJSON.buildBenchmarkConfig(&particleSystemConfig);
 
 					if(status != cupcfd::error::E_SUCCESS) {
-						std::cout << "Cannot Parse a Particle Benchmark Config at " << jsonFilePath << ". Skipping.\n";
+						std::cout << "Cannot Parse a Particle Benchmark Config at " << jsonFilePath << ". Skipping." << std::endl;
 					}
 					else {
 						cupcfd::benchmark::BenchmarkParticleSystemSimple<M,I,T,L> * benchmarkParticleSystem;
 						status = particleSystemConfig->buildBenchmark(&benchmarkParticleSystem, meshPtr);
 
 						if(status != cupcfd::error::E_SUCCESS) {
-							std::cout << "Error Encountered: Failed to build Simple Particle Benchmark with current configuration. Please check the provided configuration is correct.\n";
+							std::cout << "Error Encountered: Failed to build Simple Particle Benchmark with current configuration. Please check the provided configuration is correct." << std::endl;
 						}
 						else {
 							status = benchmarkParticleSystem->runBenchmark();

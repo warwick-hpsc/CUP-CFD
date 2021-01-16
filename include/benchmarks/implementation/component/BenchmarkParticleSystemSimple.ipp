@@ -13,6 +13,8 @@
 #ifndef CUPCFD_BENCHMARK_BENCHMARK_PARTICLESYSTEM_SIMPLE_IPP_H
 #define CUPCFD_BENCHMARK_BENCHMARK_PARTICLESYSTEM_SIMPLE_IPP_H
 
+#include <unistd.h>
+
 #include "tt_interface_c.h"
 
 namespace cupcfd
@@ -69,7 +71,9 @@ namespace cupcfd
 					status = particleSystemPtr->updateSystem(timestep);
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: updateSystem() failed" << std::endl;
-						MPI_Abort(MPI_COMM_WORLD, status);
+						sleep(1); // flush stdout
+						// MPI_Abort(MPI_COMM_WORLD, status);
+						exit(EXIT_FAILURE);
 					}
 					this->stopBenchmarkBlock("UpdateParticleTimestep");
 				}

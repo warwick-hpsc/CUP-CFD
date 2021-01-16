@@ -108,7 +108,9 @@ namespace cupcfd
 
 
 			// Copy the communicator
+			std::cout << "ExchangePattern::init() copying comm ..." << std::endl;
 			this->comm = comm;
+			std::cout << "ExchangePattern::init() comm complete" << std::endl;
 
 			// Copy and store in maps
 			for(int i = 0; i < nMapLocalToExchangeIDX; i++) {
@@ -136,14 +138,14 @@ namespace cupcfd
 
 
 			// Copy the input data arrays of the target ranks and the matching exchange index to be sent
-			// int * copyTRanks = (int *)  malloc(sizeof(int) * nTRanks);
-			// status = cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
-			// CHECK_ECODE(status)
-			// int * copyExchangeIDXSend = (int *)  malloc(sizeof(int) * nExchangeIDXSend);
-			// status = cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
-			// CHECK_ECODE(status)
-			int* copyTRanks = cupcfd::utility::drivers::duplicate(tRanks, nTRanks);
-			int* copyExchangeIDXSend = cupcfd::utility::drivers::duplicate(exchangeIDXSend, nExchangeIDXSend);
+			int * copyTRanks = (int *)  malloc(sizeof(int) * nTRanks);
+			status = cupcfd::utility::drivers::copy(tRanks, nTRanks, copyTRanks, nTRanks);
+			CHECK_ECODE(status)
+			int * copyExchangeIDXSend = (int *)  malloc(sizeof(int) * nExchangeIDXSend);
+			status = cupcfd::utility::drivers::copy(exchangeIDXSend, nExchangeIDXSend, copyExchangeIDXSend, nCopyExchangeIDXSend);
+			CHECK_ECODE(status)
+			// int* copyTRanks = cupcfd::utility::drivers::duplicate(tRanks, nTRanks);
+			// int* copyExchangeIDXSend = cupcfd::utility::drivers::duplicate(exchangeIDXSend, nExchangeIDXSend);
 
 			// Sort the copied ranks array.
 			// SortIndexes is an array of the original index positions in matching sorted order - we will use this to reshuffle
@@ -174,6 +176,17 @@ namespace cupcfd
 			// let us know how many elements we are sending to that matching rank.
 			status = cupcfd::utility::drivers::distinctArray(copyTRanks, nTRanks, this->sProc, this->nSProc, dupCount, nDupCount);
 			CHECK_ECODE(status)
+			for (int i=0; i<this->nSProc; i++) {
+				int v = this->sProc[i];
+				if (v >= comm.size) {
+					printf("ERROR: sProc[] contains illegal rank values: [%d", this->sProc[0]);
+					for (int j=1; j<this->nSProc; j++) {
+						printf(", %d", this->sProc[j]);
+					}
+					printf("], nSProc=%d, comm.size=%d, nTRanks=%d\n", this->nSProc, comm.size, nTRanks);
+					CHECK_ECODE(cupcfd::error::E_ERROR)
+				}
+			}
 
 			// === Store in pattern as a CSR ===
 			this->nSXAdj = this->nSProc + 1;
@@ -210,7 +223,12 @@ namespace cupcfd
 			}
 
 			for(int i = 0; i < this->nSProc; i++) {
-				sendCount[this->sProc[i]] = this->sXAdj[i+1] - this->sXAdj[i];
+				// sendCount[this->sProc[i]] = this->sXAdj[i+1] - this->sXAdj[i];
+				const int idx = this->sProc[i];
+				if (idx >= comm.size) {
+					printf("ERROR: idx=%d >= comm.size=%d\n", idx, comm.size);
+					CHECK_ECODE(cupcfd::error::E_ERROR)
+				}
 			}
 
 			status = cupcfd::comm::AllToAll(sendCount, comm.size, recvCount, comm.size, 1, comm);

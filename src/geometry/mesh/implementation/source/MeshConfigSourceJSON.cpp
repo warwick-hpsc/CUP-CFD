@@ -18,6 +18,7 @@
 #include "MeshSourceStructGenConfigJSON.h"
 
 #include <fstream>
+#include <unistd.h>
 
 namespace cupcfd
 {
@@ -150,7 +151,10 @@ namespace cupcfd
 				}
 
 				// If here, not good.
-				MPI_Abort(MPI_COMM_WORLD, status);
+                std::cout << "ERROR: MeshConfigSourceJSON::getMeshSourceConfig() hit edge case" << std::endl;
+                sleep(1); // flush std buffer
+				// MPI_Abort(MPI_COMM_WORLD, status);
+				exit(EXIT_FAILURE);
 				throw std::runtime_error("MeshConfigSourceJSON<I,T,L>::getMeshSourceConfig() hit edge case");
 			}
 

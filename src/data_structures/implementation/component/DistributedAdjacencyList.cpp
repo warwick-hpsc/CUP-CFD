@@ -498,10 +498,10 @@ namespace cupcfd
 					// Check 1: Number of ghost cells stored locally should be same as total sum of ghost cells claimed by other processes
 					if(nOwnership != this->nLGhNodes) {
 						// Error
-						//std::cout << "Error: On Rank " << this->comm.rank << "\n";
-						//std::cout << "Error: Rank " << i << ", Mismatch in local ghost cells and remotely claimed cells\n";
+						//std::cout << "Error: On Rank " << this->comm.rank << "" << std::endl;
+						//std::cout << "Error: Rank " << i << ", Mismatch in local ghost cells and remotely claimed cells" << std::endl;
 						//std::cout << "This rank has " << this->nLGhNodes << " registered ghost cells,";
-						//std::cout << "the number of ghost cells on this rank claimed by other processes is " << nOwnership << "\n";
+						//std::cout << "the number of ghost cells on this rank claimed by other processes is " << nOwnership << "" << std::endl;
 						return cupcfd::error::E_ADJACENCY_LIST_NODE_CLAIM_MISMATCH;
 					}
 

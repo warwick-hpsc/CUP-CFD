@@ -82,12 +82,21 @@ namespace cupcfd
 			// exchange patterns, so it could be wrapped into an exchange pattern object in graph instead.
 
 			I nTRanks = graph.sendGlobalIDsAdjncy.size();
+			if (nTRanks > graph.comm->size) {
+				printf("ERROR: nTRanks=%d > graph.comm->size=%d\n", nTRanks, graph.comm->size);
+				CHECK_ECODE(cupcfd::error::E_ERROR)
+			}
 			I * tRanks = (I *) malloc(sizeof(I) * nTRanks);
 
 			I numSendGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.sendGlobalIDsXAdj.size());
-			for (I i = 0; i < numSendGlobalIDsXAdj; i++) {
+			for (I i = 0; i < numSendGlobalIDsXAdj-1; i++) {
 				for(I j = 0; j < graph.sendGlobalIDsXAdj[i+1] - graph.sendGlobalIDsXAdj[i]; j++) {
-					tRanks[graph.sendGlobalIDsXAdj[i] + j] = graph.sendRank[i];
+					// tRanks[graph.sendGlobalIDsXAdj[i] + j] = graph.sendRank[i];
+					const I idx = graph.sendGlobalIDsXAdj[i] + j;
+					if (idx >= nTRanks) {
+						printf("ERROR: idx=%d >= nTRanks=%d", idx, nTRanks);
+						CHECK_ECODE(cupcfd::error::E_ERROR)
+					}
 				}
 			}
 
