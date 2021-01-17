@@ -243,9 +243,9 @@ namespace cupcfd
 					inline void getFaceLambda(I faceID, T * lambda);
 					__attribute__((warn_unused_result))
 					inline T getFaceLambda(I faceID);
-					inline void getFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm);
+					inline void getFaceNorm(I faceID, euc::EuclideanVector3D<T>& norm);
 					__attribute__((warn_unused_result))
-					inline euc::EuclideanVector<T,3> getFaceNorm(I faceID);
+					inline euc::EuclideanVector3D<T> getFaceNorm(I faceID);
 					inline void getFaceVertex(I faceID, I faceVertexID, I * vertexID);
 					__attribute__((warn_unused_result))
 					inline I getFaceVertex(I faceID, I faceVertexID);

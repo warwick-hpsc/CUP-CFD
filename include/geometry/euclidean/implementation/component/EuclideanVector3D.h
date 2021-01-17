@@ -40,14 +40,6 @@ namespace cupcfd
 					EuclideanVector3D(T a, T b, T c);
 					EuclideanVector3D(const EuclideanVector<T,3>& v);
 
-					operator EuclideanVector<T,3>() const  {
-						EuclideanVector<T,3> base;
-						for (uint i=0; i<3; i++) {
-							base.cmp[i] = this->cmp[i];
-						}
-						return base;
-					}
-
 					/**
 					 * Compute the vector that is the cross product of this vector and another vector.
 					 * This is currently only defined for 3D Vectors, so is not a class function

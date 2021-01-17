@@ -177,12 +177,12 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline void CupCfdAoSMesh<I,T,L>::getFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm) {
+			inline void CupCfdAoSMesh<I,T,L>::getFaceNorm(I faceID, euc::EuclideanVector3D<T>& norm) {
 				norm = DBG_SAFE_VECTOR_LOOKUP(this->faces, faceID).norm;
 			}
 
 			template <class I, class T, class L>
-			inline euc::EuclideanVector<T,3> CupCfdAoSMesh<I,T,L>::getFaceNorm(I faceID) {
+			inline euc::EuclideanVector3D<T> CupCfdAoSMesh<I,T,L>::getFaceNorm(I faceID) {
 				return DBG_SAFE_VECTOR_LOOKUP(this->faces, faceID).norm;
 			}
 
