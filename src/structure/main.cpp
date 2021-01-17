@@ -142,7 +142,7 @@ int main (int argc, char ** argv)
 
 	if(configData.isMember("DataTypes")) {
 		if(comm.rank == 0) {
-			std::cout << "Reading DataTypes" << std::endl;
+			std::cout << "Reading DataTypes\n";
 		}
 
 		cupcfd::SystemConfigJSON dataTypeJSON(configData["DataTypes"]);
@@ -183,8 +183,8 @@ int main (int argc, char ** argv)
 		cupcfd::geometry::mesh::MeshConfig<int,double,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -194,14 +194,14 @@ int main (int argc, char ** argv)
 
 		// Build Mesh
 		if(comm.rank == 0) {
-			std::cout << "Building Mesh" << std::endl;
+			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdAoSMesh<int, double, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct." << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -231,8 +231,8 @@ int main (int argc, char ** argv)
 		cupcfd::geometry::mesh::MeshConfig<int,float,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -242,14 +242,14 @@ int main (int argc, char ** argv)
 
 		// Build Mesh
 		if(comm.rank == 0) {
-			std::cout << "Building Mesh" << std::endl;
+			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdAoSMesh<int, float, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct." << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -279,8 +279,8 @@ int main (int argc, char ** argv)
 		cupcfd::geometry::mesh::MeshConfig<int,double,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -290,14 +290,14 @@ int main (int argc, char ** argv)
 
 		// Build Mesh
 		if(comm.rank == 0) {
-			std::cout << "Building Mesh" << std::endl;
+			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdSoAMesh<int, double, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct." << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -327,8 +327,8 @@ int main (int argc, char ** argv)
 		cupcfd::geometry::mesh::MeshConfig<int,float,int> * meshConfig;
 		status = configFile.buildMeshConfig(&meshConfig);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Cannot Parse a JSON Mesh Configuration at " << configPath << "\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();
@@ -338,14 +338,14 @@ int main (int argc, char ** argv)
 
 		// Build Mesh
 		if(comm.rank == 0) {
-			std::cout << "Building Mesh" << std::endl;
+			std::cout << "Building Mesh\n";
 		}
 
 		mesh::CupCfdSoAMesh<int, float, int> * mesh;
 		status = meshConfig->buildUnstructuredMesh(&mesh, comm);
 		if(status != cupcfd::error::E_SUCCESS) {
-			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct." << std::endl;
-			std::cout << "Ending Benchmarking" << std::endl;
+			std::cout << "Error Encountered: Failed to build Mesh with current configuration. Please check the provided configuration is correct.\n";
+			std::cout << "Ending Benchmarking\n";
 			int ierr = -1;
 			TreeTimerFinalize();
 			PetscFinalize();

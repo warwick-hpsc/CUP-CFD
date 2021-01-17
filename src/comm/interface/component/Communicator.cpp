@@ -29,11 +29,10 @@ namespace cupcfd
 
 			// Override the null comm
 			int err = MPI_Comm_dup(MPI_COMM_SELF, &(this->comm));
-			if(err != MPI_SUCCESS) {
-				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor" << std::endl;
-			}
 
-			// this->comm = MPI_COMM_SELF;
+			if(err != MPI_SUCCESS) {
+				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor\n";
+			}
 		}
 
 		Communicator::Communicator(MPI_Comm mpiComm)
@@ -41,25 +40,14 @@ namespace cupcfd
 		{
 			// Duplicate the communicator
 			int err = MPI_Comm_dup(mpiComm, &(this->comm));
+
 			if(err != MPI_SUCCESS) {
-				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor" << std::endl;
+				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor\n";
 			}
-			/*
-			this->comm = mpiComm;
-			int err;
-			*/
 
 			// Store basic properties
-			err = 
 			MPI_Comm_rank(this->comm, &(this->rank));
-			if(err != MPI_SUCCESS) {
-				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor: MPI_Comm_rank() failed" << std::endl;
-			}
-			err = 
 			MPI_Comm_size(this->comm, &(this->size));
-			if(err != MPI_SUCCESS) {
-				std::cout << "Warning: Error Duplicating MPIComm in MPI Communicator Constructor: MPI_Comm_size() failed" << std::endl;
-			}
 
 			// Leave root rank as always zero for now
 			this->root_rank = 0;
@@ -79,14 +67,6 @@ namespace cupcfd
 		{
 			// Use the copy operator
 			*this = comm;
-
-			/*
-			this->rank = comm.rank;
-			this->size = comm.size;
-			this->root = comm.root;
-			this->root_rank = comm.root_rank;
-			this->comm = comm.comm;
-			*/
 		}
 
 		Communicator::~Communicator() {

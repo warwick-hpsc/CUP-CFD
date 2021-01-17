@@ -62,7 +62,7 @@ namespace cupcfd
 					else {
 						// Error - We have an argument without a option flag
 						// ToDo: Handle appropriately - this is a warning, not a terminal error
-						std::cout << "Warning: Argument " << std::string(argv[i]) << " found without a preceeding flag" << std::endl;
+						std::cout << "Warning: Argument " << std::string(argv[i]) << " found without a preceeding flag\n";
 					}
 				}
 			}

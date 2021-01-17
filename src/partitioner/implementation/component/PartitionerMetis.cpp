@@ -155,7 +155,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			if(graph.nNodes == 0) {
-				//std::cout << "Error in Metis setWorkArrays, partition graph has zero nodes" << std::endl;
+				//std::cout << "Error in Metis setWorkArrays, partition graph has zero nodes\n";
 			}
 
 			// (a) Clear any exiting work arrays

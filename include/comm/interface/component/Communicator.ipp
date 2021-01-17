@@ -22,22 +22,19 @@ namespace cupcfd
 	{
 		inline void Communicator::operator=(Communicator& source) {		
 			int err;
+			
 			// Free this value if it is currently not initialised
 			// (e.g. during a clone operation)
 			if(this->comm != MPI_COMM_NULL) {
-			// if(this->comm != MPI_COMM_NULL && this->comm != MPI_COMM_SELF && this->comm != MPI_COMM_WORLD) {
-				err = 
 				MPI_Comm_free(&(this->comm));
-				if(err != MPI_SUCCESS) {
-					std::cout << "Warning: Error Duplicating MPIComm: MPI_Comm_free() failed" << std::endl;
-				}
-			}
+			} 
+			
 			// Create a Duplicate Communicator
 			err = MPI_Comm_dup(source.comm, &(this->comm));
+
 			if(err != MPI_SUCCESS) {
-				std::cout << "Warning: Error Duplicating MPIComm: MPI_Comm_dup() failed" << std::endl;
+				std::cout << "Warning: Error Duplicating MPIComm\n";
 			}
-			// this->comm = source.comm;
 			
 			// Copy Values
 			this->rank = source.rank;
