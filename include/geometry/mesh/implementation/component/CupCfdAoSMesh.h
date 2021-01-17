@@ -177,6 +177,9 @@ namespace cupcfd
 
 					// =========================== Cell Operators ===========================
 
+					__attribute__((warn_unused_result))
+					inline I getNumCells();
+
 					inline void getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center);
 
 					__attribute__((warn_unused_result))

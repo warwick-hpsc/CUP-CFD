@@ -38,6 +38,13 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T, class L>
+			inline I CupCfdAoSMesh<I,T,L>::getNumCells()
+			{
+				return this->cells.size();
+				// return 321;
+			}
+
+			template <class I, class T, class L>
 			inline void CupCfdAoSMesh<I,T,L>::getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				center = DBG_SAFE_VECTOR_LOOKUP(this->cells, cellID).center;
 			}

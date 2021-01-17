@@ -182,6 +182,9 @@ namespace cupcfd
 
 					// =========================== Cell Operators ===========================
 
+					__attribute__((warn_unused_result))
+					I getNumCells();
+
 					/**
 					 * Get the point at the center of the cell
 					 *

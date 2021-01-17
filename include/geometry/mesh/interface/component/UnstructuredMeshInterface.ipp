@@ -64,6 +64,12 @@ namespace cupcfd
 			}
 
 			template <class M, class I, class T, class L>
+			I UnstructuredMeshInterface<M,I,T,L>::getNumCells() {
+				return static_cast<M*>(this)->getNumCells();
+				// return 123;
+			}
+
+			template <class M, class I, class T, class L>
 			void UnstructuredMeshInterface<M,I,T,L>::getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
 				static_cast<M*>(this)->getCellCenter(cellID, center);
 			}

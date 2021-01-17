@@ -287,6 +287,27 @@ namespace cupcfd
 		
 			cupcfd::error::eCodes status;
 
+			// Experimenting how coupling could/would work:
+			// 1) Get number of data items to transfer/update. All cells for now, in future can restrict to boundary
+			I numCells = this->mesh->getNumCells();
+			// printf("Rank %d has %d cells\n", this->mesh->cellConnGraph->comm->rank, numCells);
+			// 2) Get arbitrary cell data (currently no CFD data accessible from here)
+			if (numCells > 0) {
+				// T cell1vol;
+				// this->mesh->getCellVolume(0, &cell1vol);
+				// std::cout << "volume of first cell = " << cell1vol << std::endl;
+				T* dataArray = (T*)malloc(numCells*sizeof(T));
+				for (I i=0; i<numCells; i++) {
+					this->mesh->getCellVolume(i, &dataArray[i]);
+				}
+				// 3) send data to coupler
+				// 4) receive data
+				// 5) TODO: write new data back into mesh
+				// 6) Cleanup
+				free(dataArray);
+			}
+
+
 			// (1a) Ensure that the travelTime for all existing active particles is set to the time period dt
 			status = this->setActiveParticlesTravelTime(dt);
 			CHECK_ECODE(status)
