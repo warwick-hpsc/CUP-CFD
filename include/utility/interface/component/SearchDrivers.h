@@ -44,28 +44,8 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
  			template <class I, class T>
+ 			__attribute__((warn_unused_result))
  			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I * index);
-
- 			/**
- 			 * Performs a linear search for an element within an array.
- 			 * This driver both runs the kernel and provides error checking.
- 			 *
- 			 * @param source The source array to search through
-			 * @param nEle The number of elements to search through the array.
-			 * 			   This should be no greater than the number of elements
-			 * 			   in the array.
- 			 * @param target The element to search for
- 			 * @param found True if element is found, else fails
- 			 *
-		 	 * @tparam I The type of the indexing scheme
-			 * @tparam T The type of the stored array data
- 			 *
-			 * @return An error status indicating the success or failure of the operation
- 			 * @retval cupcfd::error::E_SEARCH_SUCCESS Value was found successfully.
- 			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
- 			 */
-  			template <class I, class T>
-  			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, bool * found);
 
  			/**
  			 * Performs a binary search for an element within an array.
@@ -90,6 +70,7 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
   			template <class I, class T>
+ 			__attribute__((warn_unused_result))
   			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I * index);
 
  			/**
@@ -112,8 +93,9 @@ namespace cupcfd
  			 * @retval cupcfd::error::E_SEARCH_SORT_CHECK_FAILURE Error occurred checking if source is sorted
  			 * @retval cupcfd::error::E_SEARCH_NOT_FOUND Value was not found.
  			 */
- 			template <class I, class T>
- 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found);
+ 			// template <class I, class T>
+ 			// __attribute__((warn_unused_result))
+ 			// cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, bool * found);
  		} // namespace drivers
  	} // namespace utility
 } // namespace cupcfd

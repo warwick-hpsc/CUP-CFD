@@ -37,6 +37,8 @@
 #define CUPCFD_AOS_MESH_BOUNDARY_PADDING 0
 #endif
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -75,7 +77,7 @@ namespace cupcfd
 					T uplus;
 
 					/** Boundary shear vector **/
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> shear;
+					euc::EuclideanVector<T,3> shear;
 
 					/** Boundary q value **/
 					T q;
@@ -106,7 +108,7 @@ namespace cupcfd
 					 * @tparam I The type of the indexing scheme (integer based)
 					 * @tparam T The type of the stored array data
 					 */
-					virtual ~CupCfdAoSMeshBoundary();
+					~CupCfdAoSMeshBoundary();
 
 					// === Concrete Methods ===
 

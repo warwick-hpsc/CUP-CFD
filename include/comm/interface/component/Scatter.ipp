@@ -26,28 +26,24 @@ namespace cupcfd
 	namespace comm
 	{
 		template <class T>
-		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int chunkSize, cupcfd::comm::Communicator& mpComm, int sProcess)
-		{
+		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int chunkSize, cupcfd::comm::Communicator& mpComm, int sProcess) {
 			cupcfd::error::eCodes status;
 			
 			// This function is essentially a wrapper for an underlying comms operation - currently this is MPI only.
 			
-			// ToDo: Error Checks
+			if (nEleBSend != chunkSize*mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 
 			// Since this function uses a fixed chunk size, we can opt for Scatter over ScatterV.
 			status = cupcfd::comm::mpi::ScatterMPI(bSend, chunkSize, bRecv, nEleBRecv, sProcess, mpComm.comm);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int * chunkSizes, int nEleChunkSizes, cupcfd::comm::Communicator& mpComm, int sProcess)
-		{
+		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int * chunkSizes, int nEleChunkSizes, cupcfd::comm::Communicator& mpComm, int sProcess) {
 			cupcfd::error::eCodes status;
 					
 			// This function is essentially a wrapper for an underlying comms operation - currently this is MPI only.
@@ -55,50 +51,45 @@ namespace cupcfd
 			// ToDo: Error Checks
 
 			status = cupcfd::comm::mpi::ScatterVMPI(bSend, nEleBSend, bRecv, nEleBRecv, chunkSizes, nEleChunkSizes, sProcess, mpComm.comm);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 		
 		template <class T>
-		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T ** bRecv, int * nEleBRecv, int * pSend, int nElePSend, cupcfd::comm::Communicator& mpComm, int sProcess)
-		{
+		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T ** bRecv, int * nEleBRecv, int * pSend, int nElePSend, cupcfd::comm::Communicator& mpComm, int sProcess) {
 			cupcfd::error::eCodes status;
 		
-			int * sendCount;
-			T * bSendCpy;
-			int * pSendCpy;
-			int * sortIndexes;
-			int * groupID;
-			int * groupSize;
-			int nGroup;
-			int nGroupSize;
+			int * sendCount = NULL;
+			T * bSendCpy = NULL;
+			int * pSendCpy = NULL;
+			int * sortIndexes = NULL;
+			int * groupID = NULL;
+			int * groupSize = NULL;
+			int nGroup = -1;
+			int nGroupSize = -1;
 
 			// (1) We need to sort/group the send buffer by destination process on the root process
-			if(mpComm.rank == sProcess)
-			{
-				// First we can make copies of bSend and pSend so it is non-destructive
-				bSendCpy = (T *) malloc(sizeof(T) * nEleBSend);
-				pSendCpy = (int *) malloc(sizeof(int) * nElePSend);
+			if(mpComm.rank == sProcess) {
 				sortIndexes = (int *) malloc(sizeof(int) * nElePSend);
 
-				cupcfd::utility::drivers::copy(bSend, nEleBSend, bSendCpy, nEleBSend);
-				cupcfd::utility::drivers::copy(pSend, nElePSend, pSendCpy, nElePSend);
+				// First we can make copies of bSend and pSend so it is non-destructive
+				bSendCpy = cupcfd::utility::drivers::duplicate(bSend, nEleBSend);
+				pSendCpy = cupcfd::utility::drivers::duplicate(pSend, nElePSend);
 
 				// First, we need to group the process ids, so let's sort them and keep a copy of their original indexes.
-				cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
+				status = cupcfd::utility::drivers::merge_sort_index(pSend, nElePSend, sortIndexes, nElePSend);
+				CHECK_ECODE(status)
 
 				// Now we have a sorted order by original index, let us reorder bSendCpy to that order (pSendCpy already sorted by now)
-				cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);
+				status = cupcfd::utility::drivers::sourceIndexReorder(bSendCpy, nEleBSend, sortIndexes, nElePSend);
+				CHECK_ECODE(status)
 
 				// Now we have a copy of the send buffer and the processes each index is going to, grouped by sorted process id.
 				// Compute the size of each of these groups.
 				// This driver will also allocate the pointer space for us (but we must free it in this function to avoid leaks)
-				cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize, &nGroupSize);
+				status = cupcfd::utility::drivers::distinctArray(pSendCpy, nElePSend, &groupID, &nGroup, &groupSize, &nGroupSize);
+				CHECK_ECODE(status)
 
 				// Now we need to build an array of how many elements are to be sent to each process. Not all processes are
 				// guaranteed to be in the pSend list, so we need to diff the arrays to find out which are missing (and set
@@ -106,15 +97,13 @@ namespace cupcfd
 				sendCount = (int *) malloc(sizeof(int) * mpComm.size);
 
 				// Set process IDs and initial counts for full set of processes in communicator.
-				for(int i = 0; i < mpComm.size; i++)
-				{
+				for(int i = 0; i < mpComm.size; i++) {
 					sendCount[i] = 0;
 				}
 
 				// For those process IDs that were listed, set their counts to what was previously calculated.
 				// Those that were not in pSend will remain at the default of 0.
-				for(int i = 0; i < nGroup; i++)
-				{
+				for(int i = 0; i < nGroup; i++) {
 					sendCount[groupID[i]] = groupSize[i];
 				}
 			}
@@ -125,11 +114,7 @@ namespace cupcfd
 			//     Note: some of these pointers will be null for non-root processes, but this should be ok, since only root
 			//     needs them.
 			status = Scatter(sendCount, mpComm.size, nEleBRecv, 1, 1, mpComm, sProcess);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// (3) Now that each process knows their chunk size, we can allocate space for the recv buffer.
 			*bRecv = (T *) malloc(sizeof(T) * *nEleBRecv);
@@ -138,17 +123,12 @@ namespace cupcfd
 			//     We must scatter the grouped/sorted versions of the data buffer, and use the sendCount array that applies for all processes.
 			//     Again some of these may be null pointers for non-root processes
 			status = Scatter(bSendCpy, nEleBSend, *bRecv, *nEleBRecv, sendCount, mpComm.size, mpComm, sProcess);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			// (5) Cleanup. Note we do not free the receive buffer here, the pointer to it is passed back as part of this function since
 			//     it contains the result.
 			//	   Only the process doing the sending need do cleanup.
-			if(mpComm.rank == sProcess)
-			{
+			if(mpComm.rank == sProcess) {
 				free(bSendCpy);
 				free(pSendCpy);
 				free(sortIndexes);

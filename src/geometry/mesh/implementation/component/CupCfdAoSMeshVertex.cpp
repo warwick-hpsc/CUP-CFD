@@ -31,12 +31,10 @@ namespace cupcfd
 			{
 
 			}
+
+			// Explicit instantiation
+			template class CupCfdAoSMeshVertex<float>;
+			template class CupCfdAoSMeshVertex<double>;
 		}
 	}
 }
-
-// Explicit instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMeshVertex<float>;
-template class CupCfdAoSMeshVertex<double>;

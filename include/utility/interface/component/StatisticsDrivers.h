@@ -36,7 +36,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
-			cupcfd::error::eCodes sum(T * source, I nEle, T * result);
+			void sum(T * source, I nEle, T * result);
 
 			/**
 			 * Compute the mean of the values in an array
@@ -52,6 +52,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes mean(T * source, I nEle, double * result);
 
 			/**
@@ -68,6 +69,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes median(T * source, I nEle, T * result);
 
 			/**
@@ -84,6 +86,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes mode(T * source, I nEle, T * result);
 
 			/**
@@ -100,6 +103,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes stDev(T * source, I nEle, double * result);
 
 			/**
@@ -118,6 +122,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes count(T * source, I nEle, T target, I * result);
 		} // namespace drivers
 	} // namespace utility

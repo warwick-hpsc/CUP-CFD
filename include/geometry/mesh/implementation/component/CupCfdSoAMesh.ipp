@@ -29,6 +29,8 @@
 #ifndef CUPCFD_GEOMETRY_MESH_CUPCFD_SOA_MESH_IPP_H
 #define CUPCFD_GEOMETRY_MESH_CUPCFD_SOA_MESH_IPP_H
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -36,998 +38,746 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center)
-			{
-				center = this->cellCenter[cellID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
+				center = DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID);
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID)
-			{
-				return this->cellCenter[cellID];
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getCellCenter(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID);
 			}
 			
 			
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellVolume(I cellID, T * vol)
-			{
-				*vol = this->cellVolume[cellID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellVolume(I cellID, T * vol) {
+				*vol = DBG_SAFE_VECTOR_LOOKUP(this->cellVolume, cellID);
 			}
 			
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getCellVolume(I cellID)
-			{
-				return this->cellVolume[cellID];
+			inline T CupCfdSoAMesh<I,T,L>::getCellVolume(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellVolume, cellID);
 			}
 			
 			
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellNFaces(I cellID, I * nFaces)
-			{
-				*nFaces = this->cellNGFaces[cellID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellNFaces(I cellID, I * nFaces) {
+				*nFaces = DBG_SAFE_VECTOR_LOOKUP(this->cellNGFaces, cellID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getCellNFaces(I cellID)
-			{
-				return this->cellNGFaces[cellID];
+			inline I CupCfdSoAMesh<I,T,L>::getCellNFaces(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellNGFaces, cellID);
 			}
 
 
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellStoredNFaces(I cellID, I * nFaces)
-			{
-				*nFaces = this->cellNFaces[cellID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellStoredNFaces(I cellID, I * nFaces) {
+				*nFaces = DBG_SAFE_VECTOR_LOOKUP(this->cellNFaces, cellID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getCellStoredNFaces(I cellID)
-			{
-				return this->cellNFaces[cellID];
+			inline I CupCfdSoAMesh<I,T,L>::getCellStoredNFaces(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellNFaces, cellID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellNVertices(I cellID, int * nVertices)
-			{
-				if(this->finalized == false)
-				{
-					return cupcfd::error::E_UNFINALIZED;
-				}
-
-				*nVertices = this->cellNGVertices[cellID];
-
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellNVertices(I cellID, int * nVertices) {
+				*nVertices = DBG_SAFE_VECTOR_LOOKUP(this->cellNGVertices, cellID);
 			}
 
 			template <class I, class T, class L>
-			int CupCfdSoAMesh<I,T,L>::getCellNVertices(I cellID)
-			{
-				return this->cellNGVertices[cellID];
+			int CupCfdSoAMesh<I,T,L>::getCellNVertices(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellNGVertices, cellID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellStoredNVertices(I cellID, I * nVertices)
-			{
-				*nVertices = cellNVertices[cellID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellStoredNVertices(I cellID, I * nVertices) {
+				*nVertices = DBG_SAFE_VECTOR_LOOKUP(this->cellNVertices, cellID);
 			}
 
 			template <class I, class T, class L>
-			I CupCfdSoAMesh<I,T,L>::getCellStoredNVertices(I cellID)
-			{
-				return cellNVertices[cellID];
+			I CupCfdSoAMesh<I,T,L>::getCellStoredNVertices(I cellID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellNVertices, cellID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellFaceID(I cellID, I cellFaceID, I * faceID)
-			{
-				I index = this->cellFaceMapCSRXAdj[cellID] + cellFaceID;
-				*faceID = this->cellFaceMapCSRAdj[index];
-
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getCellFaceID(I cellID, I cellFaceID, I * faceID) {
+				I index = DBG_SAFE_VECTOR_LOOKUP(this->cellFaceMapCSRXAdj, cellID) + cellFaceID;
+				*faceID = DBG_SAFE_VECTOR_LOOKUP(this->cellFaceMapCSRAdj, index);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getCellFaceID(I cellID, I cellFaceID)
-			{
-				I index = this->cellFaceMapCSRXAdj[cellID] + cellFaceID;
-				return this->cellFaceMapCSRAdj[index];
+			inline I CupCfdSoAMesh<I,T,L>::getCellFaceID(I cellID, I cellFaceID) {
+				I index = DBG_SAFE_VECTOR_LOOKUP(this->cellFaceMapCSRXAdj, cellID) + cellFaceID;
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellFaceMapCSRAdj, index);
 			}
 
 
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setCellCenter(I cellID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center)
-			{
-				this->cellCenter[cellID] = center;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setCellCenter(I cellID, euc::EuclideanPoint<T,3>& center) {
+				DBG_SAFE_VECTOR_LOOKUP(this->cellCenter, cellID) = center;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setCellVolume(I cellID, T vol)
-			{
-				this->cellVolume[cellID] = vol;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setCellVolume(I cellID, T vol) {
+				DBG_SAFE_VECTOR_LOOKUP(this->cellVolume, cellID) = vol;
 			}
 			
 			
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getCellID(L cellLabel, I * cellID)
-			{
-				*cellID = this->cellBuildIDToLocalID[cellLabel];
-				return cupcfd::error::E_SUCCESS;
+			void CupCfdSoAMesh<I,T,L>::getCellID(L cellLabel, I * cellID) {
+				*cellID = DBG_SAFE_VECTOR_LOOKUP(this->cellBuildIDToLocalID, cellLabel);
 			}
 			
 			template <class I, class T, class L>
-			I CupCfdSoAMesh<I,T,L>::getCellID(L cellLabel)
-			{
-				return this->cellBuildIDToLocalID[cellLabel];
+			I CupCfdSoAMesh<I,T,L>::getCellID(L cellLabel) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->cellBuildIDToLocalID, cellLabel);
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceNVertices(I faceID, I * nVertices)
-			{
+			inline void CupCfdSoAMesh<I,T,L>::getFaceNVertices(I faceID, I * nVertices) {
 				*nVertices = this->getFaceNVertices(faceID);
-				return cupcfd::error::E_SUCCESS;
 			}
 			
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getFaceNVertices(I faceID)
-			{
+			inline I CupCfdSoAMesh<I,T,L>::getFaceNVertices(I faceID) {
 				// Currently we can only have three or four vertices max per face
-				if(this->faceVertexID[faceID][3] == -1)
-				{
+				if(DBG_SAFE_VECTOR_LOOKUP(this->faceVertexID, faceID)[3] == -1) {
 					return 3;
-				}
-				else
-				{
+				} else {
 					return 4;
 				}
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceCell1ID(I faceID, I * cellID)
-			{
-				*cellID = this->faceCell1ID[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceCell1ID(I faceID, I * cellID) {
+				*cellID = DBG_SAFE_VECTOR_LOOKUP(this->faceCell1ID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getFaceCell1ID(I faceID)
-			{
-				return this->faceCell1ID[faceID];
+			inline I CupCfdSoAMesh<I,T,L>::getFaceCell1ID(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceCell1ID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceCell2ID(I faceID, I * cellID)
-			{
-				*cellID = this->faceCell2ID[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceCell2ID(I faceID, I * cellID) {
+				*cellID = DBG_SAFE_VECTOR_LOOKUP(this->faceCell2ID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getFaceCell2ID(I faceID)
-			{
-				return this->faceCell2ID[faceID];
+			inline I CupCfdSoAMesh<I,T,L>::getFaceCell2ID(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceCell2ID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceLambda(I faceID, T * lambda)
-			{
-				*lambda = this->faceLambda[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceLambda(I faceID, T * lambda) {
+				*lambda = DBG_SAFE_VECTOR_LOOKUP(this->faceLambda, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getFaceLambda(I faceID)
-			{
-				return this->faceLambda[faceID];
+			inline T CupCfdSoAMesh<I,T,L>::getFaceLambda(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceLambda, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm)
-			{
-				norm = this->faceNorm[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm) {
+				norm = DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID)
-			{
-				return this->faceNorm[faceID];
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getFaceNorm(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceVertex(I faceID, I faceVertexID, I * vertexID)
-			{
-				*vertexID = this->faceVertexID[faceID][faceVertexID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceVertex(I faceID, I faceVertexID, I * vertexID) {
+				*vertexID = DBG_SAFE_VECTOR_LOOKUP(this->faceVertexID, faceID)[faceVertexID];
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getFaceVertex(I faceID, I faceVertexID)
-			{
-				return this->faceVertexID[faceID][faceVertexID];
+			inline I CupCfdSoAMesh<I,T,L>::getFaceVertex(I faceID, I faceVertexID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceVertexID, faceID)[faceVertexID];
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center)
-			{
-				center = this->faceCenter[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
+				center = DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID)
-			{
-				return this->faceCenter[faceID];
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceCenter(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceRLencos(I faceID, T * rlencos)
-			{
-				*rlencos = this->faceRLencos[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceRLencos(I faceID, T * rlencos) {
+				*rlencos = DBG_SAFE_VECTOR_LOOKUP(this->faceRLencos, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getFaceRLencos(I faceID)
-			{
-				return this->faceRLencos[faceID];
+			inline T CupCfdSoAMesh<I,T,L>::getFaceRLencos(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceRLencos, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceArea(I faceID, T * area)
-			{
-				*area = this->faceArea[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceArea(I faceID, T * area) {
+				*area = DBG_SAFE_VECTOR_LOOKUP(this->faceArea, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getFaceArea(I faceID)
-			{
-				return this->faceArea[faceID];
+			inline T CupCfdSoAMesh<I,T,L>::getFaceArea(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceArea, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac)
-			{
-				xpac = this->faceXpac[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
+				xpac = DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID)
-			{
-				return this->faceXpac[faceID];
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXpac(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac)
-			{
-				xnac = this->faceXnac[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
+				xnac = DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID)
-			{
-				return this->faceXnac[faceID];
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getFaceXnac(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceIsBoundary(I faceID, bool * result)
-			{
-				if(this->faceBoundaryID[faceID] > -1)
-				{
+			inline void CupCfdSoAMesh<I,T,L>::getFaceIsBoundary(I faceID, bool * result) {
+				if(DBG_SAFE_VECTOR_LOOKUP(this->faceBoundaryID, faceID) > -1) {
 					*result = true;
-				}
-				else
-				{
+				} else {
 					*result = false;
 				}
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
-			inline bool CupCfdSoAMesh<I,T,L>::getFaceIsBoundary(I faceID)
-			{
-				if(this->faceBoundaryID[faceID] > -1)
-				{
+			inline bool CupCfdSoAMesh<I,T,L>::getFaceIsBoundary(I faceID) {
+				if(DBG_SAFE_VECTOR_LOOKUP(this->faceBoundaryID, faceID) > -1) {
 					return true;
 				}
-
 				return false;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceBoundaryID(I faceID, I * boundaryID)
-			{
-				*boundaryID = this->faceBoundaryID[faceID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getFaceBoundaryID(I faceID, I * boundaryID) {
+				*boundaryID = DBG_SAFE_VECTOR_LOOKUP(this->faceBoundaryID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getFaceBoundaryID(I faceID)
-			{
-				return this->faceBoundaryID[faceID];
+			inline I CupCfdSoAMesh<I,T,L>::getFaceBoundaryID(I faceID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceBoundaryID, faceID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceCell1ID(I faceID, I cellID)
-			{
-				this->faceCell1ID[faceID] = cellID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceCell1ID(I faceID, I cellID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceCell1ID, faceID) = cellID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceCell2ID(I faceID, I cellID)
-			{
-				this->faceCell2ID[faceID] = cellID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceCell2ID(I faceID, I cellID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceCell2ID, faceID) = cellID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceLambda(I faceID, T lambda)
-			{
-				this->faceLambda[faceID] = lambda;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceLambda(I faceID, T lambda) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceLambda, faceID) = lambda;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceNorm(I faceID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& norm)
-			{
-				this->faceNorm[faceID] = norm;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceNorm(I faceID, euc::EuclideanVector<T,3>& norm) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceNorm, faceID) = norm;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceVertex(I faceID, I faceVertexID, I vertexID)
-			{
-				this->faceVertexID[faceID][faceVertexID] = vertexID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceVertex(I faceID, I faceVertexID, I vertexID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceVertexID, faceID)[faceVertexID] = vertexID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceCenter(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center)
-			{
-				this->faceCenter[faceID] = center;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceCenter(I faceID, euc::EuclideanPoint<T,3>& center) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceCenter, faceID) = center;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceRLencos(I faceID, T rlencos)
-			{
-				this->faceRLencos[faceID] = rlencos;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceRLencos(I faceID, T rlencos) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceRLencos, faceID) = rlencos;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceArea(I faceID, T area)
-			{
-				this->faceArea[faceID] = area;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceArea(I faceID, T area) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceArea, faceID) = area;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceXpac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac)
-			{
-				this->faceXpac[faceID] = xpac;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceXpac(I faceID, euc::EuclideanPoint<T,3>& xpac) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceXpac, faceID) = xpac;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceXnac(I faceID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac)
-			{
-				this->faceXnac[faceID] = xnac;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceXnac(I faceID, euc::EuclideanPoint<T,3>& xnac) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceXnac, faceID) = xnac;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setFaceBoundaryID(I faceID, I boundaryID)
-			{
-				this->faceBoundaryID[faceID] = boundaryID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setFaceBoundaryID(I faceID, I boundaryID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->faceBoundaryID, faceID) = boundaryID;
 			}
 			
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getFaceID(L faceLabel, I * faceID)
-			{
-				*faceID = this->faceBuildIDToLocalID[faceLabel];
-				return cupcfd::error::E_SUCCESS;
+			void CupCfdSoAMesh<I,T,L>::getFaceID(L faceLabel, I * faceID) {
+				*faceID = DBG_SAFE_VECTOR_LOOKUP(this->faceBuildIDToLocalID, faceLabel);
 			}
 
 			template <class I, class T, class L>
-			I CupCfdSoAMesh<I,T,L>::getFaceID(L faceLabel)
-			{
-				return this->faceBuildIDToLocalID[faceLabel];
+			I CupCfdSoAMesh<I,T,L>::getFaceID(L faceLabel) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->faceBuildIDToLocalID, faceLabel);
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryFaceID(I boundaryID, I * faceID)
-			{
-				*faceID = this->boundaryFaceID[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryFaceID(I boundaryID, I * faceID) {
+				*faceID = DBG_SAFE_VECTOR_LOOKUP(this->boundaryFaceID, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getBoundaryFaceID(I boundaryID)
-			{
-				return this->boundaryFaceID[boundaryID];
+			inline I CupCfdSoAMesh<I,T,L>::getBoundaryFaceID(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryFaceID, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID)
-			{
-				*vertexID = this->boundaryVertexID[boundaryID][boundaryVertexID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryVertex(I boundaryID, I boundaryVertexID, I * vertexID) {
+				*vertexID = DBG_SAFE_VECTOR_LOOKUP(this->boundaryVertexID, boundaryID)[boundaryVertexID];
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getBoundaryVertex(I boundaryID, I boundaryVertexID)
-			{
-				return this->boundaryVertexID[boundaryID][boundaryVertexID];
+			inline I CupCfdSoAMesh<I,T,L>::getBoundaryVertex(I boundaryID, I boundaryVertexID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryVertexID, boundaryID)[boundaryVertexID];
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryDistance(I boundaryID, T * distance)
-			{
-				*distance = this->boundaryDistance[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryDistance(I boundaryID, T * distance) {
+				*distance = DBG_SAFE_VECTOR_LOOKUP(this->boundaryDistance, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryDistance(I boundaryID)
-			{
-				return this->boundaryDistance[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryDistance(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryDistance, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryYPlus(I boundaryID, T * yPlus)
-			{
-				*yPlus = this->boundaryYPlus[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryYPlus(I boundaryID, T * yPlus) {
+				*yPlus = DBG_SAFE_VECTOR_LOOKUP(this->boundaryYPlus, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryYPlus(I boundaryID)
-			{
-				return this->boundaryYPlus[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryYPlus(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryYPlus, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryUPlus(I boundaryID, T * uPlus)
-			{
-				*uPlus = this->boundaryUPlus[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryUPlus(I boundaryID, T * uPlus) {
+				*uPlus = DBG_SAFE_VECTOR_LOOKUP(this->boundaryUPlus, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryUPlus(I boundaryID)
-			{
-				return this->boundaryUPlus[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryUPlus(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryUPlus, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryRegionID(I boundaryID, I * regionID)
-			{
-				*regionID = this->boundaryRegionID[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryRegionID(I boundaryID, I * regionID) {
+				*regionID = DBG_SAFE_VECTOR_LOOKUP(this->boundaryRegionID, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getBoundaryRegionID(I boundaryID)
-			{
-				return this->boundaryRegionID[boundaryID];
+			inline I CupCfdSoAMesh<I,T,L>::getBoundaryRegionID(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryRegionID, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear)
-			{
-				shear = this->boundaryShear[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
+				shear = DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID)
-			{
-				return this->boundaryShear[boundaryID];
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getBoundaryShear(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryQ(I boundaryID, T * q)
-			{
-				*q = this->boundaryQ[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryQ(I boundaryID, T * q) {
+				*q = DBG_SAFE_VECTOR_LOOKUP(this->boundaryQ, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryQ(I boundaryID)
-			{
-				return this->boundaryQ[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryQ(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryQ, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryH(I boundaryID, T * h)
-			{
-				*h = this->boundaryH[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryH(I boundaryID, T * h) {
+				*h = DBG_SAFE_VECTOR_LOOKUP(this->boundaryH, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryH(I boundaryID)
-			{
-				return this->boundaryH[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryH(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryH, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryT(I boundaryID, T * t)
-			{
-				*t = this->boundaryT[boundaryID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getBoundaryT(I boundaryID, T * t) {
+				*t = DBG_SAFE_VECTOR_LOOKUP(this->boundaryT, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getBoundaryT(I boundaryID)
-			{
-				return this->boundaryT[boundaryID];
+			inline T CupCfdSoAMesh<I,T,L>::getBoundaryT(I boundaryID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryT, boundaryID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryFaceID(I boundaryID, I faceID)
-			{
-				this->boundaryFaceID[boundaryID] = faceID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryFaceID(I boundaryID, I faceID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryFaceID, boundaryID) = faceID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID)
-			{
-				this->boundaryVertexID[boundaryID][boundaryVertexID] = vertexID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryVertex(I boundaryID, I boundaryVertexID, I vertexID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryVertexID, boundaryID)[boundaryVertexID] = vertexID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryDistance(I boundaryID, T distance)
-			{
-				this->boundaryDistance[boundaryID] = distance;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryDistance(I boundaryID, T distance) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryDistance, boundaryID) = distance;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryYPlus(I boundaryID, T yPlus)
-			{
-				this->boundaryYPlus[boundaryID] = yPlus;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryYPlus(I boundaryID, T yPlus) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryYPlus, boundaryID) = yPlus;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryUPlus(I boundaryID, T uPlus)
-			{
-				this->boundaryUPlus[boundaryID] = uPlus;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryUPlus(I boundaryID, T uPlus) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryUPlus, boundaryID) = uPlus;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryRegionID(I boundaryID, I regionID)
-			{
-				this->boundaryRegionID[boundaryID] = regionID;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryRegionID(I boundaryID, I regionID) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryRegionID, boundaryID) = regionID;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryShear(I boundaryID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& shear)
-			{
-				this->boundaryShear[boundaryID] = shear;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryShear(I boundaryID, euc::EuclideanVector<T,3>& shear) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryShear, boundaryID) = shear;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryQ(I boundaryID, T q)
-			{
-				this->boundaryQ[boundaryID] = q;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryQ(I boundaryID, T q) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryQ, boundaryID) = q;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryH(I boundaryID, T h)
-			{
-				this->boundaryH[boundaryID] = h;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryH(I boundaryID, T h) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryH, boundaryID) = h;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setBoundaryT(I boundaryID, T t)
-			{
-				this->boundaryT[boundaryID] = t;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setBoundaryT(I boundaryID, T t) {
+				DBG_SAFE_VECTOR_LOOKUP(this->boundaryT, boundaryID) = t;
 			}
 			
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getBoundaryID(L boundaryLabel, I * boundaryID)
-			{
-				*boundaryID = this->boundaryBuildIDToLocalID[boundaryLabel];
-				return cupcfd::error::E_SUCCESS;
+			void CupCfdSoAMesh<I,T,L>::getBoundaryID(L boundaryLabel, I * boundaryID) {
+				*boundaryID = DBG_SAFE_VECTOR_LOOKUP(this->boundaryBuildIDToLocalID, boundaryLabel);
 			}
 
 			template <class I, class T, class L>
-			I CupCfdSoAMesh<I,T,L>::getBoundaryID(L boundaryLabel)
-			{
-				return this->boundaryBuildIDToLocalID[boundaryLabel];
+			I CupCfdSoAMesh<I,T,L>::getBoundaryID(L boundaryLabel) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->boundaryBuildIDToLocalID, boundaryLabel);
 			}
 			
 			template <class I, class T, class L>			
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionType(I regionID, RType * type)
-			{
-				*type = this->regionType[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionType(I regionID, RType * type) {
+				*type = DBG_SAFE_VECTOR_LOOKUP(this->regionType, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline RType CupCfdSoAMesh<I,T,L>::getRegionType(I regionID)
-			{
-				return this->regionType[regionID];
+			inline RType CupCfdSoAMesh<I,T,L>::getRegionType(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionType, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionStd(I regionID, bool * std)
-			{
-				*std = this->regionStd[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionStd(I regionID, bool * std) {
+				*std = DBG_SAFE_VECTOR_LOOKUP(this->regionStd, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline bool CupCfdSoAMesh<I,T,L>::getRegionStd(I regionID)
-			{
-				return this->regionStd[regionID];
+			inline bool CupCfdSoAMesh<I,T,L>::getRegionStd(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionStd, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionYLog(I regionID, T * yLog)
-			{
-				*yLog = this->regionYLog[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionYLog(I regionID, T * yLog) {
+				*yLog = DBG_SAFE_VECTOR_LOOKUP(this->regionYLog, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionYLog(I regionID)
-			{
-				return this->regionYLog[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionYLog(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionYLog, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionELog(I regionID, T * eLog)
-			{
-				*eLog = this->regionELog[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionELog(I regionID, T * eLog) {
+				*eLog = DBG_SAFE_VECTOR_LOOKUP(this->regionELog, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionELog(I regionID)
-			{
-				return this->regionELog[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionELog(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionELog, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionDensity(I regionID, T * density)
-			{
-				*density = this->regionDensity[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionDensity(I regionID, T * density) {
+				*density = DBG_SAFE_VECTOR_LOOKUP(this->regionDensity, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionDensity(I regionID)
-			{
-				return this->regionDensity[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionDensity(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionDensity, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionTurbKE(I regionID, T * turbKE)
-			{
-				*turbKE = this->regionTurbKE[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionTurbKE(I regionID, T * turbKE) {
+				*turbKE = DBG_SAFE_VECTOR_LOOKUP(this->regionTurbKE, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionTurbKE(I regionID)
-			{
-				return this->regionTurbKE[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionTurbKE(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionTurbKE, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionTurbDiss(I regionID, T * turbDiss)
-			{
-				*turbDiss = this->regionTurbDiss[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionTurbDiss(I regionID, T * turbDiss) {
+				*turbDiss = DBG_SAFE_VECTOR_LOOKUP(this->regionTurbDiss, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionTurbDiss(I regionID)
-			{
-				return this->regionTurbDiss[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionTurbDiss(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionTurbDiss, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionSplvl(I regionID, T * splvl)
-			{
-				*splvl = this->regionSplvl[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionSplvl(I regionID, T * splvl) {
+				*splvl = DBG_SAFE_VECTOR_LOOKUP(this->regionSplvl, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionSplvl(I regionID)
-			{
-				return this->regionSplvl[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionSplvl(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionSplvl, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionDen(I regionID, T * den)
-			{
-				*den = this->regionDen[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionDen(I regionID, T * den) {
+				*den = DBG_SAFE_VECTOR_LOOKUP(this->regionDen, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionDen(I regionID)
-			{
-				return this->regionDen[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionDen(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionDen, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent)
-			{
-				forceTangent = this->regionForceTangent[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
+				forceTangent = DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID)
-			{
-				return this->regionForceTangent[regionID];
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionForceTangent(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw)
-			{
-				uvw = this->regionUVW[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
+				uvw = DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID)
-			{
-				return this->regionUVW[regionID];
+			inline euc::EuclideanVector<T,3> CupCfdSoAMesh<I,T,L>::getRegionUVW(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionName(I regionID, std::string& regionName)
-			{
-				regionName = this->regionName[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionName(I regionID, std::string& regionName) {
+				regionName = DBG_SAFE_VECTOR_LOOKUP(this->regionName, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline std::string CupCfdSoAMesh<I,T,L>::getRegionName(I regionID)
-			{
-				return this->regionName[regionID];
+			inline std::string CupCfdSoAMesh<I,T,L>::getRegionName(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionName, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionFlux(I regionID, bool * flux)
-			{
-				*flux = this->regionFlux[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionFlux(I regionID, bool * flux) {
+				*flux = DBG_SAFE_VECTOR_LOOKUP(this->regionFlux, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline bool CupCfdSoAMesh<I,T,L>::getRegionFlux(I regionID)
-			{
-				return this->regionFlux[regionID];
+			inline bool CupCfdSoAMesh<I,T,L>::getRegionFlux(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionFlux, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionAdiab(I regionID, bool * adiab)
-			{
-				*adiab = this->regionAdiab[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionAdiab(I regionID, bool * adiab) {
+				*adiab = DBG_SAFE_VECTOR_LOOKUP(this->regionAdiab, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline bool CupCfdSoAMesh<I,T,L>::getRegionAdiab(I regionID)
-			{
-				return this->regionAdiab[regionID];
+			inline bool CupCfdSoAMesh<I,T,L>::getRegionAdiab(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionAdiab, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionR(I regionID, T * r)
-			{
-				*r = this->regionR[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionR(I regionID, T * r) {
+				*r = DBG_SAFE_VECTOR_LOOKUP(this->regionR, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionR(I regionID)
-			{
-				return this->regionR[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionR(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionR, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionT(I regionID, T * t)
-			{
-				*t = this->regionT[regionID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getRegionT(I regionID, T * t) {
+				*t = DBG_SAFE_VECTOR_LOOKUP(this->regionT, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline T CupCfdSoAMesh<I,T,L>::getRegionT(I regionID)
-			{
-				return this->regionT[regionID];
+			inline T CupCfdSoAMesh<I,T,L>::getRegionT(I regionID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionT, regionID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionType(I regionID, RType type)
-			{
-				this->regionType[regionID] = type;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionType(I regionID, RType type) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionType, regionID) = type;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionStd(I regionID, bool std)
-			{
-				this->regionStd[regionID] = std;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionStd(I regionID, bool std) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionStd, regionID) = std;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionYLog(I regionID, T yLog)
-			{
-				this->regionYLog[regionID] = yLog;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionYLog(I regionID, T yLog) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionYLog, regionID) = yLog;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionELog(I regionID, T eLog)
-			{
-				this->regionELog[regionID] = eLog;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionELog(I regionID, T eLog) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionELog, regionID) = eLog;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionDensity(I regionID, T density)
-			{
-				this->regionDensity[regionID] = density;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionDensity(I regionID, T density) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionDensity, regionID) = density;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionTurbKE(I regionID, T turbKE)
-			{
-				this->regionTurbKE[regionID] = turbKE;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionTurbKE(I regionID, T turbKE) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionTurbKE, regionID) = turbKE;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionTurbDiss(I regionID, T turbDiss)
-			{
-				this->regionTurbDiss[regionID] = turbDiss;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionTurbDiss(I regionID, T turbDiss) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionTurbDiss, regionID) = turbDiss;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionSplvl(I regionID, T splvl)
-			{
-				this->regionSplvl[regionID] = splvl;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionSplvl(I regionID, T splvl) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionSplvl, regionID) = splvl;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionDen(I regionID, T den)
-			{
-				this->regionDen[regionID] = den;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionDen(I regionID, T den) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionDen, regionID) = den;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionForceTangent(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent)
-			{
-				this->regionForceTangent[regionID] = forceTangent;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionForceTangent(I regionID, euc::EuclideanVector<T,3>& forceTangent) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionForceTangent, regionID) = forceTangent;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionUVW(I regionID, cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw)
-			{
-				this->regionUVW[regionID] = uvw;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionUVW(I regionID, euc::EuclideanVector<T,3>& uvw) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionUVW, regionID) = uvw;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionName(I regionID, std::string& regionName)
-			{
-				this->regionName[regionID] = regionName;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionName(I regionID, std::string& regionName) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionName, regionID) = regionName;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionFlux(I regionID, bool flux)
-			{
-				this->regionFlux[regionID] = flux;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionFlux(I regionID, bool flux) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionFlux, regionID) = flux;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionAdiab(I regionID, bool adiab)
-			{
-				this->regionAdiab[regionID] = adiab;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionAdiab(I regionID, bool adiab) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionAdiab, regionID) = adiab;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionR(I regionID, T r)
-			{
-				this->regionR[regionID] = r;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionR(I regionID, T r) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionR, regionID) = r;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setRegionT(I regionID, T t)
-			{
-				this->regionT[regionID] = t;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setRegionT(I regionID, T t) {
+				DBG_SAFE_VECTOR_LOOKUP(this->regionT, regionID) = t;
 			}
 			
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getRegionID(L regionLabel, I * regionID)
-			{
-				*regionID = this->regionBuildIDToLocalID[regionLabel];;
-				return cupcfd::error::E_SUCCESS;
+			void CupCfdSoAMesh<I,T,L>::getRegionID(L regionLabel, I * regionID) {
+				*regionID = DBG_SAFE_VECTOR_LOOKUP(this->regionBuildIDToLocalID, regionLabel);;
 			}
 
 			template <class I, class T, class L>
-			I CupCfdSoAMesh<I,T,L>::getRegionID(L regionLabel)
-			{
-				return this->regionBuildIDToLocalID[regionLabel];
+			I CupCfdSoAMesh<I,T,L>::getRegionID(L regionLabel) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->regionBuildIDToLocalID, regionLabel);
 			}
 			
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
-			{
-				pos = this->verticesPos[vertexID];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID, euc::EuclideanPoint<T,3>& pos) {
+				pos = DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::geometry::euclidean::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID)
-			{
-				return this->verticesPos[vertexID];
+			inline euc::EuclideanPoint<T,3> CupCfdSoAMesh<I,T,L>::getVertexPos(I vertexID) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID);
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::setVertexPos(I vertexID, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
-			{
-				this->verticesPos[vertexID] = pos;
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::setVertexPos(I vertexID, euc::EuclideanPoint<T,3>& pos) {
+				DBG_SAFE_VECTOR_LOOKUP(this->verticesPos, vertexID) = pos;
 			}
 
 			template <class I, class T, class L>
-			inline cupcfd::error::eCodes CupCfdSoAMesh<I,T,L>::getVertexID(L vertexLabel, I * vertexID)
-			{
-				*vertexID = this->vertexBuildIDToLocalID[vertexLabel];
-				return cupcfd::error::E_SUCCESS;
+			inline void CupCfdSoAMesh<I,T,L>::getVertexID(L vertexLabel, I * vertexID) {
+				*vertexID = DBG_SAFE_VECTOR_LOOKUP(this->vertexBuildIDToLocalID, vertexLabel);
 			}
 
 			template <class I, class T, class L>
-			inline I CupCfdSoAMesh<I,T,L>::getVertexID(L vertexLabel)
-			{
-				return this->vertexBuildIDToLocalID[vertexLabel];
+			inline I CupCfdSoAMesh<I,T,L>::getVertexID(L vertexLabel) {
+				return DBG_SAFE_VECTOR_LOOKUP(this->vertexBuildIDToLocalID, vertexLabel);
 			}					
 		}
 	}

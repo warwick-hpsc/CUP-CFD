@@ -51,18 +51,34 @@ set (cupcfd_VERSION_MINOR 0)
 # ======== Set Compile Flags ===========
 # ======================================
 
-if(RTYPE STREQUAL "Debug")
-  if(COMPILER STREQUAL "intel")
-    set(CMAKE_CXX_FLAGS "-O0 -g -pg -mkl")
+if ( "${CMAKE_BUILD_TYPE}" STREQUAL "Debug" )
+  if("${COMPILER}" STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -mkl")
+  elseif ("${COMPILER}" STREQUAL "clang")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wno-narrowing -Wno-undefined-var-template -Wno-delete-abstract-non-virtual-dtor -Wno-pointer-bool-conversion -Wno-dynamic-class-memaccess -Werror")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wextra -Wno-narrowing -Wno-undefined-var-template -Wno-delete-abstract-non-virtual-dtor -Wno-pointer-bool-conversion -Wno-dynamic-class-memaccess -Werror")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wall -Wextra -Wunused -Werror")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Weverything -Werror")
+    set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Wunused -Wunused-value -Wunused-parameter -Wunused-variable -Werror")
+  elseif ("${COMPILER}" STREQUAL "gnu")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Werror -Wno-narrowing")
+    #set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Werror -Wno-narrowing -Wunused")
+    set(CMAKE_CXX_FLAGS "-DDEBUG -O0 -g -pg -Wfatal-errors -Werror -Wno-narrowing -Wunused -Wextra")
   else()
-    set(CMAKE_CXX_FLAGS "-O0 -g -pg -w -Wfatal-errors")
+  	message(FATAL_ERROR "Unrecognised value for COMPILER - '${COMPILER}'" )
+  endif()
+elseif ( "${CMAKE_BUILD_TYPE}" STREQUAL "Release" )
+  if("${COMPILER}" STREQUAL "intel")
+    set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
+  elseif ("${COMPILER}" STREQUAL "clang")
+    set(CMAKE_CXX_FLAGS "-O2 -g -Wfatal-errors")
+  elseif ("${COMPILER}" STREQUAL "gnu")
+    set(CMAKE_CXX_FLAGS "-O2 -g -Wfatal-errors")
+  else()
+  	message(FATAL_ERROR "Unrecognised value for COMPILER - '${COMPILER}'" )
   endif()
 else()
-  if(COMPILER STREQUAL "intel")
-    set(CMAKE_CXX_FLAGS "-O2 -g -mkl")
-  else()
-    set(CMAKE_CXX_FLAGS "-O2 -g -w -Wfatal-errors")
-  endif()
+  message(FATAL_ERROR "Unrecognised value for CMAKE_BUILD_TYPE - '${CMAKE_BUILD_TYPE}'" )
 endif()
 
 # ====================================================================================================================================
@@ -97,6 +113,8 @@ set(MPIRUN_EXEC srun)
 # ====================================================================================================================================
 # ================================================= External Libraries ===============================================================
 # ====================================================================================================================================
+
+cmake_policy(SET CMP0074 NEW)
 
 # === File Input/Output Options ===
 if(USE_HDF5)
@@ -382,7 +400,7 @@ set(config_source_files
 # ============== Network Communication ==============
 # ===================================================
 set(comm_source_files
-	src/comm/implementation/component/CustomMPIType.cpp
+	src/comm/interface/component/CustomMPIType.cpp
 	src/comm/implementation/component/MPIUtility.cpp
 	src/comm/interface/component/ExchangePattern.cpp
 	src/comm/implementation/component/ExchangePatternOneSidedNonBlocking.cpp
@@ -458,6 +476,10 @@ endif(USE_HDF5)
 set(geometry_source_files
 	src/geometry/euclidean/implementation/component/EuclideanPoint.cpp
 	src/geometry/euclidean/implementation/component/EuclideanVector.cpp
+  src/geometry/euclidean/implementation/component/EuclideanVector2D.cpp
+  src/geometry/euclidean/implementation/component/EuclideanVector3D.cpp
+  src/geometry/euclidean/implementation/component/LineSegment3D.cpp
+  src/geometry/euclidean/implementation/component/Matrix.cpp
 	src/geometry/euclidean/implementation/component/EuclideanPlane3D.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshProperties.cpp
 	src/geometry/mesh/interface/component/UnstructuredMeshInterface.cpp
@@ -479,6 +501,7 @@ set(geometry_source_files
 	src/geometry/mesh/implementation/source/MeshSourceFileConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshSourceStructGenConfigJSON.cpp
 	src/geometry/mesh/implementation/source/MeshConfigSourceJSON.cpp
+  src/geometry/shapes/interface/component/Polygon.cpp
 	src/geometry/shapes/interface/component/Polygon2D.cpp
 	src/geometry/shapes/interface/component/Polygon3D.cpp
 	src/geometry/shapes/implementation/component/Triangle.cpp
@@ -608,6 +631,12 @@ set(structure_source_files
 	src/structure/implementation/component/CupCfd.cpp
 )
 
+# ===================================================
+# ================== Error Checking =================
+# ===================================================
+set(error_source_files
+	src/error/Error.cpp
+)
 
 # ===================================================
 # ================= Set Libraries ===================
@@ -625,6 +654,7 @@ add_library(cupcfd_lib ${bench_source_files}
 					   ${particle_source_files}
 					   ${partitioner_source_files}
 					   ${structure_source_files}
+					   ${error_source_files}
 					   ${utility_source_files}
 			)
 

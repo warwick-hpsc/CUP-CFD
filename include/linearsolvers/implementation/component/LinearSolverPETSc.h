@@ -105,17 +105,23 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~LinearSolverPETSc();
+				~LinearSolverPETSc();
 
 				// === Overloaded Inherited Methods ===
-				cupcfd::error::eCodes resetVectorX();
-				cupcfd::error::eCodes resetVectorB();
-				cupcfd::error::eCodes resetMatrixA();
+				void resetVectorX();
+				void resetVectorB();
+				void resetMatrixA();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setValuesVectorX(T scalar);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setValuesVectorX(T * scalars, I nScalars, I * indexes, I nIndexes, I indexBase);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setValuesVectorB(T scalar);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setValuesVectorB(T * scalars, I nScalars, I * indexes, I nIndexes, I indexBase);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes clearVectorX();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes clearVectorB();
 
 				/**
@@ -126,24 +132,33 @@ namespace cupcfd
 				 * @tparam C The implementation class of the Sparse Matrix
 				 * @tparam I The type of the indexing system
 				 * @tparam T The data type of the matrix non-zero data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				cupcfd::error::eCodes reset();
+				void reset();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setupVectorX();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setupVectorB();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setupMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setup(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getValuesVectorX(T ** result, I * nResult);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getValuesVectorX(T ** result, I * nResult,
 																	I * indexes, I nIndexes, I indexBase);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getValuesVectorB(T ** result, I * nResult);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getValuesVectorB(T ** result, I * nResult,
 																	I * indexes, I nIndexes, I indexBase);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getValuesMatrixA(cupcfd::data_structures::SparseMatrix<C,I,T>& matrix);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes clearMatrixA();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes solve();
 		};
 	}

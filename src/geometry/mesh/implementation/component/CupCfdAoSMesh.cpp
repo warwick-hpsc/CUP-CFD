@@ -57,19 +57,18 @@ namespace cupcfd
 						L cellLabel,
 						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& center,
 						T vol,
-						bool isLocal)
-			{
+						bool isLocal) {
 				// Can only add if not finalized
-				if(this->finalized == true)
-				{
+				if(this->finalized) {
 					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Cell bID does not already exist
-				if(this->cellBuildIDToLocalID.find(cellLabel) != this->cellBuildIDToLocalID.end())
-				{
+				if(this->cellBuildIDToLocalID.find(cellLabel) != this->cellBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_EXISTING_CELL;
 				}
+
+				cupcfd::error::eCodes status;
 
 				// Create a cell object
 				CupCfdAoSMeshCell<I, T> cell;
@@ -100,19 +99,19 @@ namespace cupcfd
 				// Update the mesh properties
 				this->properties.lTCells = this->properties.lTCells + 1;
 
-				if(isLocal)
-				{
+				if(isLocal) {
 					this->properties.lOCells = this->properties.lOCells + 1;
 
 					// Add the cell to the connectivity graph
-					this->cellConnGraph->addLocalNode(cellLabel);
+					status = this->cellConnGraph->addLocalNode(cellLabel);
+					CHECK_ECODE(status)
 				}
-				else
-				{
+				else {
 					this->properties.lGhCells = this->properties.lGhCells + 1;
 
 					// Add the cell to the connectivity graph
-					this->cellConnGraph->addGhostNode(cellLabel);
+					status = this->cellConnGraph->addGhostNode(cellLabel);
+					CHECK_ECODE(status)
 				}
 
 				// Store the current 'local ID' - this will ultimately be updated to
@@ -125,31 +124,31 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addCell(L cellLabel, bool isLocal)
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addCell(L cellLabel, bool isLocal) {
+				cupcfd::error::eCodes status;
+
 				// Create empty center, vol for now
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> center(T(0), T(0), T(0));
 				T vol = T(0);
 
 				// Pass to more descriptive function
-				this->addCell(cellLabel, center, vol, isLocal);
+				status = this->addCell(cellLabel, center, vol, isLocal);
+				CHECK_ECODE(status)
+
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			// === Vertex Operators ===
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos)
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addVertex(L vertexLabel, cupcfd::geometry::euclidean::EuclideanPoint<T,3>& pos) {
 				// Can only add if not finalized
-				if(this->finalized == true)
-				{
+				if(this->finalized == true) {
 					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check the vertex doesn't already exist
-				if(this->vertexBuildIDToLocalID.find(vertexLabel) != this->vertexBuildIDToLocalID.end())
-				{
+				if(this->vertexBuildIDToLocalID.find(vertexLabel) != this->vertexBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_EXISTING_VERTEX;
 				}
 
@@ -175,32 +174,29 @@ namespace cupcfd
 
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addRegion(L regionLabel,
-																		  RType type,
-																		  bool std,
-																		  bool flux,
-																		  bool adiab,
-																		  T ylog,
-																		  T elog,
-																		  T density,
-																		  T turbKE,
-																		  T turbDiss,
-																		  T splvl,
-																		  T den,
-																		  T r,
-																		  T t,
-																		  cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
-																		  cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
-																		  std::string& regionName)
-			{
+																	RType type,
+																	bool std,
+																	bool flux,
+																	bool adiab,
+																	T ylog,
+																	T elog,
+																	T density,
+																	T turbKE,
+																	T turbDiss,
+																	T splvl,
+																	T den,
+																	T r,
+																	T t,
+																	cupcfd::geometry::euclidean::EuclideanVector<T,3>& forceTangent,
+																	cupcfd::geometry::euclidean::EuclideanVector<T,3>& uvw,
+																	std::string& regionName) {
 				// Can only add if not finalized
-				if(this->finalized == true)
-				{
+				if(this->finalized == true) {
 					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Region bID does not already exist
-				if(this->regionBuildIDToLocalID.find(regionLabel) != this->regionBuildIDToLocalID.end())
-				{
+				if(this->regionBuildIDToLocalID.find(regionLabel) != this->regionBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_EXISTING_REGION;
 				}
 
@@ -238,8 +234,7 @@ namespace cupcfd
 			template <class I, class T, class L>
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addRegion(
 								L regionLabel,
-								std::string& regionName)
-			{
+								std::string& regionName) {
 				RType type = RTYPE_DEFAULT;
 
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> forceTangent(T(0), T(0), T(0));
@@ -257,17 +252,14 @@ namespace cupcfd
 					L boundaryLabel,
 					L regionLabel,
 					L * vertexLabels, I nVertexLabels,
-					T distance)
-			{
+					T distance) {
 				// Can only add if not finalized
-				if(this->finalized == true)
-				{
+				if(this->finalized == true) {
 					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Boundary bID does not already exist
-				if(this->boundaryBuildIDToLocalID.find(boundaryLabel) != this->boundaryBuildIDToLocalID.end())
-				{
+				if(this->boundaryBuildIDToLocalID.find(boundaryLabel) != this->boundaryBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_EXISTING_BOUNDARY;
 				}
 
@@ -280,17 +272,14 @@ namespace cupcfd
 
 				// Check the vertex count is valid
 				// Currently, we only handle 3-4 vertex faces/boundaries
-				if(nVertexLabels < 3 || nVertexLabels > 4)
-				{
+				if(nVertexLabels < 3 || nVertexLabels > 4) {
 					return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
 				}
 
 				// Copy the vertexIDs, if they exist
-				for(I i = 0; i < nVertexLabels; i++)
-				{
+				for(I i = 0; i < nVertexLabels; i++) {
 					// Check the vertex exists
-					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end())
-					{
+					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end()) {
 						return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
 					}
 
@@ -299,8 +288,7 @@ namespace cupcfd
 				}
 
 				// If only 3 vertices, set the 4th to -1
-				if(nVertexLabels == 3)
-				{
+				if(nVertexLabels == 3) {
 					boundary.verticesID[3] = -1;
 				}
 
@@ -314,8 +302,7 @@ namespace cupcfd
 				boundary.uplus = T(0);
 
 				// Check the Region ID Exists
-				if(this->regionBuildIDToLocalID.find(regionLabel) == this->regionBuildIDToLocalID.end())
-				{
+				if(this->regionBuildIDToLocalID.find(regionLabel) == this->regionBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_INVALID_REGION_LABEL;
 				}
 
@@ -339,8 +326,7 @@ namespace cupcfd
 			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::addBoundary(
 					L boundaryLabel,
 					L regionLabel,
-					L * vertexLabels, I nVertexLabels)
-			{
+					L * vertexLabels, I nVertexLabels) {
 				T distance = 0.0;
 
 				// Passthrough to more detailed function
@@ -362,19 +348,16 @@ namespace cupcfd
 						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xpac,
 						cupcfd::geometry::euclidean::EuclideanPoint<T,3>& xnac,
 						T rlencos,
-						T area)
-			{
+						T area) {
 				cupcfd::error::eCodes status;
 
 				// Can only add if not finalized
-				if(this->finalized == true)
-				{
+				if(this->finalized == true) {
 					return cupcfd::error::E_FINALIZED;
 				}
 
 				// Check Face bID does not already exist
-				if(this->faceBuildIDToLocalID.find(faceLabel) != this->faceBuildIDToLocalID.end())
-				{
+				if(this->faceBuildIDToLocalID.find(faceLabel) != this->faceBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_EXISTING_FACE;
 				}
 
@@ -382,8 +365,7 @@ namespace cupcfd
 				CupCfdAoSMeshFace<I, T> face;
 
 				// Check Cell 1 exists
-				if(this->cellBuildIDToLocalID.find(cell1Label) == this->cellBuildIDToLocalID.end())
-				{
+				if(this->cellBuildIDToLocalID.find(cell1Label) == this->cellBuildIDToLocalID.end()) {
 					return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
 				}
 
@@ -391,11 +373,9 @@ namespace cupcfd
 				face.cell1ID = this->cellBuildIDToLocalID[cell1Label];
 
 
-				if(isBoundary)
-				{
+				if(isBoundary) {
 					// Check the Boundary ID exists
-					if(this->boundaryBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->boundaryBuildIDToLocalID.end())
-					{
+					if(this->boundaryBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->boundaryBuildIDToLocalID.end()) {
 						return cupcfd::error::E_MESH_INVALID_BOUNDARY_LABEL;
 					}
 
@@ -405,40 +385,34 @@ namespace cupcfd
 					// Boundary Face, fix cell 2 to -1 (i.e. no cell)
 					face.cell2ID = -1;
 				}
-				else
-				{
+				else {
 					// Check the Cell ID exists
-					if(this->cellBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->cellBuildIDToLocalID.end())
-					{
+					if(this->cellBuildIDToLocalID.find(cell2OrBoundaryLabel) == this->cellBuildIDToLocalID.end()) {
 						return cupcfd::error::E_MESH_INVALID_CELL_LABEL;
 					}
 
 					// Check this is not a face between two ghost cells
 					// We only accept faces between local->local, or local->ghost cells
 					// Since this graph shouldn't be finalised yet, the data will be stored in the build graph
-					if(!isBoundary)
-					{
-						bool foundGhost1, foundGhost2;
-						this->cellConnGraph->existsGhostNode(cell1Label, &foundGhost1);
-						this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel, &foundGhost2);
-
-						if(foundGhost1 && foundGhost2)
-						{
+					if(!isBoundary) {
+						bool foundGhost1 = this->cellConnGraph->existsGhostNode(cell1Label);
+						bool foundGhost2 = this->cellConnGraph->existsGhostNode(cell2OrBoundaryLabel);
+						if(foundGhost1 && foundGhost2) {
 							return cupcfd::error::E_MESH_INVALID_FACE;
 						}
 					}
 
 					// Check Edge does not already exist in connectivity graph
 					bool found;
-					this->cellConnGraph->existsEdge(cell1Label, cell2OrBoundaryLabel, &found);
-					if(found)
-					{
+					status = this->cellConnGraph->existsEdge(cell1Label, cell2OrBoundaryLabel, &found);
+					CHECK_ECODE(status)
+					if(found) {
 						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
 
-					this->cellConnGraph->existsEdge(cell2OrBoundaryLabel, cell1Label, &found);
-					if(found)
-					{
+					status = this->cellConnGraph->existsEdge(cell2OrBoundaryLabel, cell1Label, &found);
+					CHECK_ECODE(status)
+					if(found) {
 						return cupcfd::error::E_MESH_FACE_EDGE_EXISTS;
 					}
 
@@ -451,6 +425,7 @@ namespace cupcfd
 					// Add the edge to the cell connectivity graph since not a boundary face
 					// Use the Build Global IDs for the connectivity graph nodes.
 					status = this->cellConnGraph->addUndirectedEdge(cell1Label, cell2OrBoundaryLabel);
+					CHECK_ECODE(status)
 				}
 
 				// Copy the face lambda
@@ -461,17 +436,14 @@ namespace cupcfd
 
 				// Check the vertex count is valid
 				// Currently, we only handle 3-4 vertex faces/boundaries
-				if(nVertexLabels < 3 || nVertexLabels > 4)
-				{
+				if(nVertexLabels < 3 || nVertexLabels > 4) {
 					return cupcfd::error::E_MESH_INVALID_VERTEX_COUNT;
 				}
 
 				// Copy the vertexIDs, if they exist
-				for(I i = 0; i < nVertexLabels; i++)
-				{
+				for(I i = 0; i < nVertexLabels; i++) {
 					// Check the vertex exists
-					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end())
-					{
+					if(this->vertexBuildIDToLocalID.find(vertexLabels[i]) == this->vertexBuildIDToLocalID.end()) {
 						return cupcfd::error::E_MESH_INVALID_VERTEX_LABEL;
 					}
 
@@ -480,8 +452,7 @@ namespace cupcfd
 				}
 
 				// if only 3 vertices, set the 4th to -1
-				if(nVertexLabels == 3)
-				{
+				if(nVertexLabels == 3) {
 					face.verticesID[3] = -1;
 				}
 
@@ -512,15 +483,12 @@ namespace cupcfd
 				// Update the Local Face Count for Cell 1
 				this->cellNFaces[this->cellBuildIDToLocalID[cell1Label]] = this->cellNFaces[this->cellBuildIDToLocalID[cell1Label]] + 1;
 
-				if(!isBoundary)
-				{
+				if(!isBoundary) {
 					// Update the Local Face Count for Cell 2
-					this->cellNFaces[this->cellBuildIDToLocalID[cell2OrBoundaryLabel]] =
-							this->cellNFaces[this->cellBuildIDToLocalID[cell2OrBoundaryLabel]] + 1;
+					this->cellNFaces[this->cellBuildIDToLocalID[cell2OrBoundaryLabel]]++;
 				}
 
-				if(isBoundary)
-				{
+				if(isBoundary) {
 					// Update the referenced boundary to point back at this face's local ID
 					int localBoundaryID = this->boundaryBuildIDToLocalID[cell2OrBoundaryLabel];
 					this->boundaries[localBoundaryID].faceID = this->faceBuildIDToLocalID[faceLabel];
@@ -535,8 +503,7 @@ namespace cupcfd
 						L cell1Label,
 						L cell2OrBoundaryLabel,
 						bool isBoundary,
-						L * vertexLabels, I nVertexLabels)
-			{
+						L * vertexLabels, I nVertexLabels) {
 				// Set Defaults
 				T lambda = T(0);
 				T rlencos = T(0);
@@ -547,15 +514,14 @@ namespace cupcfd
 				cupcfd::geometry::euclidean::EuclideanPoint<T,3> xnac(T(0), T(0), T(0));
 
 				// Passthrough to more detailed function
-				this->addFace(faceLabel, cell1Label, cell2OrBoundaryLabel, isBoundary,
+				return this->addFace(faceLabel, cell1Label, cell2OrBoundaryLabel, isBoundary,
 							  lambda, norm, vertexLabels, nVertexLabels, center, xpac, xnac, rlencos, area);
 			}
 
 			// === Concrete Methods ===
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::reset()
-			{
+			void CupCfdAoSMesh<I,T,L>::reset() {
 				// Reset Data Stores
 				this->boundaries.clear();
 				this->cells.clear();
@@ -578,8 +544,9 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::updateCellFaceMap()
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::updateCellFaceMap() {
+				cupcfd::error::eCodes status;
+				
 				// Reset in case it was in use
 				this->cellFaceMapCSRXAdj.clear();
 				this->cellFaceMapCSRAdj.clear();
@@ -590,8 +557,9 @@ namespace cupcfd
 				I faceCountSum = 0;
 
 				// Part (1) Store the index lookups in cellFaceMapCSRAdj
-				for(I i = 0; i < this->cells.size(); i++)
-				{
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cells.size());
+				for(I i = 0; i < iLimit; i++) {
 					this->cellFaceMapCSRXAdj.push_back(ptr);
 					ptr = ptr + this->getCellStoredNFaces(i);
 
@@ -603,15 +571,14 @@ namespace cupcfd
 				}
 				this->cellFaceMapCSRXAdj.push_back(ptr);
 
-				for(I i = 0; i < faceCountSum; i++)
-				{
+				for(I i = 0; i < faceCountSum; i++) {
 					this->cellFaceMapCSRAdj.push_back(I(-1));
 				}
 
 				// Store Face IDs in the Cell Mapping Vector
 				// Not a guaranteed order within a cell list
-				for(I i = 0; i < this->faces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->faces.size());
+				for(I i = 0; i < iLimit; i++) {
 					I faceID = i;
 
 					// Cell 1 ID
@@ -619,26 +586,21 @@ namespace cupcfd
 					I rangeStart = this->cellFaceMapCSRXAdj[cell1ID];
 					I rangeEnd = this->cellFaceMapCSRXAdj[cell1ID+1];
 
-					for(I j = rangeStart; j < rangeEnd; j++)
-					{
-						if(this->cellFaceMapCSRAdj[j] == -1)
-						{
+					for(I j = rangeStart; j < rangeEnd; j++) {
+						if(this->cellFaceMapCSRAdj[j] == -1) {
 							this->cellFaceMapCSRAdj[j] = faceID;
 							break;
 						}
 					}
 
 					// Cell 2 if not boundary
-					if(faces[i].cell2ID > -1)
-					{
+					if(faces[i].cell2ID > -1) {
 						I cell2ID = faces[i].cell2ID;
 						rangeStart = this->cellFaceMapCSRXAdj[cell2ID];
 						rangeEnd = this->cellFaceMapCSRXAdj[cell2ID+1];
 
-						for(I j = rangeStart; j < rangeEnd; j++)
-						{
-							if(this->cellFaceMapCSRAdj[j] == -1)
-							{
+						for(I j = rangeStart; j < rangeEnd; j++) {
+							if(this->cellFaceMapCSRAdj[j] == -1) {
 								this->cellFaceMapCSRAdj[j] = faceID;
 								break;
 							}
@@ -647,20 +609,21 @@ namespace cupcfd
 				}
 
 				// Tidyup - Not strictly necessary, but we will sort the face IDs within each cell range
-				for(I i = 0; i < this->cells.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cells.size());
+				for(I i = 0; i < iLimit; i++) {
 					I rangeStart = this->cellFaceMapCSRXAdj[i];
 					I rangeSize = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
 
-					cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					status = cupcfd::utility::drivers::merge_sort(&cellFaceMapCSRAdj[rangeStart], rangeSize);
+					CHECK_ECODE(status)
 				}
 
 				// Now that the cell -> face map is complete, let us compute the number of locally stored
 				// faces and vertices associated with a cell
 
 				// Faces - can derive quickly from CSR mappings
-				for(I i = 0; i < this->cells.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cells.size());
+				for(I i = 0; i < iLimit; i++) {
 					this->cellNFaces[i] = this->cellFaceMapCSRXAdj[i+1] - this->cellFaceMapCSRXAdj[i];
 
 					// Temporarily set global nfaces to the same as local stored face counts
@@ -669,23 +632,21 @@ namespace cupcfd
 				}
 
 				// Vertices - Build a list of stored vertices for stored associated faces and remove duplicates
-				for(I i = 0; i < this->cells.size(); i++)
-				{
+				// for(I i = 0; i < this->cells.size(); i++)
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cells.size());
+				for(I i = 0; i < iLimit; i++) {
 					std::vector<I> vertexIDs;
 
 					// Number of stored faces
 					I cellFaceCount = this->cellNFaces[i];
 
-					for(I j = 0; j < cellFaceCount; j++)
-					{
+					for(I j = 0; j < cellFaceCount; j++) {
 						I faceID = this->getCellFaceID(i, j);
 
-						for(I k = 0; k < 4; k++)
-						{
+						for(I k = 0; k < 4; k++) {
 							I vertexID = this->getFaceVertex(faceID, k);
 
-							if(vertexID != -1)
-							{
+							if(vertexID != -1) {
 								vertexIDs.push_back(vertexID);
 							}
 						}
@@ -694,7 +655,8 @@ namespace cupcfd
 					I nVertices = vertexIDs.size();
 
 					// Store number of distinct vertices local IDs stored for this cell on this rank
-					cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					status = cupcfd::utility::drivers::distinctCount(&vertexIDs[0], nVertices, &(this->cellNVertices[i]));
+					CHECK_ECODE(status)
 
 					// Set the global amount to the same as the local amount - for local cells this is the same,
 					// for ghost cells this will be incorrect and should be overridden by an exchange function
@@ -705,8 +667,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::updateCellLocalIndexes()
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::updateCellLocalIndexes() {
 				// We have two mappings
 				// (a) cellBuildIDToLocalID - This maps the build cell ID (e.g. from a file) to the cell data
 				// (b) Connectivity Graph.local - This maps the build Cell ID (the node) to a local ID in the graph
@@ -714,19 +675,21 @@ namespace cupcfd
 				// We wish to reorder the cell data (this->cells) to the same ordering as the local IDs in the
 				// connectivity graph, and update cellBuildIDToLocalID and the face->cell mappings accordingly.
 
+				cupcfd::error::eCodes status;
+
 				// First, let us create useful data stores
 				// (a) A vector of valid Keys (Build Cell IDs)
 				std::vector<I> keys;
-				for(typename std::map<I,I>::iterator iter = this->cellBuildIDToLocalID.begin(); iter != this->cellBuildIDToLocalID.end(); iter++)
-				{
+				for(typename std::map<I,I>::iterator iter = this->cellBuildIDToLocalID.begin(); iter != this->cellBuildIDToLocalID.end(); iter++) {
 					keys.push_back(iter->first);
 				}
 
 
 				// (b) A mapping of the current local cell IDs in the map to their key
 				std::map<I,I> localToBuildID;
-				for(I i = 0; i < keys.size(); i++)
-				{
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(keys.size());
+				for(I i = 0; i < iLimit; i++) {
 					I lID = this->cellBuildIDToLocalID[keys[i]];
 					localToBuildID[lID] = keys[i];
 				}
@@ -734,19 +697,20 @@ namespace cupcfd
 				// Now we begin correcting all cell related structures and mappings
 
 				// (1) Remap the face->cell mappings to the graph local IDs
-				for(I i = 0; i < faces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(faces.size());
+				for(I i = 0; i < iLimit; i++) {
 					// Update Cell 1 ID by mapping the current local back to the build ID, then to the local ID in the graph
 					I bID = localToBuildID[faces[i].cell1ID];
 					I graphLocalID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
+					CHECK_ECODE(status)
 					faces[i].cell1ID = graphLocalID;
 
 					// Get and Update Cell 2 IF this is not a boundary face
-					if(faces[i].cell2ID > -1)
-					{
+					if(faces[i].cell2ID > -1) {
 						bID = localToBuildID[faces[i].cell2ID];
-						this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
+						status = this->cellConnGraph->connGraph.getNodeLocalIndex(bID, &graphLocalID);
+						CHECK_ECODE(status)
 						faces[i].cell2ID = graphLocalID;
 					}
 				}
@@ -756,19 +720,20 @@ namespace cupcfd
 				// Make a copy
 				std::vector<CupCfdAoSMeshCell<I,T>> tmpCells;
 
-				for(I i = 0; i < this->cells.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cells.size());
+				for(I i = 0; i < iLimit; i++) {
 					tmpCells.push_back(this->cells[i]);
 				}
 
 				// Now we reorder using tmpCells as the source
-				for(I i = 0; i < keys.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(keys.size());
+				for(I i = 0; i < iLimit; i++) {
 					I currentLocalID = this->cellBuildIDToLocalID[keys[i]];
 					I newLocalID;
 
 					// Get Graph Local ID
-					this->cellConnGraph->connGraph.getNodeLocalIndex(keys[i], &newLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(keys[i], &newLocalID);
+					CHECK_ECODE(status)
 
 					// Update Map To Point at new Local ID
 					this->cellBuildIDToLocalID[keys[i]] = newLocalID;
@@ -782,67 +747,71 @@ namespace cupcfd
 				// (3) Shuffle the cellNFaces data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNFaces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellNFaces.size());
+				for(I i = 0; i < iLimit; i++) {
 					tmpVec.push_back(this->cellNFaces[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNFaces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNFaces.size());
+				for(I i = 0; i < iLimit; i++) {
 					I label = localToBuildID[i];
 					I graphLocalID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					CHECK_ECODE(status)
 					this->cellNFaces[graphLocalID] = tmpVec[i];
 				}
 
 				// (4) Shuffle the cellNGFaces data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNGFaces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNGFaces.size());
+				for(I i = 0; i < iLimit; i++) {
 					tmpVec.push_back(this->cellNGFaces[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNGFaces.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNGFaces.size());
+				for(I i = 0; i < iLimit; i++) {
 					I label = localToBuildID[i];
 					I graphLocalID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					CHECK_ECODE(status)
 					this->cellNGFaces[graphLocalID] = tmpVec[i];
 				}
 
 				// (5) Shuffle the cellNGVertices data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNGVertices.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNGVertices.size());
+				for(I i = 0; i < iLimit; i++) {
 					tmpVec.push_back(this->cellNGVertices[i]);
 				}
 
 				// Update the source to shuffled order
-				for(I i = 0; i < this->cellNGVertices.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNGVertices.size());
+				for(I i = 0; i < iLimit; i++) {
 					I label = localToBuildID[i];
 					I graphLocalID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					CHECK_ECODE(status)
 					this->cellNGVertices[graphLocalID] = tmpVec[i];
 				}
 
 				// (6) Shuffle the cellNVertices data structure
 				// Make a copy
 				tmpVec.clear();
-				for(I i = 0; i < this->cellNVertices.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNVertices.size());
+				for(I i = 0; i < iLimit; i++) {
 					tmpVec.push_back(this->cellNVertices[i]);
 				}
 
-				for(I i = 0; i < this->cellNVertices.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->cellNVertices.size());
+				for(I i = 0; i < iLimit; i++) {
 					I label = localToBuildID[i];
 					I graphLocalID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphLocalID);
+					CHECK_ECODE(status)
 					this->cellNVertices[graphLocalID] = tmpVec[i];
 				}
 
@@ -852,11 +821,12 @@ namespace cupcfd
 
 				// (8) Finally, correct the cellBuildIDToLocalID data structure to point at the new
 				// mesh local IDs (i.e. the graph local IDs)
-				for(I i = 0; i < cellBuildIDToLocalID.size(); i++)
-				{
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(cellBuildIDToLocalID.size());
+				for(I i = 0; i < iLimit; i++) {
 					I label = localToBuildID[i];
 					I graphCellID;
-					this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphCellID);
+					status = this->cellConnGraph->connGraph.getNodeLocalIndex(label, &graphCellID);
+					CHECK_ECODE(status)
 					this->cellBuildIDToLocalID[label] = graphCellID;
 				}
 
@@ -864,8 +834,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::finalize()
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::finalize() {
 				cupcfd::error::eCodes status;
 				// Now all data has been added, finalize the connectivity graph to ensure all
 				// structures are fixed
@@ -874,17 +843,13 @@ namespace cupcfd
 				// this method also a blocking method
 
 				status = this->cellConnGraph->finalize();
-
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return cupcfd::error::E_ERROR;
-				}
+				CHECK_ECODE(status)
 
 				// Check that every boundary is mapped to a face
-				for(I i = 0; i < this->boundaries.size(); i++)
-				{
-					if(this->boundaries[i].faceID == -1)
-					{
+				I iLimit;
+				iLimit = cupcfd::utility::drivers::safeConvertSizeT<I>(this->boundaries.size());
+				for(I i = 0; i < iLimit; i++) {
+					if(this->boundaries[i].faceID == -1) {
 						return cupcfd::error::E_MESH_UNMAPPED_BOUNDARY_FACE;
 					}
 				}
@@ -897,19 +862,23 @@ namespace cupcfd
 
 				// Important - This should be done before Cell->Face Mapping and Cell->NVertices Mapping
 				// to ensure that the correct indexes are used for those functions
-				this->updateCellLocalIndexes();
+				status = this->updateCellLocalIndexes();
+				CHECK_ECODE(status)
 
 				// Most data is stored in AoS structures already. However, we need to update
 				// the Cell -> Face Mapping as it is stored in a separate CSR and is not updated
 				// by any of the add/set functions due to the performance overheads of doing it
 				// element by element (constant inserts, reindexing)
-				this->updateCellFaceMap();
+				status = this->updateCellFaceMap();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NVertices so Ghost Cells have the correct values
-				this->exchangeCellGlobalNVertices();
+				status = this->exchangeCellGlobalNVertices();
+				CHECK_ECODE(status)
 
 				// Exchange the Global NFace counts so Ghost Cells have the correct values
-				this->exchangeCellGlobalNFaces();
+				status = this->exchangeCellGlobalNFaces();
+				CHECK_ECODE(status)
 
 				// Update status
 				this->finalized = true;
@@ -918,8 +887,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::exchangeCellGlobalNVertices()
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::exchangeCellGlobalNVertices() {
 				// Should only be called as part of the finalise step, since it requires the connectivity graph to
 				// be set up
 
@@ -927,8 +895,11 @@ namespace cupcfd
 				cupcfd::comm::ExchangePatternConfig exchangePatternConfig(cupcfd::comm::EXCHANGE_NONBLOCKING_ONE_SIDED);
 				cupcfd::comm::ExchangePattern<I> * exchangePattern;
 
+				cupcfd::error::eCodes status;
+
 				// Build the exchange pattern for cells
-				exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				CHECK_ECODE(status)
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage
@@ -936,31 +907,32 @@ namespace cupcfd
 
 				I * nVertices = (I *) malloc(sizeof(I) * nCells);
 
-				for(I i = 0; i < nCells; i++)
-				{
+				for(I i = 0; i < nCells; i++) {
 					// For local cells, stored vertices = global vertices
 					// Ghost cell data will be overwritten after exchange
 					nVertices[i] = this->getCellStoredNVertices(i);
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nVertices, nCells);
-				exchangePattern->exchangeStop(nVertices, nCells);
+				status = exchangePattern->exchangeStart(nVertices, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nVertices, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
-				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++)
-				{
+				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {
 					this->cellNGVertices[i] = nVertices[i];
 				}
 
 				free(nVertices);
 
 				delete exchangePattern;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::exchangeCellGlobalNFaces()
-			{
+			cupcfd::error::eCodes CupCfdAoSMesh<I,T,L>::exchangeCellGlobalNFaces() {
 				// Should only be called as part of the finalise step, since it requires the connectivity graph to
 				// be set up
 
@@ -968,8 +940,11 @@ namespace cupcfd
 				cupcfd::comm::ExchangePatternConfig exchangePatternConfig(cupcfd::comm::EXCHANGE_NONBLOCKING_ONE_SIDED);
 				cupcfd::comm::ExchangePattern<I> * exchangePattern;
 
+				cupcfd::error::eCodes status;
+
 				// Build the exchange pattern for cells
-				exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				status = exchangePatternConfig.buildExchangePattern(&exchangePattern, *(this->cellConnGraph));
+				CHECK_ECODE(status)
 
 				// Build an array of the number of vertices for local cells, leave space for ghost cells
 				// but their values don't matter at this stage
@@ -977,34 +952,32 @@ namespace cupcfd
 
 				I * nFaces = (I *) malloc(sizeof(I) * nCells);
 
-				for(I i = 0; i < nCells; i++)
-				{
+				for(I i = 0; i < nCells; i++) {
 					// For local cells, stored vertices = global vertices
 					// Ghost cell data will be overwritten after exchange
 					nFaces[i] = this->getCellStoredNFaces(i);
 				}
 
 				// MPI Exchange
-				exchangePattern->exchangeStart(nFaces, nCells);
-				exchangePattern->exchangeStop(nFaces, nCells);
+				status = exchangePattern->exchangeStart(nFaces, nCells);
+				CHECK_ECODE(status)
+				status = exchangePattern->exchangeStop(nFaces, nCells);
+				CHECK_ECODE(status)
 
 				// Overwrite the Global Counts for Ghost Cells on this rank with the received data
-				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++)
-				{
+				for(I i = this->cellConnGraph->nLONodes; i < nCells; i++) {
 					this->cellNGFaces[i] = nFaces[i];
 				}
 
 				free(nFaces);
 				delete exchangePattern;
+
+				return cupcfd::error::E_SUCCESS;
 			}
 
+			// Explicit Instantiation
+			template class CupCfdAoSMesh<int, float, int>;
+			template class CupCfdAoSMesh<int, double, int>;
 		}
 	}
 }
-
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMesh<int, float, int>;
-template class CupCfdAoSMesh<int, double, int>;

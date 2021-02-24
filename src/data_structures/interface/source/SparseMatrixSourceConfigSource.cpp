@@ -23,31 +23,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		SparseMatrixSourceConfigSource<I,T>::SparseMatrixSourceConfigSource(const SparseMatrixSourceConfigSource<I,T>& source)
-		{
-
-		}
-
-		template <class I, class T>
 		SparseMatrixSourceConfigSource<I,T>::~SparseMatrixSourceConfigSource()
-		{
-
-		}
-
-		template <class I, class T>
-		void SparseMatrixSourceConfigSource<I,T>::operator=(const SparseMatrixSourceConfigSource<I,T>& source)
-		{
-
-		}
-
-		template <class I, class T>
-		SparseMatrixSourceConfigSource<I,T> * SparseMatrixSourceConfigSource<I,T>::clone()
-		{
-
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSourceConfigSource<I,T>::buildSparseMatrixSourceConfig(SparseMatrixSourceConfig<I,T> ** matrixSourceConfig)
 		{
 
 		}

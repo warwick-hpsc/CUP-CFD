@@ -44,9 +44,10 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_MPI_ERR An MPI error was encountered
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes AllToAllMPI(T * sendbuf, int sendcount,
-												  T * recvbuf, int recvcount,
-												  MPI_Comm comm);
+												T * recvbuf, int recvcount,
+												MPI_Comm comm);
 
 			/**
 			 * Wrapper for performing an All-to-All operation using MPI.
@@ -69,9 +70,10 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_MPI_ERR An MPI error was encountered
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts,
-												   T * recvbuf, int *recvcounts,
-												   MPI_Comm comm);
+												T * recvbuf, int *recvcounts,
+												MPI_Comm comm);
 
 			/**
 			 * Wrapper for performing an All-to-All operation using MPI.
@@ -96,9 +98,10 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_MPI_ERR An MPI error was encountered
 			 */
 			template <class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts, int *sdispls,
-												   T * recvbuf, int *recvcounts, int *rdispls,
-												   MPI_Comm comm);
+												T * recvbuf, int *recvcounts, int *rdispls,
+												MPI_Comm comm);
 		}
 	}
 }

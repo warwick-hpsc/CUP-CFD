@@ -14,6 +14,8 @@
 #ifndef CUPCFD_GEOMETRY_SHAPES_POLYHEDRON_IPP_H
 #define CUPCFD_GEOMETRY_SHAPES_POLYHEDRON_IPP_H
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -23,76 +25,61 @@ namespace cupcfd
 			// === Constructors/Deconstructors ===
 
 			template <class P, class T>
-			Polyhedron<P,T>::Polyhedron()
-			{
+			Polyhedron<P,T>::Polyhedron() {
 
 			}
 
 			template <class P, class T>
-			Polyhedron<P,T>::~Polyhedron()
-			{
+			Polyhedron<P,T>::~Polyhedron() {
 
 			}
 
-			// === Static Methods ===
-
-			// === Concrete Methods ===
-			
-			template <class P, class T>
-			inline int Polyhedron<P,T>::getNEdges()
-			{
-				return this->nEdges;
-			}
-				
-			template <class P, class T>		
-			inline int Polyhedron<P,T>::getNVertices()
-			{
-				return this->nVertices;
-			}		
-								
 			// === Interface Methods ===
 
 			template <class P, class T>
-			inline bool Polyhedron<P,T>::isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point)
-			{
+			auto Polyhedron<P,T>::getVolume() {
+				return static_cast<P*>(this)->getVolume();
+			}
+
+			template <class P, class T>
+			auto Polyhedron<P,T>::getCentroid() {
+				return static_cast<P*>(this)->getCentroid();
+			}
+
+			template <class P, class T>
+			auto Polyhedron<P,T>::isPointInside(euc::EuclideanPoint<T,3>& point) {
 				return static_cast<P*>(this)->isPointInside(point);
 			}
 
 			template <class P, class T>
-			T Polyhedron<P,T>::computeVolume()
-			{
-				return static_cast<P*>(this)->computeVolume();
+			void Polyhedron<P,T>::print() {
+				printf("- centroid: "); this->getCentroid().print(); printf("\n");
+				std::cout << "- volume: " << this->getVolume() << std::endl;
 			}
-			
+
 			// Namespace non-class methods
 
-			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces)
-			{
+			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces) {
 				// https://en.wikipedia.org/wiki/Types_of_mesh
 			
 				// Determine the type of cell
-				if(nVertices == 4 && nFaces == 4)
-				{
+				if(nVertices == 4 && nFaces == 4) {
 					// Tetrahedron
 					return POLYHEDRON_TETRAHEDRON;
 				}
-				else if(nVertices == 5 && nFaces == 5)
-				{
+				else if(nVertices == 5 && nFaces == 5) {
 					// Quad Pyramid
 					return POLYHEDRON_QUADPYRAMID;
 				}
-				else if(nVertices == 6 && nFaces == 5)
-				{
+				else if(nVertices == 6 && nFaces == 5) {
 					// TriPrism
 					return POLYHEDRON_TRIPRISM;
 				}
-				else if(nVertices == 8 && nFaces == 6)
-				{
+				else if(nVertices == 8 && nFaces == 6) {
 					// Hexahedron
 					return POLYHEDRON_HEXAHEDRON;
 				}
-				else
-				{
+				else {
 					// Unknown Type
 					return POLYHEDRON_UNKNOWN;
 				}

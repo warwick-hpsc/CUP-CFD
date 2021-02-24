@@ -33,19 +33,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		PartitionerNaiveConfig<I,T>::PartitionerNaiveConfig(PartitionerNaiveConfig<I,T>& source)
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
 		PartitionerNaiveConfig<I,T>::~PartitionerNaiveConfig()
-		{
-			// Nothing to do currently
-		}
-
-		template <class I, class T>
-		void PartitionerNaiveConfig<I,T>::operator=(PartitionerNaiveConfig<I,T>& source)
 		{
 			// Nothing to do currently
 		}

@@ -40,8 +40,6 @@ BOOST_AUTO_TEST_CASE(constructor_test1)
 // Test 1:
 BOOST_AUTO_TEST_CASE(parse_test1)
 {
-	cupcfd::error::eCodes status;
-
     int argc = 3;
 
     char ** argv = (char **) malloc(sizeof(char *) * 3);
@@ -49,9 +47,9 @@ BOOST_AUTO_TEST_CASE(parse_test1)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "4";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "4");
 
     CommandLine opts(argc, argv);
     BOOST_CHECK_EQUAL(opts.nOptions, 1);
@@ -70,9 +68,9 @@ BOOST_AUTO_TEST_CASE(getStringArg_test1)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "abcde";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "abcde");
 
     CommandLine opts(argc, argv);
 
@@ -93,10 +91,10 @@ BOOST_AUTO_TEST_CASE(getStringArg_test2)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "abcde";
-    argv[3] = "fghijk";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "abcde");
+    strcpy(argv[2], "fghijk");
 
     CommandLine opts(argc, argv);
 
@@ -117,10 +115,10 @@ BOOST_AUTO_TEST_CASE(getStringArg_test3)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "abcde";
-    argv[3] = "fghijk";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "abcde");
+    strcpy(argv[2], "fghijk");
 
     CommandLine opts(argc, argv);
 
@@ -140,10 +138,10 @@ BOOST_AUTO_TEST_CASE(getStringArg_test4)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "abcde";
-    argv[3] = "fghijk";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "abcde");
+    strcpy(argv[2], "fghijk");
 
     CommandLine opts(argc, argv);
 
@@ -165,9 +163,9 @@ BOOST_AUTO_TEST_CASE(getBoolArg_test1)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "true";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "true");
 
     CommandLine opts(argc, argv);
 
@@ -189,9 +187,9 @@ BOOST_AUTO_TEST_CASE(getBoolArg_test2)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "false";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "false");
 
     CommandLine opts(argc, argv);
 
@@ -213,9 +211,9 @@ BOOST_AUTO_TEST_CASE(getBoolArg_test3)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "1";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "1");
 
     CommandLine opts(argc, argv);
 
@@ -237,9 +235,9 @@ BOOST_AUTO_TEST_CASE(getBoolArg_test4)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "0";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "0");
 
     CommandLine opts(argc, argv);
 
@@ -261,9 +259,9 @@ BOOST_AUTO_TEST_CASE(getBoolArg_test5)
     {
     	argv[i] = (char *) malloc(sizeof(char) * 10);
     }
-    argv[0] = "binName";
-    argv[1] = "--test";
-    argv[2] = "abc";
+    strcpy(argv[0], "binName");
+    strcpy(argv[1], "--test");
+    strcpy(argv[2], "abc");
 
     CommandLine opts(argc, argv);
 

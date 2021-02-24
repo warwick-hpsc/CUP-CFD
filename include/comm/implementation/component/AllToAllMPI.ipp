@@ -27,52 +27,43 @@ namespace cupcfd
 		{
 			template <class T>
 			cupcfd::error::eCodes AllToAllMPI(T * sendbuf, int sendcount,
-												  T * recvbuf, int recvcount,
-												  MPI_Comm comm)
-			{
-				// MPI Error Status
-				int err;
-				cupcfd::error::eCodes status;
-
-				// Create a dummy variable of type T so we can select the correct
-				// specialisation of getMPIType
-				T dummy;
-
-				// Retrieve the MPI Datatype for T
-				MPI_Datatype dType;
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
+												T * recvbuf, int recvcount,
+												MPI_Comm comm) {
+				if (sendcount != recvcount) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+				if (sendcount == 0) {
+					return cupcfd::error::E_NO_DATA;
 				}
 
-				// MPI Call
-				err = MPI_Alltoall(sendbuf, sendcount, dType,
-								   recvbuf, recvcount, dType,
-								   comm);
+				int mpi_err;
+				MPI_Datatype dType;
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
-				// Error Status Check
-				if(err != MPI_SUCCESS)
-				{
+				mpi_err = MPI_Alltoall(sendbuf, sendcount, dType,
+									recvbuf, recvcount, dType,
+									comm);
+
+				if(mpi_err != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
-
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class T>
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts,
-												   T * recvbuf, int *recvcounts,
-												   MPI_Comm comm)
-			{
-				int err;
-				T dummy;
+												T * recvbuf, int *recvcounts,
+												MPI_Comm comm) {
+				int mpi_err;
 				int commSize;
 				cupcfd::error::eCodes status;
 
-				err = MPI_Comm_size(comm, &commSize);
-				if(err != MPI_SUCCESS)
-				{
+				mpi_err = MPI_Comm_size(comm, &commSize);
+				if(mpi_err != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 				
@@ -83,20 +74,15 @@ namespace cupcfd
 				sdispls[0] = 0;
 				rdispls[0] = 0;
 
-				for(int i = 1; i < commSize; i++)
-				{
+				for(int i = 1; i < commSize; i++) {
 					sdispls[i] = sdispls[i-1] + sendcounts[i-1];
 					rdispls[i] = rdispls[i-1] + recvcounts[i-1];
 				}
 
 				status = AllToAllVMPI(sendbuf, sendcounts, sdispls,
-								   recvbuf, recvcounts, rdispls,
-								   comm);
-								   
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+									recvbuf, recvcounts, rdispls,
+									comm);
+				CHECK_ECODE(status)
 				
 				// Cleanup
 				free(sdispls);
@@ -107,27 +93,22 @@ namespace cupcfd
 
 			template <class T>
 			cupcfd::error::eCodes AllToAllVMPI(T * sendbuf, int * sendcounts, int *sdispls,
-												   T * recvbuf, int *recvcounts, int *rdispls,
-												   MPI_Comm comm)
-			{
-				int err;
-				T dummy;
-				MPI_Datatype dType;
-				cupcfd::error::eCodes status;
+												T * recvbuf, int * recvcounts, int *rdispls,
+												MPI_Comm comm) {
+				int mpi_err;
 				
-				// Retrieve the MPI Datatype for T
-				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				MPI_Datatype dType;
+				#pragma GCC diagnostic push
+				#pragma GCC diagnostic ignored "-Wuninitialized"
+				T dummy;
+				cupcfd::comm::mpi::getMPIType(dummy, &dType);
+				#pragma GCC diagnostic pop
 
-				err = MPI_Alltoallv(sendbuf, sendcounts, sdispls, dType,
-							  recvbuf, recvcounts, rdispls, dType,
-							  comm);
+				mpi_err = MPI_Alltoallv(sendbuf, sendcounts, sdispls, dType,
+										recvbuf, recvcounts, rdispls, dType,
+										comm);
 
-				if(err != MPI_SUCCESS)
-				{
+				if(mpi_err != MPI_SUCCESS) {
 					return cupcfd::error::E_MPI_ERR;
 				}
 

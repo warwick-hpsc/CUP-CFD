@@ -28,32 +28,29 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		BenchmarkExchange<I,T>::~BenchmarkExchange()
-		{
+		BenchmarkExchange<I,T>::~BenchmarkExchange() {
 
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkExchange<I,T>::ExchangeBenchmark()
-		{
-
+		cupcfd::error::eCodes BenchmarkExchange<I,T>::ExchangeBenchmark() {
+			// return cupcfd::error::E_SUCCESS;
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 
 		template <class I, class T>
-		void BenchmarkExchange<I,T>::setupBenchmark()
-		{
+		void BenchmarkExchange<I,T>::setupBenchmark() {
 			// Nothing to currently do here
 		}
 
 		template <class I, class T>
-		void BenchmarkExchange<I,T>::recordParameters()
-		{
+		void BenchmarkExchange<I,T>::recordParameters() {
 
 		}
 
 		template <class I, class T>
-		void BenchmarkExchange<I,T>::runBenchmark()
-		{
+		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark() {
+			cupcfd::error::eCodes status;
 			this->startBenchmarkBlock(this->benchmarkName);
 			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 
@@ -66,26 +63,37 @@ namespace cupcfd
 			// that is also suitable for primitive types?
 			T * data = (T *) malloc(sizeof(T) * dataSize);
 
-			for(I i = 0; i < dataSize; i++)
-			{
+			for(I i = 0; i < dataSize; i++) {
 				// The actual contents of the data array do not matter.
 				data[i] = T(i)/T(23);
 			}
 			TreeTimerExit("BenchmarkSetup");
 
-			for(I i = 0; i < this->repetitions; i++)
-			{
+			for(I i = 0; i < this->repetitions; i++) {
 				this->recordParameters();
 
+				this->startBenchmarkBlock("PackBuffer");
+				status = patternPtr->packSendBuffer(data, dataSize);
+				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("PackBuffer");
+
 				this->startBenchmarkBlock("Exchange");
-				patternPtr->exchangeStart(data, dataSize);
-				patternPtr->exchangeStop(data, dataSize);
+				status = patternPtr->exchangeStart(data, dataSize);
+				CHECK_ECODE(status)
+				status = patternPtr->exchangeStop(data, dataSize);
+				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("Exchange");
+
+				this->startBenchmarkBlock("UnpackBuffer");
+				status = patternPtr->unpackRecvBuffer(data, dataSize);
+				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("UnpackBuffer");
 			}
 
 			free(data);
 
 			this->stopBenchmarkBlock(this->benchmarkName);
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

@@ -77,7 +77,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Cleanup any dynamically allocated memory.
 				 */
-				virtual ~ExchangePatternConfig();
+				~ExchangePatternConfig();
 
 				// === Concrete Methods ===
 
@@ -130,6 +130,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
 				template <class I, class T, class N>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildExchangePattern(ExchangePattern<T>** pattern, cupcfd::data_structures::DistributedAdjacencyList<I, N>& graph);
 
 				// === Pure Virtual Methods ===

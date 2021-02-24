@@ -59,7 +59,9 @@ BOOST_AUTO_TEST_CASE(getLBound_test1, * utf::tolerance(0.00001))
 	DistributionConfigSourceUniformJSON<int,double> jsonConfigSource("../tests/distributions/data/DistributionConfigSourceUniformTest.json", topLevels, 1);
 
 	double lBound;
-	jsonConfigSource.getLBound(&lBound);
+	cupcfd::error::eCodes status;
+	status = jsonConfigSource.getLBound(&lBound);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_TEST(lBound == 12.0);
 }
 
@@ -70,7 +72,9 @@ BOOST_AUTO_TEST_CASE(getUBound_test1, * utf::tolerance(0.00001))
 	DistributionConfigSourceUniformJSON<int,double> jsonConfigSource("../tests/distributions/data/DistributionConfigSourceUniformTest.json", topLevels, 1);
 
 	double uBound;
-	jsonConfigSource.getUBound(&uBound);
+	cupcfd::error::eCodes status;
+	status = jsonConfigSource.getUBound(&uBound);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_TEST(uBound == 14.7);
 }
 

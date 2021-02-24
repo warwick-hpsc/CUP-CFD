@@ -65,7 +65,7 @@ namespace cupcfd
 				 * Deconstructor:
 				 * Currently does nothing.
 				 */
-				virtual ~DistributionConfigUniform();
+				~DistributionConfigUniform();
 
 				// === Concrete Methods ===
 
@@ -76,6 +76,7 @@ namespace cupcfd
 				 *
 				 * @return The lower bound value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getLBound();
 
 				/**
@@ -96,6 +97,7 @@ namespace cupcfd
 				 *
 				 * @return The upper bound value stored in the configuration.
 				 */
+				__attribute__((warn_unused_result))
 				T getUBound();
 
 				/**
@@ -110,8 +112,9 @@ namespace cupcfd
 				void setUBound(T ubound);
 
 				void operator=(const DistributionConfigUniform<I,T>& source);
+				__attribute__((warn_unused_result))
 				DistributionConfigUniform<I,T> * clone();
-				cupcfd::error::eCodes buildDistribution(Distribution<I,T> ** dist);
+				void buildDistribution(Distribution<I,T> ** dist);
 		};
 	}
 }

@@ -56,6 +56,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		*/
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int chunkSize, cupcfd::comm::Communicator& mpComm, int sProcess);
 
 		/**
@@ -95,6 +96,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		*/
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T * bRecv, int nEleBRecv, int * chunkSizes, int nEleChunkSizes, cupcfd::comm::Communicator& mpComm, int sProcess);
 
 		/**
@@ -143,6 +145,7 @@ namespace cupcfd
 		 * @retval cupcfd::error::E_MPI_ERR An MPI Error was encountered.
 		*/
 		template <class T>
+		__attribute__((warn_unused_result))
 		cupcfd::error::eCodes Scatter(T * bSend, int nEleBSend, T ** bRecv, int * nEleBRecv, int * pSend, int nElePSend, cupcfd::comm::Communicator& mpComm, int sProcess);
 
 	} // namespace comm

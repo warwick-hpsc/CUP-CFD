@@ -67,9 +67,11 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
-				virtual ~ParticleSystemSimpleConfig();
+				~ParticleSystemSimpleConfig();
 
 				// === Concrete Methods ===
+
+				I getNEmitterConfigs();
 
 				// === Virtual Methods ===
 
@@ -83,7 +85,7 @@ namespace cupcfd
 				 *
 				 * @return Nothing.
 				 */
-				virtual void operator=(ParticleSystemSimpleConfig<M,I,T,L>& source);
+				void operator=(ParticleSystemSimpleConfig<M,I,T,L>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -95,13 +97,15 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
-				virtual ParticleSystemSimpleConfig<M,I,T,L> * clone();
+				__attribute__((warn_unused_result))
+				ParticleSystemSimpleConfig<M,I,T,L> * clone();
 
 				/**
 				 *
 				 */
-				virtual cupcfd::error::eCodes buildParticleSystem(ParticleSystem<ParticleSystemSimple<M, I, T, L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M, I, T, L> ** system,
-																	   std::shared_ptr<M> meshPtr);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes buildParticleSystem(ParticleSystem<ParticleSystemSimple<M, I, T, L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M, I, T, L> ** system,
+															std::shared_ptr<M> meshPtr);
 
 			private:
 				int numParticleSourcesOrEmitters;

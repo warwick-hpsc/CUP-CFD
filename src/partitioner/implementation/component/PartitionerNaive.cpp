@@ -17,7 +17,6 @@
 #include "ArrayDrivers.h"
 #include "SearchDrivers.h"
 #include "StatisticsDrivers.h"
-#include "Scatter.h"
 #include "Gather.h"
 #include "AllToAll.h"
 
@@ -48,18 +47,16 @@ namespace cupcfd
 			// Nothing to do in this subclass.
 		}
 
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::reset()
-		{
-			// Nothing to reset beyond the base class components
-			this->PartitionerInterface<I,T>::reset();
+		// template <class I, class T>
+		// cupcfd::error::eCodes PartitionerNaive<I,T>::reset() {
+		// 	// Nothing to reset beyond the base class components
+		// 	this->PartitionerInterface<I,T>::reset();
 
-			return cupcfd::error::E_SUCCESS;
-		}
+		// 	return cupcfd::error::E_SUCCESS;
+		// }
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::partition()
-		{
+		cupcfd::error::eCodes PartitionerNaive<I,T>::partition() {
 			// The naive partition approach simply divides the total number of nodes
 			// stored across the various node stores in the communicator for the partitioner.
 
@@ -68,21 +65,22 @@ namespace cupcfd
 
 			// This naturally means that it does not account for any edge data (hence naive!)
 
+			cupcfd::error::eCodes status;
+
 			// Error Check: Check that nParts is set
-			if(this->getNParts() == 0)
-			{
+			if(this->getNParts() == 0) {
 				return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 			}
 
 			// Error Check: Ensure that there is data in the node store.
-			if(this->nodes == nullptr)
-			{
+			if(this->nodes == nullptr) {
 				return cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA;
 			}
 
 			// AllGather - Get the number of nodes on each rank
 			I * rankNNodes = (I *) malloc(sizeof(I) * this->workComm.size);
-			cupcfd::comm::AllGather(&this->nNodes, 1, rankNNodes, this->workComm.size, 1, this->workComm);
+			status = cupcfd::comm::AllGather(&this->nNodes, 1, rankNNodes, this->workComm.size, 1, this->workComm);
+			CHECK_ECODE(status)
 
 			// Since this is naive, doesn't really matter *which* nodes we are assigned - they don't have to be sequential
 			// As such, just compute the assigned partition based on which range it falls into
@@ -117,8 +115,7 @@ namespace cupcfd
 			// can be placed in the correct partition group.
 
 			// If this partition also has a remainder, then 1 more extra cell must be assigned to it.
-			for(I i = 0; i < this->nNodes; i++)
-			{
+			for(I i = 0; i < this->nNodes; i++) {
 				// Zero-Indexed
 
 				// Compute the group assignment for a node base on its count position when globally
@@ -129,18 +126,15 @@ namespace cupcfd
 				// ToDo: Should just use min
 				// Add 1 to remainder for each prior group
 				I check;
-				if(group < partitionerRemainder)
-				{
+				if(group < partitionerRemainder) {
 					check = group;
 				}
-				else
-				{
+				else {
 					check = partitionerRemainder;
 				}
 
 				// Adjust group assignment if within remainder limits
-				if((group > 0) && (id < ((group * partitionSize) + check)))
-				{
+				if((group > 0) && (id < ((group * partitionSize) + check))) {
 					group = group - 1;
 				}
 
@@ -153,8 +147,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaive<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
+		cupcfd::error::eCodes PartitionerNaive<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts) {
 			cupcfd::error::eCodes status;
 
 			this->setNParts(nParts);
@@ -165,15 +158,11 @@ namespace cupcfd
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
 
 			// Make a copy of locally owned nodes from the graph
-			graph.getLocalNodes(nodes, nNodes);
+			status = graph.getLocalNodes(nodes, nNodes);
+			CHECK_ECODE(status)
 
 			// Set the nodes in the partitioner
-			status = this->setNodeStorage(nodes, nNodes);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			this->setNodeStorage(nodes, nNodes);
 
 			// Cleanup temporary store
 			free(nodes);

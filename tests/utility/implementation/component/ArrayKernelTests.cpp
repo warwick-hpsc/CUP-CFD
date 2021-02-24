@@ -526,9 +526,11 @@ BOOST_AUTO_TEST_CASE(minusArray_test1)
 	int source2[4] = {2, 8, 21, 22};
 	int result[4];
 	int resultCmp[4] = {1, 4, 10, 12};
+	cupcfd::error::eCodes status;
 
-	minusArray(source1, 7, source2, 4, result, 4);
+	status = minusArray(source1, 7, source2, 4, result, 4);
 
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 4, resultCmp, resultCmp + 4);
 }
 
@@ -539,9 +541,11 @@ BOOST_AUTO_TEST_CASE(minusArray_test2)
 	int source2[8] = {2, 8, 21, 22, 100, 102, 200, 400};
 	int result[4];
 	int resultCmp[4] = {1, 4, 10, 12};
+	cupcfd::error::eCodes status;
 
-	minusArray(source1, 7, source2, 8, result, 4);
+	status = minusArray(source1, 7, source2, 8, result, 4);
 
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 4, resultCmp, resultCmp + 4);
 }
 
@@ -552,9 +556,11 @@ BOOST_AUTO_TEST_CASE(minusArray_test3)
 	int source2[4] = {2, 8, 21, 22};
 	int result[7];
 	int resultCmp[7] = {1, 1, 1, 1, 1, 1, 1};
+	cupcfd::error::eCodes status;
 
-	minusArray(source1, 7, source2, 4, result, 7);
+	status = minusArray(source1, 7, source2, 4, result, 7);
 
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 7, resultCmp, resultCmp + 7);
 }
 
@@ -565,9 +571,11 @@ BOOST_AUTO_TEST_CASE(minusArray_test4)
 	int source2[4] = {2, 8, 21, 22};
 	int result[0];
 	int resultCmp[0];
+	cupcfd::error::eCodes status;
 
-	minusArray(source1, 4, source2, 4, result, 0);
+	status = minusArray(source1, 4, source2, 4, result, 0);
 
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 0, resultCmp, resultCmp + 0);
 }
 
@@ -649,7 +657,9 @@ BOOST_AUTO_TEST_CASE(intersectArray_test1)
 	int nResult = 2;
 	int cmp[2] = {2, 8};
 
-	intersectArray(source1, 6, source2, 4, result, nResult);
+	cupcfd::error::eCodes status;
+	status = intersectArray(source1, 6, source2, 4, result, nResult);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 2, cmp, cmp + 2);
 }
 
@@ -664,7 +674,9 @@ BOOST_AUTO_TEST_CASE(intersectArray_test2)
 	int nResult = 3;
 	int cmp[3] = {2, 8, 22};
 
-	intersectArray(source1, 6, source2, 4, result, nResult);
+	cupcfd::error::eCodes status;
+	status = intersectArray(source1, 6, source2, 4, result, nResult);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 3, cmp, cmp + 3);
 }
 
@@ -678,7 +690,9 @@ BOOST_AUTO_TEST_CASE(intersectArray_test3)
 	int nResult = 3;
 	int cmp[3] = {2, 8, 200};
 
-	intersectArray(source1, 7, source2, 8, result, nResult);
+	cupcfd::error::eCodes status;
+	status = intersectArray(source1, 7, source2, 8, result, nResult);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 3, cmp, cmp + 3);
 }
 
@@ -692,7 +706,9 @@ BOOST_AUTO_TEST_CASE(intersectArray_test4)
 	int nResult = 0;
 	int cmp[0];
 
-	intersectArray(source1, 1, source2, 4, result, nResult);
+	cupcfd::error::eCodes status;
+	status = intersectArray(source1, 1, source2, 4, result, nResult);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 0, cmp, cmp + 0);
 }
 
@@ -706,7 +722,9 @@ BOOST_AUTO_TEST_CASE(intersectArray_test5)
 	int nResult = 4;
 	int cmp[4] = {2, 8, 21, 22};
 
-	intersectArray(source1, 4, source2, 4, result, nResult);
+	cupcfd::error::eCodes status;
+	status = intersectArray(source1, 4, source2, 4, result, nResult);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result + 4, cmp, cmp + 4);
 }
 

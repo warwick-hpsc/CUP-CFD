@@ -111,7 +111,7 @@ namespace cupcfd
 				 * Deconstructor for a Partitioner object.
 				 * This will free up any memory being used to store result or node data.
 				 */
-				~PartitionerInterface();
+				virtual ~PartitionerInterface();
 
 				// ========== Concrete Methods ===============
 
@@ -125,7 +125,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes resetResultStorage();
+				virtual void resetResultStorage();
 
 				/**
 				 * Copy the node data in the provided array to the internal node storage
@@ -142,7 +142,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes setNodeStorage(T * nodes, I nNodes);
+				virtual void setNodeStorage(T * nodes, I nNodes);
 
 				/**
 				 * Reset any data storage used for storing node data assigned to the current rank.
@@ -154,7 +154,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes resetNodeStorage();
+				virtual void resetNodeStorage();
 
 				/**
 				 * Set the number of partitions the graph space should be split into
@@ -167,7 +167,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes setNParts(I nParts);
+				virtual void setNParts(I nParts);
 
 				/**
 				 * Get the number of partitions the graph space should be split into
@@ -177,6 +177,7 @@ namespace cupcfd
 				 *
 				 * @return The number of partitions this partitioner is currently using
 				 */
+				__attribute__((warn_unused_result))
 				virtual I getNParts();
 
 				/**
@@ -201,6 +202,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_PARTITIONER_NO_RESULTS There are no results to distribute.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes assignRankNodes(T** rankNodes,
 																   I * nNodes);
 
@@ -209,11 +211,8 @@ namespace cupcfd
 				 *
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the stored array data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes reset();
+				virtual void reset();
 
 				// ========== Pure Virtual Methods ===============
 
@@ -237,6 +236,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_PARTITIONER_MISSING_NODE_DATA No node data is stored.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes partition() = 0;
 
 				/**
@@ -265,6 +265,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts) = 0;
 		};
 	}

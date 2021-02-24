@@ -24,55 +24,49 @@ namespace cupcfd
 		namespace kernels
 		{
 			template <class I, class T>
-			T sum(T * source, I nEle)
-			{
+			T sum(T * source, I nEle) {
 				T result = (T) 0;
-
-				for(I i = 0; i < nEle; i++)
-				{
+				for(I i = 0; i < nEle; i++) {
 					result += source[i];
 				}
 
 				return result;
 			}
 
+			// template <class I, class T>
+			// T median(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
+
+			// 	return result;
+			// }
+
+			// template <class I, class T>
+			// T mode(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
+
+			// 	return result;
+			// }
+
+			// template <class I, class T>
+			// T stDev(T * source, I nEle)
+			// {
+			// 	// ToDo: Fill in Kernel
+			// 	T result = (T) 0;
+
+			// 	return result;
+			// }
+
 			template <class I, class T>
-			T median(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
-
-				return result;
-			}
-
-			template <class I, class T>
-			T mode(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
-
-				return result;
-			}
-
-			template <class I, class T>
-			double stDev(T * source, I nEle)
-			{
-				// ToDo: Fill in Kernel
-				T result = (T) 0;
-
-				return result;
-			}
-
-			template <class I, class T>
-			int count(T * source, I nEle, T target)
-			{
+			I count(T * source, I nEle, T target) {
 				I count = 0;
 
 				// Scan through array, add to counter for each instance of target found
-				for(I i = 0; i < nEle; i++)
-				{
-					if(source[i] == target)
-					{
+				for(I i = 0; i < nEle; i++) {
+					if(source[i] == target) {
 						count = count + 1;
 					}
 				}

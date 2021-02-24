@@ -60,12 +60,14 @@ namespace cupcfd
 				 * Benchmark the time to run the data exchange for the pattern
 				 * associated with this benchmark.
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes ExchangeBenchmark();
 
 				// === Inherited Overridden Methods ===
 				void setupBenchmark();
 				void recordParameters();
-				void runBenchmark();
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes runBenchmark();
 		};
 	}
 }

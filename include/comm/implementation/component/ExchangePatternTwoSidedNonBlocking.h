@@ -78,19 +78,26 @@ namespace cupcfd
 				 * Deconstructor.
 				 * Cleans up internally allocated buffers/arrays.
 				 */
-				virtual ~ExchangePatternTwoSidedNonBlocking();
+				~ExchangePatternTwoSidedNonBlocking();
 
 				// Inherited Methods
-				void init(cupcfd::comm::Communicator& comm,
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
 						  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
 						  int * exchangeIDXSend, int nExchangeIDXSend,
 						  int * tRanks, int nTRanks);
 
-				void packSendBuffer(T * data, int nData);
-				void unpackRecvBuffer(T * data, int nData);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes packSendBuffer(T * data, int nData);
 
-				void exchangeStart(T * sourceData, int nData);
-				void exchangeStop(T * sinkData, int nData);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData);
+
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes exchangeStart(T * sourceData, int nData);
+				
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes exchangeStop(T * sinkData, int nData);
 		};
 	}
 }

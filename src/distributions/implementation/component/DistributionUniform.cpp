@@ -50,19 +50,14 @@ namespace cupcfd
 		// === Overloaded Inherited Methods ===
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionUniform<I,T>::getValues(T * values, I nValues)
-		{
-			for(I i = 0; i < nValues; i++)
-			{
+		void DistributionUniform<I,T>::getValues(T * values, I nValues) {
+			for(I i = 0; i < nValues; i++) {
 				values[i] = (*(this->dist))(*(this->rEngine));
 			}
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		DistributionUniform<I,T> * DistributionUniform<I,T>::clone()
-		{
+		DistributionUniform<I,T> * DistributionUniform<I,T>::clone() {
 			// Pure Virtual - Shouldn't be used
 			return new DistributionUniform(*this);
 		}

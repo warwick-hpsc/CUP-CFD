@@ -19,8 +19,7 @@ namespace cupcfd
 {
 	namespace comm
 	{
-		cupcfd::error::eCodes Barrier(cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes Barrier(cupcfd::comm::Communicator& mpComm) {
 			// Currently just a simple wrapper to using the MPI operation
 			return cupcfd::comm::mpi::BarrierMPI(mpComm.comm);
 		}

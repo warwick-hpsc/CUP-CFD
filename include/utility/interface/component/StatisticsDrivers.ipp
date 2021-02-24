@@ -24,22 +24,16 @@ namespace cupcfd
 		namespace drivers
 		{
 			template <class I, class T>
-			cupcfd::error::eCodes sum(T * source, I nEle, T * result)
-			{
-				if(nEle < 1)
-				{
+			void sum(T * source, I nEle, T * result) {
+				if(nEle < 1) {
 					*result = 0;
-					return cupcfd::error::E_SUCCESS;
+					return;
 				}
-
 				*result = kernels::sum(source, nEle);
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes mean(T * source, I nEle, double * result)
-			{
+			cupcfd::error::eCodes mean(T * source, I nEle, double * result) {
 				T sum = cupcfd::utility::kernels::sum(source, nEle);
 
 				*result = ((double) sum) / nEle;
@@ -48,32 +42,28 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes median(T * source, I nEle, T * result)
-			{
+			cupcfd::error::eCodes median(T * source, I nEle, T * result) {
 				*result = cupcfd::utility::kernels::median(source, nEle);
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes mode(T * source, I nEle, T * result)
-			{
+			cupcfd::error::eCodes mode(T * source, I nEle, T * result) {
 				*result = cupcfd::utility::kernels::mode(source, nEle);
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes stDev(T * source, I nEle, double * result)
-			{
+			cupcfd::error::eCodes stDev(T * source, I nEle, double * result) {
 				*result = cupcfd::utility::kernels::stDev(source, nEle);
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes count(T * source, I nEle, T target, I * result)
-			{
+			cupcfd::error::eCodes count(T * source, I nEle, T target, I * result) {
 				*result = cupcfd::utility::kernels::count(source, nEle, target);
 
 				return cupcfd::error::E_SUCCESS;

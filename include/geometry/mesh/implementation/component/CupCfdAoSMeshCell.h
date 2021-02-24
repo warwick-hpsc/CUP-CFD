@@ -36,6 +36,8 @@
 
 #include "EuclideanPoint.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -51,7 +53,7 @@ namespace cupcfd
 				public:
 					// === Members ===
 					/** Cell Center **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> center;
+					euc::EuclideanPoint<T,3> center;
 
 					/** Cell Volume **/
 					T vol;
@@ -76,7 +78,7 @@ namespace cupcfd
 					 * @tparam I The type of the indexing scheme (integer based)
 					 * @tparam T The type of the stored array data
 					 */
-					virtual ~CupCfdAoSMeshCell();
+					~CupCfdAoSMeshCell();
 
 
 					/**

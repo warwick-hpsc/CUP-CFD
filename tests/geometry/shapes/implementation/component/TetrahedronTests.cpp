@@ -34,11 +34,8 @@ BOOST_AUTO_TEST_CASE(constructor_test1, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
-
-	BOOST_CHECK_EQUAL(shape.nEdges, 6);
-	BOOST_CHECK_EQUAL(shape.nVertices, 4);
-	BOOST_CHECK_EQUAL(shape.nFaces, 4);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
 
 	BOOST_CHECK_EQUAL(shape.apex.cmp[0], 2.5);
 	BOOST_CHECK_EQUAL(shape.apex.cmp[1], 2.5);
@@ -67,7 +64,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test1, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	euc::EuclideanPoint<double,3> point(2.5, 2.5, 1.78);
 
@@ -84,7 +83,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test2, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	euc::EuclideanPoint<double,3> point(2.5, 2.5, 18.6);
 
@@ -101,7 +102,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test3, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	bool isInside = shape.isPointInside(f);
 
@@ -116,7 +119,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test4, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	bool isInside = shape.isPointInside(bl);
 
@@ -131,7 +136,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test5, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	bool isInside = shape.isPointInside(br);
 
@@ -146,7 +153,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test6, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	bool isInside = shape.isPointInside(apex);
 
@@ -161,7 +170,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test7, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	euc::EuclideanPoint<double,3> point(2.5,2.5,0.0);
 
@@ -178,7 +189,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test8, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	// Test Face apex, f, br
 	euc::EuclideanPoint<double,3> point(3.125, 2.5, 3.5);
@@ -196,7 +209,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test9, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	// Test Face apex, f, bl
 	euc::EuclideanPoint<double,3> point(1.875, 2.5, 3.5);
@@ -214,7 +229,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test10, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
 	// Test Face apex, bl, br
 	euc::EuclideanPoint<double,3> point(2.5, 1.25, 3.5);
@@ -224,47 +241,53 @@ BOOST_AUTO_TEST_CASE(isPointInside_test10, * utf::tolerance(0.00001))
 	BOOST_CHECK_EQUAL(isInside, true);
 }
 
-// === computeVolume ===
+// === getVolume ===
 // Test 1: Compute Volume of Tetrahedron
-BOOST_AUTO_TEST_CASE(computeVolume_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test1, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> f(2.5, 5.0, 0.0);
 	euc::EuclideanPoint<double, 3> bl(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
-	double volume = shape.computeVolume();
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
+	double volume = shape.getVolume();
 
 	BOOST_TEST(volume == 29.166667);
 }
 
 // Test 2: Compute Volume of Oblique Tetrahedron
-BOOST_AUTO_TEST_CASE(computeVolume_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test2, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> f(2.5, 5.0, 0.0);
 	euc::EuclideanPoint<double, 3> bl(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(1.4, 3.2, 6.4);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 
-	double volume = shape.computeVolume();
+	double volume = shape.getVolume();
 
 	BOOST_TEST(volume == 26.666667);
 }
 
-// === computeCentroid ===
+// === getCentroid ===
 // Test 1: Compute Centroid of Pyramid
-BOOST_AUTO_TEST_CASE(computeCentroid_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getCentroid_test1, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> f(2.5, 5.0, 0.0);
 	euc::EuclideanPoint<double, 3> bl(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
-	euc::EuclideanPoint<double, 3> centroid = shape.computeCentroid();
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
+	euc::EuclideanPoint<double, 3> centroid = shape.getCentroid();
 
 	BOOST_TEST(centroid.cmp[0] == 2.5);
 	BOOST_TEST(centroid.cmp[1] == 1.875000);
@@ -272,15 +295,17 @@ BOOST_AUTO_TEST_CASE(computeCentroid_test1, * utf::tolerance(0.00001))
 }
 
 // Test 2: Compute Centroid of Oblique Pyramid
-BOOST_AUTO_TEST_CASE(computeCentroid_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getCentroid_test2, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> f(2.5, 5.0, 0.0);
 	euc::EuclideanPoint<double, 3> bl(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(1.4, 3.2, 6.4);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
-	euc::EuclideanPoint<double, 3> centroid = shape.computeCentroid();
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
+	euc::EuclideanPoint<double, 3> centroid = shape.getCentroid();
 
 	BOOST_TEST(centroid.cmp[0] == 2.225);
 	BOOST_TEST(centroid.cmp[1] == 2.05000);
@@ -296,7 +321,9 @@ BOOST_AUTO_TEST_CASE(isPointOnEdge_test1, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 	euc::EuclideanPoint<double, 3> point(1.2, 1.2, 0.6);
 
 	bool onEdge = shape.isPointOnEdge(point);
@@ -311,7 +338,9 @@ BOOST_AUTO_TEST_CASE(isPointOnEdge_test2, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 	euc::EuclideanPoint<double, 3> point(1.25, 1.25, 3.5);
 
 	bool onEdge = shape.isPointOnEdge(point);
@@ -328,7 +357,9 @@ BOOST_AUTO_TEST_CASE(isPointOnVertex_test1, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 	euc::EuclideanPoint<double, 3> point(1.25, 1.25, 3.5);
 
 	bool onEdge = shape.isPointOnVertex(point);
@@ -344,7 +375,9 @@ BOOST_AUTO_TEST_CASE(isPointOnVertex_test2, * utf::tolerance(0.00001))
 	euc::EuclideanPoint<double, 3> br(5.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> apex(2.5, 2.5, 7.0);
 
-	Tetrahedron<double> shape(apex, f, bl, br);
+	Triangle3D<double> base(f, br, bl);
+	Tetrahedron<double> shape(apex, base);
+	
 	euc::EuclideanPoint<double, 3> point(2.5, 2.5, 7.0);
 
 	bool onEdge = shape.isPointOnVertex(point);

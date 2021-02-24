@@ -75,7 +75,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Cleans up the stored partitioner data.
 					 */
-					virtual ~MeshSourceFileConfig();
+					~MeshSourceFileConfig();
 
 					// === Concrete Methods ===
 
@@ -84,6 +84,7 @@ namespace cupcfd
 					 *
 					 * @return An enum identifier for the file format
 					 */
+					__attribute__((warn_unused_result))
 					inline MeshFileFormat getFileFormat();
 
 					/**
@@ -100,6 +101,7 @@ namespace cupcfd
 					 *
 					 * @return The file path to the mesh source file stored in this configuration
 					 */
+					__attribute__((warn_unused_result))
 					inline std::string getSourceFilePath();
 
 					/**
@@ -114,11 +116,12 @@ namespace cupcfd
 					// === Overloaded Methods ===
 
 					inline void operator=(const MeshSourceFileConfig<I,T>& source);
-					MeshSourceFileConfig<I,T> * clone();
-					cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
 
-					// === Pure Virtual Methods ===
-					// None
+					__attribute__((warn_unused_result))
+					MeshSourceFileConfig<I,T> * clone();
+					
+					__attribute__((warn_unused_result))
+					cupcfd::error::eCodes buildMeshSource(MeshSource<I,T,I> ** source);
 			};
 		}
 	}

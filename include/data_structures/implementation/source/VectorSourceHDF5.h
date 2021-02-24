@@ -55,13 +55,16 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~VectorSourceHDF5();
+				~VectorSourceHDF5();
 
 				// === Concrete Methods ===
 
 				// === Inherited Overloads ===
 
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getSize(I * vecSize);
+				
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getData(T * data, I nData, I * indexes, I nIndexes, I indexBase);
 
 				// === Pure Virtual Methods ===

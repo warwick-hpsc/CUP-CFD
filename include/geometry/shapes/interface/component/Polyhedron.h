@@ -17,6 +17,8 @@
 
 #include "EuclideanPoint.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -25,15 +27,16 @@ namespace cupcfd
 		{
 			/**
 			 * Top level interface for Polyhedron shapes.
+			 * Fix dimension to 3D (not interested in 4D and above, cannot be 2D)
 			 * Declares a set of common operations and/or members.
 			 *
 			 * Uses a CRTP design pattern to minimise/remove virtual overheads
 			 *
-			 * @tparam P The implementation type of the polygon
-			 * @tparam T The type of the spatial domain
+			 * @tparam S The polyhedron specialisation
+			 * @tparam T Numerical type
 			 */
 
-			enum PolyhedronType
+			enum PolyhedronType 
 			{
 				POLYHEDRON_TETRAHEDRON,
 				POLYHEDRON_QUADPYRAMID,
@@ -42,82 +45,59 @@ namespace cupcfd
 				POLYHEDRON_UNKNOWN
 			};
 
-			// For now, we will hard code all Polyhedrons to be 3D (not interested in 4D and above, cannot be 2D)
-			template <class P, class T>
+			template <class S, class T>
 			class Polyhedron
 			{
 				public:
-					// === Members ===
-
-					/** Number of edges in polyhedron **/
-					int nEdges;
-
-					/** Number of vertices in polyhedron **/
-					int nVertices;
-
-					/** Number of faces in the polyhedron **/
-					int nFaces;
-
 					// === Constructors/Deconstructors ===
 
-					/**
-					 * Default Constructor
-					 */
 					Polyhedron();
 
-					/**
-					 * Deconstructor
-					 */
 					~Polyhedron();
-
-					// === Static Methods ===
 
 					// === Concrete Methods ===
 
-					/**
-					 * Get the number of edges in this polyhedron.
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The number of edges.
-					 */
-					inline int getNEdges();
-
-					/**
-					 * Get the number of vertices in this polyhedron.
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The number of vertices.
-					 */
-					inline int getNVertices();
-
 					// === Interface Methods ===
+
+					/**
+					 * Return volume of polyhedron, calculating if not known
+					 *
+					 * @return Polyhedron volume
+					 */
+					__attribute__((warn_unused_result))
+					auto getVolume();
+
+					/**
+					 * Return centroid of polyhedron, calculating if not known
+					 *
+					 * @return Polyhedron centroid
+					 */
+					__attribute__((warn_unused_result))
+					auto getCentroid();
 
 					/**
 					 * Determine whether the provided point is inside the polyhedron.
 					 * Edges/Faces/Vertices are treated as inside the polygon for this purpose.
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return Return whether the point exists inside this polyhedron
-					 * @retval true The point is inside the polyhedron
-					 * @retval false The point is outside the polyhedron
+					 * @return Return true if point exists inside this polyhedron
 					 */
-					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					__attribute__((warn_unused_result))
+					auto isPointInside(euc::EuclideanPoint<T,3>& point);
 
 					/**
-					 * Compute the volume of this polyhedron
-					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 *
-					 * @return The computed volume
+					 * Print  STDOUT
 					 */
-					inline T computeVolume();
+					virtual void print();
+
+				protected:
+					// This class contains all data needed/used by derived classes, 
+					// derived classes just implement new methods. 
+					// This makes implementing operator=() much easier.
+					T volume;
+					bool volumeComputed = false;
+
+					euc::EuclideanPoint<T,3> centroid;
+					bool centroidComputed = false;
 			};
 
 			// These methods are equivalent to static, but we'll place them here since they're generic
@@ -127,11 +107,9 @@ namespace cupcfd
 			 * Get an identifier for what type of polyhedron has the specified
 			 * number of vertices and faces
 			 *
-			 * @param nVertices Number of vertices
-			 * @param nFaces Number of faces
-			 *
 			 * @return An indentifier for the type of Polyhedron
 			 */
+			__attribute__((warn_unused_result))
 			inline PolyhedronType findPolyhedronType(int nVertices, int nFaces);
 		}
 	}

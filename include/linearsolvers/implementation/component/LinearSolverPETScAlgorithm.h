@@ -85,16 +85,19 @@ namespace cupcfd
 				/**
 				 * Setup the PETSc Solver Objects ready for solving
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes solve(Mat * a, Vec * b, Vec * x);
 
 				/**
 				 * Setup the PETSc objects for using a CG Solver + AMG Preconditioner
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setupPETScCGAMG();
 
 				/**
 				 * Set the PETSc objects t use the configuration on the command line
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes setupPETScCommandLine();
 		};
 	}

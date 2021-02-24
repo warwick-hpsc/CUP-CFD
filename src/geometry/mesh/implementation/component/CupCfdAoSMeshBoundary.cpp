@@ -41,12 +41,10 @@ namespace cupcfd
 			{
 				// Nothing allocated on heap, so nothing to do.
 			}
+
+			// Explicit instantiation
+			template class CupCfdAoSMeshBoundary<int, float>;
+			template class CupCfdAoSMeshBoundary<int, double>;
 		}
 	}
 }
-
-// Explicit instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMeshBoundary<int, float>;
-template class CupCfdAoSMeshBoundary<int, double>;

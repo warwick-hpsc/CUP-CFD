@@ -60,7 +60,8 @@ BOOST_AUTO_TEST_CASE(getCellLabels_test1)
 				 9, 10, 11, 12, 13, 14, 15, 16, 17,
 				 18, 19, 20, 21, 22, 23, 24, 25, 26};
 
-	source.getCellLabels(result, 27, indices, 27);
+	status = source.getCellLabels(result, 27, indices, 27);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	BOOST_CHECK_EQUAL_COLLECTIONS(result, result+27, cmp, cmp+27);
 }
 
@@ -123,7 +124,6 @@ BOOST_AUTO_TEST_CASE(calculateXCoord_test3)
 BOOST_AUTO_TEST_CASE(calculateXCoord_test4)
 {
 	MeshStructGenSource<int, double> source(3, 4, 5, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	cupcfd::error::eCodes status;
 
 	int cellLabels[60] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
 				 	      17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
@@ -167,7 +167,6 @@ BOOST_AUTO_TEST_CASE(calculateYCoord_test3)
 BOOST_AUTO_TEST_CASE(calculateYCoord_test4)
 {
 	MeshStructGenSource<int, double> source(3, 4, 5, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	cupcfd::error::eCodes status;
 
 	int cellLabels[60] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
 				 	      17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
@@ -212,7 +211,6 @@ BOOST_AUTO_TEST_CASE(calculateZCoord_test3)
 BOOST_AUTO_TEST_CASE(calculateZCoord_test4)
 {
 	MeshStructGenSource<int, double> source(3, 4, 5, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-	cupcfd::error::eCodes status;
 
 	int cellLabels[60] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
 				 	      17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
@@ -995,7 +993,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 
 	// Get Labels from the source
 	int cellLabels[6];
-	source.getCellLabels(cellLabels, 6, indices, 6);
+	status = source.getCellLabels(cellLabels, 6, indices, 6);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	cupcfd::data_structures::DistributedAdjacencyList<int,int> * graph;
 	status = source.buildDistributedAdjacencyList(&graph, comm, cellLabels, 6);
@@ -1006,28 +1005,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {0, 1, 2, 3, 4, 5};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 2)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 3)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {18, 19, 20, 21, 22, 23};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 
@@ -1036,28 +1039,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 2)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 3)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 
@@ -1070,7 +1077,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1082,7 +1090,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1094,7 +1103,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1106,7 +1116,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList1_test1)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1131,28 +1142,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {0, 1, 2, 3, 4, 5};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 2)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 3)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {18, 19, 20, 21, 22, 23};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 
@@ -1161,28 +1176,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 2)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 3)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 
@@ -1195,7 +1214,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1207,7 +1227,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1219,7 +1240,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1231,7 +1253,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test1)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1256,28 +1279,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {0, 1, 2, 3, 4, 5};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 2)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 	else if(comm.rank == 3)
 	{
 		int localNodes[6];
 		int localNodesCmp[6] = {18, 19, 20, 21, 22, 23};
-		graph->getLocalNodes(localNodes, 6);
+		status = graph->getLocalNodes(localNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(localNodes, localNodes + 6, localNodesCmp, localNodesCmp + 6);
 	}
 
@@ -1286,28 +1313,32 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {6, 7, 8, 9, 10, 11};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 	else if(comm.rank == 1)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 2)
 	{
 		int ghostNodes[12];
 		int ghostNodesCmp[12] = {6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23};
-		graph->getGhostNodes(ghostNodes, 12);
+		status = graph->getGhostNodes(ghostNodes, 12);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 12, ghostNodesCmp, ghostNodesCmp + 12);
 	}
 	else if(comm.rank == 3)
 	{
 		int ghostNodes[6];
 		int ghostNodesCmp[6] = {12, 13, 14, 15, 16, 17};
-		graph->getGhostNodes(ghostNodes, 6);
+		status = graph->getGhostNodes(ghostNodes, 6);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(ghostNodes, ghostNodes + 6, ghostNodesCmp, ghostNodesCmp + 6);
 	}
 
@@ -1320,7 +1351,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1332,7 +1364,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1344,7 +1377,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 		for(int i = 0; i < 26; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}
@@ -1356,7 +1390,8 @@ BOOST_AUTO_TEST_CASE(buildDistributedAdjacencyList2_test2)
 		for(int i = 0; i < 20; i++)
 		{
 			bool check = false;
-			graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			status = graph->existsEdge(edgeCell1[i], edgeCell2[i], &check);
+			BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 			BOOST_CHECK_EQUAL(check, true);
 		}
 	}

@@ -28,8 +28,6 @@ namespace cupcfd
 
 	cupcfd::error::eCodes SystemConfigJSON::getIntegerDataType(intDataType * dataType)
 	{
-		cupcfd::error::eCodes status;
-
 		if(this->configData.isMember("IntDataType"))
 		{
 			const Json::Value dataSourceType = this->configData["IntDataType"];
@@ -54,8 +52,6 @@ namespace cupcfd
 
 	cupcfd::error::eCodes SystemConfigJSON::getFloatingPointDataType(floatingDataType * dataType)
 	{
-		cupcfd::error::eCodes status;
-
 		if(this->configData.isMember("FloatDataType"))
 		{
 			const Json::Value dataSourceType = this->configData["FloatDataType"];
@@ -85,8 +81,6 @@ namespace cupcfd
 
 	cupcfd::error::eCodes SystemConfigJSON::getMeshSpecialisationType(meshDataType * dataType)
 	{
-		cupcfd::error::eCodes status;
-
 		if(this->configData.isMember("MeshDataType"))
 		{
 			const Json::Value dataSourceType = this->configData["MeshDataType"];

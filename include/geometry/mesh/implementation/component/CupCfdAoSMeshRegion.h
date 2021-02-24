@@ -38,6 +38,8 @@
 #include "EuclideanVector.h"
 #include <string>
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -90,10 +92,10 @@ namespace cupcfd
 					T t;
 
 					/** Region force tangent vector **/
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> forceTangent;
+					euc::EuclideanVector<T,3> forceTangent;
 
 					/** Region uvw vector **/
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> uvw;
+					euc::EuclideanVector<T,3> uvw;
 
 					// ToDo: Fix size of this to cap/make char?
 					// As a string, will be a pointer that will not increase the size of the class
@@ -125,7 +127,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor.
 					 */
-					virtual ~CupCfdAoSMeshRegion();
+					~CupCfdAoSMeshRegion();
 
 					// === Concrete Methods ===
 

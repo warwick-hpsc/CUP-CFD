@@ -157,11 +157,8 @@ namespace cupcfd
 					 *
 					 * @tparam I Type of mesh index scheme
 					 * @tparam T Type of mesh euclidean space
-					 *
-					 * @return An error status indicating the success or failure of the operation
-					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
-					cupcfd::error::eCodes reset();
+					void reset();
 
 					/**
 					 * Deep copy of properties values from source to this object
@@ -170,8 +167,6 @@ namespace cupcfd
 					 *
 					 * @tparam I Type of mesh index scheme
 					 * @tparam T Type of mesh euclidean space
-					 *
-					 * @return Nothing
 					 */
 					virtual void operator=(UnstructuredMeshProperties<I,T>& source);
 
@@ -183,6 +178,7 @@ namespace cupcfd
 					 *
 					 * @return A pointer to the cloned object
 					 */
+					__attribute__((warn_unused_result))
 					virtual UnstructuredMeshProperties<I,T> * clone();
 
 					// ToDo: Getters and setters

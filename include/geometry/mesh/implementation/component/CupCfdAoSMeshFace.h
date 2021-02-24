@@ -38,6 +38,8 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 
+namespace euc = cupcfd::geometry::euclidean;
+
 namespace cupcfd
 {
 	namespace geometry
@@ -78,16 +80,16 @@ namespace cupcfd
 					T area;
 
 					/** The boundary center **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> center;
+					euc::EuclideanPoint<T,3> center;
 
 					/** The boundary normal vector **/
-					cupcfd::geometry::euclidean::EuclideanVector<T,3> norm;
+					euc::EuclideanVector<T,3> norm;
 
 					/** The boundary xpac storage vector **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> xpac;
+					euc::EuclideanPoint<T,3> xpac;
 
 					/** The boundary xnac storage vector **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> xnac;
+					euc::EuclideanPoint<T,3> xnac;
 
 					/** Padding to boost the class byte size. Size determined by sizeof(char) * CUPCFD_AOS_MESH_FACE_PADDING, where
 					 * CUPCFD_AOS_MESH_FACE_PADDING is defined at compile type.
@@ -108,7 +110,7 @@ namespace cupcfd
 					/**
 					 * Deconstructor
 					 */
-					virtual ~CupCfdAoSMeshFace();
+					~CupCfdAoSMeshFace();
 
 					// === Concrete Methods ===
 

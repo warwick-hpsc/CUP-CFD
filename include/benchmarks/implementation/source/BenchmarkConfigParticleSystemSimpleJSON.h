@@ -56,38 +56,44 @@ namespace cupcfd
 				/**
 				 * Deconstructor
 				 */
-				virtual ~BenchmarkConfigParticleSystemSimpleJSON();
+				~BenchmarkConfigParticleSystemSimpleJSON();
 
 				// === Concrete Methods ===
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkName(std::string& benchmarkName);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getBenchmarkRepetitions(I * repetitions);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getNTimesteps(I * nTimesteps);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getDtDistributionConfig(cupcfd::distributions::DistributionConfig<I,T> ** dtDistConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes getParticleSystemConfig(cupcfd::particles::ParticleSystemSimpleConfig<M,I,T,L> ** particleSystemConfig);
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmarkConfig(BenchmarkConfigParticleSystemSimple<M,I,T,L> ** config);
 		};
 	}

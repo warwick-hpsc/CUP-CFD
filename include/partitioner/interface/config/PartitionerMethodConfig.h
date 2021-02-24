@@ -74,6 +74,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual PartitionerMethodConfig * clone() = 0;
 
 				/**
@@ -92,6 +93,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part) = 0;
 
 				/**
@@ -107,8 +109,9 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation.
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,
-																    cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
+																cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
 		};
 	}
 }

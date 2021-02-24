@@ -24,17 +24,14 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T, class L>
-			inline cupcfd::partitioner::PartitionerConfig<I,I> * MeshConfig<I,T,L>::getPartitionerConfig()
-			{
+			inline cupcfd::partitioner::PartitionerConfig<I,I> * MeshConfig<I,T,L>::getPartitionerConfig() {
 				return this->partConfig->clone();
 			}
 
 			template <class I, class T, class L>
-			inline void MeshConfig<I,T,L>::setPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I>& partConfig)
-			{
+			inline void MeshConfig<I,T,L>::setPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I>& partConfig) {
 				// Cleanup old, clone new.
-				if(this->partConfig != nullptr)
-				{
+				if(this->partConfig != nullptr) {
 					delete this->partConfig;
 				}
 					
@@ -42,16 +39,13 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			inline MeshSourceConfig<I,T,L> * MeshConfig<I,T,L>::getMeshSourceConfig()
-			{
+			inline MeshSourceConfig<I,T,L> * MeshConfig<I,T,L>::getMeshSourceConfig() {
 				return this->meshSourceConfig->clone();
 			}
 
 			template <class I, class T, class L>
-			inline void MeshConfig<I,T,L>::setMeshSourceConfig(MeshSourceConfig<I,T,L>& meshSourceConfig)
-			{
-				if(this->meshSourceConfig != nullptr)
-				{
+			inline void MeshConfig<I,T,L>::setMeshSourceConfig(MeshSourceConfig<I,T,L>& meshSourceConfig) {
+				if(this->meshSourceConfig != nullptr) {
 					delete this->meshSourceConfig;
 				}
 
@@ -59,8 +53,7 @@ namespace cupcfd
 			}
 					
 			template <class I, class T, class L>
-			inline void MeshConfig<I,T,L>::operator=(const MeshConfig<I,T,L>& source)
-			{				
+			inline void MeshConfig<I,T,L>::operator=(const MeshConfig<I,T,L>& source) {				
 				this->setPartitionerConfig(*(source.partConfig));
 				this->setMeshSourceConfig(*(source.meshSourceConfig));
 			}
@@ -74,42 +67,32 @@ namespace cupcfd
 			template <class I, class T, class L>
 			template <class M>
 			cupcfd::error::eCodes MeshConfig<I,T,L>::buildUnstructuredMesh(M ** mesh,
-																			  cupcfd::comm::Communicator& comm)
-			{
+																			  cupcfd::comm::Communicator& comm) {
 				cupcfd::error::eCodes status;
 
 				// ==========================================================
 				// (1) Setup Stage: Identify which cells this process 'owns'
 				// ==========================================================
 
-
 				// (1) Build the mesh source
 				MeshSource<I,T,L> * source;
 				status = this->meshSourceConfig->buildMeshSource(&source);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// (2) Build a naive connectivity graph
 				cupcfd::data_structures::DistributedAdjacencyList<I,I> * naiveConnGraph;
 				status = source->buildDistributedAdjacencyList(&naiveConnGraph, comm);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ECODE(status)
 				
 				// (3) Use the partitioner config to build a partitioner
 				cupcfd::partitioner::PartitionerInterface<I,I> * partitioner;
 				status = this->partConfig->buildPartitioner(&partitioner, *naiveConnGraph);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					return status;
-				}
+				CHECK_ECODE(status)
 				
 				// (4) Run the partitioner and store the results
 				//partitioner->initialise(*naiveConnGraph, comm.size);
-				partitioner->partition();
+				status = partitioner->partition();
+				CHECK_ECODE(status)
 
 				// I * assignedCellLabels;
 				I * assignedCellLabels = NULL;
@@ -117,14 +100,17 @@ namespace cupcfd
 
 				// ToDo: The use of comm inside the partitioner for this alongside the nparts
 				// above needs some tidying up....
-				partitioner->assignRankNodes(&assignedCellLabels, &nAssignedCellLabels);
+				status = partitioner->assignRankNodes(&assignedCellLabels, &nAssignedCellLabels);
+				CHECK_ECODE(status)
 
 				// (5) Create the Mesh using the MeshSource and the assigned labels
 				// Create the Mesh Object based on the template type M
 				// This should inherit from UnstructuredMeshInterface so the type constraint is satisfied
 				*mesh = new M(comm);
-				(*mesh)->addData(*source, assignedCellLabels, nAssignedCellLabels);
-				(*mesh)->finalize();
+				status = (*mesh)->addData(*source, assignedCellLabels, nAssignedCellLabels);
+				CHECK_ECODE(status)
+				status = (*mesh)->finalize();
+				CHECK_ECODE(status)
 				
 				// Cleanup
 				delete naiveConnGraph;

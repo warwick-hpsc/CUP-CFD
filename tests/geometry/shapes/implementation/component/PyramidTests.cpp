@@ -65,9 +65,9 @@ BOOST_AUTO_TEST_CASE(isPointInside_test1, * utf::tolerance(0.00001))
 
 }
 
-// === computeVolume ===
+// === getVolume ===
 // Test 1: Compute Volume of Pyramid
-BOOST_AUTO_TEST_CASE(computeVolume_test1, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test1, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> p1(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> p2(0.0, 10.0, 0.0);
@@ -78,13 +78,13 @@ BOOST_AUTO_TEST_CASE(computeVolume_test1, * utf::tolerance(0.00001))
 	Quadrilateral3D<double> base(p1, p2, p3, p4);
 	Pyramid<Quadrilateral3D<double>, double> shape(apex, base);
 
-	double volume = shape.computeVolume();
+	double volume = shape.getVolume();
 
 	BOOST_TEST(volume == 166.666667);
 }
 
 // Test 2: Compute Volume of Oblique Pyramid
-BOOST_AUTO_TEST_CASE(computeVolume_test2, * utf::tolerance(0.00001))
+BOOST_AUTO_TEST_CASE(getVolume_test2, * utf::tolerance(0.00001))
 {
 	euc::EuclideanPoint<double, 3> p1(0.0, 0.0, 0.0);
 	euc::EuclideanPoint<double, 3> p2(0.0, 10.0, 0.0);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(computeVolume_test2, * utf::tolerance(0.00001))
 	Quadrilateral3D<double> base(p1, p2, p3, p4);
 	Pyramid<Quadrilateral3D<double>, double> shape(apex, base);
 
-	double volume = shape.computeVolume();
+	double volume = shape.getVolume();
 
 	BOOST_TEST(volume == 296.666667);
 }

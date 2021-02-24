@@ -36,6 +36,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+
 	int nBuf = 8;
 	int recvbuf[8];
 
@@ -44,7 +46,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 		int sendbuf[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 		int cmp[8] = {1, 2, 9, 10, 17, 18, 25, 26};
 
-		AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		status = AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + nBuf, cmp, cmp + nBuf);
 	}
 	else if(comm.rank == 1)
@@ -52,7 +55,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 		int sendbuf[8] = {9, 10, 11, 12, 13 ,14 ,15, 16};
 		int cmp[8] = {3, 4, 11, 12, 19, 20, 27, 28};
 
-		AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		status = AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + nBuf, cmp, cmp + nBuf);
 	}
 	else if(comm.rank == 2)
@@ -60,7 +64,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 		int sendbuf[8] = {17, 18, 19, 20, 21, 22, 23, 24};
 		int cmp[8] = {5, 6, 13, 14, 21, 22, 29, 30};
 
-		AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		status = AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + nBuf, cmp, cmp + nBuf);
 	}
 	else if(comm.rank == 3)
@@ -68,7 +73,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 		int sendbuf[8] = {25, 26, 27, 28, 29, 30, 31, 32};
 		int cmp[8] = {7, 8, 15, 16, 23, 24, 31, 32};
 
-		AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		status = AllToAll(sendbuf, 8, recvbuf, 8, 2, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + nBuf, cmp, cmp + nBuf);
 	}
 }
@@ -78,6 +84,8 @@ BOOST_AUTO_TEST_CASE(AllToAll1_test1)
 BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
+
+    cupcfd::error::eCodes status;
 
 	if(comm.rank == 0)
 	{
@@ -91,7 +99,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 
 		int cmp[7] = {1, 2, 3, 4, 5, 18, 25};
 
-		AllToAll(sendbuf, 12,
+		status = AllToAll(sendbuf, 12,
 				  sendcounts, 4,
 				  sdispls, 4,
 				  recvbuf, 7,
@@ -99,6 +107,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 				  rdispls, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 7, cmp, cmp + 7);
 
 	}
@@ -114,7 +123,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 
 		int cmp[5] = {6, 7, 8, 13, 19};
 
-		AllToAll(sendbuf, 5,
+		status = AllToAll(sendbuf, 5,
 				  sendcounts, 4,
 				  sdispls, 4,
 				  recvbuf, 5,
@@ -122,6 +131,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 				  rdispls, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 5, cmp, cmp + 5);
 
 	}
@@ -137,7 +147,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 
 		int cmp[12] = {9, 10, 11, 14, 15, 20, 21, 22, 26, 27, 28, 29};
 
-		AllToAll(sendbuf, 7,
+		status = AllToAll(sendbuf, 7,
 				  sendcounts, 4,
 				  sdispls, 4,
 				  recvbuf, 12,
@@ -145,6 +155,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 				  rdispls, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 12, cmp, cmp + 12);
 	}
 	else if(comm.rank == 3)
@@ -159,7 +170,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 
 		int cmp[8] = {12, 16, 17, 23, 24, 30, 31, 32};
 
-		AllToAll(sendbuf, 8,
+		status = AllToAll(sendbuf, 8,
 				  sendcounts, 4,
 				  sdispls, 4,
 				  recvbuf, 8,
@@ -167,6 +178,7 @@ BOOST_AUTO_TEST_CASE(AllToAll2_test2)
 				  rdispls, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 8, cmp, cmp + 8);
 	}
 }
@@ -178,6 +190,8 @@ BOOST_AUTO_TEST_CASE(AllToAll3_test3)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+
 	if(comm.rank == 0)
 	{
 		int sendbuf[12] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
@@ -188,12 +202,13 @@ BOOST_AUTO_TEST_CASE(AllToAll3_test3)
 
 		int cmp[7] = {1, 2, 3, 4, 5, 18, 25};
 
-		AllToAll(sendbuf, 12,
+		status = AllToAll(sendbuf, 12,
 				  sendcounts, 4,
 				  recvbuf, 7,
 				  recvcounts, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 7, cmp, cmp + 7);
 
 	}
@@ -207,12 +222,13 @@ BOOST_AUTO_TEST_CASE(AllToAll3_test3)
 
 		int cmp[5] = {6, 7, 8, 13, 19};
 
-		AllToAll(sendbuf, 5,
+		status = AllToAll(sendbuf, 5,
 				  sendcounts, 4,
 				  recvbuf, 5,
 				  recvcounts, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 5, cmp, cmp + 5);
 
 	}
@@ -226,12 +242,13 @@ BOOST_AUTO_TEST_CASE(AllToAll3_test3)
 
 		int cmp[12] = {9, 10, 11, 14, 15, 20, 21, 22, 26, 27, 28, 29};
 
-		AllToAll(sendbuf, 7,
+		status = AllToAll(sendbuf, 7,
 				  sendcounts, 4,
 				  recvbuf, 12,
 				  recvcounts, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 12, cmp, cmp + 12);
 	}
 	else if(comm.rank == 3)
@@ -244,12 +261,13 @@ BOOST_AUTO_TEST_CASE(AllToAll3_test3)
 
 		int cmp[8] = {12, 16, 17, 23, 24, 30, 31, 32};
 
-		AllToAll(sendbuf, 8,
+		status = AllToAll(sendbuf, 8,
 				  sendcounts, 4,
 				  recvbuf, 8,
 				  recvcounts, 4,
 				  comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 8, cmp, cmp + 8);
 	}
 }
@@ -261,6 +279,8 @@ BOOST_AUTO_TEST_CASE(AllToAll4_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+    cupcfd::error::eCodes status;
+    
 	if(comm.rank == 0)
 	{
 		int sendbuf[12] =    {2, 4, 6, 7, 8, 3, 9, 5, 11, 12, 10, 1};
@@ -271,7 +291,8 @@ BOOST_AUTO_TEST_CASE(AllToAll4_test1)
 		int * recvbuf;
 		int nRecvBuf;
 
-		AllToAll(sendbuf, 12, processIDs, 12, &recvbuf, &nRecvBuf, comm);
+		status = AllToAll(sendbuf, 12, processIDs, 12, &recvbuf, &nRecvBuf, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 7, cmp, cmp + 7);
 
 		free(recvbuf);
@@ -287,8 +308,9 @@ BOOST_AUTO_TEST_CASE(AllToAll4_test1)
 		int * recvbuf;
 		int nRecvBuf;
 
-		AllToAll(sendbuf, 5, processIDs, 5, &recvbuf, &nRecvBuf, comm);
+		status = AllToAll(sendbuf, 5, processIDs, 5, &recvbuf, &nRecvBuf, comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 5, cmp, cmp + 5);
 
 		free(recvbuf);
@@ -303,8 +325,9 @@ BOOST_AUTO_TEST_CASE(AllToAll4_test1)
 		int * recvbuf;
 		int nRecvBuf;
 
-		AllToAll(sendbuf, 7, processIDs, 7, &recvbuf, &nRecvBuf, comm);
+		status = AllToAll(sendbuf, 7, processIDs, 7, &recvbuf, &nRecvBuf, comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 12, cmp, cmp + 12);
 
 		free(recvbuf);
@@ -318,8 +341,9 @@ BOOST_AUTO_TEST_CASE(AllToAll4_test1)
 		int * recvbuf;
 		int nRecvBuf;
 
-		AllToAll(sendbuf, 8, processIDs, 8, &recvbuf, &nRecvBuf, comm);
+		status = AllToAll(sendbuf, 8, processIDs, 8, &recvbuf, &nRecvBuf, comm);
 
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 		BOOST_CHECK_EQUAL_COLLECTIONS(recvbuf, recvbuf + 8, cmp, cmp + 8);
 
 		free(recvbuf);

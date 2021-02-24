@@ -24,7 +24,7 @@ using namespace cupcfd::utility::drivers;
 // Test 1:
 BOOST_AUTO_TEST_CASE(sum_test1)
 {
-	int i = 0;
+	// int i = 0;
 }
 
 // === mean ===

@@ -1056,13 +1056,15 @@ BOOST_AUTO_TEST_CASE(MPIPointBroadcast_test1)
 		EuclideanPoint<double,3> points[2] = {EuclideanPoint<double,3>(3.5, 6.3, 19.7),
 											   EuclideanPoint<double,3>(3.0, 4.5, 6.7)};
 
-		cupcfd::comm::Broadcast(points, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(points, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 	}
 	else
 	{
 		EuclideanPoint<double,3> recvPoints[2];
 
-		cupcfd::comm::Broadcast(recvPoints, 2, 0, comm);
+		status = cupcfd::comm::Broadcast(recvPoints, 2, 0, comm);
+		BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 		BOOST_CHECK_EQUAL(recvPoints[0].cmp[0], 3.5);
 		BOOST_CHECK_EQUAL(recvPoints[0].cmp[1], 6.3);

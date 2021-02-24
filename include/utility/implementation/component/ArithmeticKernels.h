@@ -34,6 +34,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
+				__attribute__((warn_unused_result))
 				inline bool isEqual(int val, int target);
 
 				/**
@@ -48,6 +49,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
+				__attribute__((warn_unused_result))
 				inline bool isEqual(float val, float target);
 
 				/*
@@ -62,6 +64,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
+				__attribute__((warn_unused_result))
 				inline bool isEqual(float val, float target, float tolerance);
 
 				/*
@@ -76,6 +79,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
+				__attribute__((warn_unused_result))
 				inline bool isEqual(double val, double target);
 
 				/*
@@ -90,6 +94,7 @@ namespace cupcfd
 				 * @retval true The values are considered equivalent.
 				 * @retval false The values are not considered equivalent.
 				 */
+				__attribute__((warn_unused_result))
 				inline bool isEqual(double val, double target, double tolerance);
 
 				/**
@@ -100,6 +105,7 @@ namespace cupcfd
 				 *
 				 * @return The square root
 				 */
+				__attribute__((warn_unused_result))
 				inline double sqrtWr(double val);
 
 				/**
@@ -110,6 +116,7 @@ namespace cupcfd
 				 *
 				 * @return The square root
 				 */
+				__attribute__((warn_unused_result))
 				inline float sqrtWr(float val);
 
 				/**
@@ -123,6 +130,7 @@ namespace cupcfd
 				 * @retval -1 The sign of v is negative
 				 */
 				template <class T>
+				__attribute__((warn_unused_result))
 				inline int sgn(T v);
 			}
 		}

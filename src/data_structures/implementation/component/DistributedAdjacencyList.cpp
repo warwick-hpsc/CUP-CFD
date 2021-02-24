@@ -30,8 +30,7 @@ namespace cupcfd
 	namespace data_structures
 	{
 		template <class I, class T>
-		DistributedAdjacencyList<I, T>::DistributedAdjacencyList(cupcfd::comm::Communicator& comm)
-		{
+		DistributedAdjacencyList<I, T>::DistributedAdjacencyList(cupcfd::comm::Communicator& comm) {
 			this->comm = comm.clone();
 
 			this->processNodeCounts = nullptr;
@@ -41,13 +40,13 @@ namespace cupcfd
 
 			// ToDo: Should distribute a unique random graph identifier to establish whether the same graph
 			// object is in use across processes.
+
+			this->finalized = false;
 		}
 
 		template <class I, class T>
-		DistributedAdjacencyList<I, T>::~DistributedAdjacencyList()
-		{
-			if(this->processNodeCounts != nullptr)
-			{
+		DistributedAdjacencyList<I, T>::~DistributedAdjacencyList() {
+			if(this->processNodeCounts != nullptr) {
 				free(this->processNodeCounts);
 			}
 			this->processNodeCounts = nullptr;
@@ -59,16 +58,14 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::reset()
-		{
+		void DistributedAdjacencyList<I, T>::reset() {
 			// Clear Data - Note we do not reset the MPI Communicator.
 			// A new object should be created if using a new communicator.
 
 			this->buildGraph = cupcfd::data_structures::AdjacencyListVector<I, T>();
 			this->connGraph = cupcfd::data_structures::AdjacencyListCSR<I, T>();
 
-			if(this->processNodeCounts != nullptr)
-			{
+			if(this->processNodeCounts != nullptr) {
 				free(this->processNodeCounts);
 				this->processNodeCounts = nullptr;
 			}
@@ -91,8 +88,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::operator=(DistributedAdjacencyList<I, T>& source)
-		{
+		void DistributedAdjacencyList<I, T>::operator=(DistributedAdjacencyList<I, T>& source) {
 			// Deep copy the contents from source to destination.
 			// This involves copying
 			// (a) Top level variables
@@ -107,12 +103,12 @@ namespace cupcfd
 			this->reset();
 
 			// === Variables ===
-			this->nLONodes = source.nLONodes;
+			this->nLONodes  = source.nLONodes;
 			this->nLGhNodes = source.nLGhNodes;
-			this->nLEdges = source.nLEdges;
-			this->nGNodes = source.nGNodes;
+			this->nLEdges   = source.nLEdges;
+			this->nGNodes   = source.nGNodes;
 			this->nGGhNodes = source.nGGhNodes;
-			this->nGEdges = source.nGEdges;
+			this->nGEdges   = source.nGEdges;
 			this->finalized = source.finalized;
 
 			// Copy the data, not the pointer)
@@ -138,85 +134,48 @@ namespace cupcfd
 			this->nodeToGlobal = source.nodeToGlobal;
 			this->globalToNode = source.globalToNode;
 
-			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
-
-			return cupcfd::error::E_SUCCESS;
+			// this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
+			// status = cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
+			// HARD_CHECK_ECODE(status)
+			this->processNodeCounts = cupcfd::utility::drivers::duplicate(source.processNodeCounts, source.comm->size);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsLocalNode( T node, bool * found)
-		{
-			*found = false;
-
+		bool DistributedAdjacencyList<I, T>::existsLocalNode( T node) {
 			auto find = this->nodeDistType.find(node);
-			if(find == this->nodeDistType.end())
-			{
-				// Did not find the node, but function ran to completion.
-				return cupcfd::error::E_SUCCESS;
+			if (find != this->nodeDistType.end() && find->second == cupcfd::data_structures::LOCAL) {
+				return true;
 			}
-			else
-			{
-				if(find->second == cupcfd::data_structures::LOCAL)
-				{
-					*found = true;
-				}
-			}
-
-			return cupcfd::error::E_SUCCESS;
+			return false;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsGhostNode(T node, bool * found)
-		{
-			*found = false;
-
+		bool DistributedAdjacencyList<I, T>::existsGhostNode(T node) {
 			auto find = this->nodeDistType.find(node);
-			if(find == this->nodeDistType.end())
-			{
-				// Did not find the node, but function ran to completion.
-				return cupcfd::error::E_SUCCESS;
+			if (find != this->nodeDistType.end() && find->second == cupcfd::data_structures::GHOST) {
+				return true;
 			}
-			else
-			{
-				if(find->second == cupcfd::data_structures::GHOST)
-				{
-					*found = true;
-				}
-			}
-
-			return cupcfd::error::E_SUCCESS;
+			return false;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsNode(T node, bool * found)
-		{
-			*found = false;
-			this->existsLocalNode(node, found);
-
-			if(*found == true)
-			{
-				// Node has been found so we can stop here.
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			this->existsGhostNode(node, found);
-
-			// There are no more types to search through, so 'found' is the final correct value, whatever that might be.
-			return cupcfd::error::E_SUCCESS;
+		bool DistributedAdjacencyList<I, T>::existsNode(T node) {
+			return this->existsLocalNode(node) || this->existsGhostNode(node);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addLocalNode(T node)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addLocalNode(T node) {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Check node does not exist already as a local node.
-			bool found;
+
+			cupcfd::error::eCodes status;
 
 			// Check node does not exist already.
-			this->existsNode(node, &found);
-
-			if(found == true)
-			{
+			bool found = this->existsNode(node);
+			if(found) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 
@@ -224,7 +183,8 @@ namespace cupcfd
 			this->nodeDistType[node] = LOCAL;
 
 			// Store the node in the local adjacency_list structure
-			this->buildGraph.addNode(node);
+			status = this->buildGraph.addNode(node);
+			CHECK_ECODE(status)
 
 			// Increment node counter for local nodes
 			this->nLONodes++;
@@ -233,16 +193,18 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addGhostNode(T node)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addGhostNode(T node) {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Check node does not exist already as a local node.
-			bool found;
+
+			cupcfd::error::eCodes status;
 
 			// Check node does not exist already.
-			this->existsNode(node, &found);
-
-			if(found == true)
-			{
+			bool found = this->existsNode(node);
+			if(found) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_EXISTS;
 			}
 
@@ -250,7 +212,8 @@ namespace cupcfd
 			this->nodeDistType[node] = GHOST;
 
 			// Store the node in the local adjacency_list structure
-			this->buildGraph.addNode(node);
+			status = this->buildGraph.addNode(node);
+			CHECK_ECODE(status)
 
 			// Increment node counter for ghost nodes
 			this->nLGhNodes++;
@@ -259,110 +222,107 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addNode(T node)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addNode(T node) {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			// Since the node type is unspecified, we default to adding it as a ghost node.
 			return this->addGhostNode(node);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsEdge(T src, T dst, bool * found)
-		{
-			bool srcExists = false;
-			bool dstExists = false;
-
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::existsEdge(T src, T dst, bool * found) {
+			cupcfd::error::eCodes status;
 			// ToDo: Is it safe to use buildgraph here???
 			// This might be cleared after finalize!
+
 			// Check that the source node exists
-			this->buildGraph.existsNode(src, &srcExists);
-			if(!srcExists)
-			{
+			bool srcExists = this->buildGraph.existsNode(src);
+			if(!srcExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Check that the destination node exists
-			this->buildGraph.existsNode(dst, &dstExists);
-			if(!dstExists)
-			{
+			bool dstExists = this->buildGraph.existsNode(dst);
+			if(!dstExists) {
 				return cupcfd::error::E_ADJACENCY_LIST_NODE_MISSING;
 			}
 
 			// Both nodes exist
 			// Pass through the task of checking to the underlying graph structure
 			//ToDo: Once return type of adjacency lists are fixed, return the err code.
-			this->buildGraph.existsEdge(src, dst, found);
+			status = this->buildGraph.existsEdge(src, dst, found);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addEdge(T src, T dst)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addEdge(T src, T dst) {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
+			}
+
 			cupcfd::error::eCodes status;
-			bool srcExists;
-			bool dstExists;
-			bool edgeExists;
 
 			// Behaviour for this function is to add a node as a ghost node if it is missing, rather
 			// than to return an error code
-			this->existsNode(src, &srcExists);
-			this->existsNode(dst, &dstExists);
+			bool srcExists = this->existsNode(src);
+			bool dstExists = this->existsNode(dst);
 
 			// ToDo: Currently add node as ghost node if missing, but is an error code preferable?
-			if(!srcExists)
-			{
+			if(!srcExists) {
 				//return E_ADJACENCY_LIST_NODE_MISSING;
-				this->addGhostNode(src);
+				status = this->addGhostNode(src);
+				CHECK_ECODE(status)
 			}
 
-			if(!dstExists)
-			{
+			if(!dstExists) {
 				//return E_ADJACENCY_LIST_NODE_MISSING;
-				this->addGhostNode(dst);
+				status = this->addGhostNode(dst);
+				CHECK_ECODE(status)
 			}
 
 			// Error Check built into addEdge
 			// If edge exists it will return the status code
 			status = this->buildGraph.addEdge(src, dst);
+			return status;
+		}
 
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
+		template <class I, class T>
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addUndirectedEdge(T src, T dst) {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
+
+			cupcfd::error::eCodes status;
+
+			status = this->addEdge(src, dst);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
+
+			status = this->addEdge(dst, src);
+			if (status != cupcfd::error::E_SUCCESS) return status;
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::addUndirectedEdge(T src, T dst)
-		{
-			cupcfd::error::eCodes err;
-
-			err = this->addEdge(src, dst);
-			if(err != cupcfd::error::E_SUCCESS)
-			{
-				return err;
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::finalize() {
+			if (this->finalized) {
+				return cupcfd::error::eCodes::E_DISTGRAPH_FINALIZED;
 			}
 
-			err = this->addEdge(dst, src);
-			if(err != cupcfd::error::E_SUCCESS)
-			{
-				return err;
-			}
-
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::finalize()
-		{
-			cupcfd::error::eCodes err;
+			cupcfd::error::eCodes status;
 
 			// =========================================================================================================
 			// (1) Setup a barrier to ensure that every process registered as involved with the graph (comm) has
 			//     called this finalize step.
 			// =========================================================================================================
-			err = cupcfd::comm::Barrier(*(this->comm));
+			status = cupcfd::comm::Barrier(*(this->comm));
+			CHECK_ECODE(status)
 
 			// =========================================================================================================
 			// (2) Distribute the graph unique identifier to ensure everyone is modifying the same graph
@@ -373,10 +333,12 @@ namespace cupcfd
 			// =========================================================================================================
 
 			// (3a) Allreduce on number of local ghost cells
-			cupcfd::comm::allReduceAdd(&(this->nLGhNodes), 1, &(this->nGGhNodes), 1, *(this->comm));
+			status = cupcfd::comm::allReduceAdd(&(this->nLGhNodes), 1, &(this->nGGhNodes), 1, *(this->comm));
+			CHECK_ECODE(status)
 
 			// (3b) Allreduce on number of owned cells to total number of owned cells (assuming everything is correct)
-			cupcfd::comm::allReduceAdd(&(this->nLONodes), 1, &(this->nGNodes), 1, *(this->comm));
+			status = cupcfd::comm::allReduceAdd(&(this->nLONodes), 1, &(this->nGNodes), 1, *(this->comm));
+			CHECK_ECODE(status)
 
 			// =========================================================================================================
 			// (4) Verification/Data Gathering Stage
@@ -391,14 +353,16 @@ namespace cupcfd
 			T * ghostNodes = (T *) malloc(sizeof(T) * this->nLGhNodes);
 
 			// Populate the array
-			this->getGhostNodes(ghostNodes, this->nLGhNodes);
+			status = this->getGhostNodes(ghostNodes, this->nLGhNodes);
+			CHECK_ECODE(status)
 
 			// ===== Build an array of local owned cell global identifiers on this process =====
 			// Allocate space based on local owned node count.
 			T * localNodes = (T *) malloc(sizeof(T) * this->nLONodes);
 
 			// Populate the array
-			this->getLocalNodes(localNodes, this->nLONodes);
+			status = this->getLocalNodes(localNodes, this->nLONodes);
+			CHECK_ECODE(status)
 
 			// A global indexing system needs to built that associates a global id with a node, but in such a way that any
 			// process can determine who they need to communicate with based on the global id
@@ -414,15 +378,16 @@ namespace cupcfd
 
 			// this will only be freed on reset/deconstructor
 			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			err = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
-			err = cupcfd::comm::Broadcast(this->processNodeCounts, this->comm->size, 0, *(this->comm));
+			status = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
+			CHECK_ECODE(status)
+			status = cupcfd::comm::Broadcast(this->processNodeCounts, this->comm->size, 0, *(this->comm));
+			CHECK_ECODE(status)
 
 			// Assign global ids to this processes' nodes. Done on a sequential basis across processes
 			// Assumes ranks will always start at 0 and be sequential in number
 			I base = 0;
 
-			for(I i = 0; i < this->comm->rank; i++)
-			{
+			for(I i = 0; i < this->comm->rank; i++) {
 				// Sum the number of nodes up to process rank - 1
 				base = base + this->processNodeCounts[i];
 			}
@@ -442,8 +407,7 @@ namespace cupcfd
 			this->globalOwnedRangeMax = base + this->nLONodes - 1;
 
 			// Perhaps it should do this by order of nodes in adjacency_list to improve cache behaviour if looping over them later.
-			for(I i = 0; i < this->nLONodes; i++)
-			{
+			for(I i = 0; i < this->nLONodes; i++) {
 				this->nodeToGlobal[localNodes[i]] = base + i;
 				this->globalToNode[base + i] = localNodes[i];
 			}
@@ -454,8 +418,7 @@ namespace cupcfd
 			I sendAdjncyPtr = 0;
 
 
-			for(I i = 0; i < this->comm->size; i++)
-			{
+			for(I i = 0; i < this->comm->size; i++) {
 				// ToDo: Should probably be a barrier here
 
 				// Serialised Scatter - i.e. each process takes it in turn to
@@ -471,19 +434,17 @@ namespace cupcfd
 
 
 				// (a) Broadcast the ghost cell data from process i in the serial loop to all other processes so they know what cells we're looking for information on.
-				T * recvGhostData;
+				T * recvGhostData = nullptr;
 				I nRecvGhostData;
-				cupcfd::error::eCodes err = cupcfd::comm::Broadcast(ghostNodes, this->nLGhNodes, &recvGhostData, &nRecvGhostData, i, *(this->comm));
-				if(err != cupcfd::error::E_SUCCESS)
-				{
-					return err;
-				}
+				status = cupcfd::comm::Broadcast(ghostNodes, this->nLGhNodes, &recvGhostData, &nRecvGhostData, i, *(this->comm));
+				CHECK_ECODE(status)
 
 				// (b)/(c) Identify which cells in the ghost cell list are in the local cell list via a set intersect (uses equality on nodes, precaution if extended in future
 				//		   with custom operator)
-				T * intersect;
+				T * intersect = nullptr;
 				I nIntersect;
-				cupcfd::utility::drivers::intersectArray(localNodes, this->nLONodes, recvGhostData, nRecvGhostData, &intersect, &nIntersect);
+				status = cupcfd::utility::drivers::intersectArray(localNodes, this->nLONodes, recvGhostData, nRecvGhostData, &intersect, &nIntersect);
+				CHECK_ECODE(status)
 
 				// (b)/(c) Gather the results from each process - i.e. the cells that each process has identified from the ghost cell list as ones they 'own'
 				// ToDo: This could possibly be made more efficient by only communicating bits (1/0) for if a cell is owned - but then each process would have to communicate
@@ -498,7 +459,8 @@ namespace cupcfd
 				I nCountOwned = 0;
 
 				// Communicate the nodes which we own that have been requested as a ghost node by the root process
-				cupcfd::comm::GatherV(intersect, nIntersect, &ownership, &nOwnership, &countOwned, &nCountOwned, i, *(this->comm));
+				status = cupcfd::comm::GatherV(intersect, nIntersect, &ownership, &nOwnership, &countOwned, &nCountOwned, i, *(this->comm));
+				CHECK_ECODE(status)
 
 				// Also communicate the global IDs for the nodes that we own that have been requested as a ghost node by the root process
 				// Build array of globalIDs
@@ -506,25 +468,23 @@ namespace cupcfd
 				I * ghostGID = (I *) malloc(sizeof(I) * this->nLGhNodes);	// Need storage on process i to store ghost node global ids from all process
 																				// Could also use size of ownership?
 
-				for(I j = 0; j < nIntersect; j++)
-				{
+				for(I j = 0; j < nIntersect; j++) {
 					intersectGID[j] = this->nodeToGlobal[intersect[j]];
 				}
 
 				// Can reuse countOwned, since the values should be the same as identified in the previous gatherV.
-				cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, this->nLGhNodes, countOwned, nCountOwned, i, *(this->comm));
+				status = cupcfd::comm::GatherV(intersectGID, nIntersect, ghostGID, this->nLGhNodes, countOwned, nCountOwned, i, *(this->comm));
+				CHECK_ECODE(status)
 
 				// While we're here, make a note of the globalIDs requested from this process for the sink process i.
 				// We'll need this information later to send data during exchanges
 				// Since we loop over the ranks in order, this should also means the ranks will be stored in a sorted fashion.
 
-				if(nIntersect > 0 && this->comm->rank != i)
-				{
+				if(nIntersect > 0 && this->comm->rank != i) {
 					this->sendRank.push_back(i);
 					this->sendGlobalIDsXAdj.push_back(sendAdjncyPtr);
 
-					for(I j = 0; j < nIntersect; j++)
-					{
+					for(I j = 0; j < nIntersect; j++) {
 						this->sendGlobalIDsAdjncy.push_back(intersectGID[j]);
 						sendAdjncyPtr = sendAdjncyPtr + 1;
 					}
@@ -533,12 +493,10 @@ namespace cupcfd
 				// Now the sink/root process should have data of which processes claim ownership over it's ghost nodes, grouped by process (regions indexed by nNodesOwned)
 				// Update local information to store this
 				// ToDo: Should this be in a kernel of some sort
-				if(this->comm->rank == i)
-				{
+				if(this->comm->rank == i) {
 					// Error Checks
 					// Check 1: Number of ghost cells stored locally should be same as total sum of ghost cells claimed by other processes
-					if(nOwnership != this->nLGhNodes)
-					{
+					if(nOwnership != this->nLGhNodes) {
 						// Error
 						//std::cout << "Error: On Rank " << this->comm.rank << "\n";
 						//std::cout << "Error: Rank " << i << ", Mismatch in local ghost cells and remotely claimed cells\n";
@@ -555,18 +513,15 @@ namespace cupcfd
 
 					I ptr = 0;
 					// Loop over regions
-					for(I k = 0; k < nCountOwned; k++)
-					{
+					for(I k = 0; k < nCountOwned; k++) {
 						// Loop over number of elements claimed by this region/process
-						for(I j = 0; j < countOwned[k]; j++)
-						{
+						for(I j = 0; j < countOwned[k]; j++) {
 							processID[ptr] = k;
 							ptr = ptr + 1;
 						}
 					}
 
-					if(ptr != nOwnership)
-					{
+					if(ptr != nOwnership) {
 						// Error - fewer process ids were assigned that reported number of claimed nodes
 						// ToDo: Suitable Error Code
 						return cupcfd::error::E_ERROR;
@@ -577,36 +532,34 @@ namespace cupcfd
 
 					std::vector<I> neighbourRanksTmp;
 
-					for(I j = 0; j < nOwnership; j++)
-					{
+					for(I j = 0; j < nOwnership; j++) {
 						this->nodeOwner[ownership[j]] = processID[j];
 						neighbourRanksTmp.push_back(processID[j]);
 					}
 
-					if(neighbourRanksTmp.size() > 0)
-					{
+					if(neighbourRanksTmp.size() > 0) {
 						// Reduce the neighbour list down to distinct ranks
 						I * distinctRanks;
 						I nDistinctRanks;
 
 						I tmpSize = neighbourRanksTmp.size();
 
-						cupcfd::utility::drivers::distinctArray(&neighbourRanksTmp[0], tmpSize, &distinctRanks, &nDistinctRanks);
+						status = cupcfd::utility::drivers::distinctArray(&neighbourRanksTmp[0], tmpSize, &distinctRanks, &nDistinctRanks);
+						CHECK_ECODE(status)
 
-						for(I k = 0; k < nDistinctRanks; k++)
-						{
+						for(I k = 0; k < nDistinctRanks; k++) {
 							this->neighbourRanks.push_back(distinctRanks[k]);
 						}
 
 						free(distinctRanks);
 
 						// Sort the rank order
-						cupcfd::utility::drivers::merge_sort(&(this->neighbourRanks[0]), this->neighbourRanks.size());
+						status = cupcfd::utility::drivers::merge_sort(&(this->neighbourRanks[0]), this->neighbourRanks.size());
+						CHECK_ECODE(status)
 					}
 
 					// Can also assigned global IDs
-					for(I j = 0; j < nOwnership; j++)
-					{
+					for(I j = 0; j < nOwnership; j++) {
 						this->nodeToGlobal[ownership[j]] = ghostGID[j];
 						this->globalToNode[ghostGID[j]] = ownership[j];
 					}
@@ -624,13 +577,11 @@ namespace cupcfd
 				free(ghostGID);
 
 				// These are only allocated by the gather driver on the sink process
-				if(ownership != NULL && ownership != nullptr)
-				{
+				if(ownership != NULL && ownership != nullptr) {
 					free(ownership);
 				}
 
-				if(countOwned != NULL && countOwned != nullptr)
-				{
+				if(countOwned != NULL && countOwned != nullptr) {
 					free(countOwned);
 				}
 
@@ -663,31 +614,32 @@ namespace cupcfd
 			T * ghosts = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostsGIDs = (T *) malloc(sizeof(T) * this->nLGhNodes);
 			T * ghostrank = (T *) malloc(sizeof(T) * this->nLGhNodes);
-			this->getGhostNodes(ghosts, this->nLGhNodes);
+			status = this->getGhostNodes(ghosts, this->nLGhNodes);
+			CHECK_ECODE(status)
 
-			for(I i = 0; i < this->nLGhNodes; i++)
-			{
+			for(I i = 0; i < this->nLGhNodes; i++) {
 				ghostsGIDs[i] = this->nodeToGlobal[ghosts[i]];
 				ghostrank[i] = this->nodeOwner[ghosts[i]];
 			}
 
 			// Now group the global IDs by neighbour rank, by sorting the ranks and then reordering the ghostGIDs
 			I * indexes = (I *) malloc(sizeof(I) * this->nLGhNodes);
-			cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
-			cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
+			status = cupcfd::utility::drivers::merge_sort_index(ghostrank, this->nLGhNodes, indexes, this->nLGhNodes);
+			CHECK_ECODE(status)
+			status = cupcfd::utility::drivers::destIndexReorder(ghostsGIDs, this->nLGhNodes, indexes, this->nLGhNodes);
+			CHECK_ECODE(status)
 
 			// Loop over neighbour ranks, this should already have been sorted
 			I ptr = 0;
 			I j = 0;
 
-			for(I i = 0; i < this->neighbourRanks.size(); i++)
-			{
+			I numNeighbourRanks = cupcfd::utility::drivers::safeConvertSizeT<I>(this->neighbourRanks.size());
+			for(I i = 0; i < numNeighbourRanks; i++) {
 				this->recvRank.push_back(this->neighbourRanks[i]);
 				this->recvGlobalIDsXAdj.push_back(ptr);
 
 				I rankCellCount = 0;
-				while((j < this->nLGhNodes) && (ghostrank[j] == this->neighbourRanks[i]))
-				{
+				while((j < this->nLGhNodes) && (ghostrank[j] == this->neighbourRanks[i])) {
 					this->recvGlobalIDsAdjncy.push_back(ghostsGIDs[j]);
 					rankCellCount = rankCellCount + 1;
 					j = j + 1;
@@ -697,19 +649,21 @@ namespace cupcfd
 			this->recvGlobalIDsXAdj.push_back(j);
 
 			// Sort the ghost global ids within their groups
-			for(I i = 0; i < this->recvGlobalIDsXAdj.size()-1; i++)
-			{
+			I numRecvGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->recvGlobalIDsXAdj.size());
+			for(I i = 0; i < numRecvGlobalIDsXAdj-1; i++) {
 				I start = this->recvGlobalIDsXAdj[i];
 				I count = this->recvGlobalIDsXAdj[i+1] - this->recvGlobalIDsXAdj[i];
-				cupcfd::utility::drivers::merge_sort(&(this->recvGlobalIDsAdjncy[start]), count);
+				status = cupcfd::utility::drivers::merge_sort(&(this->recvGlobalIDsAdjncy[start]), count);
+				CHECK_ECODE(status)
 			}
 
 			// Sort the send global ids within their groups
-			for(I i = 0; i < this->sendGlobalIDsXAdj.size()-1; i++)
-			{
+			I numSendGlobalIDsXAdj = cupcfd::utility::drivers::safeConvertSizeT<I>(this->sendGlobalIDsXAdj.size());
+			for(I i = 0; i < numSendGlobalIDsXAdj-1; i++) {
 				I start = this->sendGlobalIDsXAdj[i];
 				I count = this->sendGlobalIDsXAdj[i+1] - this->sendGlobalIDsXAdj[i];
-				cupcfd::utility::drivers::merge_sort(&(this->sendGlobalIDsAdjncy[start]), count);
+				status = cupcfd::utility::drivers::merge_sort(&(this->sendGlobalIDsAdjncy[start]), count);
+				CHECK_ECODE(status)
 			}
 
 			free(ghosts);
@@ -726,14 +680,20 @@ namespace cupcfd
 			this->finalized = true;
 
 			// Sort the nodes so local nodes have lower local indexes than ghost nodes
-			this->sortNodesByLocal();
+			status = this->sortNodesByLocal();
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::sortNodesByLocal()
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::sortNodesByLocal() {
+			if (!this->finalized) {
+				// I suppose nothing technically wrong with sorting a unfinalized graph, but 
+				// why would a developer want to sort an unfinalized graph?
+				return cupcfd::error::eCodes::E_DISTGRAPH_UNFINALIZED;
+			}
+
 			// Kernels may wish to only loop over local nodes. We wish to maintain index parity with any data arrays
 			// between the locally assigned index for a node, and it's data.
 			// As such, we want the graph data to be sorted by local nodes first, else we'd have to check for every
@@ -756,65 +716,56 @@ namespace cupcfd
 			cupcfd::data_structures::AdjacencyListVector<I, T> sourceList;
 
 			T * localNodes = (T *) malloc(sizeof(T) * this->nLONodes);
-			this->getLocalNodes(localNodes, this->nLONodes);
-
-			for(I i = 0; i < this->nLONodes; i++)
-			{
-				sourceList.addNode(localNodes[i]);
+			status = this->getLocalNodes(localNodes, this->nLONodes);
+			CHECK_ECODE(status)
+			for(I i = 0; i < this->nLONodes; i++) {
+				status = sourceList.addNode(localNodes[i]);
+				CHECK_ECODE(status)
 			}
 
 			// (b) Get the list of nodes that are ghosts and add each node to the new adjacency list
 			T * ghostNodes = (T *) malloc(sizeof(T) * this->nLGhNodes);
-			this->getGhostNodes(ghostNodes, this->nLGhNodes);
-
-			for(I i = 0; i < this->nLGhNodes; i++)
-			{
-				sourceList.addNode(ghostNodes[i]);
+			status = this->getGhostNodes(ghostNodes, this->nLGhNodes);
+			CHECK_ECODE(status)
+			for(I i = 0; i < this->nLGhNodes; i++) {
+				status = sourceList.addNode(ghostNodes[i]);
+				CHECK_ECODE(status)
 			}
 
 			// (c) For each node, add the edges that were previously stored. There should be no new nodes at this stage.
-			for(I i = 0; i < this->nLONodes; i++)
-			{
+			for(I i = 0; i < this->nLONodes; i++) {
 				I count;
-				this->connGraph.getAdjacentNodeCount(localNodes[i], &count);
+				status = this->connGraph.getAdjacentNodeCount(localNodes[i], &count);
+				CHECK_ECODE(status)
 
 				T * adjNodes = (T *) malloc(sizeof(T) * count);
+				status = this->connGraph.getAdjacentNodes(localNodes[i], adjNodes, count);
+				CHECK_ECODE(status)
 
-				this->connGraph.getAdjacentNodes(localNodes[i], adjNodes, count);
-
-				for(I j = 0; j < count; j++)
-				{
+				for(I j = 0; j < count; j++) {
 					// No need to add in both directions - if it exists in both directions it will be added when processing
 					// the adjacent node.
 					status = sourceList.addEdge(localNodes[i], adjNodes[j]);
-
-					if(status != cupcfd::error::E_SUCCESS)
-					{
-						return status;
-					}
+					CHECK_ECODE(status)
 				}
 				free(adjNodes);
 			}
 
-			for(I i = 0; i < this->nLGhNodes; i++)
-			{
+			for(I i = 0; i < this->nLGhNodes; i++) {
 				I count;
-				this->connGraph.getAdjacentNodeCount(ghostNodes[i], &count);
+				status = this->connGraph.getAdjacentNodeCount(ghostNodes[i], &count);
+				CHECK_ECODE(status)
 
 				T * adjNodes = (T *) malloc(sizeof(T) * count);
 
-				this->connGraph.getAdjacentNodes(ghostNodes[i], adjNodes, count);
+				status = this->connGraph.getAdjacentNodes(ghostNodes[i], adjNodes, count);
+				CHECK_ECODE(status)
 
-				for(I j = 0; j < count; j++)
-				{
+				for(I j = 0; j < count; j++) {
 					// No need to add in both directions - if it exists in both directions it will be added when processing
 					// the adjacent node.
 					status = sourceList.addEdge(ghostNodes[i], adjNodes[j]);
-
-					if(status != cupcfd::error::E_SUCCESS)
-					{
-						return status;
-					}
+					CHECK_ECODE(status)
 				}
 				free(adjNodes);
 			}
@@ -830,15 +781,17 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::getGhostNodes(T * nodes, I nNodes)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::getGhostNodes(T * nodes, I nNodes) {
 			auto it = this->nodeDistType.begin();
 			I ptr = 0;
 
-			while(it != this->nodeDistType.end())
-			{
-				if(it->second == GHOST)
-				{
+			while(it != this->nodeDistType.end()) {
+				if(it->second == GHOST) {
+					#ifdef DEBUG
+						if (ptr >= nNodes) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					nodes[ptr] = it->first;
 					ptr++;
 				}
@@ -849,15 +802,17 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::getLocalNodes(T * nodes, I nNodes)
-		{
+		cupcfd::error::eCodes DistributedAdjacencyList<I, T>::getLocalNodes(T * nodes, I nNodes) {
 			auto it = this->nodeDistType.begin();
 			I ptr = 0;
 
-			while(it != this->nodeDistType.end())
-			{
-				if(it->second == LOCAL)
-				{
+			while(it != this->nodeDistType.end()) {
+				if(it->second == LOCAL) {
+					#ifdef DEBUG
+						if (ptr >= nNodes) {
+							return cupcfd::error::E_INVALID_INDEX;
+						}
+					#endif
 					nodes[ptr] = it->first;
 					ptr++;
 				}

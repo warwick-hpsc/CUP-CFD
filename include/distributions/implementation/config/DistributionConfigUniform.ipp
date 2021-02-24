@@ -51,32 +51,27 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		T DistributionConfigUniform<I,T>::getLBound()
-		{
+		T DistributionConfigUniform<I,T>::getLBound() {
 			return this->lbound;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigUniform<I,T>::setLBound(T lbound)
-		{
+		void DistributionConfigUniform<I,T>::setLBound(T lbound) {
 			this->lbound = lbound;
 		}
 		
 		template <class I, class T>
-		T DistributionConfigUniform<I,T>::getUBound()
-		{
+		T DistributionConfigUniform<I,T>::getUBound() {
 			return this->ubound;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigUniform<I,T>::setUBound(T ubound)
-		{
+		void DistributionConfigUniform<I,T>::setUBound(T ubound) {
 			this->ubound = ubound;
 		}
 		
 		template <class I, class T>
-		void DistributionConfigUniform<I,T>::operator=(const DistributionConfigUniform<I,T>& source)
-		{
+		void DistributionConfigUniform<I,T>::operator=(const DistributionConfigUniform<I,T>& source) {
 			// Call Base
 			DistributionConfig<I,T>::operator=(source);
 			
@@ -85,16 +80,13 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigUniform<I,T> * DistributionConfigUniform<I,T>::clone()
-		{
+		DistributionConfigUniform<I,T> * DistributionConfigUniform<I,T>::clone() {
 			return new DistributionConfigUniform(*this);
 		}
 		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigUniform<I,T>::buildDistribution(Distribution<I,T> ** dist)
-		{
+		void DistributionConfigUniform<I,T>::buildDistribution(Distribution<I,T> ** dist) {
 			*dist = new DistributionUniform<I,T>(this->lbound, this->ubound);
-			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

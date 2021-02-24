@@ -59,7 +59,9 @@ BOOST_AUTO_TEST_CASE(getFixedValue_test1, * utf::tolerance(0.00001))
 	DistributionConfigSourceFixedJSON<int,double> jsonConfigSource("../tests/distributions/data/DistributionConfigSourceFixedTest.json", topLevels, 1);
 
 	double fixedValue;
-	jsonConfigSource.getFixedValue(&fixedValue);
+	cupcfd::error::eCodes status;
+	status = jsonConfigSource.getFixedValue(&fixedValue);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	BOOST_TEST(fixedValue == 14.7);
 }

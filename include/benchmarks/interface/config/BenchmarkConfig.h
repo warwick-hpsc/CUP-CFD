@@ -74,11 +74,13 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual BenchmarkConfig<I,T> * clone() = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(Benchmark<I,T> ** bench);
 		};
 	}

@@ -25,8 +25,8 @@ namespace cupcfd
 		ParticleEmitter<E,P,I,T>::ParticleEmitter(const I localCellID, const I globalCellID, 
 												  const I rank, const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& position)
 		: position(position),
-		  localCellID(localCellID),
 		  globalCellID(globalCellID),
+		  localCellID(localCellID),
 		  emitterID(numEmitters),
 		  rank(rank),
 		  nextParticleID(0)

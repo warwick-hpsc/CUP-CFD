@@ -27,51 +27,6 @@ namespace cupcfd
 		{
 			// Currently Nothing to Clean Up.
 		}
-
-		// === Pure Virtual Methods ===
-		// Empty implementations to satisy the linker.
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getNNZ(I * nnz)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getNRows(I * nRows)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getNCols(I * nCols)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getMatrixIndicesBase(I * indicesBase)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getNNZRows(I * rowIndices, I nRowIndices)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes SparseMatrixSource<I, T>::getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
 	}
 }
 

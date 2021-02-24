@@ -21,14 +21,6 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
-
 		}
 	}
 }
-
-// Explicit Instantiation
-
-using namespace cupcfd::geometry::shapes;
-
-template class Triangle2D<float>;
-template class Triangle2D<double>;

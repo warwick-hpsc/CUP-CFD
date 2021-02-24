@@ -33,24 +33,28 @@ namespace cupcfd
 		template <class T>
 		class ExchangePatternTest : public ExchangePattern<T>
 		{
-			void packSendBuffer(T * data, int nData)
-			{
-
+			cupcfd::error::eCodes packSendBuffer(
+				T * data __attribute__((unused)), 
+				int nData __attribute__((unused))) {
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void unpackRecvBuffer(T * data, int nData)
-			{
-
+			cupcfd::error::eCodes unpackRecvBuffer(
+				T * data __attribute__((unused)), 
+				int nData __attribute__((unused))) {
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void exchangeStart(T * sourceData, int nData)
-			{
-
+			cupcfd::error::eCodes exchangeStart(
+				T * sourceData __attribute__((unused)), 
+				int nData __attribute__((unused))) {
+				return cupcfd::error::E_SUCCESS;
 			}
 
-			void exchangeStop(T * sinkData, int nData)
-			{
-
+			cupcfd::error::eCodes exchangeStop(
+				T * sinkData __attribute__((unused)), 
+				int nData __attribute__((unused))) {
+				return cupcfd::error::E_SUCCESS;
 			}
 		};
 	}
@@ -79,6 +83,7 @@ BOOST_AUTO_TEST_CASE(constructor_test1)
 BOOST_AUTO_TEST_CASE(init_test1)
 {
     cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
+    cupcfd::error::eCodes status;
 
     // Create a default empty pattern
     cupcfd::comm::ExchangePatternTest<int> pattern;
@@ -101,7 +106,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[2] = {4, 5};
     	int rankSend[2] = {1, 1};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);
@@ -139,7 +145,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[4] = {6, 7, 9, 10};
     	int rankSend[4] = {0, 0, 2, 2};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 4, rankSend, 4);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -182,7 +189,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[5] = {12, 14, 11, 15, 13};
     	int rankSend[5] = {1, 3, 1, 3, 3};
 
-    	pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	status = pattern.init(comm, exchangeIDX, 9, exchangeIDXSend, 5, rankSend, 5);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 2);
@@ -220,7 +228,8 @@ BOOST_AUTO_TEST_CASE(init_test1)
     	int exchangeIDXSend[2] = {16, 17};
     	int rankSend[2] = {2, 2};
 
-    	pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	status = pattern.init(comm, exchangeIDX, 7, exchangeIDXSend, 2, rankSend, 2);
+    	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
     	// Check the data has been set up correctly
 	    BOOST_CHECK_EQUAL(pattern.nSProc, 1);

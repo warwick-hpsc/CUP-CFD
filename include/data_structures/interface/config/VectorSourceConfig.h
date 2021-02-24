@@ -53,17 +53,6 @@ namespace cupcfd
 				 */
 				virtual ~VectorSourceConfig();
 
-				// === Concrete Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(VectorSourceConfig<I,T>& source);
-
 				// === Pure Virtual Methods ===
 
 				/**
@@ -73,6 +62,7 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual VectorSourceConfig<I,T> * clone() = 0;
 
 				/**
@@ -80,6 +70,7 @@ namespace cupcfd
 				 *
 				 * @param A pointer to the location where the pointer of the newly created object will be stored.
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildVectorSource(VectorSource<I,T> ** vectorSource) = 0;
 		};
 	}

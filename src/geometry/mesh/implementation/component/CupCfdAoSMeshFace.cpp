@@ -41,12 +41,10 @@ namespace cupcfd
 			{
 
 			}
+
+			// Explicit Instantiation
+			template class CupCfdAoSMeshFace<int, float>;
+			template class CupCfdAoSMeshFace<int, double>;
 		}
 	}
 }
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMeshFace<int, float>;
-template class CupCfdAoSMeshFace<int, double>;

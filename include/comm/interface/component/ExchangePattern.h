@@ -192,10 +192,11 @@ namespace cupcfd
 				 * @param tRanks The target ranks for the elements in exchangeIDXSend to be sent to, paired by index
 				 * @param nTRanks The size of the tRanks array
 				 */
-				virtual void init(cupcfd::comm::Communicator& comm,
-						  int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
-						  int * exchangeIDXSend, int nExchangeIDXSend,
-						  int * tRanks, int nTRanks);
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes init(cupcfd::comm::Communicator& comm,
+												int * mapLocalToExchangeIDX, int nMapLocalToExchangeIDX,
+												int * exchangeIDXSend, int nExchangeIDXSend,
+												int * tRanks, int nTRanks);
 
 				// ToDo: These need more error code validations
 
@@ -222,7 +223,8 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				virtual void packSendBuffer(T * data, int nData) = 0;
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes packSendBuffer(T * data, int nData) = 0;
 
 				/**
 				 * Unpack the recv buffer into the provided data array,
@@ -250,7 +252,8 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				virtual void unpackRecvBuffer(T * data, int nData) = 0;
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes unpackRecvBuffer(T * data, int nData) = 0;
 
 				/**
 				 * Begin a data exchange using the stored pattern.
@@ -273,7 +276,8 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				virtual void exchangeStart(T * sourceData, int nData) = 0;
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes exchangeStart(T * sourceData, int nData) = 0;
 
 				// ToDo:
 				// Error Codes - Exchange not active
@@ -298,7 +302,8 @@ namespace cupcfd
 				 *
 				 * @return Nothing
 				 */
-				virtual void exchangeStop(T * sinkData, int nData) = 0;
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes exchangeStop(T * sinkData, int nData) = 0;
 		};
 	}
 }

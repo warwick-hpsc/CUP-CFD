@@ -32,14 +32,6 @@ namespace cupcfd
 		{
 			// Nothing to do currently
 		}
-
-		// === Concrete Methods ===
-
-		template <class C, class I, class T>
-		cupcfd::error::eCodes LinearSolverConfigSource<C,I,T>::buildLinearSolverConfig(LinearSolverConfig<C,I,T> ** linearSolverConfig)
-		{
-			// Pure Virtual
-		}
 	}
 }
 

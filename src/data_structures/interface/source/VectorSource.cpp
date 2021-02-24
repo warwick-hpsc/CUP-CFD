@@ -31,22 +31,6 @@ namespace cupcfd
 		{
 			// Currently Nothing to Clean Up.
 		}
-
-		// === Pure Virtual ===
-
-		template <class I, class T>
-		cupcfd::error::eCodes VectorSource<I,T>::getSize(I * vecSize)
-		{
-			cupcfd::error::eCodes status;
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes VectorSource<I,T>::getData(T * data, I nData, I * indexes, I nIndexes, I indexBase)
-		{
-			cupcfd::error::eCodes status;
-			return cupcfd::error::E_SUCCESS;
-		}
 	}
 }
 

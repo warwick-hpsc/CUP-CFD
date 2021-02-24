@@ -61,14 +61,18 @@ namespace cupcfd
 				/**
 				 * Deconstructor.
 				 */
-				virtual ~SparseMatrixSourceMeshGenConfig();
+				~SparseMatrixSourceMeshGenConfig();
 
 				// === Concrete Methods ===
 
 				// === Overridden Inherited Methods ===
 
 				void operator=(SparseMatrixSourceMeshGenConfig<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				SparseMatrixSourceMeshGenConfig<I,T> * clone();
+
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildSparseMatrixSource(SparseMatrixSource<I,T> ** matrixSource);
 		};
 	}

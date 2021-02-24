@@ -40,213 +40,11 @@ namespace cupcfd
 				// Do nothing
 			}
 
-			// === Pure Methods ===
-			// Empty implementations to satisfy linker
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellLabels(L * labels, I nLabels, I * indexes, I nIndexes)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceLabels(L * labels, I nLabels, I * indexes, I nIndexes)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getVertexLabels(L * labels, I nLabels, I * indexes, I nIndexes)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryLabels(L * labels, I nLabels, I * indexes, I nIndexes)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getRegionLabels(L * labels, I nLabels, I * indexes, I nIndexes)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellCount(I * cellCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceCount(I * faceCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryCount(I * boundaryCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getRegionCount(I * regionCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getVertexCount(I * vertexCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getMaxFaceCount(I * maxFaceCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getMaxVertexCount(I * maxVertexCount)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellNFaces(I * nFaces, I nNFaces, L * cellLabels, I nCellLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellVolume(T * cellVol, I nCellVol, L * cellLabels, I nCellLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * cellCenter, I nCellCenter, L * cellLabels, I nCellLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getCellFaceLabels(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData, L * cellLabels, I nCellLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceIsBoundary(bool * isBoundary, I nIsBoundary, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceNVertices(I * nVertices, I nNVertices, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceBoundaryLabels(I * faceBoundaryLabels, I nFaceBoundaryLabels, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceCell1Labels(I * faceCell1Labels, I nFaceCell1Labels, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceCell2Labels(I * faceCell2Labels, I nFaceCell2Labels, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceArea(T * faceLambda, I nFaceLambda, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceLambda(T * faceLambda, I nFaceLambda, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceNormal(cupcfd::geometry::euclidean::EuclideanVector<T,3> * faceNormal, I nFaceNormal, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceCenter(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * faceCenter, I nFaceCenter, L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getFaceVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getVertexCoords(cupcfd::geometry::euclidean::EuclideanPoint<T,3> * vertCoords, I nVertCoords, L * vertexLabels, I nVertexLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryFaceLabels(I * boundaryFaceLabels, I nBoundaryFaceLabels, L * boundaryLabels, I nBoundaryLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryNVertices(I * nVertices, I nNVertices, L * boundaryLabels, I nBoundaryLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryRegionLabels(I * boundaryRegionLabels, I nBoundaryRegionLabels, L * boundaryLabels, I nBoundaryLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryVerticesLabelsCSR(I * csrIndices, I nCsrIndices, I * csrData, I nCsrData,  L * faceLabels, I nFaceLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getBoundaryDistance(T * boundaryDistance, I nBoundaryDistance, L * boundaryLabels, I nBoundaryLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
-			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getRegionName(std::string * names, I nNames, L * regionLabels, I nRegionLabels)
-			{
-				return cupcfd::error::E_SUCCESS;
-			}
-
 			// === Concrete Methods ===
 
 	/*
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::getConnectivityGraph(cupcfd::adjacency_list::AdjacencyListCSR<I, I>& graph)
-			{
+			cupcfd::error::eCodes MeshSource<I,T,L>::getConnectivityGraph(cupcfd::adjacency_list::AdjacencyListCSR<I, I>& graph) {
 				cupcfd::error::eCodes status;
 
 				// We use an empty adjacency list vector instead of the CSR version to build,
@@ -296,47 +94,36 @@ namespace cupcfd
 
 				// Add Nodes
 				I base = 1;
-				for(I i = 0; i < cellCount; i++)
-				{
+				for(I i = 0; i < cellCount; i++) {
 					I label = i;
 
 					status = buildGraph.addNode(label);
 
-					if(status != cupcfd::error::E_SUCCESS)
-					{
-						// Failed to add a node
-						return status;
-					}
+					CHECK_ECODE(status)
 				}
 
 				// Add Edges
 
-				for(I i = 0; i < cellCount; i++)
-				{
+				for(I i = 0; i < cellCount; i++) {
 					I cellLabel = i;
 
 					I ptr = pos[cellLabel];
 					I edgeCount = pos[cellLabel + 1] - pos[cellLabel];
 
-					for(I j = ptr; j < ptr + edgeCount; j++)
-					{
+					for(I j = ptr; j < ptr + edgeCount; j++) {
 						I faceLabel = data[j];
 
 						// Check that it is an face between two cells
-						if(!(isBoundary[faceLabel]))
-						{
-							if(faceCell1[faceLabel] == cellLabel)
-							{
+						if(!(isBoundary[faceLabel])) {
+							if(faceCell1[faceLabel] == cellLabel) {
 								// Current cell is cell1: Direction is cell1->cell2
 								status = buildGraph.addEdge(cellLabel, faceCell2[faceLabel]);
 							}
-							else if(faceCell2[faceLabel] == cellLabel)
-							{
+							else if(faceCell2[faceLabel] == cellLabel) {
 								// Current cell is cell1: Direction is cell2->cell1
 								status = buildGraph.addEdge(cellLabel, faceCell1[faceLabel]);
 							}
-							else
-							{
+							else {
 								// Mismatch between cell->face and face->cell - error
 								return cupcfd::error::E_ERROR;
 							}
@@ -360,8 +147,7 @@ namespace cupcfd
 			template <class I, class T, class L>
 			cupcfd::error::eCodes MeshSource<I,T,L>::partitionMeshSource(cupcfd::partitioner::Partitioner<I,I>& partitionEngine,
 																		cupcfd::mpi::Communicator& workComm,
-																		cupcfd::adjacency_list::DistributedAdjacencyList<I, I>& resultGraph)
-			{
+																		cupcfd::adjacency_list::DistributedAdjacencyList<I, I>& resultGraph) {
 				cupcfd::error::eCodes status;
 
 				// Note: to avoid blocking behaviour, all ranks of either the partitioner comm or resultGraph comm must call this method,
@@ -385,32 +171,27 @@ namespace cupcfd
 				I nLCells;
 
 				// Compute the local cell count, distribute a remainder amongst the lower ranks
-				if(workComm.rank < r)
-				{
+				if(workComm.rank < r) {
 					nLCells = ((I) nGCells) / ((I) resultGraph.comm.size) + 1;
 				}
-				else
-				{
+				else {
 					nLCells = ((I) nGCells) / ((I) resultGraph.comm.size);
 				}
 
 				I base;
 				I * naiveLocalCells = (I *) malloc(sizeof(I) * nLCells);
 
-				if(workComm.rank < r)
-				{
+				if(workComm.rank < r) {
 					base = (((I) nGCells) / ((I) resultGraph.comm.size) + 1) * resultGraph.comm.rank;
 				}
-				else
-				{
+				else {
 					base = ((((I) nGCells) / ((I) resultGraph.comm.size) + 1) * r) +
 							   (((I) nGCells) / ((I) resultGraph.comm.size) * (resultGraph.comm.rank - r));
 				}
 
 				// Assign local nodes naively - each rank get a range from base -> base+nLCells
 				// where base is assigned such that e.g. [0->9|10->19...] to divide into segments
-				for(I i = 0; i < nLCells; i++)
-				{
+				for(I i = 0; i < nLCells; i++) {
 					naiveLocalCells[i] = base + i;
 				}
 

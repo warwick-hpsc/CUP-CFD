@@ -29,15 +29,6 @@ namespace cupcfd
 		{
 			// Nothing to do currently
 		}
-
-		// === Concrete Methods ===
-
-		// === Pure Virtual Methods ===
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerNaiveConfigSource<I,T>::buildPartitionerConfig(PartitionerConfig<I,T> ** config)
-		{
-
-		}
 	}
 }
 

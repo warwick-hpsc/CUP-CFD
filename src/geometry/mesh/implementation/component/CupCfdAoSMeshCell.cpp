@@ -29,12 +29,10 @@ namespace cupcfd
 			{
 
 			}
+
+			// Explicit Instantiation
+			template class CupCfdAoSMeshCell<int, float>;
+			template class CupCfdAoSMeshCell<int, double>;
 		}
 	}
 }
-
-// Explicit Instantiation
-using namespace cupcfd::geometry::mesh;
-
-template class CupCfdAoSMeshCell<int, float>;
-template class CupCfdAoSMeshCell<int, double>;

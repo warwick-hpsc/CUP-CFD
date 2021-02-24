@@ -48,32 +48,12 @@ namespace cupcfd
 				ParticleSystemConfig();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				ParticleSystemConfig(ParticleSystemConfig<S,E,P,M,I,T,L>& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */
 				virtual ~ParticleSystemConfig();
 
-				// === Concrete Methods ===
-
 				// === Virtual Methods ===
-
-				/**
-				 * Deep copy from source to this config
-				 *
-				 * @param source The source configuration to copy from.
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes.
-				 *
-				 * @return Nothing.
-				 */
-				virtual void operator=(ParticleSystemConfig<S,E,P,M,I,T,L>& source);
 
 				/**
 				 * Return a pointer to a clone of this object.
@@ -85,13 +65,15 @@ namespace cupcfd
 				 *
 				 * @return A pointer to a cloned copy of this object.
 				 */
+				__attribute__((warn_unused_result))
 				virtual ParticleSystemConfig<S,E,P,M,I,T,L> * clone() = 0;
 
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildParticleSystem(ParticleSystem<S,E,P,M,I,T,L> ** system,
-																	   std::shared_ptr<M> meshPtr) = 0;
+																	std::shared_ptr<M> meshPtr) = 0;
 		};
 	}
 }

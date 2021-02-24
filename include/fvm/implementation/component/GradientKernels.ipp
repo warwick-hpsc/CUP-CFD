@@ -37,15 +37,13 @@ namespace cupcfd
 	{
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes GradientPhiGaussDolfyn(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh, I nGradient,
-							  T * phiCell, I nPhiCell,
-							  T * phiBoundary, I nPhiBoundary,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
-							  cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell)
-		{
-
+													T * phiCell, I nPhiCell,
+													T * phiBoundary, I nPhiBoundary,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxCell, I nDPhidxCell,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dPhidxoCell, I nDPhidxoCell) {
 			T facn, facp, fact;
-			T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
-			T phiFace, delta, vol;
+			// T xp, xn, xf, xnorm, xpac, xnac, delp, deln;
+			T phiFace, vol;
 			I ip, ib, in;
 
 			cupcfd::geometry::euclidean::EuclideanPoint<T,3> xac;
@@ -53,30 +51,26 @@ namespace cupcfd
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> corrTmp;
 
 			I nFac = mesh.properties.lFaces;
-			I nCel = mesh.properties.lOCells;
+			// I nCel = mesh.properties.lOCells;
 
 			// Zero Cell Values
-			for (I i = 0; i < nDPhidxoCell; i++)
-			{
+			for (I i = 0; i < nDPhidxoCell; i++) {
 				dPhidxoCell[i].cmp[0] = (T) 0;
 				dPhidxoCell[i].cmp[1] = (T) 0;
 				dPhidxoCell[i].cmp[2] = (T) 0;
 			}
 
 			// Gradient Loop
-			for(I iGrad = 0; iGrad < nGradient; iGrad++)
-			{
+			for(I iGrad = 0; iGrad < nGradient; iGrad++) {
 				// Reset
-				for (I i = 0; i < nDPhidxCell; i++)
-				{
+				for (I i = 0; i < nDPhidxCell; i++) {
 					dPhidxCell[i].cmp[0] = (T) 0;
 					dPhidxCell[i].cmp[1] = (T) 0;
 					dPhidxCell[i].cmp[2] = (T) 0;
 				}
 
 				// Face Loop
-				for(I i = 0; i < mesh.properties.lFaces; i++)
-				{			
+				for(I i = 0; i < nFac; i++) {			
 					// Get Cell 1 Index
 					ip = mesh.getFaceCell1ID(i);
 
@@ -86,30 +80,38 @@ namespace cupcfd
 					bool isBoundary;
 					mesh.getFaceIsBoundary(i, &isBoundary);
 
-					if(!isBoundary)
-					{
+					if(!isBoundary) {
 						facn = mesh.getFaceLambda(i);
 						facp = 1.0 - facn;
 
 						xac = (mesh.getCellCenter(in) * facn) + (mesh.getCellCenter(ip) * facp);
 
 						dPhidxac = (dPhidxoCell[in] * facn) + (dPhidxoCell[ip] * facp);
+
+						#ifdef DEBUG
+							if (ip >= nPhiCell || in >= nPhiCell) {
+								return cupcfd::error::E_INVALID_INDEX;
+							}
+						#endif
 						phiFace = (phiCell[in] * facn) + (phiCell[ip] * facp);
 
 						corrTmp = mesh.getFaceCenter(i) - xac;
 
-						dPhidxac.dotProduct(corrTmp, &delta);
-						phiFace = phiFace + delta;
+						phiFace += dPhidxac.dotProduct(corrTmp);
 
-						dPhidxCell[ip] = dPhidxCell[ip] + (phiFace * mesh.getFaceNorm(i));
-						dPhidxCell[in] = dPhidxCell[in] + (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[ip] += (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[in] += (phiFace * mesh.getFaceNorm(i));
 					}
-					else
-					{
+					else {
 						ib = mesh.getFaceBoundaryID(i);
+						#ifdef DEBUG
+							if (ib >= nPhiBoundary) {
+								return cupcfd::error::E_INVALID_INDEX;
+							}
+						#endif
 						phiFace = phiBoundary[ib];
 
-						dPhidxCell[ip] = dPhidxCell[ip] + (phiFace * mesh.getFaceNorm(i));
+						dPhidxCell[ip] += (phiFace * mesh.getFaceNorm(i));
 					}
 				}
 
@@ -117,16 +119,14 @@ namespace cupcfd
 				// Loop over local cells only? Or ghost cells too?
 				// Since faces can access ghost cells, presume these must be updated
 				// for ghost cells also.
-				for(I i = 0; i < mesh.properties.lTCells; i++)
-				{
+				for(I i = 0; i < mesh.properties.lTCells; i++) {
 					mesh.getCellVolume(i, &vol);
 					fact = 1.0/vol;
-					dPhidxCell[i] = fact * dPhidxCell[i];
+					dPhidxCell[i] *= fact;
 				}
 
 				// Copy
-				for(I i = 0; i < nDPhidxoCell; i++)
-				{
+				for(I i = 0; i < nDPhidxoCell; i++) {
 					dPhidxoCell[i] = dPhidxCell[i];
 				}
 			}

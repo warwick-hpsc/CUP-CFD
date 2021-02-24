@@ -6,6 +6,9 @@ if [ "$COMPILER" = "gnu" ]; then
 elif [ "$COMPILER" = "intel" ]; then
 	export CC=mpiicc
 	export CXX=mpicxx
+elif [ "$COMPILER" = "clang" ]; then
+	export CC="mpicc -cc=clang"
+	export CXX="mpicxx -cxx=clang++"
 else
 	## Default to GNU, everything has that, right?
 	COMPILER=gnu
@@ -36,7 +39,7 @@ mkdir -p build
 RTYPE=Debug
 cd build
 cmake .. -DHDF5_ROOT="$HDF5_ROOT" \
-         -DCMAKE_BUILD_TYPE="$RTYPE" \
+         -DCMAKE_BUILD_TYPE="$RTYPE" -DCOMPILER="$COMPILER" \
          -DMETIS_ROOT="$METIS_ROOT" \
          -DPARMETIS_ROOT="$PARMETIS_ROOT" \
 		 -DSQLITE_LIBS="$SQLITE_ROOT"/lib/libsqlite3.so \

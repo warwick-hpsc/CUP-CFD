@@ -57,18 +57,21 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				virtual ~BenchmarkConfigKernels();
+				~BenchmarkConfigKernels();
 
 				// === Concrete Methods ===
 
 				// === Overloaded Inherited Methods ===
 
 				void operator=(const BenchmarkConfigKernels<I,T>& source);
+				
+				__attribute__((warn_unused_result))
 				BenchmarkConfigKernels<I,T> * clone();
 
 				template <class M, class L>
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildBenchmark(BenchmarkKernels<M,I,T,L> ** bench,
-														  std::shared_ptr<M> meshPtr);
+													std::shared_ptr<M> meshPtr);
 		};
 	}
 }

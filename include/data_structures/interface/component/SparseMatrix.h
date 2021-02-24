@@ -122,6 +122,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_MATRIX_INVALID_ROW_SIZE An invalid row size was provided
 				 * @retval cupcfd::error::E_MATRIX_INVALID_COL_SIZE An invalid column size was provided
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes resize(I rows, I columns);
 
 				/**
@@ -136,6 +137,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes clear();
 
 				/**
@@ -155,6 +157,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB The row index is outside the matrix index range
 				 * @retval cupcfd::error::E_MATRIX_COL_OOB The column index is outside the matrix index range
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes setElement(I row, I col, T val);
 
 				/**
@@ -175,6 +178,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB The row index is outside the matrix index range
 				 * @retval cupcfd::error::E_MATRIX_COL_OOB The column index is outside the matrix index range
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getElement(I row, I col, T * val);
 
 				/**
@@ -193,6 +197,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes);
 
 				/**
@@ -214,6 +219,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB rowIndex is out of bounds for an acceptable row index (from the matrix base index)
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getRowColumnIndexes(I rowIndex, I ** columnIndexes, I * nColumnIndexes);
 
 				/**
@@ -235,6 +241,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_MATRIX_ROW_OOB rowIndex is out of bounds for an acceptable row index (from the matrix base index)
 				 */
+				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes getRowNNZValues(I rowIndex, T ** nnzValues, I * nNNZValues);
 
 				// === Concrete Methods ===

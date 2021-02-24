@@ -23,59 +23,59 @@ namespace cupcfd
 	namespace comm
 	{
 		template <class T>
-		cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes Gather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, int sinkProcess, cupcfd::comm::Communicator& mpComm) {
 			cupcfd::error::eCodes status;
-		
-			// Error Check: bRecv cannot be null (sink process only)
-			if((bRecv == nullptr || bRecv == NULL) && mpComm.rank == sinkProcess)
-			{
-				return cupcfd::error::E_NULL_PTR;
+
+			if (nBSend != nElePerProcess) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
 			}
 
-			// Error Check: Verify recv buffer size is appropriate (sink process only)
-			// Naturally, we're trusting the callee to accurately report the buffer size
-			if((nBRecv < (nElePerProcess * mpComm.size)) && mpComm.rank == sinkProcess)
-			{
-				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+			if (mpComm.rank == sinkProcess) {
+				// Error Check: bRecv cannot be null
+				if(bRecv == nullptr || bRecv == NULL) {
+					return cupcfd::error::E_NULL_PTR;
+				}
+
+				// Error Check: Verify recv buffer size is appropriate
+				// Naturally, we're trusting the callee to accurately report the buffer size
+				if((nBRecv < (nElePerProcess * mpComm.size))) {
+					return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
+				}
+			} else {
+				if(bSend == nullptr || bSend == NULL) {
+					return cupcfd::error::E_NULL_PTR;
+				}
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::GatherMPI(bSend, bRecv, nElePerProcess, sinkProcess, mpComm.comm);
-			
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class T>
-		cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes AllGather(T * bSend, int nBSend, T * bRecv, int nBRecv, int nElePerProcess, cupcfd::comm::Communicator& mpComm) {
 			cupcfd::error::eCodes status;
+
+			if (nBSend != nElePerProcess) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
 					
-			// Error Check: bRecv cannot be null
-			if(bRecv == nullptr || bRecv == NULL)
-			{
+			// Error Check: buffers cannot be null
+			if(bSend == nullptr || bSend == NULL || bRecv == nullptr || bRecv == NULL) {
 				return cupcfd::error::E_NULL_PTR;
 			}
 			
 			// Error Check: Verify recv buffer size is appropriate (sink process only)
 			// Naturally, we're trusting the callee to accurately report the buffer size
-			if(nBRecv < (nElePerProcess * mpComm.size))
-			{
+			if(nBRecv < (nElePerProcess * mpComm.size)) {
 				return cupcfd::error::E_ARRAY_SIZE_UNDERSIZED;
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::AllGatherMPI(bSend, bRecv, nElePerProcess, mpComm.comm);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -83,23 +83,36 @@ namespace cupcfd
 		// ===============================================================================================================
 
 		template <class T>
-		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes GatherV(T * bSend, int nBSend __attribute__((unused)), T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, int sinkProcess, cupcfd::comm::Communicator& mpComm) {
 			cupcfd::error::eCodes status;
-		
-			// Error Check: bRecv cannot be null (sink process only)
-			if((bRecv == nullptr || bRecv == NULL) && mpComm.rank == sinkProcess)
-			{
-				return cupcfd::error::E_NULL_PTR;
+
+			if (mpComm.rank == sinkProcess) {
+				// Check recv buffer
+
+				if (nBRecvCounts != mpComm.size) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+
+				// Error Check: bRecv cannot be null
+				if((bRecv == nullptr || bRecv == NULL)) {
+					return cupcfd::error::E_NULL_PTR;
+				}
+
+				// Error Check: Verify recv buffer size is appropriate
+				int actualNumRecv = 0;
+				for (int i=0; i<mpComm.size; i++) actualNumRecv += bRecvCounts[i];
+				if (nBRecv != actualNumRecv) {
+					return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+				}
+			} else {
+				if(bSend == nullptr || bSend == NULL) {
+					return cupcfd::error::E_NULL_PTR;
+				}
 			}
 
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::GatherVMPI(bSend, nBSend, bRecv, bRecvCounts, sinkProcess, mpComm.comm);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -107,8 +120,7 @@ namespace cupcfd
 		// ===============================================================================================================
 
 		template <class T>
-		cupcfd::error::eCodes GatherV(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes GatherV(T * bSend, int nBSend __attribute__((unused)), T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, int sinkPID, cupcfd::comm::Communicator& mpComm) {
 			// The bulk of the gather works is passed through to a different gather driver.
 			// However, this driver is responsible for setting up the receive buffer on the sink process before the full gather can go ahead.
 			// This requires:
@@ -125,13 +137,11 @@ namespace cupcfd
 
 			// Error Checks:
 			// We expect *bRecv, *bRecvCounts to be NULL or nullptr on all processes.
-			if(*bRecv != NULL && *bRecv != nullptr)
-			{
+			if(*bRecv != NULL && *bRecv != nullptr) {
 				return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
-			if(*bRecvCounts != NULL && *bRecvCounts != nullptr)
-			{
+			if(*bRecvCounts != NULL && *bRecvCounts != nullptr) {
 				return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
@@ -141,18 +151,17 @@ namespace cupcfd
 			// First, setup the array to store the send buffer sizes
 			// It must be the same size as the number of processes
 
-			if(mpComm.rank == sinkPID)
-			{
+			if(mpComm.rank == sinkPID) {
 				*nBRecvCounts = mpComm.size;
 				*bRecvCounts = (int *) malloc(sizeof(int) * *nBRecvCounts);
 			}
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
-			Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			status = Gather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, sinkPID, mpComm);
+			CHECK_ECODE(status)
 
 			// Now bRecvCounts is known, we can setup the receive buffer
-			if(mpComm.rank == sinkPID)
-			{
+			if(mpComm.rank == sinkPID) {
 				// Get the total element count
 				cupcfd::utility::drivers::sum(*bRecvCounts, *nBRecvCounts, nBRecv);
 
@@ -162,11 +171,7 @@ namespace cupcfd
 
 			// Setup complete, pass final gather work onto next driver
 			status = GatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, sinkPID, mpComm);
-			
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -174,17 +179,28 @@ namespace cupcfd
 		// ===============================================================================================================
 
 		template <class T>
-		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T * bRecv, int nBRecv, int * bRecvCounts, int nBRecvCounts, cupcfd::comm::Communicator& mpComm) {
 			cupcfd::error::eCodes status;
 		
+			// Error Check: bRecv cannot be null
+			if(bSend == nullptr || bSend == NULL || bRecv == nullptr || bRecv == NULL) {
+				return cupcfd::error::E_NULL_PTR;
+			}
+
+			// Error Check: Verify recv buffer size is appropriate
+			int actualNumRecv = 0;
+			for (int i=0; i<mpComm.size; i++) actualNumRecv += bRecvCounts[i];
+			if (nBRecv != actualNumRecv) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+
+			if (nBRecvCounts != mpComm.size) {
+				return cupcfd::error::E_ARRAY_SIZE_MISMATCH;
+			}
+
 			// Call Suitable Communication Library Driver (in this case, MPI)
 			status = cupcfd::comm::mpi::AllGatherVMPI(bSend, nBSend, bRecv, bRecvCounts, mpComm.comm);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}	
@@ -192,8 +208,7 @@ namespace cupcfd
 		// ===============================================================================================================
 		
 		template <class T>
-		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, cupcfd::comm::Communicator& mpComm)
-		{
+		cupcfd::error::eCodes AllGatherV(T * bSend, int nBSend, T ** bRecv, int * nBRecv, int ** bRecvCounts, int * nBRecvCounts, cupcfd::comm::Communicator& mpComm) {
 			// The bulk of the allgather works is passed through to a different allgather driver.
 			// However, this driver is responsible for setting up the receive buffer on the sink process before the full gather can go ahead.
 			// This requires:
@@ -213,13 +228,11 @@ namespace cupcfd
 
 			// Error Checks:
 			// We expect *bRecv, *bRecvCounts to be NULL or nullptr on all processes.
-			if(*bRecv != NULL && *bRecv != nullptr)
-			{
+			if(*bRecv != NULL && *bRecv != nullptr) {
 				return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
-			if(*bRecvCounts != NULL && *bRecvCounts != nullptr)
-			{
+			if(*bRecvCounts != NULL && *bRecvCounts != nullptr) {
 				return cupcfd::error::E_NOT_NULL_PTR;
 			}
 
@@ -232,7 +245,8 @@ namespace cupcfd
 			*bRecvCounts = (int *) malloc(sizeof(int) * *nBRecvCounts);
 
 			// Gather on the send buffer sizes (single-element fixed-size gather)
-			AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			status =  AllGather(&nBSend, 1, *bRecvCounts, *nBRecvCounts, 1, mpComm);
+			CHECK_ECODE(status)
 
 			// Now bRecvCounts is known, we can setup the receive buffer
 			// Get the total element count
@@ -243,11 +257,7 @@ namespace cupcfd
 			
 			// Setup complete, pass final allgather work onto next driver
 			status = AllGatherV(bSend, nBSend, *bRecv, *nBRecv, *bRecvCounts, *nBRecvCounts, mpComm);
-			
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			return cupcfd::error::E_SUCCESS;
 		}

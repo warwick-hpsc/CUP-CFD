@@ -15,6 +15,8 @@
 
 #include <string>
 
+#include "Error.h"
+
 namespace cupcfd
 {
 	namespace benchmark
@@ -52,7 +54,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				~Benchmark();
+				virtual ~Benchmark();
 
 				// === Concrete Methods ===
 
@@ -95,9 +97,10 @@ namespace cupcfd
 				 * @tparam I The type of the indexing scheme
 				 * @tparam T The type of the computation data
 				 *
-				 * @return Nothing
+				 * @return error code
 				 */
-				virtual void runBenchmark() = 0;
+				__attribute__((warn_unused_result))
+				virtual cupcfd::error::eCodes runBenchmark() = 0;
 		};
 	}
 }

@@ -109,11 +109,8 @@ namespace cupcfd
 				 * @tparam C The implementation class of the Sparse Matrix
 				 * @tparam I The type of the indexing system
 				 * @tparam T The data type of the matrix non-zero data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes reset() = 0;
+				virtual void reset() = 0;
 
 				/**
 				 * Reset the vector X to an unconstructed/unset state. This should
@@ -124,11 +121,8 @@ namespace cupcfd
 				 * @tparam C The implementation class of the Sparse Matrix
 				 * @tparam I The type of the indexing system
 				 * @tparam T The data type of the matrix non-zero data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes resetVectorX() = 0;
+				virtual void resetVectorX() = 0;
 
 				/**
 				 * Reset the vector B to an unconstructed/unset state. This should
@@ -139,11 +133,8 @@ namespace cupcfd
 				 * @tparam C The implementation class of the Sparse Matrix
 				 * @tparam I The type of the indexing system
 				 * @tparam T The data type of the matrix non-zero data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes resetVectorB() = 0;
+				virtual void resetVectorB() = 0;
 
 				/**
 				 * Reset the matrix A to an unconstructed/unset state. This should
@@ -154,11 +145,8 @@ namespace cupcfd
 				 * @tparam C The implementation class of the Sparse Matrix
 				 * @tparam I The type of the indexing system
 				 * @tparam T The data type of the matrix non-zero data
-				 *
-				 * @return An error status indicating the success or failure of the operation
-				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
-				virtual cupcfd::error::eCodes resetMatrixA() = 0;
+				virtual void resetMatrixA() = 0;
 
 				/**
 				 * Setup the Vector X so it is ready to accept values and suitable for a solve.
@@ -173,6 +161,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET The row size is an invalid size of 0 or less
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_COMM The solver communicator is not PETSC_COMM_SELF
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setupVectorX() = 0;
 
 				/**
@@ -188,6 +177,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_LINEARSOLVER_ROW_SIZE_UNSET The row size is an invalid size of 0 or less.
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_COMM The solver communicator is not PETSC_COMM_SELF
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setupVectorB() = 0;
 
 				/**
@@ -208,6 +198,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setupMatrixA(cupcfd::data_structures::SparseMatrix<C, I, T>& matrix) = 0;
 
 				/**
@@ -226,6 +217,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setup(cupcfd::data_structures::SparseMatrix<C, I, T>& matrix) = 0;
 
 				/**
@@ -243,6 +235,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The X vector has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setValuesVectorX(T scalar) = 0;
 
 				/**
@@ -262,6 +255,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The X vector has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setValuesVectorX(T * scalars, I nScalars,
 																	I * indexes, I nIndexes, I indexBase) = 0;
 
@@ -280,6 +274,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The B vector has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setValuesVectorB(T scalar) = 0;
 
 				/**
@@ -299,6 +294,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The B vector has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setValuesVectorB(T * scalars, I nScalars,
 																	I * indexes, I nIndexes, I indexBase) = 0;
 
@@ -318,6 +314,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes setValuesMatrixA(cupcfd::data_structures::SparseMatrix<C, I, T>& matrix) = 0;
 
 				/**
@@ -335,6 +332,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getValuesVectorX(T ** result, I * nResult) = 0;
 
 				/**
@@ -356,6 +354,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes  getValuesVectorX(T ** result, I * nResult,
 															 	 	 I * indexes, I nIndexes, I indexBase) = 0;
 
@@ -374,6 +373,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getValuesVectorB(T ** result, I * nResult) = 0;
 
 				/**
@@ -395,6 +395,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getValuesVectorB(T ** result, I * nResult,
 																	I * indexes, I nIndexes, I indexBase) = 0;
 
@@ -412,6 +413,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes getValuesMatrixA(cupcfd::data_structures::SparseMatrix<C, I, T>& matrix) = 0;
 
 				/**
@@ -425,6 +427,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The Vector X has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes clearVectorX() = 0;
 
 				/**
@@ -438,6 +441,7 @@ namespace cupcfd
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 * @retval cupcfd::error::E_LINEARSOLVER_INVALID_VECTOR The vector X has not been setup
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes clearVectorB() = 0;
 
 				/**
@@ -450,6 +454,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes clearMatrixA() = 0;
 
 				/**
@@ -463,6 +468,7 @@ namespace cupcfd
 				 * @return An error status indicating the success or failure of the operation
 				 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes solve() = 0;
 		};
 	}

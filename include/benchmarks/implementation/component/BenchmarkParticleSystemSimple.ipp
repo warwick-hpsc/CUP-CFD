@@ -32,26 +32,22 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		BenchmarkParticleSystemSimple<M,I,T,L>::~BenchmarkParticleSystemSimple()
-		{
+		BenchmarkParticleSystemSimple<M,I,T,L>::~BenchmarkParticleSystemSimple() {
 			delete this->dtDist;
 		}
 
 		template <class M, class I, class T, class L>
-		void BenchmarkParticleSystemSimple<M,I,T,L>::setupBenchmark()
-		{
+		void BenchmarkParticleSystemSimple<M,I,T,L>::setupBenchmark() {
 			// Nothing to do currently
 		}
 
 		template <class M, class I, class T, class L>
-		void BenchmarkParticleSystemSimple<M,I,T,L>::recordParameters()
-		{
+		void BenchmarkParticleSystemSimple<M,I,T,L>::recordParameters() {
 			// Nothing to do currently
 		}
 
 		template <class M, class I, class T, class L>
-		void BenchmarkParticleSystemSimple<M,I,T,L>::runBenchmark()
-		{
+		cupcfd::error::eCodes BenchmarkParticleSystemSimple<M,I,T,L>::runBenchmark() {
 			// ToDo: Increasing number of repetitions is currently just
 			// a multiplier for the number of timesteps.
 			// Need to add a means to reset the Particle System!
@@ -62,10 +58,8 @@ namespace cupcfd
 			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 			this->recordParameters();
 
-			for(I i = 0; i < this->repetitions; i++)
-			{
-				for(I j = 0; j < this->nTimesteps; j++)
-				{
+			for(I i = 0; i < this->repetitions; i++) {
+				for(I j = 0; j < this->nTimesteps; j++) {
 					// Generate time for next timestep
 					T timestep;
 					this->dtDist->getValues(&timestep, 1);
@@ -82,6 +76,8 @@ namespace cupcfd
 			}
 
 			this->stopBenchmarkBlock(this->benchmarkName);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

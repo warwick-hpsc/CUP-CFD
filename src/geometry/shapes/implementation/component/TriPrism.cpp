@@ -20,10 +20,7 @@ namespace cupcfd
 	{
 		namespace shapes
 		{
-
 		}
 	}
 }
 
-template class cupcfd::geometry::shapes::TriPrism<float>;
-template class cupcfd::geometry::shapes::TriPrism<double>;

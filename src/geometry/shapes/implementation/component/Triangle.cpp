@@ -12,26 +12,12 @@
 
 #include "Triangle.h"
 
-namespace arth = cupcfd::utility::arithmetic::kernels;
-namespace euc = cupcfd::geometry::euclidean;
-
 namespace cupcfd
 {
 	namespace geometry
 	{
 		namespace shapes
 		{
-
 		}
 	}
 }
-
-// Explicit Instantiation
-
-using namespace cupcfd::geometry::shapes;
-
-template class Triangle<float,2>;
-template class Triangle<double,2>;
-
-template class Triangle<float,3>;
-template class Triangle<double,3>;

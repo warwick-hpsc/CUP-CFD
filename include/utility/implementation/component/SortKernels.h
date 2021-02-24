@@ -14,6 +14,8 @@
 #ifndef CUPCFD_UTILITY_SORT_KERNELS_INCLUDE_H
 #define CUPCFD_UTILITY_SORT_KERNELS_INCLUDE_H
 
+#include "Error.h"
+
 namespace cupcfd
 {
 	namespace utility
@@ -35,7 +37,8 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source, I nele);
+			__attribute__((warn_unused_result))
+			int merge_sort(T * source, I nele);
 
 
 			/**
@@ -50,7 +53,6 @@ namespace cupcfd
 			 * @param source The source data array
 			 * @param nSource The size of source as the number of elements of type T
 			 * @param indexes The index array the result is written to by the function
-			 * @param nIndexes The size of indexes as the number of elements of type T
 			 *
 			 * @tparam I The type of the indexing scheme (integer based)
 			 * @tparam T The type of the stored array data
@@ -58,7 +60,8 @@ namespace cupcfd
 			 * @return Monitoring value for identifying when recursion is complete
 			 */
 			template <class I, class T>
-			I merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
+			__attribute__((warn_unused_result))
+			int merge_sort(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
 			 * Evaluate whether an array is sorted in ascending order based on the < and == operators of type T.
@@ -74,6 +77,7 @@ namespace cupcfd
 			 * @retval false The array is not sorted
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			bool is_sorted(T * source, I nEle);
 
 			/**
@@ -96,7 +100,8 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 
 			/**
 			 * Reorder an array: The element at source[i] is moved to source[indexes[i]]
@@ -118,7 +123,8 @@ namespace cupcfd
 			 * @return Returns nothing
 			 */
 			template <class I, class T>
-			void destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
+			__attribute__((warn_unused_result))
+			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 		} // namespace kernels
 	} // namespace utility
 } // namespace cupcfd

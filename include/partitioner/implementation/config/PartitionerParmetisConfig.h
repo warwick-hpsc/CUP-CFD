@@ -38,14 +38,6 @@ namespace cupcfd
 				 * @tparam T The datatype of the partitioner nodes/graph to be partitioned.
 				 */
 				PartitionerParmetisConfig();
-				/**
-				 * Constructor:
-				 * Copies the configuration from the source to this newly created object
-				 *
-				 * @tparam I The indexing scheme of the partitioner.
-				 * @tparam T The datatype of the partitioner nodes/graph to be partitioned.
-				 */
-				PartitionerParmetisConfig(PartitionerParmetisConfig<I,T>& source);
 
 				/**
 				 * Deconstructor.
@@ -60,11 +52,13 @@ namespace cupcfd
 				// === Concrete Methods ===
 
 				// === Overridden Inherited Methods ===
-				void operator=(PartitionerParmetisConfig<I,T>& source);
+				__attribute__((warn_unused_result))
 				PartitionerParmetisConfig<I,T> * clone();
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part);
+				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes buildPartitioner(PartitionerInterface<I,T> ** part,
-															cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
+														cupcfd::data_structures::DistributedAdjacencyList<I,T>& partGraph);
 		};
 	}
 }

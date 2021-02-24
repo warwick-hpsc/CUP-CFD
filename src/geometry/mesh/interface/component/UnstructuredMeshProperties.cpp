@@ -62,8 +62,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			cupcfd::error::eCodes UnstructuredMeshProperties<I, T>::reset()
-			{
+			void UnstructuredMeshProperties<I, T>::reset() {
 				this->nCells = (I) 0;
 				this->nFaces = (I) 0;
 				this->nVertices = (I) 0;
@@ -79,13 +78,10 @@ namespace cupcfd
 				this->lVertices = (I) 0;
 				this->lBoundaries = (I) 0;
 				this->lRegions = (I) 0;
-
-				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
-			void UnstructuredMeshProperties<I,T>::operator=(UnstructuredMeshProperties<I,T>& source)
-			{
+			void UnstructuredMeshProperties<I,T>::operator=(UnstructuredMeshProperties<I,T>& source) {
 				// No need for reset, since everything is overwritten.
 
 				this->nCells = source.nCells;
@@ -106,8 +102,7 @@ namespace cupcfd
 			}
 
 			template <class I, class T>
-			UnstructuredMeshProperties<I,T> * UnstructuredMeshProperties<I,T>::clone()
-			{
+			UnstructuredMeshProperties<I,T> * UnstructuredMeshProperties<I,T>::clone() {
 				return new UnstructuredMeshProperties<I,T>(*this);
 			}
 		}

@@ -545,7 +545,8 @@ BOOST_AUTO_TEST_CASE(getNonZeroRowIndexes_test1)
 	int * rowIndexes;
 	int  nRowIndexes;
 
-	matrix.getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+	status = matrix.getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	BOOST_CHECK_EQUAL(nRowIndexes, 2);
 	BOOST_CHECK_EQUAL(rowIndexes[0], 0);

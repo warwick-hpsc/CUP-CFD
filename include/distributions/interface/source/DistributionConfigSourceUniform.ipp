@@ -30,61 +30,27 @@ namespace cupcfd
 		}
 		
 		template <class I, class T>
-		DistributionConfigSourceUniform<I,T>::DistributionConfigSourceUniform(const DistributionConfigSourceUniform<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
 		DistributionConfigSourceUniform<I,T>::~DistributionConfigSourceUniform()
 		{
 		
 		}
 		
+		// === Concrete Methods ===
+		
 		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceUniform<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig)
-		{
+		cupcfd::error::eCodes DistributionConfigSourceUniform<I,T>::buildDistributionConfig(DistributionConfig<I,T> ** distConfig) {
 			cupcfd::error::eCodes status;
+			
 			T lBound, uBound;
 			
 			status = this->getLBound(&lBound);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 			
 			status = this->getUBound(&uBound);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
+					
+			*distConfig = new DistributionConfigUniform<I,T>(lBound, uBound);
 			
-			*distConfig = new DistributionConfigUniform<I,T>(lBound, uBound); 
-		
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		void DistributionConfigSourceUniform<I,T>::operator=(const DistributionConfigSourceUniform<I,T>& source)
-		{
-		
-		}
-		
-		template <class I, class T>
-		DistributionConfigSourceUniform<I,T> * DistributionConfigSourceUniform<I,T>::clone()
-		{
-		
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceUniform<I,T>::getLBound(T * lBound)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-		
-		template <class I, class T>
-		cupcfd::error::eCodes DistributionConfigSourceUniform<I,T>::getUBound(T * lBound)
-		{
 			return cupcfd::error::E_SUCCESS;
 		}
 	}

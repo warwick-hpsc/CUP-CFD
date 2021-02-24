@@ -24,17 +24,15 @@ namespace cupcfd
 																	    ParticleSourceConfig<ParticleSimple<I,T>, I, T> * particleSourceConfig)
 		: ParticleSystemConfig<ParticleSystemSimple<M,I,T,L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M,I,T,L>()
 		{
-			for(I i = 0; i < emitterConfigs.size(); i++)
-			{
+			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(emitterConfigs.size());
+			for(I i = 0; i < size; i++) {
 				this->emitterConfigs.push_back(emitterConfigs[i]->clone());
 			}
 			
-			if(particleSourceConfig == nullptr)
-			{			
+			if(particleSourceConfig == nullptr) {			
 				this->particleSourceConfig = nullptr;
 			}
-			else
-			{	
+			else {	
 				this->particleSourceConfig = particleSourceConfig->clone();
 			}
 
@@ -48,24 +46,21 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		ParticleSystemSimpleConfig<M,I,T,L>::~ParticleSystemSimpleConfig()
-		{
-			for(I i = 0; i < this->emitterConfigs.size(); i++)
-			{
+		ParticleSystemSimpleConfig<M,I,T,L>::~ParticleSystemSimpleConfig() {
+			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(this->emitterConfigs.size());
+			for(I i = 0; i < size; i++) {
 				delete this->emitterConfigs[i];
 			}
 			
-			if(this->particleSourceConfig != nullptr)
-			{
+			if(this->particleSourceConfig != nullptr) {
 				delete this->particleSourceConfig;
 			}
 		}
 
 		template <class M, class I, class T, class L>
-		void ParticleSystemSimpleConfig<M,I,T,L>::operator=(ParticleSystemSimpleConfig<M,I,T,L>& source)
-		{
-			for(I i = 0; i < source.emitterConfigs.size(); i++)
-			{
+		void ParticleSystemSimpleConfig<M,I,T,L>::operator=(ParticleSystemSimpleConfig<M,I,T,L>& source) {
+			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(source.emitterConfigs.size());
+			for(I i = 0; i < size; i++) {
 				this->emitterConfigs.push_back(source.emitterConfigs[i]->clone());
 			}
 			
@@ -77,23 +72,21 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		ParticleSystemSimpleConfig<M,I,T,L> * ParticleSystemSimpleConfig<M,I,T,L>::clone()
-		{
+		ParticleSystemSimpleConfig<M,I,T,L> * ParticleSystemSimpleConfig<M,I,T,L>::clone() {
 			return new ParticleSystemSimpleConfig<M,I,T,L>(*this);
 		}
 
 		template <class M, class I, class T, class L>
 		cupcfd::error::eCodes ParticleSystemSimpleConfig<M,I,T,L>::buildParticleSystem(ParticleSystem<ParticleSystemSimple<M, I, T, L>, ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, M, I, T, L> ** system,
-																							std::shared_ptr<M> meshPtr)
-		{
+																							std::shared_ptr<M> meshPtr) {
 			cupcfd::error::eCodes status;
 		
 			// Build the initial system
 			*system = new ParticleSystemSimple<M,I,T,L>(meshPtr);
 			
-			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the system
-			for(I i = 0; i < this->emitterConfigs.size(); i++)
-			{
+			// For each emitter, check whether it belongs to a cell on this rank in the mesh. If it does, add it to the systemI size;
+			I size = cupcfd::utility::drivers::safeConvertSizeT<I>(this->emitterConfigs.size());
+			for(I i = 0; i < size; i++) {
 				// Search through the local cells on this rank for the position specified in the emitter configuration
 				bool onRank = false;
 				
@@ -107,21 +100,16 @@ namespace cupcfd
 				// We do not want this duplication.
 				// Approaches? - Could do a count allreduce
 			
-				if(status == cupcfd::error::E_SUCCESS)
-				{
+				if(status == cupcfd::error::E_SUCCESS) {
 					onRank = true;
 				}
 			
 				// If found, build the emitter and set the rank, localCellID and globalCellID
-				if(onRank)
-				{
+				if(onRank) {
 					ParticleEmitter<ParticleEmitterSimple<I,T>, ParticleSimple<I,T>, I, T> * emitter;
 					status = this->emitterConfigs[i]->buildParticleEmitter(&emitter, this->numParticleSourcesOrEmitters+1);
 					this->numParticleSourcesOrEmitters++;
-					if (status != cupcfd::error::E_SUCCESS) {
-						std::cout << "ERROR: buildParticleEmitter() failed" << std::endl;
-						return status;
-					}
+					CHECK_ECODE(status)
 
 					emitter->localCellID = localCellID;
 					emitter->globalCellID = globalCellID;
@@ -133,10 +121,7 @@ namespace cupcfd
 					// when we really want very concrete types for e.g. adding Particles.
 					// We could do away with the interface as one approach, resolving the issue....
 					status = (*system)->addParticleEmitter( *(static_cast<ParticleEmitterSimple<I,T> *>(emitter)));
-					if (status != cupcfd::error::E_SUCCESS) {
-						std::cout << "ERROR: addParticleEmitter() failed" << std::endl;
-						return status;
-					}
+					CHECK_ECODE(status)
 				
 					delete emitter;
 				}
@@ -147,48 +132,33 @@ namespace cupcfd
 			// ToDo: Since we have to check whether every particle is in any of this ranks cells, this could get very expensive (m * n where both
 			// m and n could be large). Storing rank data doesn't work if the decomposition could change between loads - consider alternatives?
 			
-			if(this->particleSourceConfig != nullptr)
-			{
+			if(this->particleSourceConfig != nullptr) {
 				// Configuration exists - Build Particle Source Object
 				ParticleSource<ParticleSimple<I,T>,I,T> * particleSource;
 
 				status = this->particleSourceConfig->buildParticleSource(&particleSource, this->numParticleSourcesOrEmitters+1);
 				this->numParticleSourcesOrEmitters++;
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					std::cout << "ERROR: buildParticleSource() failed" << std::endl;
-					return status;
-				}
+				CHECK_ECODE(status)
 				
 				// Retrieve Particle Data From Source
 				I nIndexes;
 				I nParticles;
 				
 				status = particleSource->getNParticles(&nIndexes);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					std::cout << "ERROR: getNParticles() failed" << std::endl;
-					return status;
-				}
+				CHECK_ECODE(status)
 				
 				I * indexes = (I *) malloc(sizeof(I) * nIndexes);
 				
-				for(I i = 0; i < nIndexes; i++)
-				{
+				for(I i = 0; i < nIndexes; i++) {
 					indexes[i] = i;
 				}
 				
 				Particle<ParticleSimple<I,T>,I,T> ** particles;
 				status = particleSource->getParticles(&particles, &nParticles, indexes, nIndexes, 0);
-				if(status != cupcfd::error::E_SUCCESS)
-				{
-					std::cout << "ERROR: getParticles() failed" << std::endl;
-					return status;
-				}
+				CHECK_ECODE(status)
 
 				// Add particles to the system, but only if they exist on this ranks mesh partition
-				for(I i = 0; i < nParticles; i++)
-				{
+				for(I i = 0; i < nParticles; i++) {
 					ParticleSimple<I,T> p = *(static_cast<ParticleSimple<I,T> *>(particles[i]));
 
 					// Find the cell this particle exists in on this rank, if it exists
@@ -200,8 +170,7 @@ namespace cupcfd
 					
 					status = meshPtr->findCellID(pos, &localCellID, &globalCellID);
 					
-					if(status == cupcfd::error::E_SUCCESS)
-					{
+					if(status == cupcfd::error::E_SUCCESS) {
 						ParticleSimple<I,T> allocatedParticle = 
 							ParticleSimple<I,T>(
 								p.pos,
@@ -217,18 +186,13 @@ namespace cupcfd
 						allocatedParticle.inflightPos = p.pos;
 						status = (*system)->addParticle(allocatedParticle);
 
-						if(status != cupcfd::error::E_SUCCESS)
-						{
-							std::cout << "ERROR: addParticle() failed" << std::endl;
-							return status;
-						}
+						CHECK_ECODE(status)
 					}
 				}
 				
 				// Cleanup
 				// Destroy particle data retrieved from object
-				for( I i = 0; i < nParticles; i++)
-				{
+				for( I i = 0; i < nParticles; i++) {
 					delete(particles[i]);
 				}
 				

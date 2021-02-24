@@ -40,6 +40,7 @@ namespace cupcfd
 				/**
 				 *
 				 */
+				__attribute__((warn_unused_result))
 				virtual cupcfd::error::eCodes buildLinearSolverConfig(LinearSolverConfig<C,I,T> ** linearSolverConfig) = 0;
 
 				// === Pure Virtual Methods ===

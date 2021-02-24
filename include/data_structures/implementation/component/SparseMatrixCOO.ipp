@@ -43,24 +43,23 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		SparseMatrixCOO<I,T>::~SparseMatrixCOO()
-		{
+		SparseMatrixCOO<I,T>::~SparseMatrixCOO() {
 			// Nothing to do currently, vectors will cleanup themselves on destructor call
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::resize(I rows, I columns)
-		{
-			// Clear the matrix
-			this->clear();
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::resize(I rows, I columns) {
+			cupcfd::error::eCodes status;
 
-			if(rows < 1)
-			{
+			// Clear the matrix
+			status = this->clear();
+			CHECK_ECODE(status)
+
+			if(rows < 1) {
 				return cupcfd::error::E_MATRIX_INVALID_ROW_SIZE;
 			}
 
-			if(columns < 1)
-			{
+			if(columns < 1) {
 				return cupcfd::error::E_MATRIX_INVALID_COL_SIZE;
 			}
 
@@ -77,8 +76,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::clear()
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::clear() {
 			// Delete the entries from row, col and val in the object
 			this->row.clear();
 			this->col.clear();
@@ -91,8 +89,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::setElement(I row, I col, T val)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::setElement(I row, I col, T val) {
 			// Store in a sorted fashion to try and speed up searches a bit
 			// Still a linear search, but can at least reduce the number of
 			// comparisons...
@@ -100,13 +97,11 @@ namespace cupcfd
 			// any of a number of better search methods...
 
 			// Error Check: Within Range -- Greater than baseIndex
-			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
-			{
+			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
-			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
-			{
+			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
 				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
@@ -115,22 +110,19 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
-			{
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
 
-				if(this->row[i] == row)
-				{
-					if(this->col[i] == col)
-					{
+				if(this->row[i] == row) {
+					if(this->col[i] == col) {
 						exists = true;
 						index = i;
 						break;
 					}
 
-					if(this->col[i] > col)
-					{
+					if(this->col[i] > col) {
 						// Past the point where a valid column for the correct row will be found in a sorted data store
 						exists = false;
 						index = i;
@@ -138,8 +130,7 @@ namespace cupcfd
 					}
 				}
 
-				if(this->row[i] > row)
-				{
+				if(this->row[i] > row) {
 					// We're past the point where a valid entry can be found
 					exists = false;
 					index = i;
@@ -147,18 +138,16 @@ namespace cupcfd
 				}
 			}
 
-			if(i == this->val.size())
-			{
+			if(i == valSize) {
 				// We got to the end of the list without finding a match
 				// Insert at the end (i.e. one greater than the last element)
 				exists = false;
-				index = this->val.size();
+				index = valSize;
 			}
 
 			// === Insert/Replace as appropriate
 
-			if(exists)
-			{
+			if(exists) {
 				// Note: We still leave the entry even if overwriting with a zero value
 				// This is because it will leave the position registered as a non-zero position.
 				// ToDo: Add a seperate deleteElement function to remove the element entirely from
@@ -168,8 +157,7 @@ namespace cupcfd
 				this->val[index] = val;
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// Add a new value
 				// index should be set to the first valid location past the possible entries
 				// (i.e. a suitable insert point to keep data sorted)
@@ -191,21 +179,18 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getElement(I row, I col, T * val)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getElement(I row, I col, T * val) {
 			// Data should be stored in a sorted fashion (By row, then column)
 			// Search through to the point where it is no longer possible to find
 			// the value if it exists (row > data rows, or columns > col in a row
 			// range)
 
 			// Error Check: Ensure we are within range
-			if((row < this->baseIndex) || (row >= this->baseIndex + this->m))
-			{
+			if((row < this->baseIndex) || (row >= this->baseIndex + this->m)) {
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
-			if((col < this->baseIndex) || (col >= this->baseIndex + this->n))
-			{
+			if((col < this->baseIndex) || (col >= this->baseIndex + this->n)) {
 				return cupcfd::error::E_MATRIX_COL_OOB;
 			}
 
@@ -214,22 +199,19 @@ namespace cupcfd
 			I index = 0;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
-			{
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
 
-				if(this->row[i] == row)
-				{
-					if(this->col[i] == col)
-					{
+				if(this->row[i] == row) {
+					if(this->col[i] == col) {
 						exists = true;
 						index = i;
 						break;
 					}
 
-					if(this->col[i] > col)
-					{
+					if(this->col[i] > col) {
 						// Past the point where a valid column for the correct row will be found in a sorted data store
 						exists = false;
 						index = i;
@@ -237,8 +219,7 @@ namespace cupcfd
 					}
 				}
 
-				if(this->row[i] > row)
-				{
+				if(this->row[i] > row) {
 					// We're past the point where a valid entry can be found
 					exists = false;
 					index = i;
@@ -246,22 +227,19 @@ namespace cupcfd
 				}
 			}
 
-			if(i == this->val.size())
-			{
+			if(i == valSize) {
 				// We got to the end of the list without finding a match
 				// Insert at the end (i.e. one greater than the last element)
 				exists = false;
-				index = this->val.size();
+				index = valSize;
 			}
 
 			// Pass value back via reference
-			if(exists)
-			{
+			if(exists) {
 				*val = this->val[index];
 				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// No value was found - this makes it a zero value
 				*val = 0;
 				return cupcfd::error::E_SUCCESS;
@@ -269,113 +247,97 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getNonZeroRowIndexes(I ** rowIndexes, I * nRowIndexes) {
 			// Non Zero Rows are basically any row which has an entry for a value in the matrix
 			// We can pass through this work to a utility function that gets the distinct row indexes in the data store, since
 			// if an entry exists then there is a non-zero value stored for that row.
+
+			cupcfd::error::eCodes status;
 
 			// ToDo: Should return error status of utility function instead - can do this once
 			// error codes are ported across to same enum.
 
 			// This method also allocates the array
 			I tmpSize = this->row.size();
-			cupcfd::utility::drivers::distinctArray(&(this->row[0]), tmpSize, rowIndexes, nRowIndexes);
+			status = cupcfd::utility::drivers::distinctArray(&(this->row[0]), tmpSize, rowIndexes, nRowIndexes);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowColumnIndexes(I row, I ** columnIndexes, I * nColumnIndexes) {
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
+
 			I startIndex = -1;
 			I stopIndex = -1;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
-			{
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
 
-				if(this->row[i] == row && startIndex == -1)
-				{
+				if(this->row[i] == row && startIndex == -1) {
 					startIndex = i;
 					stopIndex = i;
 				}
-				else if(this->row[i] == row && startIndex != -1)
-				{
+				else if(this->row[i] == row && startIndex != -1) {
 					stopIndex = i;
 				}
-				else if(this->row[i] > row)
-				{
+				else if(this->row[i] > row) {
 					break;
 				}
 			}
 
-			if(startIndex == -1)
-			{
+			if(startIndex == -1) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			*nColumnIndexes = (stopIndex - startIndex) + 1;
-
-			// Allocate the space
-			*columnIndexes = (I *) malloc(sizeof(I) * *nColumnIndexes);
-
-			// Copy the column indexes across
-			cupcfd::utility::drivers::copy(&(this->col[startIndex]), *nColumnIndexes, *columnIndexes, *nColumnIndexes);
+			*columnIndexes = cupcfd::utility::drivers::duplicate(&(this->col[startIndex]), *nColumnIndexes);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues)
-		{
+		inline cupcfd::error::eCodes SparseMatrixCOO<I,T>::getRowNNZValues(I row, T ** nnzValues, I * nNNZValues) {
 			// Find the Region where the row starts/ends
 			// ToDo: This search component is getting reused throughout the class in parts
 			// We can probably move it out into a generic function
+
 			I startIndex = -1;
 			I stopIndex = -1;
 			I i;
 
-			for(i = 0; i < this->val.size(); i++)
-			{
+			I valSize = cupcfd::utility::drivers::safeConvertSizeT<I>(this->val.size());
+			for(i = 0; i < valSize; i++) {
 				// We don't need to compute the offset of row and col from the baseIndex here
 				// since we store the values directly
 
-				if(this->row[i] == row && startIndex == -1)
-				{
+				if(this->row[i] == row && startIndex == -1) {
 					startIndex = i;
 					stopIndex = i;
 				}
-				else if(this->row[i] == row && startIndex != -1)
-				{
+				else if(this->row[i] == row && startIndex != -1) {
 					stopIndex = i;
 				}
-				else if(this->row[i] > row)
-				{
+				else if(this->row[i] > row) {
 					break;
 				}
 			}
 
-			if(startIndex == -1)
-			{
+			if(startIndex == -1) {
 				// The row does not exist - error
 				return cupcfd::error::E_MATRIX_ROW_OOB;
 			}
 
 			*nNNZValues = (stopIndex - startIndex) + 1;
-
-			// Allocate the space
-			*nnzValues = (T *) malloc(sizeof(T) * *nNNZValues);
-
-			// Copy the column indexes across
-			cupcfd::utility::drivers::copy(&(this->val[startIndex]), *nNNZValues, *nnzValues, *nNNZValues);
+			*nnzValues = cupcfd::utility::drivers::duplicate(&(this->val[startIndex]), *nNNZValues);
 
 			// Done without error
 			return cupcfd::error::E_SUCCESS;

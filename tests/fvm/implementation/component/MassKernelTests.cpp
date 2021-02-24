@@ -68,11 +68,11 @@ BOOST_AUTO_TEST_CASE(FluxMassDolfynFaceLoop_test1)
 
 	// Setup
 	int nCells = mesh->properties.lTCells;
-	int nOwnedCells = mesh->properties.lOCells;
-	int nGhostCells = mesh->properties.lGhCells;
+	// int nOwnedCells = mesh->properties.lOCells;
+	// int nGhostCells = mesh->properties.lGhCells;
 	int nBnds = mesh->properties.lBoundaries;
 	int nFaces = mesh->properties.lFaces;
-	int nRegions = mesh->properties.lRegions;
+	// int nRegions = mesh->properties.lRegions;
 
 	cupcfd::geometry::euclidean::EuclideanVector<double,3> * dudx =
 			(cupcfd::geometry::euclidean::EuclideanVector<double,3> *) malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<double,3>) * nCells);
@@ -116,7 +116,7 @@ BOOST_AUTO_TEST_CASE(FluxMassDolfynFaceLoop_test1)
 	double * tCell = (double *) malloc(sizeof(double) * nCells);
 	double * tBoundary = (double *) malloc(sizeof(double) * nBnds);
 
-	FluxMassDolfynFaceLoop(*mesh,
+	status = FluxMassDolfynFaceLoop(*mesh,
 			dudx, nCells,
 			dvdx, nCells,
 			dwdx, nCells,
@@ -141,6 +141,7 @@ BOOST_AUTO_TEST_CASE(FluxMassDolfynFaceLoop_test1)
 			viseffBoundary, nBnds,
 			tCell, nCells,
 			tBoundary, nBnds);
+	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 
 	free(dudx);
 	free(dvdx);

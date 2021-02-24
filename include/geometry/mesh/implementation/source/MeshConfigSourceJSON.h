@@ -85,7 +85,7 @@ namespace cupcfd
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */
-					virtual ~MeshConfigSourceJSON();
+					~MeshConfigSourceJSON();
 
 					// === Concrete Methods ===
 
@@ -101,7 +101,7 @@ namespace cupcfd
 					 *
 					 * @return Nothing.
 					 */
-					virtual void operator=(MeshConfigSourceJSON<I,T,L>& source);
+					void operator=(MeshConfigSourceJSON<I,T,L>& source);
 
 					/**
 					 * Return a pointer to a clone of this object.
@@ -113,22 +113,27 @@ namespace cupcfd
 					 *
 					 * @return A pointer to a cloned copy of this object.
 					 */
+					__attribute__((warn_unused_result))
 					MeshConfigSourceJSON<I,T,L> * clone();
 
 
 					/**
 					 * Retrieve and create a dynamically allocated Partitioner Configuration
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes getPartitionerConfig(cupcfd::partitioner::PartitionerConfig<I,I> ** partConfig);
 
 					/**
 					 * Retrieve and create a dynamically allocated MeshSource Configuration
 					 */
-					MeshSourceConfig<I,T,L> * getMeshSourceConfig();
+					__attribute__((warn_unused_result))
+					// MeshSourceConfig<I,T,L> * getMeshSourceConfig();
+					cupcfd::error::eCodes getMeshSourceConfig(MeshSourceConfig<I,T,L>** config);
 
 					/**
 					 *
 					 */
+					__attribute__((warn_unused_result))
 					cupcfd::error::eCodes buildMeshConfig(MeshConfig<I,T,L> ** config);
 			};
 		}

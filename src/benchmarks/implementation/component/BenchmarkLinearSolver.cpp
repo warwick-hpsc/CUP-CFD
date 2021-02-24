@@ -40,31 +40,29 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		BenchmarkLinearSolver<C,I,T>::~BenchmarkLinearSolver()
-		{
+		BenchmarkLinearSolver<C,I,T>::~BenchmarkLinearSolver() {
 			// Shared Pointer will cleanup after itself as object is destroyed
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::setupBenchmark()
-		{
+		void BenchmarkLinearSolver<C,I,T>::setupBenchmark() {
 			// Nothing to do here currently
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::recordParameters()
-		{
+		void BenchmarkLinearSolver<C,I,T>::recordParameters() {
 
 		}
 
 		template <class C, class I, class T>
-		void BenchmarkLinearSolver<C,I,T>::runBenchmark()
-		{
+		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark() {
+			cupcfd::error::eCodes status;
 
 			// Get the non-zero rows assigned to this rank
 			I * rowIndexes;
 			I nRowIndexes;
-			matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			status = matrixPtr->getNonZeroRowIndexes(&rowIndexes, &nRowIndexes);
+			CHECK_ECODE(status)
 
 			// Start tracking parameters/time for this block
 			this->startBenchmarkBlock(this->benchmarkName);
@@ -72,43 +70,49 @@ namespace cupcfd
 
 			this->recordParameters();
 
-			for(I i = 0; i < this->repetitions; i++)
-			{
+			for(I i = 0; i < this->repetitions; i++) {
 				// Clear Matrix A
 				TreeTimerEnterLibraryCall("ClearMatrixA");
-				this->solverSystemPtr->clearMatrixA();
+				status = this->solverSystemPtr->clearMatrixA();
 				TreeTimerExit("ClearMatrixA");
+				CHECK_ECODE(status)
 
 				// Clear Vector X
 				TreeTimerEnterLibraryCall("ClearVectorX");
-				this->solverSystemPtr->clearVectorX();
+				status = this->solverSystemPtr->clearVectorX();
 				TreeTimerExit("ClearVectorX");
+				CHECK_ECODE(status)
 
 				// Clear Vector B
 				TreeTimerEnterLibraryCall("ClearVectorB");
-				this->solverSystemPtr->clearVectorB();
+				status = this->solverSystemPtr->clearVectorB();
 				TreeTimerExit("ClearVectorB");
+				CHECK_ECODE(status)
 
 				// Set Vector B Values
 				TreeTimerEnterLibraryCall("SetValuesVectorB");
-				this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				status = this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
 				TreeTimerExit("SetValuesVectorB");
+				CHECK_ECODE(status)
 
 				// Set Vector X Values
 				TreeTimerEnterLibraryCall("SetValuesVectorX");
-				this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
+				status = this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
 				TreeTimerExit("SetValuesVectorX");
+				CHECK_ECODE(status)
 
 				// Set Matrix A Values/Build Matrix A (Structures already set inside setup)
 				// Matrix must have same structures as one used during setup
 				TreeTimerEnterLibraryCall("SetValuesMatrixA");
-				this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
+				status = this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
 				TreeTimerExit("SetValuesMatrixA");
+				CHECK_ECODE(status)
 
 				// Run Linear Solver
 				TreeTimerEnterLibraryCall("Solve");
-				this->solverSystemPtr->solve();
+				status = this->solverSystemPtr->solve();
 				TreeTimerExit("Solve");
+				CHECK_ECODE(status)
 			}
 
 			// Stop tracking parameters/time for this block
@@ -116,6 +120,8 @@ namespace cupcfd
 
 			// Cleanup
 			free(rowIndexes);
+
+			return cupcfd::error::E_SUCCESS;
 		}
 	}
 }

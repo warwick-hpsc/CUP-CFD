@@ -17,6 +17,10 @@
 
 #include "Polygon3D.h"
 #include "Polyhedron.h"
+#include "Triangle3D.h"
+
+namespace euc = cupcfd::geometry::euclidean;
+namespace shapes = cupcfd::geometry::shapes;
 
 namespace cupcfd
 {
@@ -27,9 +31,10 @@ namespace cupcfd
 			/**
 			 * Class for storing TriPrism data.
 			 *
-			 * ToDo: Currently presumes that the non-triangular faces
-			 * have normals in the same plane and does not handle truncated prisms
-			 * (i.e. the top and bottom triangular faces are parallel)
+			 * ToDo: Generalise class, to accept any two identical Polygons as faces, 
+			 *       not just triangles.
+			 *
+			 * @tparam T Numerical type
 			 *
 			 */
 			template <class T>
@@ -38,44 +43,26 @@ namespace cupcfd
 				public:
 					// === Members ===
 
-					/**
-					 * Vertices of the Polyhedron.
-					 * Stored in the following order:
-					 * 0: Top Front Vertex
-					 * 1: Top Left Back Vertex
-					 * 2: Top Right Back Vertex
-					 * 3: Bottom Front Vertex
-					 * 4: Bottom Left Back Vertex
-					 * 5: Bottom Right Back Vertex
-					 **/
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> verticesStore[6];
+					/** Top and bottom faces **/
+					shapes::Triangle3D<T> top;
+					shapes::Triangle3D<T> bottom;
 
 					// === Constructors/Deconstructors ===
 
 					/**
-					 * Construct a Triprism from the provided vertices
+					 * Construct a Triprism from the provided vertices. Assumes that 
+					 * edge exists between vertex i of Top and vertex i of Bottom.
 					 *
-					 * @param tf Top Front Vertex
-					 * @param tlb Top Left Back Vertex
-					 * @param trb Top Right Back Vertex
-					 * @param bf Bottom Front Vertex
-					 * @param blb Bottom Left Back Vertex
-					 * @param brb Bottom Right Back Vertex
+					 * @param top Top Triangle
+					 * @param bottom Bottom Triangle
 					 *
 					 */
-					TriPrism(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& tf,
-						   	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& tlb,
-						   	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& trb,
-						   	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& bf,
-						   	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& blb,
-						   	 const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& brb);
+					TriPrism(const shapes::Triangle3D<T>& top, const shapes::Triangle3D<T>& bottom);
 
 					/**
 					 *
 					 */
-					virtual ~TriPrism();
-
-					// === Static Methods ===
+					~TriPrism();
 
 					// === Concrete Methods ===
 
@@ -83,63 +70,62 @@ namespace cupcfd
 					 * Determine whether the provided point is inside the polyhedron.
 					 * Edges/Faces/Vertices are treated as inside the polygon for this purpose.
 					 *
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point exists inside this polyhedron
-					 * @retval true The point is inside the polyhedron
-					 * @retval false The point is outside the polyhedron
+					 * @return Return true if the point exists inside this polyhedron
 					 */
-					inline bool isPointInside(cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
-
-					/**
-					 * Compute the volume of this polyhedron
-					 *
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return The computed volume
-					 */
-					T computeVolume();
-
-					/**
-					 * Compute the centroid of the polyhedron
-					 *
-					 * @tparam T Datatype of the geometry
-					 *
-					 * @return The computed centroid
-					 */
-					cupcfd::geometry::euclidean::EuclideanPoint<T,3> computeCentroid();
+					__attribute__((warn_unused_result))
+					inline bool isPointInside(euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on an edge of the polyhedron
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
-					inline bool isPointOnEdge(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					__attribute__((warn_unused_result))
+					inline bool isPointOnEdge(const euc::EuclideanPoint<T,3>& point);
 
 					/**
 					 * Determine whether the provided point is on a vertex of the polyhedron
 					 *
 					 * @param point The point to test
 					 *
-					 * @tparam P The implementation type of the polygon
-					 * @tparam T The type of the spatial domain
-					 * @tparam N The dimension of the spatial domain that the shape exists in
-					 *
-					 * @return Return whether the point is on an edge of this polyhedron
-					 * @retval true The point is on an edge of the polyhedron
-					 * @retval false The point is not on an edge of the polyhedron
+					 * @return Return true if the point is on an edge of this polyhedron
 					 */
-					inline bool isPointOnVertex(const cupcfd::geometry::euclidean::EuclideanPoint<T,3>& point);
+					__attribute__((warn_unused_result))
+					inline bool isPointOnVertex(const euc::EuclideanPoint<T,3>& point);
+
+					/**
+					 * Return volume of TriPrisim, calculating if not known
+					 *
+					 * @return TriPrisim volume
+					 */
+					T getVolume();
+
+					/**
+					 * Return centroid of TriPrisim, calculating if not known
+					 *
+					 * @return TriPrisim centroid
+					 */
+					euc::EuclideanPoint<T,3> getCentroid();
+
+				protected:
+					/**
+					 * Compute the volume of this polyhedron
+					 *
+					 * @return The computed volume
+					 */
+					__attribute__((warn_unused_result))
+					T computeVolume();
+
+					/**
+					 * Compute the centroid of the polyhedron
+					 *
+					 * @return The computed centroid
+					 */
+					__attribute__((warn_unused_result))
+					euc::EuclideanPoint<T,3> computeCentroid();
+
 			};
 		}
 	}

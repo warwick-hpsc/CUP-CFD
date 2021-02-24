@@ -36,25 +36,21 @@ namespace cupcfd
 
 		// === Concrete Methods ===
 
-		cupcfd::error::eCodes ExchangePatternConfigSourceJSON::getExchangeMethod(ExchangeMethod * method)
-		{
+		cupcfd::error::eCodes ExchangePatternConfigSourceJSON::getExchangeMethod(ExchangeMethod * method) {
 			Json::Value dataSourceType;
 
 			// Access the correct field
 			dataSourceType = this->configData["Method"];
 
 			// Check the value and return the appropriate ID
-			if(dataSourceType == Json::Value::null)
-			{
+			if(dataSourceType == Json::Value::null) {
 				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
 			}
-			else if(dataSourceType == "NBOneSided")
-			{
+			else if(dataSourceType == "NBOneSided") {
 				*method = EXCHANGE_NONBLOCKING_ONE_SIDED;
 				return cupcfd::error::E_SUCCESS;
 			}
-			else if(dataSourceType == "NBTwoSided")
-			{
+			else if(dataSourceType == "NBTwoSided") {
 				*method = EXCHANGE_NONBLOCKING_TWO_SIDED;
 				return cupcfd::error::E_SUCCESS;
 			}
@@ -63,16 +59,12 @@ namespace cupcfd
 			return cupcfd::error::E_CONFIG_INVALID_VALUE;
 		}
 
-		cupcfd::error::eCodes ExchangePatternConfigSourceJSON::buildExchangePatternConfig(ExchangePatternConfig ** patternConfig)
-		{
+		cupcfd::error::eCodes ExchangePatternConfigSourceJSON::buildExchangePatternConfig(ExchangePatternConfig ** patternConfig) {
 			cupcfd::error::eCodes status;
 			ExchangeMethod method;
 
 			status = this->getExchangeMethod(&method);
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
+			CHECK_ECODE(status)
 
 			*patternConfig = new ExchangePatternConfig(method);
 

@@ -22,24 +22,25 @@ namespace cupcfd
 
 		template <class I, class T>
 		PartitionerInterface<I,T>::PartitionerInterface(cupcfd::comm::Communicator& workComm)
-		:nParts(0),
-		 nResult(0),
-		 nNodes(0),
-		 nodes(nullptr),
-		 result(nullptr)
+		: nodes(nullptr),
+		  nNodes(0),
+		  result(nullptr),
+		  nResult(0),
+		  nParts(0)
 		{
 			this->workComm = workComm;
 		}
 
 		template <class I, class T>
 		PartitionerInterface<I,T>::PartitionerInterface(cupcfd::data_structures::DistributedAdjacencyList<I,T>& sourceGraph, int nParts)
-		:nParts(0),
-		 nResult(0),
-		 nNodes(0),
-		 nodes(nullptr),
-		 result(nullptr)
+		: nodes(nullptr),
+		  nNodes(0),
+		  result(nullptr),
+		  nResult(0),
+		  nParts(0)
 		{
-			// === Set the Work Communicator ===
+			cupcfd::error::eCodes status;
+
 			this->workComm = *(sourceGraph.comm);
 
 			// === Set Nparts ===
@@ -52,7 +53,8 @@ namespace cupcfd
 			T * nodes = (T *) malloc(sizeof(T) * nNodes);
 
 			// Make a copy of locally owned nodes from the graph
-			sourceGraph.getLocalNodes(nodes, nNodes);
+			status = sourceGraph.getLocalNodes(nodes, nNodes);
+			HARD_CHECK_ECODE(status)
 
 			// Set the nodes in the partitioner
 			this->setNodeStorage(nodes, nNodes);
@@ -67,92 +69,71 @@ namespace cupcfd
 			// Cleanup the object by freeing any space currently being used to store
 			// result or node data
 			this->nParts = 0;
-
 			this->resetResultStorage();
 			this->resetNodeStorage();
 		}
 
 		// ========== Concrete Methods ===============
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::resetResultStorage()
-		{
-			if(this->result != nullptr)
-			{
+		void PartitionerInterface<I,T>::resetResultStorage() {
+			if(this->result != nullptr) {
 				free(this->result);
 			}
 
 			this->result = nullptr;
 			this->nResult = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::setNodeStorage(T * nodes, I nNodes)
-		{
-			cupcfd::error::eCodes status;
-
+		void PartitionerInterface<I,T>::setNodeStorage(T * nodes, I nNodes) {
 			// Clear existing data stores
 			this->resetNodeStorage();
 			this->resetResultStorage();
 
 			this->nNodes = nNodes;
-			this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
-			status = cupcfd::utility::drivers::copy(nodes, nNodes, this->nodes, this->nNodes);
-
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
-
-			return cupcfd::error::E_SUCCESS;
+			// this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
+			// status = cupcfd::utility::drivers::copy(nodes, nNodes, this->nodes, this->nNodes);
+			// CHECK_ECODE(status)
+			// return cupcfd::error::E_SUCCESS;
+			this->nodes = cupcfd::utility::drivers::duplicate(nodes, nNodes);
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::resetNodeStorage()
-		{
-			if(this->nodes != nullptr)
-			{
+		void PartitionerInterface<I,T>::resetNodeStorage() {
+			if(this->nodes != nullptr) {
 				free(this->nodes);
 			}
 
 			this->nodes = nullptr;
 			this->nNodes = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::setNParts(I nParts)
-		{
+		void PartitionerInterface<I,T>::setNParts(I nParts) {
 			// Set the sub-domain value
 			this->nParts = nParts;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		I PartitionerInterface<I,T>::getNParts()
-		{
+		I PartitionerInterface<I,T>::getNParts() {
 			return this->nParts;
 		}
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerInterface<I,T>::assignRankNodes(T** rankNodes,
-																	 I * nNodes)
-		{
+																		I * nNodes) {
+			cupcfd::error::eCodes status;
+
 			// === Input Error Checks ===
 			// Error Check 1: Ensure that the results array exists
-			if(this->result == nullptr)
-			{
+			if(this->result == nullptr) {
 				// Error - Results array is not allocated
 				return cupcfd::error::E_PARTITIONER_NO_RESULTS;
 			}
 
 			// Error Check 2: The size of the communicator the node allocations will be distributed must be equal to or larger than the number of partitions
 			// (If larger then some ranks will clearly get no allocated nodes - generate a warning in this case?)
-			if(this->workComm.size < this->nParts)
-			{
+			if(this->workComm.size < this->nParts) {
 				return cupcfd::error::E_PARMETIS_UNDERSIZED_COMM;
 			}
 
@@ -168,47 +149,19 @@ namespace cupcfd
 			// from a source, such as a file.
 			// However, lacking another meaningful way to communicate these nodes easily, we do so here with the all-to-all
 
-			cupcfd::comm::AllToAll(this->nodes, this->nNodes,
-										this->result, this->nResult,
-										rankNodes, nNodes,
-										workComm);
+			status = cupcfd::comm::AllToAll(this->nodes, this->nNodes,
+											this->result, this->nResult,
+											rankNodes, nNodes,
+											workComm);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::reset()
-		{
-			cupcfd::error::eCodes status;
-
-			status = resetNodeStorage();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
-
-			status = resetResultStorage();
-			if(status != cupcfd::error::E_SUCCESS)
-			{
-				return status;
-			}
-
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		// ========== Pure Virtual Methods ===============
-		// Implemented as empty to satisfy linker, but expected to be overloaded
-
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
-			return cupcfd::error::E_SUCCESS;
-		}
-
-		template <class I, class T>
-		cupcfd::error::eCodes PartitionerInterface<I,T>::partition()
-		{
-			return cupcfd::error::E_SUCCESS;
+		void PartitionerInterface<I,T>::reset() {
+			resetNodeStorage();
+			resetResultStorage();
 		}
 	}
 }

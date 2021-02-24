@@ -45,6 +45,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort(T * source, I nele);
 
 			// Merge Sort (Non-Destructive, result in dest)
@@ -65,6 +66,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort(T * source,  T * dest, I nele);
 
 			/**
@@ -86,6 +88,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes merge_sort_index(T * source,  I nSource, I * indexes, I nIndexes);
 
 			/**
@@ -99,13 +102,11 @@ namespace cupcfd
 			 * @tparam I The type of the indexing scheme (integer based)
 			 * @tparam T The type of the stored array data
 			 *
-			 * @return An error status indicating the success or failure of the operation
-			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
-			 * @retval cupcfd::error::E_ARRAY_SIZE_UNDERSIZED The number of reported elements in nEle is too small
-			 * (i.e. < 0)
+			 * @return Return True if sorted
 			 */
 			template <class I, class T>
-			cupcfd::error::eCodes is_sorted(T * source, I nEle, bool * result);
+			__attribute__((warn_unused_result))
+			bool is_sorted(T * source, I nEle);
 
 			/**
 			 * Reorder an array: The element at source[i] is replaced by the value at source[indexes[i]]
@@ -128,6 +129,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes sourceIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 
 			/**
@@ -145,6 +147,7 @@ namespace cupcfd
 			 * @retval cupcfd::error::E_ARRAY_SUCCESS Success
 			 */
 			template <class I, class T>
+			__attribute__((warn_unused_result))
 			cupcfd::error::eCodes destIndexReorder(T * source, I nEleSource, I * indexes, I nEleIndexes);
 		} // namespace drivers
 	} // namespace utility

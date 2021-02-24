@@ -49,10 +49,10 @@ namespace cupcfd
 		template <class I, class T>
 		PartitionerMetis<I,T>::PartitionerMetis(cupcfd::data_structures::DistributedAdjacencyList<I,T>& sourceGraph, int nParts, int nCon)
 		: PartitionerInterface<I,T>(*(sourceGraph.comm)),
+		  numflag(0),
 		  xadj(nullptr),
 		  adjncy(nullptr),
-		  nCon(0),
-		  numflag(0)
+		  nCon(0)
 		{
 			cupcfd::error::eCodes status;
 
@@ -77,33 +77,33 @@ namespace cupcfd
 			// This graph will exist on the root process of the distributed graph communicator
 			cupcfd::data_structures::AdjacencyListCSR<I,T> * rootGraph = nullptr;
 
-			if(this->workComm.root)
-			{
+			if(this->workComm.root) {
 				rootGraph = new cupcfd::data_structures::AdjacencyListCSR<I,T>();
 			}
 
 			// Convert the distributed graph to a serial graph on the root process
 			status = sourceGraph.buildSerialAdjacencyList(rootGraph, this->workComm.root_rank);
+			HARD_CHECK_ECODE(status)
 
 			// Setup the internal data structures on the root process
 			// This includes:
 			// (a) The node storage
 			// (b) The work storage
-			if(this->workComm.root)
-			{
-				I nNodes;
-				rootGraph->getNodeCount(&nNodes);
+			if(this->workComm.root) {
+				I nNodes = rootGraph->getNodeCount();
 
 				//std::shared_ptr<std::array<T,nNodes>> nodes;
 				T * nodes = (T *) malloc(sizeof(T) * nNodes);
 
 				// Make a copy of locally owned nodes from the graph and store them in the partitioner
 				// ToDo: Since we use the setter, this adds an unnecessary copy - could operate directly on pointers inside object
-				rootGraph->getNodes(nodes, nNodes);
+				status = rootGraph->getNodes(nodes, nNodes);
+				HARD_CHECK_ECODE(status)
 				this->setNodeStorage(nodes, nNodes);
 
 				// Setup the work arrays
-				this->setWorkArrays(*rootGraph);
+				status = this->setWorkArrays(*rootGraph);
+				HARD_CHECK_ECODE(status)
 
 				// Cleanup temporary store
 				free(nodes);
@@ -114,23 +114,19 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		PartitionerMetis<I,T>::~PartitionerMetis()
-		{
+		PartitionerMetis<I,T>::~PartitionerMetis() {
 			// Node, Results Arrays will be reset by base class
 			this->resetWorkArrays();
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::resetWorkArrays()
-		{
+		void PartitionerMetis<I,T>::resetWorkArrays() {
 			// Free allocated arrays
-			if(this->xadj != nullptr)
-			{
+			if(this->xadj != nullptr) {
 				free(this->xadj);
 			}
 
-			if(this->adjncy != nullptr)
-			{
+			if(this->adjncy != nullptr) {
 				free(this->adjncy);
 			}
 
@@ -143,27 +139,22 @@ namespace cupcfd
 
 			// No nodes currently in work arrays
 			this->nNodes = 0;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::setNCon(I nCon)
-		{
+		void PartitionerMetis<I,T>::setNCon(I nCon) {
 			// Set the number of weights that each vertex has (also number of balance constraints)
 			this->nCon = nCon;
-
-			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::setWorkArrays(cupcfd::data_structures::AdjacencyListCSR<I,T>& graph)
-		{
+		cupcfd::error::eCodes PartitionerMetis<I,T>::setWorkArrays(cupcfd::data_structures::AdjacencyListCSR<I,T>& graph) {
 			// AdjacencyListCSR has no features for distributed nodes, so it can only refer to nodes that are
 			// stored within the AdjacencyListCSR, and so we can treat it as serial data
 
-			if(graph.nNodes == 0)
-			{
+			cupcfd::error::eCodes status;
+
+			if(graph.nNodes == 0) {
 				//std::cout << "Error in Metis setWorkArrays, partition graph has zero nodes\n";
 			}
 
@@ -176,7 +167,8 @@ namespace cupcfd
 			this->nodes = (T *) malloc(sizeof(T) * this->nNodes);
 
 			// Make a copy of locally owned nodes from the graph
-			graph.getNodes(this->nodes, this->nNodes);
+			status = graph.getNodes(this->nodes, this->nNodes);
+			CHECK_ECODE(status)
 
 			// Make a copy of the graph CSR
 			this->nXAdj = graph.xadj.size();
@@ -189,13 +181,14 @@ namespace cupcfd
 			//cupcfd::utility::drivers::copy(&(graph.adjncy[0]), graph.adjncy.size(), this->adjncy, this->nAdjncy);
 
 			// ToDo: Fix the copy template for these and switch back to using the array drivers
-			for(I i = 0; i < graph.xadj.size(); i++)
-			{
+			I size;
+			size = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.xadj.size());
+			for(I i = 0; i < size; i++) {
 				this->xadj[i] = graph.xadj[i];
 			}
 
-			for(I i = 0; i < graph.adjncy.size(); i++)
-			{
+			size = cupcfd::utility::drivers::safeConvertSizeT<I>(graph.adjncy.size());
+			for(I i = 0; i < size; i++) {
 				this->adjncy[i] = graph.adjncy[i];
 			}
 
@@ -204,63 +197,59 @@ namespace cupcfd
 
 		template <class I, class T>
 		cupcfd::error::eCodes PartitionerMetis<I,T>::assignRankNodes(T** rankNodes,
-														 I * nNodes)
-		{
+														 I * nNodes) {
 			// === Notify all processes in the comm if no results are available ===
 
-			bool hasResults = true;
-			if(this->workComm.root)
-			{
-				if(this->result == nullptr)
-				{
-					// Error - Results array is not allocated
-					hasResults = false;
-				}
-			}
+			cupcfd::error::eCodes status;
 
-			//if(noResults)
-			//{
-				//return cupcfd::error::E_PARTITIONER_NO_RESULTS;
-			//}
+			// bool hasResults = true;
+			// if(this->workComm.root)
+			// {
+			// 	if(this->result == nullptr)
+			// 	{
+			// 		// Error - Results array is not allocated
+			// 		hasResults = false;
+			// 	}
+			// }
+			// if(noResults)
+			// {
+			// 	return cupcfd::error::E_PARTITIONER_NO_RESULTS;
+			// }
 
 
 			// === Distribute the results ===
 			// This scatter function will not only distribute the results, but handle the grouping by partition
-			cupcfd::comm::Scatter(this->nodes,
-									   this->nNodes,
-									   rankNodes,
-									   nNodes,
-									   this->result,
-									   this->nResult,
-									   this->workComm,
-									   this->workComm.root_rank);
+			status = cupcfd::comm::Scatter(this->nodes,
+											this->nNodes,
+											rankNodes,
+											nNodes,
+											this->result,
+											this->nResult,
+											this->workComm,
+											this->workComm.root_rank);
+			CHECK_ECODE(status)
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::partition()
-		{
+		cupcfd::error::eCodes PartitionerMetis<I,T>::partition() {
 			// Only Root does serial partitioning
-			if(this->workComm.root)
-			{
+			if(this->workComm.root) {
 				// === Input Error Checks ===
 				// Error Check 1 - Work arrays all exist
-				if(this->xadj == nullptr)
-				{
+				if(this->xadj == nullptr) {
 					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
-				if(this->adjncy == nullptr)
-				{
+				if(this->adjncy == nullptr) {
 					return cupcfd::error::E_PARTITIONER_INVALID_WORK_ARRAY;
 				}
 
 				// Error Check 2 - Nodes array exists
 
 				// Error Check 3 - Number of parts is acceptable value
-				if(this->nParts < 1)
-				{
+				if(this->nParts < 1) {
 					// Error - Can't partition into zero or fewer parts (will treat 1 as a straight copy of input)
 					return cupcfd::error::E_PARTITIONER_NPARTS_UNSET;
 				}
@@ -272,14 +261,12 @@ namespace cupcfd
 				this->resetResultStorage();
 
 				// Begin Partition
-				if(this->nParts == 1)
-				{
+				if(this->nParts == 1) {
 					// Every node is assigned to partition 0
 					this->result = (I *) malloc(sizeof(I) * this->nNodes);
 					this->nResult = this->nNodes;
 
-					for(I i = 0; i < this->nNodes; i++)
-					{
+					for(I i = 0; i < this->nNodes; i++) {
 						this->result[i] = this->nodes[i];
 					}
 
@@ -305,36 +292,39 @@ namespace cupcfd
 											  NULL,
 											  &(this->objval),
 											  this->result);
+				if (ret != METIS_OK) {
+					return cupcfd::error::E_METIS_ERROR;
+				}
 			}
 
 			return cupcfd::error::E_SUCCESS;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph, I nParts)
-		{
-			// Set the number of parts
-			this->setNParts(nParts);
+		cupcfd::error::eCodes PartitionerMetis<I,T>::initialise(cupcfd::data_structures::DistributedAdjacencyList<I, T>& graph __attribute__((unused)), I nParts __attribute__((unused))) {
+			// // Set the number of parts
+			// this->setNParts(nParts);
 
-			// Build a serial graph from a distributed graph
-			cupcfd::data_structures::AdjacencyListCSR<I,T> * rootGraph = nullptr;
+			// // Build a serial graph from a distributed graph
+			// cupcfd::data_structures::AdjacencyListCSR<I,T> * rootGraph = nullptr;
 
-			// Setup the internal data structures on
-			if(this->workComm.root)
-			{
-				// Setup the work arrays - graph should exist on root
-				this->setWorkArrays(*rootGraph);
+			// // Setup the internal data structures on
+			// if(this->workComm.root) {
+			// 	// Setup the work arrays - graph should exist on root
+			// 	this->setWorkArrays(*rootGraph);
 
-				// Cleanup
-				delete rootGraph;
-			}
+			// 	// Cleanup
+			// 	delete rootGraph;
+			// }
 
-			return cupcfd::error::E_SUCCESS;
+			// return cupcfd::error::E_SUCCESS;
+
+			// Above code is nonense.
+			return cupcfd::error::E_NOT_IMPLEMENTED;
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes PartitionerMetis<I,T>::reset()
-		{
+		void PartitionerMetis<I,T>::reset() {
 			// Base class reset
 			this->PartitionerInterface<I,T>::reset();
 

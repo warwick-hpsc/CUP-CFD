@@ -30,6 +30,7 @@
 #define CUPCFD_FVM_UVW_INCLUDE_H
 
 #include "EuclideanVector.h"
+#include "EuclideanVector3D.h"
 #include "UnstructuredMeshInterface.h"
 
 namespace cupcfd
@@ -40,29 +41,30 @@ namespace cupcfd
 		 *
 		 */
 		template <class M, class I, class T, class L>
-		void FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
-									T gammaBlend,
-									T small,
-									T large,
-									T * uCell, I nUCell,
-									T * vCell, I nVCell,
-									T * wCell, I nWCell,
-									T * uBoundary, I nUBoundary,
-									T * vBoundary, I nVBoundary,
-									T * wBoundary, I nWBoundary,
-									T * visEffCell, I nVisEffCell,
-									T * visEffBoundary, I nVisEffBoundary,
-									T * massFlux, I nMassFlux,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
-									cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
-									T * rFace, I nRFace,
-									T * su, I nSu,
-									T * sv, I nSv,
-									T * sw, I nSw,
-									T * au, I nAu,
-									T * av, I nAv,
-									T * aw, I nAw);
+		__attribute__((warn_unused_result))
+		cupcfd::error::eCodes FluxUVWDolfynFaceLoop1(cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh,
+													T gammaBlend,
+													T small,
+													// T large,
+													T * uCell, I nUCell,
+													T * vCell, I nVCell,
+													T * wCell, I nWCell,
+													T * uBoundary, I nUBoundary,
+													T * vBoundary, I nVBoundary,
+													T * wBoundary, I nWBoundary,
+													T * visEffCell, I nVisEffCell,
+													T * visEffBoundary, I nVisEffBoundary,
+													T * massFlux, I nMassFlux,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx, I nDudx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dvdx, I nDvdx,
+													cupcfd::geometry::euclidean::EuclideanVector<T,3> * dwdx, I nDwdx,
+													T * rFace, I nRFace,
+													T * su, I nSu,
+													T * sv, I nSv,
+													T * sw, I nSw,
+													T * au, I nAu,
+													T * av, I nAv,
+													T * aw, I nAw);
 
 		/**
 		 *

@@ -24,44 +24,36 @@ namespace cupcfd
 		namespace kernels
 		{
 			template <class I, class T>
- 			I linearSearch(T * source, I nEle, T target)
- 			{
- 				for(I i = 0; i < nEle; i++)
- 				{
- 					if(source[i] == target)
- 					{
- 						return i;
+			__attribute__((warn_unused_result))
+ 			cupcfd::error::eCodes linearSearch(T * source, I nEle, T target, I* index) {
+ 				for(I i = 0; i < nEle; i++) {
+ 					if(source[i] == target) {
+ 						*index = i;
+ 						return cupcfd::error::E_SUCCESS;
  					}
  				}
-
- 				// Target not found. Return -1 to signify no valid index.
- 				return -1;
+ 				return cupcfd::error::E_SEARCH_NOT_FOUND;
  			}
 
  			template <class I, class T>
- 			I binarySearch(T * source, I nEle, T target)
- 			{
+			__attribute__((warn_unused_result))
+ 			cupcfd::error::eCodes binarySearch(T * source, I nEle, T target, I* index) {
 				I left = 0;
 				I right = nEle - 1;
 				I pivot;
 
-				while(left <= right)
-				{
+				while(left <= right) {
 					pivot = floor(left + right)/2.0;
-					if(source[pivot] < target)
-					{
+					if(source[pivot] < target) {
 						left = pivot + 1;
-					}
-					else if(source[pivot] > target)
-					{
+					} else if(source[pivot] > target) {
 						right = pivot - 1;
-					}
-					else
-					{
-						return pivot;
+					} else {
+						*index = pivot;
+						return cupcfd::error::E_SUCCESS;
 					}
 				}
-				return -1;
+				return cupcfd::error::E_SEARCH_NOT_FOUND;
  			}
 		} // namespace kernels
 	} // namespace search
