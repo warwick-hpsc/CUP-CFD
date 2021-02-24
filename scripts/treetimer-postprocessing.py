@@ -22,10 +22,13 @@
 
 # (5) Display Time by Algorithmic Purpose (domain-specific - e.g. exchange components, combustion, spray etc)
 
-
 # (8) Generate Wgs for Compute Blocks (time/suitable parameters)
 
-import sys, os, re
+import sys
+if sys.version_info[0] < 3:
+	raise Exception("Script requires Python 3+")
+
+import os, re
 from pprint import pprint
 from copy import deepcopy
 
