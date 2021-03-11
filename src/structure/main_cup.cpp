@@ -67,7 +67,7 @@
 
 namespace mesh = cupcfd::geometry::mesh;
 
-int main (int argc, char ** argv)
+int main_cup (int argc, char ** argv)
 {
 	cupcfd::error::eCodes status;
 
@@ -405,3 +405,4 @@ int main (int argc, char ** argv)
 
 	MPI_Finalize();
 }
+

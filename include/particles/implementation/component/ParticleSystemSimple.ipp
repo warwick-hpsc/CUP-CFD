@@ -290,7 +290,7 @@ namespace cupcfd
 			// Experimenting how coupling could/would work:
 			// 1) Get number of data items to transfer/update. All cells for now, in future can restrict to boundary
 			I numCells = this->mesh->getNumCells();
-			// printf("Rank %d has %d cells\n", this->mesh->cellConnGraph->comm->rank, numCells);
+			printf("Rank %d has %d cells\n", this->mesh->cellConnGraph->comm->rank, numCells);
 			// 2) Get arbitrary cell data (currently no CFD data accessible from here)
 			if (numCells > 0) {
 				// T cell1vol;
@@ -664,3 +664,4 @@ namespace cupcfd
 }
 
 #endif
+

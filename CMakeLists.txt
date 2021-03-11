@@ -632,6 +632,14 @@ set(structure_source_files
 )
 
 # ===================================================
+# ================== Coupler Link ===================
+# ===================================================
+
+set(coupler_link_files
+	src/structure/main_cup.cpp
+)
+
+# ===================================================
 # ================== Error Checking =================
 # ===================================================
 set(error_source_files
@@ -656,6 +664,7 @@ add_library(cupcfd_lib ${bench_source_files}
 					   ${structure_source_files}
 					   ${error_source_files}
 					   ${utility_source_files}
+					   ${coupler_link_files}
 			)
 
 if(USE_HDF5)
@@ -709,7 +718,7 @@ configure_file (
 # ================= Main Executable =========================
 # ========================================================
 
-add_executable(cupcfd src/structure/main.cpp)
+add_executable(cupcfd src/structure/coupler.cpp)
 
 # ========================================================
 # ================== Link Stage ==========================
@@ -1314,3 +1323,4 @@ if (USE_UNIT_TESTS)
 	# === Sources ===
 	
 endif (USE_UNIT_TESTS)
+
