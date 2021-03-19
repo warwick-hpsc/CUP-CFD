@@ -29,6 +29,7 @@ if sys.version_info[0] < 3:
 	raise Exception("Script requires Python 3+")
 
 import os, re
+import pickle
 from pprint import pprint
 from copy import deepcopy
 
@@ -42,7 +43,9 @@ import matplotlib.patches as mpatches
 import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument('--tt-results-dirpath', required=True, help="Dirpath to 'tt_results' folder")
-parser.add_argument('-c', '--charts', choices=["polar", "horizontal", "vertical"], help="Chart call stack runtime breakdown for each rank")
+parser.add_argument('-c', '--charts', choices=["polar", "horizontal", "vertical"], help="Chart the call stack runtime breakdown across ranks")
+parser.add_argument('-r', '--chart-ranks', action='store_true', help="If charting, also draw call stack chart for each rank. Expensive!")
+parser.add_argument('-l', '--label', action='store_true', help="Add labels to chart elements. Optional because can create clutter")
 args = parser.parse_args()
 
 
@@ -61,9 +64,12 @@ methodTypeToColour = {}
 methodTypeToColour["Program"] = "silver"
 methodTypeToColour["Method"] = "silver"
 methodTypeToColour["Block"] = "silver"
-methodTypeToColour["Loop"] = "fuchsia"
 methodTypeToColour["Compute"] = "fuchsia"
+methodTypeToColour["Loop"] = "silver"
+methodTypeToColour["ComputeLoop"] = "fuchsia"
+methodTypeToColour["NonMPIMethodCall"] = "fuchsia"
 methodTypeToColour["MPICommCall"] = "aqua"
+methodTypeToColour["MPINonCommMethodCall"] = "orange"
 methodTypeToColour["MPISyncCall"] = "orange"
 methodTypeToColour["MPICollectiveCall"] = "red"
 methodTypeToColour["LibraryCall"] = "yellowgreen"
@@ -81,30 +87,89 @@ def main():
 	## Group together rank call traces that have identical topology:
 	groupedCallTrees = None
 
+	num_dbs = 0
 	for run_root, run_dirnames, run_filenames in os.walk(tt_folder_dirpath):
 		for f in run_filenames:
 			m = re.match("^results\.([0-9]+)\.db$", f)
 			if m:
+				num_dbs += 1
+
+	ctr = 0
+	for run_root, run_dirnames, run_filenames in os.walk(tt_folder_dirpath):
+		for f in run_filenames:
+			m = re.match("^results\.([0-9]+)\.db$", f)
+			if m:
+				ctr += 1
+				#if ctr > 1:
+				#	break
+				db_fp = os.path.join(tt_folder_dirpath, f)
+				print("Processing: {0} ({1}/{2})".format(db_fp, ctr, num_dbs))
 				rank = int(m.groups()[0])
 				rank_ids.add(rank)
-				df = read_db_timings(os.path.join(tt_folder_dirpath, f))
-				df["rank"] = rank
+
+				cache_dp = os.path.join(tt_folder_dirpath, "_tt_cache")
+				if not os.path.isdir(cache_dp):
+					os.mkdir(cache_dp)
+
+				db = sqlite3.connect(db_fp)
+				## Loading DB into memory roughly halves 
+				## query times. But only load if 
+				## access required
+				dbm = None
+
+				df_csv = os.path.join(cache_dp, f+".csv")
+				if os.path.isfile(df_csv):
+					df = pd.read_csv(df_csv)
+				else:
+					#df = read_db_timings(db_fp)
+					if dbm is None:
+						dbm = sqlite3.connect(':memory:')
+						db.backup(dbm)
+					df = loadHotspotsAggregateTime(1, 1, dbm)
+					df["rank"] = rank
+					df.to_csv(df_csv, index=False)
 				if df_all_raw is None:
 					df_all_raw = df
 				else:
 					df_all_raw = df_all_raw.append(df)
 
-				db = sqlite3.connect(os.path.join(tt_folder_dirpath, f))
-				df_agg = aggregateTimesByType(1, 1, db)
-				df_agg["rank"] = rank
+				df_agg_fp = os.path.join(cache_dp, f+".typeAgg.csv")
+				if os.path.isfile(df_agg_fp):
+					df_agg = pd.read_csv(df_agg_fp)
+				else:
+					if dbm is None:
+						dbm = sqlite3.connect(':memory:')
+						db.backup(dbm)
+					df_agg = aggregateTimesByType(1, 1, dbm)
+					df_agg["rank"] = rank
+					df_agg.to_csv(df_agg_fp, index=False)
 				if df_all_aggregated is None:
 					df_all_aggregated = df_agg
 				else:
 					df_all_aggregated = df_all_aggregated.append(df_agg)
 
-				if not args.charts is None:
-					t = buildCallPathTree(1, 1, db)
+				tree_fp = os.path.join(cache_dp, f+".call-tree.pkl")
+				if os.path.isfile(tree_fp):
+					with open(tree_fp, 'rb') as input:
+						t = pickle.load(input)
+				else:
+					#print(" - constructing call tree ...")
+					if dbm is None:
+						dbm = sqlite3.connect(':memory:')
+						db.backup(dbm)
+					t = buildCallPathTree(1, 1, dbm)
+					with open(tree_fp, 'wb') as output:
+						pickle.dump(t, output, pickle.HIGHEST_PROTOCOL)
 
+				#if rank == 1:
+				#	print(t)
+				#	quit()
+				#	for l in t.leaves:
+				#		if l.name == "presol":
+				#			print(l)
+				#	quit()
+
+				if not args.charts is None:
 					## Add tree to a group
 					if groupedCallTrees is None:
 						groupedCallTrees = [ {rank:t} ]
@@ -119,28 +184,33 @@ def main():
 							groupedCallTrees.append({rank:t})
 
 					# Plot this call tree
-					if args.charts == "polar":
-						plotType = PlotType.Polar
-					elif args.charts == "vertical":
-						plotType = PlotType.Vertical
-					else:
-						plotType = PlotType.Horizontal
-
-					fig = plt.figure(figsize=fig_dims)
-					plotCallPath_root(t, plotType)
-
-					fig.suptitle("Call stack times of rank " + str(rank))
-					chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
-					if not os.path.isdir(chart_dirpath):
-						os.makedirs(chart_dirpath)
-					chart_filepath = os.path.join(chart_dirpath, "rank-{0}.png".format(rank))
-					plt.savefig(chart_filepath)
-					plt.close(fig)
+					if args.charts and (args.chart_ranks or rank==1):
+						print(" - drawing chart ...")
+						if args.charts == "polar":
+							plotType = PlotType.Polar
+						elif args.charts == "vertical":
+							plotType = PlotType.Vertical
+						else:
+							plotType = PlotType.Horizontal
+	
+						fig = plt.figure(figsize=fig_dims)
+						plotCallPath_root(t, plotType)
+	
+						fig.suptitle("Call stack times of rank " + str(rank))
+						chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
+						if not os.path.isdir(chart_dirpath):
+							os.makedirs(chart_dirpath)
+						chart_filepath = os.path.join(chart_dirpath, "rank-{0}.png".format(rank))
+						plt.savefig(chart_filepath)
+						plt.close(fig)
 
 	if not args.charts is None:
 		## Aggregate together call trees within each group, and create plots:
+		print("Drawing group charts")
 		aggregatedCallTrees = []
+		gn = 0
 		for g in groupedCallTrees:
+			gn += 1
 			agg = None
 			for rank,t in g.items():
 				if agg is None:
@@ -163,11 +233,12 @@ def main():
 			chart_dirpath = os.path.join(tt_folder_dirpath, "charts", plotTypeToString[plotType])
 			if not os.path.isdir(chart_dirpath):
 				os.makedirs(chart_dirpath)
-			chart_filepath = os.path.join(chart_dirpath, "ranksSum.png".format(rank))
+			chart_filepath = os.path.join(chart_dirpath, "rankGroup{0}.png".format(gn))
 			plt.savefig(chart_filepath)
 			plt.close(fig)
 
 
+	print("Writing out collated CSVs")
 	df_all_raw["num_ranks"] = len(rank_ids)
 	df_all_raw.sort_values(["Name", "rank"], inplace=True)
 	df_filename = os.path.join(tt_folder_dirpath, "timings_raw.csv")
@@ -181,19 +252,6 @@ def main():
 	print("Collated aggregated data written to '{0}'".format(df_filename))
 
 
-
-def read_db_timings(db_filepath):
-
-	# Open Database
-	db = sqlite3.connect(db_filepath)
-
-	df = loadHotspotsAggregateTime(1, 1, db)
-
-	# Close Database
-	db.close()
-
-	return df
-
 # Note - RunID is the SQL Key for the RunID, and processID is the SQL Key ProcessID in the db, not the process rank! (They may not be the same)
 def loadHotspotsAggregateTime(runID, processID, db):
 
@@ -206,33 +264,23 @@ def loadHotspotsAggregateTime(runID, processID, db):
 	col_names = ["Name", "TypeName", "CallCount", "InclusiveAggregateTime(s)", "ExclusiveAggregateTime(s)", "ExclusiveAggregateTime(% of Run)"]
 	df = None
 
+	df_cols = {c:[] for c in col_names}
+
 	sum = 0.0
 	nonfunctionsum = 0.0
 	for r in records:
-		datum = {"Name": r['Name'], 
-				"TypeName": r['TypeName'], 
-				"CallCount": r['CallCount'], 
-				"InclusiveAggregateTime(s)": r['AggTotalTimeI'], 
-				"ExclusiveAggregateTime(s)": r['AggTotalTimeE'], 
-				"ExclusiveAggregateTime(% of Run)": (r['AggTotalTimeE']/rootRecord['AggTotalTimeI']) }
-
-		if df is None:
-			df_init = {k:[v] for k,v in datum.items()}
-			df = pd.DataFrame(data=df_init, columns=col_names)
-		else:
-			datum = [r['Name'], 
-					 r['TypeName'], 
-					 r['CallCount'], 
-					 r['AggTotalTimeI'], 
-					 r['AggTotalTimeE'], 
-					 r['AggTotalTimeE']/rootRecord['AggTotalTimeI'] ]
-			datum = pd.Series(datum, index=col_names)
-			df = df.append(datum, ignore_index=True)
+		df_cols["Name"].append(r['Name'])
+		df_cols["TypeName"].append(r['TypeName'])
+		df_cols["CallCount"].append(r['CallCount'])
+		df_cols["InclusiveAggregateTime(s)"].append(r['AggTotalTimeI'])
+		df_cols["ExclusiveAggregateTime(s)"].append(r['AggTotalTimeE'])
+		df_cols["ExclusiveAggregateTime(% of Run)"].append(r['AggTotalTimeE']/rootRecord['AggTotalTimeI'])
 
 		sum = sum + r['AggTotalTimeE']
 
 		if(r['TypeName'] != 'Method'):
 			nonfunctionsum = nonfunctionsum + r['AggTotalTimeE']
+	df = pd.DataFrame(data=df_cols, columns=col_names)
 
 	return df
 
@@ -340,10 +388,11 @@ class CallTreeNodeIterator:
 		return n
 
 class CallTreeNode:
-	def __init__(self, name, typeName, time):
+	def __init__(self, name, typeName, time, calls):
 		self.name = name
 		self.typeName = typeName
 		self.time = time
+		self.calls = calls
 		self.leaves = []
 
 	def addLeaf(self, leaf):
@@ -365,7 +414,22 @@ class CallTreeNode:
 		return self.leaves == other.leaves
 
 	def __str__(self, indent=0):
-		nodeStr = " "*indent + "{0} [{1}] - {2:.2f} seconds\n".format(self.name, self.typeName, self.time)
+		nodeStr = ""
+		if indent > 0:
+			#nodeStr += "  :"*(indent-1) + "  |" + "-"
+			nodeStr += " :"*(indent-1) + " |" + "-"
+		else:
+			nodeStr += " "
+		#nodeStr += "{0} [{1}] - {2:.2f} seconds\n".format(self.name, self.typeName, self.time)
+		detailsStr = self.name.ljust(60-indent*2)
+		detailsStr += " - {0:.2f}s".format(self.time)
+		#detailsStr += " {0} calls".format(self.calls)
+		if self.calls == 1:
+			detailsStr += ", x{0} call".format(self.calls)
+		else:
+			detailsStr += ", x{0} calls".format(self.calls)
+		detailsStr += " [{0}]".format(self.typeName).ljust(12)
+		nodeStr += detailsStr + "\n"
 		for c in self.leaves:
 			cStr = c.__str__(indent+1)
 			nodeStr += cStr
@@ -374,7 +438,7 @@ class CallTreeNode:
 	def __add__(self, other):
 		if not self == other:
 			raise Exception("Tree structures not identical")
-		summed = CallTreeNode(self.name, self.typeName, self.time)
+		summed = CallTreeNode(self.name, self.typeName, self.time, self.calls)
 		summed.time += other.time
 		for idx in range(len(self.leaves)):
 			summed.addLeaf(self.leaves[idx] + other.leaves[idx])
@@ -391,6 +455,7 @@ class CallTreeNodeAggregated:
 		self.name = node.name
 		self.typeName = node.typeName
 		self.times = [node.time]
+		self.calls = [node.calls]
 		self.leaves = []
 		self.init_node_copy = deepcopy(node)
 		self.ranks = [rank]
@@ -405,6 +470,7 @@ class CallTreeNodeAggregated:
 			raise Exception("Attempting to add node to CallTreeNodeAggregated with different topology")
 
 		self.times.append(node.time)
+		self.calls.append(node.calls)
 		self.ranks.append(rank)
 		nodeLeavesSorted = sorted(node.leaves)
 		for idx in range(len(self.leaves)):
@@ -412,7 +478,7 @@ class CallTreeNodeAggregated:
 
 	def sumElementwise(self):
 		timesSum = sum(self.times)
-		sumNode = CallTreeNode(self.name, self.typeName, timesSum)
+		sumNode = CallTreeNode(self.name, self.typeName, timesSum, None)
 		for l in self.leaves:
 			sumNode.addLeaf(l.sumElementwise())
 		return(sumNode)
@@ -449,7 +515,7 @@ def buildCallPathNodeTraversal(runID, processID, db, treeNode, nodeID, indentLev
 	# else:
 	# 	treeNode[-1].append(leaf)
 
-	leaf = CallTreeNode(record["Name"], record["TypeName"], record["AggTotalTimeI"])
+	leaf = CallTreeNode(record["Name"], record["TypeName"], record["AggTotalTimeI"], record["CallCount"])
 	am_root = False
 	if treeNode is None:
 		am_root = True
@@ -504,14 +570,17 @@ def plotCallPath(tree, root_total, node_total, offset, level, ax, plotType):
 
 		if plotType == PlotType.Polar:
 			ax.bar(x=[0], height=[0.5], width=[node_total], color=[methodTypeToColour[methodType]])
-			ax.text(0, 0, label, ha='center', va='center')
+			if args.label:
+				ax.text(0, 0, label, ha='center', va='center')
 		else:
 			if plotType == PlotType.Vertical:
 				ax.bar(x=[node_total/2], height=[1.0], width=[node_total], color=[methodTypeToColour[methodType]])
-				ax.text(root_total/2, 0.5, label, ha='center', va='center')
+				if args.label:
+					ax.text(root_total/2, 0.5, label, ha='center', va='center')
 			else:
 				ax.bar(x=[0.5], height=[node_total], width=[1.0], color=[methodTypeToColour[methodType]])
-				ax.text(0.5, root_total/2, label, ha='center', va='center')
+				if args.label:
+					ax.text(0.5, root_total/2, label, ha='center', va='center')
 
 		plotCallPath(subnodes, root_total, value, 0, level+1, ax, plotType)
 	elif tree:
@@ -572,11 +641,14 @@ def plotCallPath(tree, root_total, node_total, offset, level, ax, plotType):
 						rotation = ((360 - np.degrees(x) % 180)) % 360
 					else:
 						rotation = (90 + (360 - np.degrees(x) % 180)) % 360
-					ax.text(x, y, label, rotation=rotation, ha='center', va='center')
+					if args.label:
+						ax.text(x, y, label, rotation=rotation, ha='center', va='center')
 				else:
-					ax.text(x, y, label, ha='center', va='center')
+					if args.label:
+						ax.text(x, y, label, ha='center', va='center')
 			else:
-				ax.text(x, y, label, ha='center', va='center')
+				if args.label:
+					ax.text(x, y, label, ha='center', va='center')
 
 	if level == 0:
 		if plotType == PlotType.Polar:
@@ -710,3 +782,4 @@ def aggregateTimesByType(runID, processID, db):
 
 if __name__ == "__main__":
 	main()
+
