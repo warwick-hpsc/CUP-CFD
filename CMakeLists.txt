@@ -141,8 +141,8 @@ endif(USE_PETSC)
 # Currently default to always needing this
 # Should set via CMake Line but can be set here if needed
 #set(SQLITE_LIBS /path/to/sqlite3/lib/libsqlite3.so)
-#set(TREETIMER_LIBS /path/to/warwick-hpsc/treetimer/libtt.so)
-#set(TREETIMER_INCLUDE /path/to/warwick-hpscetreetimer/include/timing_library/interface)
+set(TREETIMER_LIBS /rr-home/awp/cup-cfd-install/treetimer/libtt.a)
+set(TREETIMER_INCLUDE /rr-home/awp/cup-cfd-install/treetimer/include/timing_library/interface)
 
 # ====================================================================================================================================
 # ============================================== Third-Party Libraries ===============================================================
@@ -650,7 +650,7 @@ set(error_source_files
 # ================= Set Libraries ===================
 # ===================================================
 
-add_library(cupcfd_lib ${bench_source_files}
+add_library(cupcfd_lib STATIC ${bench_source_files}
 					   ${comm_source_files}
 					   ${distributions_source_files}
 					   ${config_source_files}
@@ -697,12 +697,10 @@ endif(USE_PETSC)
 # Timer Libraries
 set(ALL_LIBS ${CORE_LIBS} ${SQLITE_LIBS})
 if(COMPILER STREQUAL "intel")
-  set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS} ifcore)
+  set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS})
 else()
   set(ALL_LIBS ${CORE_LIBS} ${TREETIMER_LIBS})
 endif()
-
-set(ALL_LIBS cupcfd_lib ${ALL_LIBS})
 
 # ========================================================
 # ========= Construct Build Settings Header ==============
@@ -718,12 +716,12 @@ configure_file (
 # ================= Main Executable =========================
 # ========================================================
 
-add_executable(cupcfd src/structure/coupler.cpp)
+# add_executable(cupcfd src/structure/coupler.cpp)
 
 # ========================================================
 # ================== Link Stage ==========================
 # ========================================================
-target_link_libraries (cupcfd ${ALL_LIBS})
+target_link_libraries (cupcfd_lib ${ALL_LIBS})
 
 # ====================================================================================================================================
 # ================================================= Unit Tests =======================================================================
@@ -731,7 +729,7 @@ target_link_libraries (cupcfd ${ALL_LIBS})
 
 function(addCupCfdTest testName testSrcFile)
 	# ========= Set Executable Name  ===========
-	add_executable(${testName} ${testSrcFile})
+	# add_executable(${testName} ${testSrcFile})
 
 	# === Includes ===
 	target_include_directories(${testName} PRIVATE ${Boost_INCLUDE_DIRS})	# Boost is always added
@@ -749,7 +747,7 @@ endfunction(addCupCfdTest)
 
 function(addCupCfdMPITest testName testSrcFile nRanks)
 	# ========= Set Executable Name  ===========
-	add_executable(${testName} ${testSrcFile})
+	# add_executable(${testName} ${testSrcFile})
 
 	# === Includes ===
 	target_include_directories(${testName} PRIVATE ${Boost_INCLUDE_DIRS})	# Boost is always added
@@ -1323,4 +1321,3 @@ if (USE_UNIT_TESTS)
 	# === Sources ===
 	
 endif (USE_UNIT_TESTS)
-

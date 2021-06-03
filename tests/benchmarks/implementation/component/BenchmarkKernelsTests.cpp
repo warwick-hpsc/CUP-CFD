@@ -64,6 +64,7 @@ BOOST_AUTO_TEST_CASE(runBenchmark_test1)
 {
 	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
 
+	int testvar = 5;
 	// Setup a Mesh
     cupcfd::partitioner::PartitionerNaiveConfig<int,int> partConfig;
 	cupcfd::geometry::mesh::MeshSourceStructGenConfig<int,double> meshSourceConfig(10, 20, 21, -1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
@@ -76,7 +77,7 @@ BOOST_AUTO_TEST_CASE(runBenchmark_test1)
 	std::shared_ptr<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>> sharedPtr(meshPtr);
 
 	BenchmarkKernels<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>, int, double, int> benchmark("KernelBench",sharedPtr, 1000);
-	status = benchmark.runBenchmark();
+	status = benchmark.runBenchmark(testvar);
 	BOOST_CHECK_EQUAL(status, cupcfd::error::E_SUCCESS);
 }
 

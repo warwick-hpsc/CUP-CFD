@@ -52,7 +52,7 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkKernels<M,I,T,L>::runBenchmark() {
+		cupcfd::error::eCodes BenchmarkKernels<M,I,T,L>::runBenchmark(int testvar) {
 			cupcfd::error::eCodes status;
 
 			// Start tracking parameters/time for this block

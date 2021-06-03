@@ -49,7 +49,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark() {
+		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark(int testvar) {
 			cupcfd::error::eCodes status;
 
 			// Expected size of data array is determined at init time (this is array of data both local and to be sent)

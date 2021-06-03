@@ -85,7 +85,7 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes exchangeParticles();
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes updateSystem(T dt);
+				cupcfd::error::eCodes updateSystem(T dt, int testvar);
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes updateSystemAtomic(bool verbose);
 

@@ -43,7 +43,7 @@
 namespace cupcfd
 {
 	template <class M, class I, class T, class L>
-	CupCfd<M,I,T,L>::CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr)
+	CupCfd<M,I,T,L>::CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr, int testvar, MPI_Fint custom)
 	: meshPtr(meshPtr)
 	{
 		cupcfd::error::eCodes status;
@@ -54,7 +54,7 @@ namespace cupcfd
 		// Setup an initial system state (e.g. data arrays etc).
 		// For now, will use random values.
 
-		cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
+		cupcfd::comm::Communicator comm(MPI_Comm_f2c(custom));
 
 		// === Search for benchmark configurations ===
 		Json::Value configData;
@@ -93,7 +93,7 @@ namespace cupcfd
 						}
 						else {
 							// Run Benchmark
-							status = fvmBench->runBenchmark();
+							status = fvmBench->runBenchmark(testvar);
 							HARD_CHECK_ECODE(status);
 							delete(fvmBench);
 						}
@@ -124,7 +124,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Exchange Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = exchangeBench->runBenchmark();
+							status = exchangeBench->runBenchmark(testvar);
 							HARD_CHECK_ECODE(status)
 							delete(exchangeBench);
 						}
@@ -156,7 +156,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Linear Solver Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = linearSolverBench->runBenchmark();
+							status = linearSolverBench->runBenchmark(testvar);
 							HARD_CHECK_ECODE(status)
 							delete(linearSolverBench);
 						}
@@ -189,7 +189,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Simple Particle Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = benchmarkParticleSystem->runBenchmark();
+							status = benchmarkParticleSystem->runBenchmark(testvar);
 							HARD_CHECK_ECODE(status)
 							delete(benchmarkParticleSystem);
 						}
@@ -215,3 +215,4 @@ template class cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,i
 
 template class cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>, int, float, int>;
 template class cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>, int, double, int>;
+

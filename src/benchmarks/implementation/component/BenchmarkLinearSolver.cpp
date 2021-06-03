@@ -55,7 +55,7 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark() {
+		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark(int testvar) {
 			cupcfd::error::eCodes status;
 
 			// Get the non-zero rows assigned to this rank

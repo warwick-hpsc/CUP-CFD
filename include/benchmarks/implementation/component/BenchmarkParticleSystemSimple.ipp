@@ -47,7 +47,7 @@ namespace cupcfd
 		}
 
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes BenchmarkParticleSystemSimple<M,I,T,L>::runBenchmark() {
+		cupcfd::error::eCodes BenchmarkParticleSystemSimple<M,I,T,L>::runBenchmark(int testvar) {
 			// ToDo: Increasing number of repetitions is currently just
 			// a multiplier for the number of timesteps.
 			// Need to add a means to reset the Particle System!
@@ -66,7 +66,7 @@ namespace cupcfd
 
 					// Advance Particle System by one timestep
 					this->startBenchmarkBlock("UpdateParticleTimestep");
-					status = particleSystemPtr->updateSystem(timestep);
+					status = particleSystemPtr->updateSystem(timestep, testvar);
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: updateSystem() failed" << std::endl;
 						MPI_Abort(MPI_COMM_WORLD, status);

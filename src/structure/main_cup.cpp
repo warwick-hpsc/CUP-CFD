@@ -67,22 +67,23 @@
 
 namespace mesh = cupcfd::geometry::mesh;
 
-int main_cup (int argc, char ** argv)
+int main_cup (int argc, char ** argv, MPI_Fint custom)
 {
+	printf("Get here 1");
 	cupcfd::error::eCodes status;
-
-	MPI_Init(&argc, &argv);
-
+	printf("Get here 2");
 	// Add ifdef for petsc?
+	PETSC_COMM_WORLD=MPI_Comm_f2c(custom);
 	PetscInitialize(&argc, &argv, NULL, NULL);
-
+	printf("Get here 3");
 	TreeTimerInit();
 
 	{ // Wrap work in a block to enable precise invocation of object destructors
 
 	// Use all processes
-	cupcfd::comm::Communicator comm(MPI_COMM_WORLD);
-
+	printf("Get here 4");
+	cupcfd::comm::Communicator comm(MPI_Comm_f2c(custom));
+	printf("Get here 5");
 	// Register the custom MPI types
 	// ToDo: Would prefer to use static methods for these, but since we
 	// setup the interface via inheritance its difficult to do so
@@ -122,12 +123,13 @@ int main_cup (int argc, char ** argv)
 
 	// === Main Configuration Setup ===
 
+	int testvar = 5;
 	// Identify where to source the run configuration from
 	// Currently hard-coded to specificly named JSON file
 	std::string configPath = "./cupcfd.json";
 
 	// Verify configuration file exists
-
+	printf("Get here 6");
 
 	// Identify which types to use for the run
 
@@ -169,6 +171,7 @@ int main_cup (int argc, char ** argv)
 		}
 	}
 
+	printf("Get here 7");
 	// === Mesh ====
 
 	// Downside of CRTP - need to know types at compile time, so we're forced to have multiple branches here.
@@ -219,7 +222,7 @@ int main_cup (int argc, char ** argv)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr, testvar, custom);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINIAOS) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -267,7 +270,7 @@ int main_cup (int argc, char ** argv)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr, testvar, custom);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -315,7 +318,7 @@ int main_cup (int argc, char ** argv)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr, testvar, custom);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -363,7 +366,7 @@ int main_cup (int argc, char ** argv)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>,int,float,int> run(configPath, meshPtr);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>,int,float,int> run(configPath, meshPtr, testvar, custom);
 	}
 
 	// Deregister the Custom MPI Types
@@ -392,11 +395,16 @@ int main_cup (int argc, char ** argv)
 		return -1;
 	}
 
+	
+
 	// Add ifdef for petsc?
 	PetscFinalize();
 
-	TreeTimerFinalize();
-	
+	if(comm.rank == 0) {
+		std::cout << "GET TO HERE?\n";
+	}
+	TreeTimerFinalize(); // TODO: Not a clean finalization - need to add multiple comms support to treetimer at some point
+
 	if(comm.rank == 0) {
 		std::cout << "cup-cfd has completed" << std::endl;
 	}

@@ -277,7 +277,7 @@ namespace cupcfd
 		}
 		
 		template <class M, class I, class T, class L>
-		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystem(T dt) {
+		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::updateSystem(T dt, int testvar) {
 			// ToDo: Notes
 			// If a particle is not going off-rank, we could theoretically keep performing atomic updates for those
 			// particles till they run out of travel time in this dt period, or they go off-rank.
@@ -291,6 +291,7 @@ namespace cupcfd
 			// 1) Get number of data items to transfer/update. All cells for now, in future can restrict to boundary
 			I numCells = this->mesh->getNumCells();
 			printf("Rank %d has %d cells\n", this->mesh->cellConnGraph->comm->rank, numCells);
+			printf("Testvar is %d", testvar);
 			// 2) Get arbitrary cell data (currently no CFD data accessible from here)
 			if (numCells > 0) {
 				// T cell1vol;
@@ -664,4 +665,3 @@ namespace cupcfd
 }
 
 #endif
-
