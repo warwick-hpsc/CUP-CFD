@@ -1,3 +1,15 @@
+# Overview
+
+CUP-CFD - (Combusting Unstructured-grid Pressure-based CFD
+
+CUP-CFD is intended to capture the key performance characteristics of a parallelised combusting-particle unstructured-grid CFD solver. This also enables calibration of a corresponding performance model of the solver.
+
+CUP-CFD is composed of four benchmarks, each capturing one specific characteristic, to provide important performance data:
+- Particle System: generate particles and track across MPI ranks as they traverse the specified volume
+- Exchange: perform one specific communication pattern, either pair-wise exchange across unstructured-grid or a MPI collective operation
+- Linear solver: integration with PETSc linear system solver, and transferring data between PETSc's parallel matrix decomposition and CUP-CFD's grid partitioning
+- Kernels: integration of various Dolfyn CFD kernels to perform unstructured-grid CFD arithmetic
+
 # Software dependencies
 
 * [treetimer](https://github.com/warwick-hpsc/treetimer)
@@ -47,12 +59,6 @@ cmake .. -DCMAKE_BUILD_TYPE=Release \
          -DTREETIMER_LIBS="$TREETIMER_ROOT"/libtt.so \
          -DTREETIMER_INCLUDE="$TREETIMER_ROOT"/include/timing_library/interface \
          -DUSE_UNIT_TESTS=OFF
-```
-
-To assist with compilation, a configurable Bash script is provided:
-
-```Shell
-compile.sh
 ```
 
 There is a provision for disabling building with HDF5, Metis/Parmetis and/or PETSc via the USE_<Package> flags in CMakeLists.txt. However this setup is untested and likely to break compilation currently, since there are likely components that need wrapping with ifdefs (e.g. header includes, interface passthroughs). Expansion to make them optional is a future task.
