@@ -1,0 +1,103 @@
+name: Unit Tests
+
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # Install Ubuntu dependencies for parmetis, metis, petsc, sqlite and HDF5
+  install-deps-build-and-run-tests:
+    runs-on: ubuntu-latest
+    env:
+      COMPILER: gnu
+      HDF5_INSTALL_PATH: /usr/lib/x86_64-linux-gnu/hdf5/openmpi/
+      METIS_INSTALL_PATH: /usr/lib/x86_64-linux-gnu
+      PARMETIS_INSTALL_PATH: /usr/lib
+      PETSC_INSTALL_PATH: /usr/lib/x86_64-linux-gnu
+      SQLITE_INSTALL_PATH: /usr/lib/x86_64-linux-gnu
+      TREETIMER_PATH: /home/runner/work/CUP-CFD/CUP-CFD/treetimer
+      PETSC_INCLUDE_DIR: /usr/include/petsc
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Update apt
+      - name: apt-get update
+        run: >-
+          sudo apt-get update && sudo apt-get install -yq
+          libparmetis-dev libparmetis4.0
+          libmetis-dev libmetis5 metis
+          petsc-dev 
+          libsqlite3-dev sqlite3
+          libhdf5-mpi-dev libhdf5-dev
+          libboost-all-dev
+          libxml2-utils
+          xsltproc
+
+      - name: Checkout TreeTimer
+        run: cd $GITHUB_WORKSPACE && git clone https://github.com/warwick-hpsc/treetimer.git
+
+      - name: Build TreeTimer
+        run: cd $GITHUB_WORKSPACE/treetimer && make all
+        env:
+          COMPILER: gnu
+          SQLITE_DIR: /usr/include
+
+      - name: Build Unit Tests 
+        run: >-
+          mkdir -p build &&
+          cd build &&
+          CXX=mpic++ CC=mpicc cmake .. 
+          -DHDF5_ROOT=/usr/lib/x86_64-linux-gnu/hdf5/openmpi/          
+          -DCMAKE_BUILD_TYPE=Debug 
+          -DCOMPILER=gnu        
+          -DMETIS_ROOT=/usr/lib/x86_64-linux-gnu          
+          -DPARMETIS_ROOT=/usr/lib 		 
+          -DSQLITE_LIBS=/usr/lib/x86_64-linux-gnu/lib/libsqlite3.so 		 
+          -DPETSC_ROOT=/usr/lib/x86_64-linux-gnu  
+          -DTREETIMER_LIBS=/home/runner/work/CUP-CFD/CUP-CFD/treetimer/libtt.so 		 
+          -DTREETIMER_INCLUDE=/home/runner/work/CUP-CFD/CUP-CFD/treetimer/include/timing_library/interface 		 
+          -DUSE_UNIT_TESTS=ON && make -j `nproc`
+
+      - name: Run all unit tests 
+        run: >-
+          mkdir -p build/test-results &&
+          cd build &&
+          for f in $(ls *_tests fvm_gradient_kernels fvm_mass_kernels fvm_scalar_kernels); do 
+            echo "Running ${f}..." &&
+            ./$f --output_format=XML \
+            --log_sink=log-${f}.xml \
+            --report_sink=report-${f}.xml \
+            --report_level=detailed \
+            --log_level=all || true; 
+          done;
+          mv *.xml test-results
+
+      - name: Combine results and make HTML report
+        if: ${{ always() }}
+        run: cd build/test-results && sh +x ../../scripts/make-html-unittest-report.sh ../../scripts/test2html.xsl
+          
+      - name: Archive test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: Test Results
+          path: |
+            build/test-results/unittests.html
+            build/test-results/*.xml
+        
+      - name: Set correct Exit Status
+        if: ${{ always() }}
+        run: >-
+          NUM_FAILED=$(grep -i -o 'result="failed' build/test-results/combined-results.xml | wc -l);
+          if [ $NUM_FAILED -gt 0 ]; then
+              echo "Counted ${} test failures!"
+              exit 1
+          else
+              echo "Looks like no failures"
+              exit 0
+          fi
+
+          

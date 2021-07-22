@@ -24,7 +24,7 @@ namespace cupcfd
 		bool ParticleSimple<I,T>::mpiDataTypeReg = false;
 
 		template <class I, class T>
-		MPI_Datatype ParticleSimple<I,T>::mpiType = -1;
+		MPI_Datatype ParticleSimple<I,T>::mpiType = reinterpret_cast<MPI_Datatype>(-1);
 
 		// === Constructors/Deconstructors
 

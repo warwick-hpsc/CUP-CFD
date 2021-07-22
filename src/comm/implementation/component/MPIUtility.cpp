@@ -40,7 +40,7 @@ namespace cupcfd
 
 			cupcfd::error::eCodes getMPIType(bool dummy __attribute__((unused)), MPI_Datatype * mpiType) {
 				// ToDo: C MPI doesn't have a bool datatype
-				*mpiType = MPI::BOOL;
+				*mpiType = MPI_CXX_BOOL;
 				return cupcfd::error::E_SUCCESS;
 			}
 

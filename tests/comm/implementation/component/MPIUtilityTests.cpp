@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE(setup)
 // Test 1: Get MPI Int Type
 BOOST_AUTO_TEST_CASE(getMPIType_test1)
 {
-	int dummy;
+	int dummy = 0xDEADC0DE;
 	cupcfd::error::eCodes status;
 	MPI_Datatype dataType;
 
@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(getMPIType_test1)
 // Test 2: Get MPI Float Type
 BOOST_AUTO_TEST_CASE(getMPIType_test2)
 {
-	float dummy;
+	float dummy = 0xDEADC0DE;
 	cupcfd::error::eCodes status;
 	MPI_Datatype dataType;
 
@@ -58,7 +58,7 @@ BOOST_AUTO_TEST_CASE(getMPIType_test2)
 // Test 3: Get MPI Double Type
 BOOST_AUTO_TEST_CASE(getMPIType_test3)
 {
-	double dummy;
+	double dummy = 0xDEADC0DE;
 	cupcfd::error::eCodes status;
 	MPI_Datatype dataType;
 
@@ -70,7 +70,7 @@ BOOST_AUTO_TEST_CASE(getMPIType_test3)
 // Test 4: Get MPI Long Type
 BOOST_AUTO_TEST_CASE(getMPIType_test4)
 {
-	long dummy;
+	long dummy = 0xDEADC0DE;
 	cupcfd::error::eCodes status;
 	MPI_Datatype dataType;
 
