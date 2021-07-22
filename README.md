@@ -1,6 +1,6 @@
 # Overview
 
-CUP-CFD - (Combusting Unstructured-grid Pressure-based CFD
+CUP-CFD - Combusting Unstructured-grid Pressure-based CFD
 
 CUP-CFD is intended to capture the key performance characteristics of a parallelised combusting-particle unstructured-grid CFD solver. This also enables calibration of a corresponding performance model of the solver.
 
