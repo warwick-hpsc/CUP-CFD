@@ -1,0 +1,43 @@
+name: Check code style conformity
+
+on:
+  # Allows running this workflow manually from the Actions tab
+  workflow_dispatch:
+  # Pushes to master (or main when it is renamed)
+  push:
+    branches:
+      - main
+      - master
+  # Pull requests to master (or main when it is renamed)
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  cpplint:
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Update apt
+      - name: apt-get update
+        run: 
+          sudo apt-get update && sudo apt-get install -yq python3-pip
+
+      - name: Install cpplint
+        run: sudo pip3 install cpplint
+
+      - name: Lint
+        run: cpplint --output=sed --recursive include/ src/ >cpplint.txt 2>&1
+
+      - name: Archive linting results
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cpplint-report
+          path: cpplint.txt
+        

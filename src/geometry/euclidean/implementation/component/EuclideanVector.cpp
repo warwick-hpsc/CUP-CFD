@@ -30,7 +30,7 @@ namespace cupcfd
 			// === Members ===
 
 			template <class T, unsigned int N>
-			MPI_Datatype EuclideanVector<T,N>::mpiType = -1;
+			MPI_Datatype EuclideanVector<T,N>::mpiType = reinterpret_cast<MPI_Datatype>(-1);;
 
 			// === Constructors/Deconstructors ===
 			template <class T, unsigned int N>

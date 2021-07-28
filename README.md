@@ -1,3 +1,9 @@
+[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://lbesson.mit-license.org/)
+![build](https://github.com/warwick-hpsc/CUP-CFD/actions/workflows/build.yml/badge.svg)
+![code style](https://github.com/warwick-hpsc/CUP-CFD/actions/workflows/code-style.yml/badge.svg)
+![unit tests](https://github.com/warwick-hpsc/CUP-CFD/actions/workflows/unit-tests.yml/badge.svg)
+
+
 # Software dependencies
 
 * [treetimer](https://github.com/warwick-hpsc/treetimer)

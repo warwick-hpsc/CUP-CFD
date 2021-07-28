@@ -27,7 +27,7 @@ namespace cupcfd
 			bool EuclideanPoint<T,N>::mpiDataTypeReg = false;
 
 			template <class T, unsigned int N>
-			MPI_Datatype EuclideanPoint<T,N>::mpiType = -1;
+			MPI_Datatype EuclideanPoint<T,N>::mpiType = reinterpret_cast<MPI_Datatype>(-1);
 		}
 	}
 }

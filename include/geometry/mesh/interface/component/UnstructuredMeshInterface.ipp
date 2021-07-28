@@ -153,7 +153,7 @@ namespace cupcfd
 
 			template <class M, class I, class T, class L>
 			cupcfd::error::eCodes UnstructuredMeshInterface<M,I,T,L>::addCell(L cellLabel, bool isLocal) {
-				static_cast<M*>(this)->addCell(cellLabel, isLocal);
+				return static_cast<M*>(this)->addCell(cellLabel, isLocal);
 			}
 
 			template <class M, class I, class T, class L>
