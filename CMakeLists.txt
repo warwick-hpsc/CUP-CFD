@@ -55,7 +55,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Use the default CXX compiler if the user hasn't set a COMPILER option
-if (NOT DEFINED${COMPILER} OR ${COMPILER} STREQUAL "")
+if (NOT DEFINED ${COMPILER} OR ${COMPILER} STREQUAL "")
        string(TOLOWER ${CMAKE_CXX_COMPILER_ID} COMPILER)
 endif()
 
