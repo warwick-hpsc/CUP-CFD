@@ -1,8 +1,18 @@
 name: Unit Tests
 
 on:
-  # Allows you to run this workflow manually from the Actions tab
+  # Allows running this workflow manually from the Actions tab
   workflow_dispatch:
+  # Pushes to master (or main when it is renamed)
+  push:
+    branches:
+      - main
+      - master
+  # Pull requests to master (or main when it is renamed)
+  pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
   # Install Ubuntu dependencies for parmetis, metis, petsc, sqlite and HDF5
@@ -93,7 +103,7 @@ jobs:
         run: >-
           NUM_FAILED=$(grep -i -o 'result="failed' build/test-results/combined-results.xml | wc -l);
           if [ $NUM_FAILED -gt 0 ]; then
-              echo "Counted ${} test failures!"
+              echo "Counted ${NUM_FAILED} test failures!"
               exit 1
           else
               echo "Looks like no failures"
