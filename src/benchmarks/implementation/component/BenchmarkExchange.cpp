@@ -51,10 +51,6 @@ namespace cupcfd
 		template <class I, class T>
 		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark() {
 			cupcfd::error::eCodes status;
-			this->startBenchmarkBlock(this->benchmarkName);
-			TreeTimerLogParameterInt("Repetitions", this->repetitions);
-
-			TreeTimerEnterBlock("BenchmarkSetup");
 
 			// Expected size of data array is determined at init time (this is array of data both local and to be sent)
 			I dataSize = patternPtr->localToExchange.size();
@@ -67,7 +63,9 @@ namespace cupcfd
 				// The actual contents of the data array do not matter.
 				data[i] = T(i)/T(23);
 			}
-			TreeTimerExit("BenchmarkSetup");
+
+			this->startBenchmarkBlock(this->benchmarkName);
+			TreeTimerLogParameterInt("Repetitions", this->repetitions);
 
 			for(I i = 0; i < this->repetitions; i++) {
 				this->recordParameters();
@@ -80,6 +78,7 @@ namespace cupcfd
 				this->startBenchmarkBlock("Exchange");
 				status = patternPtr->exchangeStart(data, dataSize);
 				CHECK_ECODE(status)
+
 				status = patternPtr->exchangeStop(data, dataSize);
 				CHECK_ECODE(status)
 				this->stopBenchmarkBlock("Exchange");
@@ -87,12 +86,14 @@ namespace cupcfd
 				this->startBenchmarkBlock("UnpackBuffer");
 				status = patternPtr->unpackRecvBuffer(data, dataSize);
 				CHECK_ECODE(status)
+
 				this->stopBenchmarkBlock("UnpackBuffer");
 			}
 
+			this->stopBenchmarkBlock(this->benchmarkName);
+
 			free(data);
 
-			this->stopBenchmarkBlock(this->benchmarkName);
 			return cupcfd::error::E_SUCCESS;
 		}
 	}

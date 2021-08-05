@@ -72,47 +72,47 @@ namespace cupcfd
 
 			for(I i = 0; i < this->repetitions; i++) {
 				// Clear Matrix A
-				TreeTimerEnterLibraryCall("ClearMatrixA");
+				this->startBenchmarkBlock("ClearMatrixA");
 				status = this->solverSystemPtr->clearMatrixA();
-				TreeTimerExit("ClearMatrixA");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("ClearMatrixA");
 
 				// Clear Vector X
-				TreeTimerEnterLibraryCall("ClearVectorX");
+				this->startBenchmarkBlock("ClearVectorX");
 				status = this->solverSystemPtr->clearVectorX();
-				TreeTimerExit("ClearVectorX");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("ClearVectorX");
 
 				// Clear Vector B
-				TreeTimerEnterLibraryCall("ClearVectorB");
+				this->startBenchmarkBlock("ClearVectorB");
 				status = this->solverSystemPtr->clearVectorB();
-				TreeTimerExit("ClearVectorB");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("ClearVectorB");
 
 				// Set Vector B Values
-				TreeTimerEnterLibraryCall("SetValuesVectorB");
+				this->startBenchmarkBlock("SetValuesVectorB");
 				status = this->solverSystemPtr->setValuesVectorB(&((*(this->rhsVectorPtr.get()))[0]), this->rhsVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				TreeTimerExit("SetValuesVectorB");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("SetValuesVectorB");
 
 				// Set Vector X Values
-				TreeTimerEnterLibraryCall("SetValuesVectorX");
+				this->startBenchmarkBlock("SetValuesVectorX");
 				status = this->solverSystemPtr->setValuesVectorX(&((*(this->solVectorPtr.get()))[0]), this->solVectorPtr->size(), rowIndexes, nRowIndexes, matrixPtr->baseIndex);
-				TreeTimerExit("SetValuesVectorX");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("SetValuesVectorX");
 
 				// Set Matrix A Values/Build Matrix A (Structures already set inside setup)
 				// Matrix must have same structures as one used during setup
-				TreeTimerEnterLibraryCall("SetValuesMatrixA");
+				this->startBenchmarkBlock("SetValuesMatrixA");
 				status = this->solverSystemPtr->setValuesMatrixA(*matrixPtr);
-				TreeTimerExit("SetValuesMatrixA");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("SetValuesMatrixA");
 
 				// Run Linear Solver
-				TreeTimerEnterLibraryCall("Solve");
+				this->startBenchmarkBlock("Solve");
 				status = this->solverSystemPtr->solve();
-				TreeTimerExit("Solve");
 				CHECK_ECODE(status)
+				this->stopBenchmarkBlock("Solve");
 			}
 
 			// Stop tracking parameters/time for this block

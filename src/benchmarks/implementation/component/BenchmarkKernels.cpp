@@ -144,8 +144,6 @@ namespace cupcfd
 			// Data needed for the kernel
 			I nGradient = 1;
 
-			TreeTimerEnterLoop("BenchmarkSetup");
-
 			// Create Random Phi Data for Cells
 			T * phiCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(phiCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -164,10 +162,8 @@ namespace cupcfd
 					(cupcfd::geometry::euclidean::EuclideanVector<T,3> *)
 					malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<T,3>) * nCells);
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("GradPhiGaussDolfyn");
+			TreeTimerEnterLoop("GradientPhiGaussDolfynBenchmark");
 
 			// Track some parameters
 
@@ -187,7 +183,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("GradPhiGaussDolfyn");
+			TreeTimerExit("GradientPhiGaussDolfynBenchmark");
 
 			free(phiCell);
 			free(phiBoundaries);
@@ -207,8 +203,6 @@ namespace cupcfd
 			I nBnds = meshPtr->properties.lBoundaries;
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
-
-			TreeTimerEnterLoop("BenchmarkSetup");
 
 			cupcfd::geometry::euclidean::EuclideanVector<T,3> * dudx =
 					(cupcfd::geometry::euclidean::EuclideanVector<T,3> *) malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<T,3>) * nCells);
@@ -270,10 +264,8 @@ namespace cupcfd
 			T * tCell = (T *) malloc(sizeof(T) * nCells);
 			T * tBoundary = (T *) malloc(sizeof(T) * nBnds);
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfyn");
+			TreeTimerEnterLoop("FluxMassDolfynFaceLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -313,7 +305,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfyn");
+			TreeTimerExit("FluxMassDolfynFaceLoopBenchmark");
 
 			free(dudx);
 			free(dvdx);
@@ -350,7 +342,7 @@ namespace cupcfd
 			 T flowin;
 
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynBoundary1");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -366,7 +358,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynBoundary1");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop1Benchmark");
 
 			free(massFlux);
 
@@ -393,7 +385,7 @@ namespace cupcfd
 			T flowout;
 
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynBoundary2");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop2Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -409,7 +401,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynBoundary2");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop2Benchmark");
 
 			free(massFlux);
 			free(flowRegion);
@@ -432,7 +424,7 @@ namespace cupcfd
 			T ratearea;
 
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynBoundary3");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop3Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -448,7 +440,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynBoundary3");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop3Benchmark");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -463,8 +455,6 @@ namespace cupcfd
 			I nBnds = meshPtr->properties.lBoundaries;
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
-
-			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * massFlux = (T *) malloc(sizeof(T) * nFaces);
 			cupcfd::utility::kernels::randomUniform(massFlux, nFaces, (T) 1E-6 , (T) 1E-2);
@@ -484,10 +474,8 @@ namespace cupcfd
 			T ratearea = 1.0;
 			T flowout;
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynBoundary4");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop4Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -509,7 +497,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynBoundary4");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop4Benchmark");
 
 			free(massFlux);
 			free(uBoundary);
@@ -530,8 +518,6 @@ namespace cupcfd
 			I nBnds = meshPtr->properties.lBoundaries;
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
-
-			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * massFlux = (T *) malloc(sizeof(T) * nFaces);
 			cupcfd::utility::kernels::randomUniform(massFlux, nFaces, (T) 1E-6 , (T) 1E-2);
@@ -556,10 +542,8 @@ namespace cupcfd
 			T * flowFact = (T *) malloc(sizeof(T) * nRegions);
 			T flowout2;
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynBoundary5");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop5Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -584,7 +568,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynBoundary5");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop5Benchmark");
 
 			free(massFlux);
 			free(su);
@@ -606,8 +590,6 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TreeTimerEnterLoop("BenchmarkSetup");
-
 			T * flowFact = (T *) malloc(sizeof(T) * nRegions);
 			cupcfd::utility::kernels::randomUniform(flowFact, nRegions, (T) 1E-6 , (T) 1E-2);
 
@@ -616,10 +598,9 @@ namespace cupcfd
 
 			T flowIn = 0.0;
 
-			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TreeTimerEnterLoop("FluxMassDolfynRegion");
+			TreeTimerEnterLoop("FluxMassDolfynRegionLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -638,7 +619,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxMassDolfynRegion");
+			TreeTimerExit("FluxMassDolfynRegionLoopBenchmark");
 
 			free(flowFact);
 			free(flowRegion);
@@ -656,8 +637,6 @@ namespace cupcfd
 			I nBnds = meshPtr->properties.lBoundaries;
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
-
-			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * PhiCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(PhiCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -715,10 +694,8 @@ namespace cupcfd
 			T Large = 1E+18;
 			T TMCmu = 1.8;
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("FluxScalarDolfyn");
+			TreeTimerEnterLoop("FluxScalarDolfynFaceLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -753,7 +730,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxScalarDolfyn");
+			TreeTimerExit("FluxScalarDolfynFaceLoopBenchmark");
 
 			free(PhiCell);
 			free(VisEff);
@@ -784,8 +761,6 @@ namespace cupcfd
 			T gammaBlend = 0.9;
 			T small = 1E-18;
 			// T large = 1E+18;
-
-			TreeTimerEnterLoop("BenchmarkSetup");
 
 			T * uCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(uCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -844,10 +819,8 @@ namespace cupcfd
 			// [nfaces][2]
 			T * rFace = (T *) malloc(sizeof(T) * nFaces * 2);
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("FluxUVWDolfynFace1");
+			TreeTimerEnterLoop("FluxUVWDolfynFaceLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -883,7 +856,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("FluxUVWDolfynFace1");
+			TreeTimerExit("FluxUVWDolfynFaceLoop1Benchmark");
 
 			free(uCell);
 			free(vCell);
@@ -981,8 +954,6 @@ namespace cupcfd
 			T visURF = 0.232;
 			T visLam = 0.00547;
 
-			TreeTimerEnterLoop("BenchmarkSetup");
-
 			T * TE = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(TE, nCells, (T) 1E-6 , (T) 1E-2);
 
@@ -995,10 +966,9 @@ namespace cupcfd
 			T * visEff = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(visEff, nCells, (T) 1E-6 , (T) 1E-2);
 
-			TreeTimerExit("BenchmarkSetup");
 
 			// Start Timer
-			TreeTimerEnterLoop("calcViscDolfynCell1");
+			TreeTimerEnterLoop("calculateViscosityDolfynCellLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1018,7 +988,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("calcViscDolfynCell1");
+			TreeTimerExit("calculateViscosityDolfynCellLoop1Benchmark");
 
 			free(TE);
 			free(ED);
@@ -1081,7 +1051,7 @@ namespace cupcfd
 			T * visEffBoundary = (T *) malloc(sizeof(T) * nBnds);
 
 			// Start Timer
-			TreeTimerEnterLoop("calcViscDolfynBoundary");
+			TreeTimerEnterLoop("calculateViscosityDolfynBoundaryLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1102,7 +1072,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExit("calcViscDolfynBoundary");
+			TreeTimerExit("calculateViscosityDolfynBoundaryLoopBenchmark");
 
 			free(TE);
 			free(den);
@@ -1123,8 +1093,6 @@ namespace cupcfd
 			I nFaces = meshPtr->properties.lFaces;
 			I nRegions = meshPtr->properties.lRegions;
 
-			TreeTimerEnterLoop("BenchmarkSetup");
-
 			T visLam = 1.1;
 			T * visEffCell = (T *) malloc(sizeof(T) * nCells);
 			cupcfd::utility::kernels::randomUniform(visEffCell, nCells, (T) 1E-6 , (T) 1E-2);
@@ -1132,10 +1100,8 @@ namespace cupcfd
 			T * visEffBoundary = (T *) malloc(sizeof(T) * nBnds);
 			cupcfd::utility::kernels::randomUniform(visEffBoundary, nBnds, (T) 1E-6 , (T) 1E-2);
 
-			TreeTimerExit("BenchmarkSetup");
-
 			// Start Timer
-			TreeTimerEnterLoop("calViscDolfynCell2");
+			TreeTimerEnterLoop("calculateViscosityDolfynCellLoop2Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1154,7 +1120,7 @@ namespace cupcfd
 
 
 			// Stop Timer
-			TreeTimerExit("calViscDolfynCell2");
+			TreeTimerExit("calculateViscosityDolfynCellLoop2Benchmark");
 
 			free(visEffCell);
 			free(visEffBoundary);

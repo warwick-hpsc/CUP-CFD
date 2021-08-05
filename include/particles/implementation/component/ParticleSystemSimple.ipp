@@ -193,21 +193,17 @@ namespace cupcfd
 			MPI_Request * requests;
 			I nRequests;
 			
-			TreeTimerEnterMPICommCall("ExchangeMPIIsendIrecv");
 			status = cupcfd::comm::mpi::ExchangeMPIIsendIrecv(neighbourCount, nNeighbours, recvBuffer, nNeighbours, 
 											neighbourRanks, nNeighbours,
 											1, this->mesh->cellConnGraph->comm->comm,
 											&requests, &nRequests);
-			TreeTimerExit("ExchangeMPIIsendIrecv");
 			CHECK_ECODE(status)
 			
 			// ToDo: Getting multiple definitions error when using WaitallMPI.h header.
 			// Presumably a missing header guard somewhere, but I can't seem to find it for now....
 			// Do it directly instead
 			MPI_Status * statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
-			TreeTimerEnterMPISyncCall("MPI_Waitall");
 			MPI_Waitall(nRequests, requests, statuses);
-			TreeTimerExit("MPI_Waitall");
 			free(statuses);
 			free(requests);
 			
@@ -237,20 +233,16 @@ namespace cupcfd
 				}
 			}
 			
-			TreeTimerEnterMPICommCall("ExchangeVMPIIsendIrecv");
 			status = ExchangeVMPIIsendIrecv(particleSendBuffer, totalSendCount, neighbourCount, nNeighbours,
 											particleRecvBuffer, totalRecvCount, recvBuffer, nNeighbours,
 											neighbourRanks, nNeighbours,
 											neighbourRanks, nNeighbours,
 											this->mesh->cellConnGraph->comm->comm,
 											&requests, &nRequests);
-			TreeTimerExit("ExchangeVMPIIsendIrecv");
 			CHECK_ECODE(status)
 								   
 			statuses = (MPI_Status *) malloc(sizeof(MPI_Status) * nRequests);
-			TreeTimerEnterMPISyncCall("MPI_Waitall");
 			MPI_Waitall(nRequests, requests, statuses);
-			TreeTimerExit("MPI_Waitall");
 			free(statuses);				   
 							   
 			// Add any particles we received to the system
@@ -300,7 +292,6 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 
 			TreeTimerEnterCompute("initUpdate");
-
 			// (1a) Ensure that the travelTime for all existing active particles is set to the time period dt
 			status = this->setActiveParticlesTravelTime(dt);
 			CHECK_ECODE(status)
@@ -315,16 +306,13 @@ namespace cupcfd
 			// appropriate time remaining in this period depending on when they were generated)
 			status = this->generateEmitterParticles(dt);
 			CHECK_ECODE(status)
-
 			TreeTimerExit("initUpdate");
 
 			// Keep looping as long as there exists a particle anywhere in the system that is still going (since we could
 			// receive one on any iteration, even if we don't on this one)
 			I nGlobalTravelParticles = 0;
 			I tmp = this->getNTravelParticles();
-			TreeTimerEnterMPICollectiveCall("allReduceAdd");
 			status = cupcfd::comm::allReduceAdd(&tmp, 1, &nGlobalTravelParticles, 1, *(this->mesh->cellConnGraph->comm));
-			TreeTimerExit("allReduceAdd");
 			CHECK_ECODE(status)
 
 			int nGlobalParticles = nGlobalTravelParticles;
