@@ -163,7 +163,7 @@ namespace cupcfd
 					malloc(sizeof(cupcfd::geometry::euclidean::EuclideanVector<T,3>) * nCells);
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("GradientPhiGaussDolfynBenchmark");
+			TreeTimerEnterLoop("GradientPhiGaussDolfynBenchmark");
 
 			// Track some parameters
 
@@ -183,7 +183,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("GradientPhiGaussDolfynBenchmark");
+			TreeTimerExit("GradientPhiGaussDolfynBenchmark");
 
 			free(phiCell);
 			free(phiBoundaries);
@@ -265,7 +265,7 @@ namespace cupcfd
 			T * tBoundary = (T *) malloc(sizeof(T) * nBnds);
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynFaceLoopBenchmark");
+			TreeTimerEnterLoop("FluxMassDolfynFaceLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -305,7 +305,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynFaceLoopBenchmark");
+			TreeTimerExit("FluxMassDolfynFaceLoopBenchmark");
 
 			free(dudx);
 			free(dvdx);
@@ -342,7 +342,7 @@ namespace cupcfd
 			 T flowin;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynBoundaryLoop1Benchmark");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -358,7 +358,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynBoundaryLoop1Benchmark");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop1Benchmark");
 
 			free(massFlux);
 
@@ -385,7 +385,7 @@ namespace cupcfd
 			T flowout;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynBoundaryLoop2Benchmark");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop2Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -401,7 +401,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynBoundaryLoop2Benchmark");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop2Benchmark");
 
 			free(massFlux);
 			free(flowRegion);
@@ -424,7 +424,7 @@ namespace cupcfd
 			T ratearea;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynBoundaryLoop3Benchmark");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop3Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -440,7 +440,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynBoundaryLoop3Benchmark");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop3Benchmark");
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -475,7 +475,7 @@ namespace cupcfd
 			T flowout;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynBoundaryLoop4Benchmark");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop4Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -497,7 +497,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynBoundaryLoop4Benchmark");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop4Benchmark");
 
 			free(massFlux);
 			free(uBoundary);
@@ -543,7 +543,7 @@ namespace cupcfd
 			T flowout2;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynBoundaryLoop5Benchmark");
+			TreeTimerEnterLoop("FluxMassDolfynBoundaryLoop5Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -568,7 +568,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynBoundaryLoop5Benchmark");
+			TreeTimerExit("FluxMassDolfynBoundaryLoop5Benchmark");
 
 			free(massFlux);
 			free(su);
@@ -600,7 +600,7 @@ namespace cupcfd
 
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxMassDolfynRegionLoopBenchmark");
+			TreeTimerEnterLoop("FluxMassDolfynRegionLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -619,7 +619,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxMassDolfynRegionLoopBenchmark");
+			TreeTimerExit("FluxMassDolfynRegionLoopBenchmark");
 
 			free(flowFact);
 			free(flowRegion);
@@ -695,7 +695,7 @@ namespace cupcfd
 			T TMCmu = 1.8;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxScalarDolfynFaceLoopBenchmark");
+			TreeTimerEnterLoop("FluxScalarDolfynFaceLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -730,7 +730,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxScalarDolfynFaceLoopBenchmark");
+			TreeTimerExit("FluxScalarDolfynFaceLoopBenchmark");
 
 			free(PhiCell);
 			free(VisEff);
@@ -820,7 +820,7 @@ namespace cupcfd
 			T * rFace = (T *) malloc(sizeof(T) * nFaces * 2);
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxUVWDolfynFaceLoop1Benchmark");
+			TreeTimerEnterLoop("FluxUVWDolfynFaceLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -856,7 +856,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxUVWDolfynFaceLoop1Benchmark");
+			TreeTimerExit("FluxUVWDolfynFaceLoop1Benchmark");
 
 			free(uCell);
 			free(vCell);
@@ -891,7 +891,7 @@ namespace cupcfd
 			I nRegions = meshPtr->properties.lRegions;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxUVWDolfynRegionLoop1Benchmark");
+			TreeTimerEnterLoop("FluxUVWDolfynRegionLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -906,7 +906,7 @@ namespace cupcfd
 			cupcfd::fvm::FluxUVWDolfynRegionLoop1(*(meshPtr));
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxUVWDolfynRegionLoop1Benchmark");
+			TreeTimerExit("FluxUVWDolfynRegionLoop1Benchmark");
 		}
 
 		template <class M, class I, class T, class L>
@@ -919,7 +919,7 @@ namespace cupcfd
 			I nRegions = meshPtr->properties.lRegions;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("FluxUVWDolfynBndsLoop1Benchmark");
+			TreeTimerEnterLoop("FluxUVWDolfynBndsLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -934,7 +934,7 @@ namespace cupcfd
 			cupcfd::fvm::FluxUVWDolfynBndsLoop1(*(meshPtr));
 
 			// Stop Timer
-			TreeTimerExitBlock("FluxUVWDolfynBndsLoop1Benchmark");
+			TreeTimerExit("FluxUVWDolfynBndsLoop1Benchmark");
 		}
 
 		template <class M, class I, class T, class L>
@@ -968,7 +968,7 @@ namespace cupcfd
 
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("calculateViscosityDolfynCellLoop1Benchmark");
+			TreeTimerEnterLoop("calculateViscosityDolfynCellLoop1Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -988,7 +988,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("calculateViscosityDolfynCellLoop1Benchmark");
+			TreeTimerExit("calculateViscosityDolfynCellLoop1Benchmark");
 
 			free(TE);
 			free(ED);
@@ -1010,7 +1010,7 @@ namespace cupcfd
 			T kappa = 1.1;
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("calculateViscosityDolfynRegionLoopBenchmark");
+			TreeTimerEnterLoop("calculateViscosityDolfynRegionLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1025,7 +1025,7 @@ namespace cupcfd
 			cupcfd::fvm::calculateViscosityDolfynRegionLoop(kappa, *(this->meshPtr));
 
 			// Stop Timer
-			TreeTimerExitBlock("calculateViscosityDolfynRegionLoopBenchmark");
+			TreeTimerExit("calculateViscosityDolfynRegionLoopBenchmark");
 		}
 
 		template <class M, class I, class T, class L>
@@ -1051,7 +1051,7 @@ namespace cupcfd
 			T * visEffBoundary = (T *) malloc(sizeof(T) * nBnds);
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("calculateViscosityDolfynBoundaryLoopBenchmark");
+			TreeTimerEnterLoop("calculateViscosityDolfynBoundaryLoopBenchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1072,7 +1072,7 @@ namespace cupcfd
 			CHECK_ECODE(status)
 
 			// Stop Timer
-			TreeTimerExitBlock("calculateViscosityDolfynBoundaryLoopBenchmark");
+			TreeTimerExit("calculateViscosityDolfynBoundaryLoopBenchmark");
 
 			free(TE);
 			free(den);
@@ -1101,7 +1101,7 @@ namespace cupcfd
 			cupcfd::utility::kernels::randomUniform(visEffBoundary, nBnds, (T) 1E-6 , (T) 1E-2);
 
 			// Start Timer
-			TreeTimerEnterBlockMethod("calculateViscosityDolfynCellLoop2Benchmark");
+			TreeTimerEnterLoop("calculateViscosityDolfynCellLoop2Benchmark");
 
 			// Track some parameters
 			TreeTimerLogParameterInt("LocalCells", nCells);
@@ -1120,7 +1120,7 @@ namespace cupcfd
 
 
 			// Stop Timer
-			TreeTimerExitBlock("calculateViscosityDolfynCellLoop2Benchmark");
+			TreeTimerExit("calculateViscosityDolfynCellLoop2Benchmark");
 
 			free(visEffCell);
 			free(visEffBoundary);

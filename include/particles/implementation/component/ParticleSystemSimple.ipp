@@ -20,6 +20,8 @@
 #include "ExchangeMPI.h"
 #include "Reduce.h"
 
+#include "tt_interface_c.h"
+
 #include <unistd.h>
 
 namespace arth = cupcfd::utility::arithmetic::kernels;
@@ -244,6 +246,7 @@ namespace cupcfd
 			free(statuses);				   
 							   
 			// Add any particles we received to the system
+			TreeTimerEnterLoop("redetectEntryFaceID");
 			for(I i = 0; i < totalRecvCount; i++) {
 				status = particleRecvBuffer[i].redetectEntryFaceID(*(this->mesh));
 				CHECK_ECODE(status)
@@ -251,6 +254,7 @@ namespace cupcfd
 				status = this->addParticle(particleRecvBuffer[i]);
 				CHECK_ECODE(status)
 			}
+			TreeTimerExit("redetectEntryFaceID");
 			
 			// Tidyup Stage
 			// Free temporary buffers
@@ -287,6 +291,7 @@ namespace cupcfd
 		
 			cupcfd::error::eCodes status;
 
+			TreeTimerEnterCompute("initUpdate");
 			// (1a) Ensure that the travelTime for all existing active particles is set to the time period dt
 			status = this->setActiveParticlesTravelTime(dt);
 			CHECK_ECODE(status)
@@ -301,6 +306,7 @@ namespace cupcfd
 			// appropriate time remaining in this period depending on when they were generated)
 			status = this->generateEmitterParticles(dt);
 			CHECK_ECODE(status)
+			TreeTimerExit("initUpdate");
 
 			// Keep looping as long as there exists a particle anywhere in the system that is still going (since we could
 			// receive one on any iteration, even if we don't on this one)
@@ -348,8 +354,10 @@ namespace cupcfd
 				}
 
 				// Advance particles by at most one cell
+				TreeTimerEnterLoop("updateSystemAtomic");
 				status = this->updateSystemAtomic(verbose);
 				CHECK_ECODE(status)
+				TreeTimerExit("updateSystemAtomic");
 								
 				// No further changes should need to be made to the data stored inside a particle, and they should have ranks
 				// representing the process they should be located on. 
@@ -366,8 +374,10 @@ namespace cupcfd
 				
 				// We can now perform an exchange to identify how many (if any)
 				// particles will go off-rank in this atomic update, and transfer them ready for another round of atomic updates.
+				TreeTimerEnterMethod("exchangeParticles");
 				status = this->exchangeParticles();
 				CHECK_ECODE(status)
+				TreeTimerExit("exchangeParticles");
 				
 				// Cleanup any sent particles that should now be marked as inactive after being sent to another rank
 				status = this->removeInactiveParticles();

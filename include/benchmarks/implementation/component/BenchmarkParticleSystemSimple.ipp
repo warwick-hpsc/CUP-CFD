@@ -65,13 +65,13 @@ namespace cupcfd
 					this->dtDist->getValues(&timestep, 1);
 
 					// Advance Particle System by one timestep
-					this->startBenchmarkBlock("UpdateParticleTimestep");
+					this->startBenchmarkBlock("ParticleSystemTimestep");
 					status = particleSystemPtr->updateSystem(timestep);
 					if (status != cupcfd::error::E_SUCCESS) {
 						std::cout << "ERROR: updateSystem() failed" << std::endl;
 						MPI_Abort(MPI_COMM_WORLD, status);
 					}
-					this->stopBenchmarkBlock("UpdateParticleTimestep");
+					this->stopBenchmarkBlock("ParticleSystemTimestep");
 				}
 			}
 

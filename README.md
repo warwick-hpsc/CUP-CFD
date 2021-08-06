@@ -281,7 +281,7 @@ The TreeTimer Library is a custom library intended to capture data about instrum
 
 ## Postprocessing
 
-The library itself must be initialised with TreeTimerInit() prior to any blocks, and finalized with TreeTimerFinalize() to write out its results. The results are currently written out to an SQLite Database for postprocessing, such as by the example python script provided at scripts/treetimer-postprocessing.
+The library itself must be initialised with TT_Init() prior to any blocks, and finalized with TT_Finalize() to write out its results. The results are currently written out to an SQLite Database for postprocessing, such as by the example python script provided at scripts/treetimer-postprocessing.
 
 The script can be used by running it with the path to a SQlite database file output by the instrumentation library as an argument. A small selection of post-processing methods can be selected by uncommenting the appropriate method.
 
