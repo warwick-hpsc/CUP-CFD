@@ -36,7 +36,7 @@ namespace cupcfd
 				this->particleSourceConfig = particleSourceConfig->clone();
 			}
 
-			numParticleSourcesOrEmitters = 0;
+			this->numParticleSourcesOrEmitters = 0;
 		}
 
 		template <class M, class I, class T, class L>

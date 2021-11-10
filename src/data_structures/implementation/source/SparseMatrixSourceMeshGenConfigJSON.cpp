@@ -20,10 +20,12 @@ namespace cupcfd
 		template <class I, class T>
 		SparseMatrixSourceMeshGenConfigJSON<I,T>::SparseMatrixSourceMeshGenConfigJSON(std::string configFilePath, std::string * topLevel, int nTopLevel)
 		{
-			// Copy the top level strings
-			for(int i = 0; i < nTopLevel; i++)
-			{
-				this->topLevel.push_back(topLevel[i]);
+			if (topLevel != nullptr) {
+				// Copy the top level strings
+				for(int i = 0; i < nTopLevel; i++)
+				{
+					this->topLevel.push_back(topLevel[i]);
+				}
 			}
 
 			this->topLevel.push_back("SparseMatrixMeshGen");

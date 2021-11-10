@@ -67,7 +67,7 @@ namespace cupcfd
 						// Error out if we have a incorrect ParticleEmitterSimple JSON format
 						status = emitterConfigJSON.buildParticleEmitterConfig(&emitterConfig);
 						CHECK_ECODE(status)
-						
+
 						configs.push_back(emitterConfig);
 					}
 				}

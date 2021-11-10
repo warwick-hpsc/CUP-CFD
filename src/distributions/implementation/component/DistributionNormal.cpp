@@ -39,7 +39,6 @@ namespace cupcfd
 			}
 
 			std::random_device seedSource;
-
 			this->dist = new std::normal_distribution<T>(this->mean, this->stdev);
 			this->rEngine = new std::default_random_engine(seedSource());
 		}
@@ -51,6 +50,10 @@ namespace cupcfd
 			this->ubound = source.ubound;
 			this->mean = source.mean;
 			this->stdev = source.stdev;
+
+			std::random_device seedSource;
+			this->dist = new std::normal_distribution<T>(this->mean, this->stdev);
+			this->rEngine = new std::default_random_engine(seedSource());
 		}
 
 		template <class I, class T>

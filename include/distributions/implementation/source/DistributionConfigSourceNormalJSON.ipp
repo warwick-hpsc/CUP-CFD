@@ -30,9 +30,10 @@ namespace cupcfd
 			std::ifstream source(configFilePath, std::ifstream::binary);
 			source >> this->configData;
 
-			for(int i = 0; i < nTopLevel; i++)
-			{
-				this->configData = this->configData[topLevel[i]];
+			if (topLevel != nullptr) {
+				for(int i = 0; i < nTopLevel; i++) {
+					this->configData = this->configData[topLevel[i]];
+				}
 			}
 			this->configData = this->configData["NormalDistribution"];
 		}
@@ -77,12 +78,11 @@ namespace cupcfd
 			dataSourceType = this->configData["lbound"];
 
 			// Check the value and return the appropriate ID
-			if(dataSourceType == Json::Value::null)
-			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			if(dataSourceType == Json::Value::null) {
+				*lBound = std::numeric_limits<T>::min();
+				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// Note: This will result in loss of precision if storage type is less than a double
 				*lBound = T(dataSourceType.asDouble());
 				return cupcfd::error::E_SUCCESS;
@@ -101,12 +101,11 @@ namespace cupcfd
 			dataSourceType = this->configData["ubound"];
 
 			// Check the value and return the appropriate ID
-			if(dataSourceType == Json::Value::null)
-			{
-				return cupcfd::error::E_CONFIG_OPT_NOT_FOUND;
+			if(dataSourceType == Json::Value::null) {
+				*uBound = std::numeric_limits<T>::max();
+				return cupcfd::error::E_SUCCESS;
 			}
-			else
-			{
+			else {
 				// Note: This will result in loss of precision if storage type is less than a double
 				*uBound = T(dataSourceType.asDouble());
 				return cupcfd::error::E_SUCCESS;

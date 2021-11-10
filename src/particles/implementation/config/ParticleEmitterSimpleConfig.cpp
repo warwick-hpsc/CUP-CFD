@@ -69,18 +69,18 @@ namespace cupcfd
 		template <class I, class T>
 		ParticleEmitterSimpleConfig<I,T>::~ParticleEmitterSimpleConfig()
 		{
-			free(this->rate);
-			free(this->angleXY);
-			free(this->angleRotation);
-			free(this->speed);
-			free(this->accelerationX);
-			free(this->accelerationY);
-			free(this->accelerationZ);
-			free(this->jerkX);
-			free(this->jerkY);
-			free(this->jerkZ);
-			free(this->decayRate);
-			free(this->decayThreshold);
+			delete this->rate;
+			delete this->angleXY;
+			delete this->angleRotation;
+			delete this->speed;
+			delete this->accelerationX;
+			delete this->accelerationY;
+			delete this->accelerationZ;
+			delete this->jerkX;
+			delete this->jerkY;
+			delete this->jerkZ;
+			delete this->decayRate;
+			delete this->decayThreshold;
 		}
 
 		template <class I, class T>
@@ -152,18 +152,18 @@ namespace cupcfd
 												   accelerationX, accelerationY, accelerationZ,
 												   jerkX, jerkY, jerkZ, decayRate, decayThreshold);
 
-			free(rate);
-			free(angleXY);
-			free(angleRotation);
-			free(speed);
-			free(accelerationX);
-			free(accelerationY);
-			free(accelerationZ);
-			free(jerkX);
-			free(jerkY);
-			free(jerkZ);
-			free(decayRate);
-			free(decayThreshold);
+			delete rate;
+			delete angleXY;
+			delete angleRotation;
+			delete speed;
+			delete accelerationX;
+			delete accelerationY;
+			delete accelerationZ;
+			delete jerkX;
+			delete jerkY;
+			delete jerkZ;
+			delete decayRate;
+			delete decayThreshold;
 
 			return cupcfd::error::E_SUCCESS;
 		}

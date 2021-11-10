@@ -327,7 +327,7 @@ namespace cupcfd
 			bool verbose = false;
 			while(nGlobalTravelParticles > 0) {
 				if (first_pass) {
-					std::cout << "Num travelling particles: global = " << nGlobalTravelParticles << ", local = " << this->getNTravelParticles() << std::endl;
+					TreeTimerLogParameterInt("Particles", this->getNTravelParticles());
 				}
 
 				bool found_particle_to_track = false;

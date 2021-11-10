@@ -22,9 +22,11 @@ namespace cupcfd
 		{
 			template <class I, class T>
 			MeshSourceStructGenConfigJSON<I,T>::MeshSourceStructGenConfigJSON(std::string configFilePath, std::string * topLevel, int nTopLevel) {
-				// Copy the top level strings
-				for(int i = 0; i < nTopLevel; i++) {
-					this->topLevel.push_back(topLevel[i]);
+				if (topLevel != nullptr) {
+					// Copy the top level strings
+					for(int i = 0; i < nTopLevel; i++) {
+						this->topLevel.push_back(topLevel[i]);
+					}
 				}
 				this->topLevel.push_back("MeshSourceStructGen");
 

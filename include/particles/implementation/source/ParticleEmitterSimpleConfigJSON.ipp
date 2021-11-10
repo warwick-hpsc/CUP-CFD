@@ -182,7 +182,7 @@ namespace cupcfd
 				}
 				
 				if(this->configData[fieldName].isMember("UniformDistribution")) {
-					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData[fieldName]["UniformDistribution"]);
+					cupcfd::distributions::DistributionConfigSourceUniformJSON<I,T> test1(this->configData[fieldName]["UniformDistribution"]);
 					return test1.buildDistributionConfig(distConfig);
 				}
 

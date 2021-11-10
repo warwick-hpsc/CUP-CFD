@@ -54,7 +54,7 @@ namespace cupcfd
 			
 			status = this->getStDev(&stDev);
 			CHECK_ECODE(status)
-			
+
 			*distConfig = new DistributionConfigNormal<I,T>(lBound, uBound, mean, stDev);
 			
 			return cupcfd::error::E_SUCCESS;

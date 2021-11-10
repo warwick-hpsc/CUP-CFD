@@ -42,8 +42,8 @@ namespace cupcfd
 				// === Members ===
 
 				/** C++ Library Distribution this class is a wrapper for **/
-				std::normal_distribution<T> * dist;
-				std::default_random_engine * rEngine;
+				std::normal_distribution<T> * dist = nullptr;
+				std::default_random_engine * rEngine = nullptr;
 
 				/** Lower bound for accepted generated values **/
 				T lbound;

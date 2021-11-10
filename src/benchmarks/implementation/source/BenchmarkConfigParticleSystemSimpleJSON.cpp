@@ -139,7 +139,7 @@ namespace cupcfd
 				}
 
 				if(this->configData["DtDistribution"].isMember("UniformDistribution")) {
-					cupcfd::distributions::DistributionConfigSourceNormalJSON<I,T> test1(this->configData["DtDistribution"]["UniformDistribution"]);
+					cupcfd::distributions::DistributionConfigSourceUniformJSON<I,T> test1(this->configData["DtDistribution"]["UniformDistribution"]);
 					status = test1.buildDistributionConfig(&testDist);
 
 					if(status == cupcfd::error::E_SUCCESS) {

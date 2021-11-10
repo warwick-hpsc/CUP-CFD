@@ -30,9 +30,11 @@ namespace cupcfd
 			std::ifstream source(configFilePath, std::ifstream::binary);
 			source >> this->configData;
 
-			for(int i = 0; i < nTopLevel; i++)
-			{
-				this->configData = this->configData[topLevel[i]];
+			if (topLevel != nullptr) {
+				for(int i = 0; i < nTopLevel; i++)
+				{
+					this->configData = this->configData[topLevel[i]];
+				}
 			}
 			this->configData = this->configData["UniformDistribution"];
 		}

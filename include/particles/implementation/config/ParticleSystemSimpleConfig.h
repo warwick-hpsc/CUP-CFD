@@ -58,9 +58,9 @@ namespace cupcfd
 										   ParticleSourceConfig<ParticleSimple<I,T>, I, T> * particleSourceConfig);
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
+				* Constructor.
+				* Copies data from source to this object.
+				*/
 				ParticleSystemSimpleConfig(ParticleSystemSimpleConfig<M,I,T,L>& source);
 
 				/**
@@ -108,7 +108,7 @@ namespace cupcfd
 															std::shared_ptr<M> meshPtr);
 
 			private:
-				int numParticleSourcesOrEmitters;
+				int numParticleSourcesOrEmitters = 0;
 		};
 	}
 }
