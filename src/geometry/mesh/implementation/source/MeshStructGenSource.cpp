@@ -856,7 +856,7 @@ namespace cupcfd
 				}
 				
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
-				I * csrIndices = (I*) malloc(sizeof(I) * nFaceLabels + 1);
+				I * csrIndices = (I*) malloc(sizeof(I) * (nFaceLabels + 1));
 				I * csrData = (I*) malloc(sizeof(I) * nFaceLabels * 4);
 				status = this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
 				CHECK_ECODE(status)
@@ -891,7 +891,7 @@ namespace cupcfd
 				}
 				
 				// Temporary Storage
-				I * csrIndices = (I*) malloc(sizeof(I) * nFaceLabels + 1);
+				I * csrIndices = (I*) malloc(sizeof(I) * (nFaceLabels + 1));
 				I * csrData = (I*) malloc(sizeof(I) * nFaceLabels * 4);
 				I * cell1Labels = (I*) malloc(sizeof(I) * nFaceLabels);
 
@@ -951,7 +951,7 @@ namespace cupcfd
 				}
 				
 				// Retrieve the face vertex labels - since this is a structured grid, we know there should always be 4
-				I * csrIndices = (I*) malloc(sizeof(I) * nFaceLabels + 1);
+				I * csrIndices = (I*) malloc(sizeof(I) * (nFaceLabels + 1));
 				I * csrData = (I*) malloc(sizeof(I) * nFaceLabels * 4);
 				status = this->getFaceVerticesLabelsCSR(csrIndices, nFaceLabels + 1, csrData, nFaceLabels * 4,  faceLabels, nFaceLabels);
 				CHECK_ECODE(status)

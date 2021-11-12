@@ -81,24 +81,25 @@ namespace cupcfd
 			this->decayRate = source.decayRate->clone();
 			this->decayThreshold = source.decayThreshold->clone();
 
-			this->nextParticleID = I(0);
+			this->nextParticleID = source.nextParticleID;
+			this->id = source.id;
 		}
 
 		template <class I, class T>
 		ParticleEmitterSimple<I,T>::~ParticleEmitterSimple()
 		{
-			free(this->rate);
-			free(this->angleXY);
-			free(this->angleRotation);
-			free(this->speed);
-			free(this->accelerationX);
-			free(this->accelerationY);
-			free(this->accelerationZ);
-			free(this->jerkX);
-			free(this->jerkY);
-			free(this->jerkZ);
-			free(this->decayRate);
-			free(this->decayThreshold);
+			delete this->rate;
+			delete this->angleXY;
+			delete this->angleRotation;
+			delete this->speed;
+			delete this->accelerationX;
+			delete this->accelerationY;
+			delete this->accelerationZ;
+			delete this->jerkX;
+			delete this->jerkY;
+			delete this->jerkZ;
+			delete this->decayRate;
+			delete this->decayThreshold;
 		}
 
 		template <class I, class T>

@@ -108,7 +108,7 @@ namespace cupcfd
 															std::shared_ptr<M> meshPtr);
 
 			private:
-				int numParticleSourcesOrEmitters;
+				int numParticleSourcesOrEmitters = 0;
 		};
 	}
 }
