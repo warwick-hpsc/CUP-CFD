@@ -70,16 +70,10 @@ namespace cupcfd
 				I nAdjwgt;
 
 				/** Imbalance tolerance for vertex weights across sub-domains **/
-				real_t * ubvec;
-
-				/** Size of ubvec in number of elements of type real_t **/
-				I nUbvec;
+				std::vector<real_t> ubvec;
 
 				/** Fraction of vertex weight distributed across each subdomain **/
-				real_t * tpwgts;
-
-				/** Size of nTpwgts in number of elements of type real_t **/
-				I nTpwgts;
+				std::vector<real_t> tpwgts;
 
 				// === Partitioner Work Arrays ===
 

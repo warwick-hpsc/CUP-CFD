@@ -41,14 +41,6 @@ namespace cupcfd
 				VectorSourceConfig();
 
 				/**
-				 * Constructor:
-				 * Copy values from source into a new object.
-				 *
-				 * @param source The source object to copy the values from
-				 */
-				VectorSourceConfig(VectorSourceConfig& source);
-
-				/**
 				 * Deconstructor.
 				 */
 				virtual ~VectorSourceConfig();

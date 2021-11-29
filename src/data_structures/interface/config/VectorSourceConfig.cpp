@@ -25,12 +25,6 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		VectorSourceConfig<I,T>::VectorSourceConfig(VectorSourceConfig& source)
-		{
-			*this = source;
-		}
-
-		template <class I, class T>
 		VectorSourceConfig<I,T>::~VectorSourceConfig()
 		{
 			// Nothing to do

@@ -42,14 +42,18 @@ namespace cupcfd
 				public:
 					// === Constructors/Deconstructors ===
 
-					Polygon3D();
+					Polygon3D() = default;
+
+					Polygon3D(const Polygon3D<T,V>& p) = default;
 
 					template<class...Args>
 					Polygon3D(Args...v);
 
-					~Polygon3D();
+					~Polygon3D() = default;
 
 					// === Concrete Methods ===
+
+					Polygon3D<T,V>& operator=(const Polygon3D<T,V>& ) = default;
 
 					/**
 					 * Determine whether the provided point is inside the polygon.

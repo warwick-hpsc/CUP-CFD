@@ -57,6 +57,12 @@ namespace cupcfd
 			// === Concrete Methods ===
 
 			template <class T>
+			void Triangle3D<T>::operator=(const Triangle3D<T>& t) {
+				Triangle<Triangle3D<T>,T,3>::operator=(t);
+				this->triAsPolygon3D = Polygon3D<T,3>(t.vertices[0], t.vertices[1], t.vertices[2]);
+			}
+
+			template <class T>
 			euc::EuclideanVector3D<T> Triangle3D<T>::getNormal() {
 				return this->triAsPolygon3D.getNormal();
 			}

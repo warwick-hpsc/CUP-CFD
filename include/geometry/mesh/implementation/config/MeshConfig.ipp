@@ -80,13 +80,13 @@ namespace cupcfd
 				CHECK_ECODE(status)
 
 				// (2) Build a naive connectivity graph
-				cupcfd::data_structures::DistributedAdjacencyList<I,I> * naiveConnGraph;
-				status = source->buildDistributedAdjacencyList(&naiveConnGraph, comm);
+				cupcfd::data_structures::DistributedAdjacencyList<I,I> naiveConnGraph(comm);
+				status = source->buildDistributedAdjacencyList(naiveConnGraph, comm);
 				CHECK_ECODE(status)
 				
 				// (3) Use the partitioner config to build a partitioner
 				cupcfd::partitioner::PartitionerInterface<I,I> * partitioner;
-				status = this->partConfig->buildPartitioner(&partitioner, *naiveConnGraph);
+				status = this->partConfig->buildPartitioner(&partitioner, naiveConnGraph);
 				CHECK_ECODE(status)
 				
 				// (4) Run the partitioner and store the results
@@ -113,7 +113,6 @@ namespace cupcfd
 				CHECK_ECODE(status)
 				
 				// Cleanup
-				delete naiveConnGraph;
 				delete partitioner;
 				delete source;
 				free(assignedCellLabels);

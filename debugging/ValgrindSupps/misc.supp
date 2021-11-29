@@ -1,0 +1,68 @@
+
+##
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,reachable
+   fun:malloc
+   ...
+   fun:dlopen_doit
+   ...
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,reachable
+   fun:calloc
+   ...
+   fun:dlopen_doit
+   ...
+}
+
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:malloc
+   ...
+   fun:start_thread
+   ...
+}
+
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,reachable
+   fun:malloc
+   ...
+   fun:mca_b*
+   ...
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,reachable
+   fun:calloc
+   ...
+   fun:mca_b*
+   ...
+}
+
+# ?
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,indirect
+   fun:malloc
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+   obj:*
+}

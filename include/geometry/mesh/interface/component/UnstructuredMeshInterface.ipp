@@ -1470,24 +1470,24 @@ namespace cupcfd
 				
 				// (a) Build a new connectivity graph using the allocated cells so we are
 				// aware of the edges and ghost cells that are also needed
-				cupcfd::data_structures::DistributedAdjacencyList<I,I> * partGraph;
+				cupcfd::data_structures::DistributedAdjacencyList<I,I> partGraph(*(this->cellConnGraph->comm));
 				
 				// Reuse the same communicator as the distributed graph, since all members of the comm associated with this
 				// mesh must participate
-				status = data.buildDistributedAdjacencyList(&partGraph, *(this->cellConnGraph->comm), assignedCellLabels, nAssignedCellLabels);
+				status = data.buildDistributedAdjacencyList(partGraph, assignedCellLabels, nAssignedCellLabels);
 				CHECK_ECODE(status)
 
 				//(b) Get the labels of local + ghost cells for this rank
-				I lCells = partGraph->nLONodes;
-				I ghCells = partGraph->nLGhNodes;
+				I lCells = partGraph.nLONodes;
+				I ghCells = partGraph.nLGhNodes;
 				I nCells = lCells + ghCells;
 					
 				if(lCells > 0) {
 					// (c) Get the labels from the partition graph
 					I * cellLabels = (I *) malloc(sizeof(I) * nCells);
-					status = partGraph->getLocalNodes(cellLabels, lCells);
+					status = partGraph.getLocalNodes(cellLabels, lCells);
 					CHECK_ECODE(status)
-					status = partGraph->getGhostNodes(cellLabels + lCells, ghCells);
+					status = partGraph.getGhostNodes(cellLabels + lCells, ghCells);
 					CHECK_ECODE(status)
 
 					// (d) Get the labels of all faces associated with only *local* cells - faces that are between local-> ghost will be caught in this.
@@ -1500,6 +1500,7 @@ namespace cupcfd
 
 					// (dii) Summed number of faces per cell - needed for CSR sizes
 					cupcfd::utility::drivers::sum(nCellFaces, lCells, &nCellFacesSum);
+					free(nCellFaces);
 
 					// d(iii) Get Face Labels for each Cell in CSR Format - this will omit the non-existant faces when the faces per cell is below max faces
 					I * cellFaceLabelInd = (I *) malloc(sizeof(I) * (lCells+1));
@@ -1544,6 +1545,7 @@ namespace cupcfd
 							ptr2++;
 						}
 					}
+					free(faceLabelIsBoundary);
 					
 					// (eii) Get the boundary labels for these faces
 					I nBoundaryLabels = nFaceBoundaries;
@@ -1567,6 +1569,7 @@ namespace cupcfd
 
 					I faceVerticesCountTotal;
 					cupcfd::utility::drivers::sum(faceVerticesCount, nFaceLabelsDistinct, &faceVerticesCountTotal);
+					free(faceVerticesCount);
 
 					// (fii) Get the number of vertices per boundary and sum to get the CSR size
 					I * boundaryVerticesCount = (I *) malloc(sizeof(I) * nBoundaryLabelsDistinct);
@@ -1576,6 +1579,7 @@ namespace cupcfd
 
 					I boundaryVerticesCountTotal;
 					cupcfd::utility::drivers::sum(boundaryVerticesCount, nBoundaryLabelsDistinct, &boundaryVerticesCountTotal);
+					free(boundaryVerticesCount);
 
 					// (fiii) Get the vertex labels for the face and boundary lists - CSR format.
 					// Store the vertices labels in a combined array for both.
@@ -1685,6 +1689,7 @@ namespace cupcfd
 						CHECK_ECODE(status)
 					}
 
+					free(boundaryRegionLabels);
 					free(bDistance);
 					
 					// === Read Cell Data ===
@@ -1852,9 +1857,6 @@ namespace cupcfd
 
 				status = this->finalize();
 				CHECK_ECODE(status)
-
-				// Cleanup any temporary structures/space outside of the mesh
-				delete partGraph;
 
 				return cupcfd::error::E_SUCCESS;
 			}

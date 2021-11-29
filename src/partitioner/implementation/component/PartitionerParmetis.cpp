@@ -24,8 +24,6 @@ namespace cupcfd
 		  nCon(0),
 		  nVwgt(0),
 		  nAdjwgt(0),
-		  nUbvec(0),
-		  nTpwgts(0),
 		  nXAdj(0),
 		  nAdjncy(0),
 		  nVtxdist(0)
@@ -38,8 +36,6 @@ namespace cupcfd
 
 			this->vwgt = nullptr;
 			this->adjwgt = nullptr;
-			this->tpwgts = nullptr;
-			this->ubvec = nullptr;
 
 			this->result = nullptr;
 
@@ -59,10 +55,6 @@ namespace cupcfd
 		  nVwgt(0),
 		  adjwgt(nullptr),
 		  nAdjwgt(0),
-		  ubvec(nullptr),
-		  nUbvec(0),
-		  tpwgts(nullptr),
-		  nTpwgts(0),
 		  xadj(nullptr),
 		  nXAdj(0),
 		  adjncy(nullptr),
@@ -301,22 +293,12 @@ namespace cupcfd
 
 		template <class I, class T>
 		void PartitionerParmetis<I,T>::resetSubdomainWeights() {
-			if(this->tpwgts == nullptr) {
-				free(this->tpwgts);
-			}
-
-			this->tpwgts = nullptr;
-			this->nTpwgts = 0;
+			tpwgts.clear();
 		}
 
 		template <class I, class T>
 		void PartitionerParmetis<I,T>::resetVertexImbalanceWeights() {
-			if(this->ubvec == nullptr) {
-				free(this->ubvec);
-			}
-
-			this->ubvec = nullptr;
-			this->nUbvec = 0;
+			this->ubvec.clear();
 		}
 
 		template <class I, class T>
@@ -344,11 +326,7 @@ namespace cupcfd
 			// Reset the subdomain weights to free memory in case it is already allocated
 			this->resetSubdomainWeights();
 
-			this->nTpwgts = this->nCon * this->nParts;
-			this->tpwgts = (real_t *) malloc(sizeof(real_t) * this->nTpwgts);
-			for(I i = 0; i < this->nTpwgts; i++) {
-				this->tpwgts[i] = 1.0/this->nParts;
-			}
+			this->tpwgts.resize(this->nCon*this->nParts, 1.0/this->nParts);
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -364,11 +342,7 @@ namespace cupcfd
 			// Reset to free memory in case it is already allocated
 			this->resetVertexImbalanceWeights();
 
-			this->nUbvec = this->nCon;
-			this->ubvec = (real_t *) malloc(sizeof(real_t) * this->nUbvec);
-			for(I i = 0; i < this->nUbvec; i++) {
-				this->ubvec[i] = 1.05;
-			}
+			this->ubvec.resize(this->nCon, 1.05);
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -399,11 +373,11 @@ namespace cupcfd
 				return cupcfd::error::E_PARMETIS_INVALID_NPARTS;
 			}
 
-			if(this->tpwgts == nullptr) {
+			if (this->tpwgts.size() == 0) {
 				return cupcfd::error::E_PARMETIS_INVALID_SUBDOMAIN_WEIGHT_ARRAYS;
 			}
 
-			if(this->ubvec == nullptr) {
+			if(this->ubvec.size() == 0) {
 				return cupcfd::error::E_PARMETIS_INVALID_VERTEX_IMBALANCE_WEIGHT_ARRAYS;
 			}
 
@@ -444,8 +418,8 @@ namespace cupcfd
 										   &this->numflag,
 										   &this->nCon,
 										   &this->nParts,
-										   this->tpwgts,
-										   this->ubvec,
+										   this->tpwgts.data(),
+										   this->ubvec.data(),
 										   this->options,
 										   &this->edgecut,
 										   this->result,

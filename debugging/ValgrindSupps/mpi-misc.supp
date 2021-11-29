@@ -1,0 +1,49 @@
+## MPID_Init -> vfprintf -> X
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:vfprintf
+   ...
+   fun:MPID_Init
+}
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:vfprintf
+   ...
+   fun:MPID_Init
+}
+
+## MPID_Init -> fi_getinfo@@FABRIC_1.3 -> X
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:fi_getinfo@@FABRIC_1.3
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   close(fd)
+   ...
+   fun:fi_getinfo@@FABRIC_1.3
+   ...
+   fun:MPID_Init
+   ...
+}
+
+## MPID_Init -> memory leak
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite
+   ...
+   fun:MPID_Init
+   ...
+}
+

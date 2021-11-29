@@ -70,6 +70,8 @@ namespace cupcfd
 
 					// === Concrete Methods ===
 
+					void operator=(const Triangle3D<T>& t);
+
 					/**
 					 * Return normal of triangle, calculating if not known
 					 *

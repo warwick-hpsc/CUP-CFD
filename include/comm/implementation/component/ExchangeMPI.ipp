@@ -41,6 +41,7 @@ namespace cupcfd
 				MPI_Datatype dType;
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
+				#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 				T dummy;
 				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				#pragma GCC diagnostic pop
@@ -120,6 +121,7 @@ namespace cupcfd
 				MPI_Datatype dType;
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
+				#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 				T dummy;
 				status = cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				CHECK_ECODE(status)
@@ -228,6 +230,7 @@ namespace cupcfd
 				MPI_Datatype dType;
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
+				#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 				T dummy;
 				cupcfd::comm::mpi::getMPIType(dummy, &dType);
 				#pragma GCC diagnostic pop

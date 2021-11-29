@@ -31,6 +31,11 @@ namespace cupcfd
 			}
 
 			template <class S, class T, uint N, uint V>
+			Polygon<S,T,N,V>::Polygon(const Polygon<S,T,N,V>& p) {
+				*this = p;
+			}
+
+			template <class S, class T, uint N, uint V>
 			template<class...Args>
 			Polygon<S,T,N,V>::Polygon(Args...v)
 			: vertices{ (v)... }
@@ -47,10 +52,6 @@ namespace cupcfd
 			template <class S, class T, uint N, uint V>
 			Polygon<S,T,N,V>::~Polygon() {
 			}
-
-			// template <class S, class T, uint N, uint V>
-			// Polygon<S,T,N,V>::~Polygon() {
-			// }
 
 			template <class S, class T, uint N, uint V>
 			void Polygon<S,T,N,V>::operator=(const Polygon<S,T,N,V>& source) {

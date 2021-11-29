@@ -1,0 +1,23 @@
+
+# MPI_Win in BenchmarkExchange not being freed, cannot figure out why
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,indirect
+   fun:malloc
+   ...
+   fun:PMPI_Win_create
+   ...
+}
+
+# ?
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite
+   fun:_Znwm
+   ...
+   fun:*cupcfd*distributions*DistributionFixed*clone*
+   ...
+}
+

@@ -26,6 +26,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		SparseMatrixSourceMeshGenConfig<I,T>::SparseMatrixSourceMeshGenConfig(SparseMatrixSourceMeshGenConfig<I,T>& source)
+		: SparseMatrixSourceConfig<I,T>()
 		{
 			*this = source;
 		}

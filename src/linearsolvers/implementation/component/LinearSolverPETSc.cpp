@@ -1065,6 +1065,7 @@ namespace cupcfd
 					}
 
 					// Cleanup
+					delete pattern;
 					free(indices);
 					free(tmpResult);
 					free(dataBuffer);
@@ -1374,6 +1375,7 @@ namespace cupcfd
 					}
 
 					// Cleanup
+					delete pattern;
 					free(indices);
 					free(tmpResult);
 					free(dataBuffer);

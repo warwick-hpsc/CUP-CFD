@@ -1,0 +1,56 @@
+## sqlite3Init
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:sqlite3Init
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:sqlite3Init
+   ...
+}
+
+## sqlite3Step
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:sqlite3Step
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:sqlite3Step
+   ...
+}
+
+
+## sqlite3_backup_step
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:sqlite3_backup_step
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:sqlite3_backup_step
+   ...
+}
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   fun:sqlite3_backup_step
+   ...
+}

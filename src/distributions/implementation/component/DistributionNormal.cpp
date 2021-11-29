@@ -45,6 +45,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		DistributionNormal<I,T>::DistributionNormal(DistributionNormal<I,T>& source)
+		: Distribution<I,T>(source)
 		{
 			this->lbound = source.lbound;
 			this->ubound = source.ubound;

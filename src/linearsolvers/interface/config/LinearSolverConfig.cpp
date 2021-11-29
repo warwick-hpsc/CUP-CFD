@@ -27,12 +27,6 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		LinearSolverConfig<C,I,T>::LinearSolverConfig(const LinearSolverConfig<C,I,T>& source)
-		{
-			*this = source;
-		}
-
-		template <class C, class I, class T>
 		LinearSolverConfig<C,I,T>::~LinearSolverConfig()
 		{
 

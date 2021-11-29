@@ -144,7 +144,7 @@ namespace cupcfd
 				std::map<I, T> globalToNode;
 
 				/** Store the number of graph nodes on a process - only valids after finalizing. **/
-				I * processNodeCounts;
+				std::vector<I> processNodeCounts;
 
 				// === Constructors/Deconstructors ===
 

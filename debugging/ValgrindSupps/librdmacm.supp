@@ -1,0 +1,62 @@
+## MPID_Init -> librdmacm.so -> X
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+   fun:MPID_Init
+   ...
+}
+
+## MPIDI_OFI_mpi_init_hook -> librdmacm.so -> X
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+   fun:MPIDI_OFI_mpi_init_hook
+   ...
+}
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+   fun:MPIDI_OFI_mpi_init_hook
+   ...
+}
+
+## librdmacm.so -> libpthread-2.24.so -> X
+{
+   x
+   Memcheck:Param
+   close(fd)
+   obj:/lib/x86_64-linux-gnu/libpthread-2.24.so
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/librdmacm.so.1.0.0
+   ...
+}
+

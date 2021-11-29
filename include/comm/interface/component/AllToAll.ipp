@@ -215,8 +215,6 @@ namespace cupcfd
 
 				int * sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
 
-				sortIndexes = (int *) malloc(sizeof(int) * nLocalProcessIDs);
-
 				localSendBuffer = cupcfd::utility::drivers::duplicate(sendBuffer, nSendBuffer);
 				localProcessIDs = cupcfd::utility::drivers::duplicate(processIDs, nProcessIDs);
 

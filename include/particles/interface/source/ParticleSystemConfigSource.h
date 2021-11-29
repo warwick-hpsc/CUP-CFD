@@ -47,12 +47,6 @@ namespace cupcfd
 				ParticleSystemConfigSource();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				ParticleSystemConfigSource(ParticleSystemConfigSource<S,E,P,M,I,T,L>& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */

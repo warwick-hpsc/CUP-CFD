@@ -33,7 +33,6 @@ namespace cupcfd
 		DistributedAdjacencyList<I, T>::DistributedAdjacencyList(cupcfd::comm::Communicator& comm) {
 			this->comm = comm.clone();
 
-			this->processNodeCounts = nullptr;
 			this->reset();
 
 			// ToDo: Should put a barrier in here to ensure that every participating process has created the graph.
@@ -46,11 +45,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		DistributedAdjacencyList<I, T>::~DistributedAdjacencyList() {
-			if(this->processNodeCounts != nullptr) {
-				free(this->processNodeCounts);
-			}
-			this->processNodeCounts = nullptr;
-
 			// Vectors will cleanup themselves
 
 			// Clear up dynamically allocated comm
@@ -62,13 +56,10 @@ namespace cupcfd
 			// Clear Data - Note we do not reset the MPI Communicator.
 			// A new object should be created if using a new communicator.
 
-			this->buildGraph = cupcfd::data_structures::AdjacencyListVector<I, T>();
-			this->connGraph = cupcfd::data_structures::AdjacencyListCSR<I, T>();
+			this->buildGraph.reset();
+			this->connGraph.reset();
 
-			if(this->processNodeCounts != nullptr) {
-				free(this->processNodeCounts);
-				this->processNodeCounts = nullptr;
-			}
+			this->processNodeCounts.clear();
 
 			// Reset Variables
 			this->nLONodes = 0;
@@ -81,8 +72,8 @@ namespace cupcfd
 
 			this->finalized = false;
 
-			this->nodeDistType = std::map<T, nodeType>();
-			this->nodeOwner = std::map<T, I>();
+			this->nodeDistType.clear();
+			this->nodeOwner.clear();
 
 			// ToDo: Should some form of blocking barrier here be placed here to enforce consistency across processes?
 		}
@@ -134,10 +125,7 @@ namespace cupcfd
 			this->nodeToGlobal = source.nodeToGlobal;
 			this->globalToNode = source.globalToNode;
 
-			// this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			// status = cupcfd::utility::drivers::copy(source.processNodeCounts, source.comm->size, this->processNodeCounts, this->comm->size);
-			// HARD_CHECK_ECODE(status)
-			this->processNodeCounts = cupcfd::utility::drivers::duplicate(source.processNodeCounts, source.comm->size);
+			this->processNodeCounts = source.processNodeCounts;
 		}
 
 		template <class I, class T>
@@ -377,10 +365,10 @@ namespace cupcfd
 			// a gather/broadcast (will be less efficient since this is all-to-one and then one-to-all
 
 			// this will only be freed on reset/deconstructor
-			this->processNodeCounts = (I *) malloc(sizeof(I) * this->comm->size);
-			status = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts, this->comm->size, 1, 0, *(this->comm));
+			this->processNodeCounts.reserve(this->comm->size);
+			status = cupcfd::comm::Gather(&(this->nLONodes), 1, this->processNodeCounts.data(), this->comm->size, 1, 0, *(this->comm));
 			CHECK_ECODE(status)
-			status = cupcfd::comm::Broadcast(this->processNodeCounts, this->comm->size, 0, *(this->comm));
+			status = cupcfd::comm::Broadcast(this->processNodeCounts.data(), this->comm->size, 0, *(this->comm));
 			CHECK_ECODE(status)
 
 			// Assign global ids to this processes' nodes. Done on a sequential basis across processes
