@@ -30,10 +30,6 @@ namespace cupcfd
 		namespace shapes
 		{
 			template <class T, uint V>
-			Polygon3D<T,V>::Polygon3D() {
-			}
-			
-			template <class T, uint V>
 			template<class...Args>
 			Polygon3D<T,V>::Polygon3D(Args...v)
 			: Polygon<Polygon3D<T,V>,T,3,V>::Polygon( (v)... )
@@ -53,10 +49,6 @@ namespace cupcfd
 				}
 			}
 			
-			template <class T, uint V>
-			Polygon3D<T,V>::~Polygon3D() {
-			}
-
 			template <class T, uint V>
 			T Polygon3D<T,V>::getArea() {
 				if (!this->areaComputed) {

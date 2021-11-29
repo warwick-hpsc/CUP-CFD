@@ -50,6 +50,8 @@ namespace cupcfd
 					 */
 					Quadrilateral3D();
 
+					Quadrilateral3D(const Quadrilateral3D<T>& q) = default;
+
 					/**
 					 * Construct a quadrilateral defined by four points a,b,c and d where edges exist between
 					 * (i) a and b
@@ -75,6 +77,9 @@ namespace cupcfd
 					~Quadrilateral3D();
 
 					// === Inherited Overloaded Methods ===
+
+					// void operator=(const Quadrilateral3D<T>& q);
+					Quadrilateral3D<T>& operator=(const Quadrilateral3D<T>& ) = default;
 
 					/**
 					 * Returns a cloned copy of this object

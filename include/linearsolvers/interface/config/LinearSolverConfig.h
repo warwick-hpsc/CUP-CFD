@@ -41,11 +41,6 @@ namespace cupcfd
 				/**
 				 *
 				 */
-				LinearSolverConfig(const LinearSolverConfig<C,I,T>& source);
-
-				/**
-				 *
-				 */
 				virtual ~LinearSolverConfig();
 
 				// === Methods ===

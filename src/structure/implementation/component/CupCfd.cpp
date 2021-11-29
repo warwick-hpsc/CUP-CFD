@@ -126,11 +126,11 @@ namespace cupcfd
 						else {
 							status = exchangeBench->runBenchmark();
 							HARD_CHECK_ECODE(status)
-							delete(exchangeBench);
 						}
-
-						delete(exchangeBenchConfig);
+						delete(exchangeBench);
 					}
+
+					delete(exchangeBenchConfig);
 				}
 
 				// === Linear Solver Benchmarks ===

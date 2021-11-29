@@ -43,12 +43,6 @@ namespace cupcfd
 				Distribution();
 
 				/**
-				 * Copy Constructor
-				 *
-				 */
-				Distribution(Distribution<I,T>& source);
-
-				/**
 				 * Deconstructor
 				 */
 				virtual ~Distribution();

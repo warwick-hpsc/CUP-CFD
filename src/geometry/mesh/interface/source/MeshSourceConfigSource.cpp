@@ -25,12 +25,6 @@ namespace cupcfd
 			}
 
 			template <class I, class T, class L>
-			MeshSourceConfigSource<I,T,L>::MeshSourceConfigSource(MeshSourceConfigSource<I,T,L>& source)
-			{
-				*this = source;
-			}
-
-			template <class I, class T, class L>
 			MeshSourceConfigSource<I,T,L>::~MeshSourceConfigSource()
 			{
 

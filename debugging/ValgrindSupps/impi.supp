@@ -1,0 +1,200 @@
+## PMPI_Init -> libmpi.so -> X
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+   ...
+   fun:PMPI_Init
+   ...
+}
+
+## MPID_Init -> libpsm3-fi.so -> X
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   fcntl(fd)
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Init
+   ...
+}
+
+## MPID_Finalize -> libpsm3-fi.so -> X
+{
+   x
+   Memcheck:Addr1
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Finalize
+   ...
+}
+{
+   x
+   Memcheck:Param
+   munmap(length)
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Finalize
+   ...
+}
+{
+   x
+   Memcheck:Param
+   close(fd)
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   fun:MPID_Finalize
+   ...
+}
+
+## MPID_Wait -> libmpi.so -> X
+{
+  x
+  Memcheck:Cond
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+  fun:MPID_Wait
+  ...
+}
+
+## PMPI_Bcast -> libmpi.so -> X
+{
+  x
+  Memcheck:Cond
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+  fun:PMPI_Bcast
+  ...
+}
+
+## Concerned that these errors are being detected before/without entering libmpi.so
+## Might be CUP-CFD bugs.
+## PMPI_Comm_dup -> X
+{
+  x
+  Memcheck:Cond
+  ...
+  fun:PMPI_Comm_dup
+  ...
+}
+
+## PMPI_Alltoallv -> X
+{
+  x
+  Memcheck:Cond
+  ...
+  fun:PMPI_Alltoallv
+  ...
+}
+
+## PMPI_Iprobe -> libmpi.so -> X
+{
+  x
+  Memcheck:Value8
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+  fun:PMPI_Iprobe
+  ...
+}
+{
+  x
+  Memcheck:Cond
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+  fun:PMPI_Iprobe
+  ...
+}
+
+
+## Fuck it, whitelist libmpi.so entirely
+{
+  x
+  Memcheck:Cond
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+}
+{
+  x
+  Memcheck:Value8
+  ...
+  obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+  ...
+}
+
+## libmpi.so -> libpsm3-fi.so -> X
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+   ...
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/lib/release/libmpi.so.12.0.0
+   ...
+}
+
+## libpsm3-fi.so -> *.so -> X
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   obj:/lib/x86_64-linux-gnu/libpthread-2.24.so
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+}
+{
+   x
+   Memcheck:Param
+   poll(ufds.fd)
+   ...
+   obj:/lib/x86_64-linux-gnu/libc-2.24.so
+   ...
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+}
+
+## X -> libpsm3-fi.so
+{
+   x
+   Memcheck:Cond
+   obj:/opt/intel/oneapi/2021.3/mpi/2021.3.0/libfabric/lib/prov/libpsm3-fi.so
+   ...
+}

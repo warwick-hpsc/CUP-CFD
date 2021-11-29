@@ -41,12 +41,6 @@ namespace cupcfd
 					MeshSourceConfigSource();
 
 					/**
-					 * Constructor.
-					 * Copies data from source to this object.
-					 */
-					MeshSourceConfigSource(MeshSourceConfigSource<I,T,L>& source);
-
-					/**
 					 * Deconstructor.
 					 * Currently does nothing.
 					 */

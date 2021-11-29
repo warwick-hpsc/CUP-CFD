@@ -59,6 +59,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		ParticleSimple<I,T>::ParticleSimple(const ParticleSimple<I,T>& source)
+		: Particle<ParticleSimple<I,T>,I,T>()
 		{
 			// Passthrough to copy operator
 			*this = source;

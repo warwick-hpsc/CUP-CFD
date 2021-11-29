@@ -1,0 +1,29 @@
+
+##
+{
+   x
+   Memcheck:Param
+   writev(vector[...])
+   ...
+   fun:writev
+   ...
+   fun:start_thread
+   ...
+}
+
+
+## std::map find errors
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:*_Hashtable*_find_node*
+   ...
+}
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:*_Hashtable*_find_node*
+   ...
+}

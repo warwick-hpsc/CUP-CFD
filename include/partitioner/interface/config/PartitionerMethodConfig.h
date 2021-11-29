@@ -43,12 +43,6 @@ namespace cupcfd
 				PartitionerMethodConfig();
 
 				/**
-				 * Constructor.
-				 * Copies data from source to this object.
-				 */
-				PartitionerMethodConfig(PartitionerMethodConfig& source);
-
-				/**
 				 * Deconstructor.
 				 * Currently does nothing.
 				 */

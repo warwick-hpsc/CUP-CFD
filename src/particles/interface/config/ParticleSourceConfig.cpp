@@ -26,12 +26,6 @@ namespace cupcfd
 		}
 
 		template <class P, class I, class T>
-		ParticleSourceConfig<P,I,T>::ParticleSourceConfig(ParticleSourceConfig& source)
-		{
-			*this = source;
-		}
-
-		template <class P, class I, class T>
 		ParticleSourceConfig<P,I,T>::~ParticleSourceConfig()
 		{
 			// Nothing to do

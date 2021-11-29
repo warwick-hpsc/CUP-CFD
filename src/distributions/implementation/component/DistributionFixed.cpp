@@ -30,6 +30,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		DistributionFixed<I,T>::DistributionFixed(DistributionFixed<I,T>& source)
+		: Distribution<I,T>(source)
 		{
 			this->fixedValue = source.fixedValue;
 		}
@@ -53,7 +54,6 @@ namespace cupcfd
 
 		template <class I, class T>
 		DistributionFixed<I,T> * DistributionFixed<I,T>::clone() {
-			// Pure Virtual - Shouldn't be used
 			return new DistributionFixed(*this);
 		}
 	}

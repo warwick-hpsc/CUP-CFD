@@ -40,14 +40,6 @@ namespace cupcfd
 				ParticleSourceConfig();
 
 				/**
-				 * Constructor:
-				 * Copy values from source into a new object.
-				 *
-				 * @param source The source object to copy the values from
-				 */
-				ParticleSourceConfig(ParticleSourceConfig& source);
-
-				/**
 				 * Deconstructor.
 				 */
 				virtual ~ParticleSourceConfig();

@@ -19,13 +19,14 @@ namespace cupcfd
 	{
 		template <class I, class T>
 		VectorSourceFileConfigJSON<I,T>::VectorSourceFileConfigJSON(Json::Value& parseJSON)
-		:VectorSourceConfigSource<I,T>()
+		: VectorSourceConfigSource<I,T>()
 		{
 			this->configData = parseJSON;
 		}
 
 		template <class I, class T>
 		VectorSourceFileConfigJSON<I,T>::VectorSourceFileConfigJSON(const VectorSourceFileConfigJSON<I,T>& source)
+		: VectorSourceConfigSource<I,T>()
 		{
 			*this = source;
 		}

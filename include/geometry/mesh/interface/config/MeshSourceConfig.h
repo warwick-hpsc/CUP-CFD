@@ -45,11 +45,6 @@ namespace cupcfd
 					/**
 					 *
 					 */
-					MeshSourceConfig(MeshSourceConfig<I,T,L>& source);
-
-					/**
-					 *
-					 */
 					virtual ~MeshSourceConfig();
 
 					// === Pure Virtual Methods ===

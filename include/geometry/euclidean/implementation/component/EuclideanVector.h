@@ -69,6 +69,11 @@ namespace cupcfd
 					EuclideanVector(T scalar);
 
 					/**
+					 * Copy constructor. Sets all vector values to the scalar.
+					 */
+					EuclideanVector(const EuclideanVector& v);
+
+					/**
 					 * Constructor. Sets the components to matching values of the provided params
 					 *
 					 * @param src A list of parameters to initialise the vector components
