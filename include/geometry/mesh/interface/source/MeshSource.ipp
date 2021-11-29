@@ -20,9 +20,8 @@ namespace cupcfd
 		namespace mesh
 		{
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
-																					cupcfd::comm::Communicator& comm,
-																					L * cellLabels, I nCellLabels)
+			cupcfd::error::eCodes MeshSource<I,T,L>::buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I>& graph,
+																		L * cellLabels, I nCellLabels)
 			{
 				// This function builds a connectivity graph.
 				// The cell labels provided are the ones allocated to this process rank.
@@ -36,7 +35,7 @@ namespace cupcfd
 				// In this case, the number of cells we are interested in is the portion stated by nCellLabels
 				I cellCount = nCellLabels;
 
-				*graph = new cupcfd::data_structures::DistributedAdjacencyList<I,I>(comm);
+				graph.reset();
 
 				// Only add cells if the number is greater than 0
 				if(cellCount > 0) {
@@ -93,7 +92,7 @@ namespace cupcfd
 
 					// Add Local Nodes
 					for(I i = 0; i < cellCount; i++) {
-						status = (*graph)->addLocalNode(sortedCellLabels[i]);
+						status = graph.addLocalNode(sortedCellLabels[i]);
 						CHECK_ECODE(status)
 					}
 
@@ -114,7 +113,7 @@ namespace cupcfd
 							// If a node/cell is missing (i.e. not added as a local), the functionality of this method
 							// will add the node as a ghost node.
 							// ToDo: If this changes in the future we will need to revisit this.
-							status = (*graph)->addUndirectedEdge(faceCell1[i], faceCell2[i]);
+							status = graph.addUndirectedEdge(faceCell1[i], faceCell2[i]);
 							if (status == cupcfd::error::E_SUCCESS || status == cupcfd::error::E_ADJACENCY_LIST_EDGE_EXISTS) {
 								continue;
 							} else {
@@ -124,6 +123,7 @@ namespace cupcfd
 					}
 
 					// Free up remaining temporary storage
+					free(sortedCellLabels);
 					free(faceCell1);
 					free(faceCell2);
 					free(faceIsBoundary);
@@ -132,15 +132,15 @@ namespace cupcfd
 				}
 
 				// Finalize the Distributed Adjacency Graph so everyone is aware of their neighbours
-				status = (*graph)->finalize();
+				status = graph.finalize();
 				CHECK_ECODE(status)
 
 				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T, class L>
-			cupcfd::error::eCodes MeshSource<I,T,L>::buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
-																					cupcfd::comm::Communicator& comm)
+			cupcfd::error::eCodes MeshSource<I,T,L>::buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I>& graph,
+			 												cupcfd::comm::Communicator& comm)
 			{
 				cupcfd::error::eCodes status;
 
@@ -188,7 +188,7 @@ namespace cupcfd
 				CHECK_ECODE(status)
 
 				// Build the connectivity graph using the cell allocation built above
-				status = this->buildDistributedAdjacencyList(graph, comm, cellLabels, nLCells);
+				status = this->buildDistributedAdjacencyList(graph, cellLabels, nLCells);
 				CHECK_ECODE(status)
 
 				free(naiveLocalCells);

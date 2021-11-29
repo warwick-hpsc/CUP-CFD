@@ -28,14 +28,14 @@ namespace cupcfd
 				T * winData;
 				int nWinData;
 
-				MPI_Info info;
-				MPI_Win win;	// The MPI Window for receiving data
+				MPI_Info info = MPI_INFO_NULL;
+				MPI_Win win = MPI_WIN_NULL;	// The MPI Window for receiving data
 
 				/** MPI Groups for sending processes **/
-				MPI_Group sendGroup;
+				MPI_Group sendGroup = MPI_GROUP_EMPTY;
 
 				/** MPI Groups for receiving processes **/
-				MPI_Group recvGroup;
+				MPI_Group recvGroup = MPI_GROUP_EMPTY;
 
 				/** Size of sendBuffer in number of elements of type T **/
 				int nSendBuffer;

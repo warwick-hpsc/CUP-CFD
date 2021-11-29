@@ -314,6 +314,7 @@ namespace cupcfd
 
 					cellVol[i] = cellShape.getVolume();
 				}
+				free(centers);
 
 				return cupcfd::error::E_SUCCESS;
 			}

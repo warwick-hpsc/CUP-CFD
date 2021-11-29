@@ -1,0 +1,51 @@
+##
+{
+	x
+	Memcheck:Param
+	writev(vector[...])
+	...
+	fun:writev
+	...
+	fun:start_thread
+	...
+	fun:main
+}
+
+## ompi_mpi_init
+{
+   x
+   Memcheck:Cond
+   ...
+   fun:ompi_mpi_init
+   ...
+	fun:main
+}
+{
+   x
+   Memcheck:Value8
+   ...
+   fun:ompi_mpi_init
+   ...
+	fun:main
+}
+
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: definite,indirect,reachable
+   fun:malloc
+   ...
+   fun:ompi_mpi_init
+   ...
+   fun:main
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: indirect,definite,possible
+   fun:calloc
+   ...
+   fun:ompi_mpi_init
+   ...
+   fun:main
+}

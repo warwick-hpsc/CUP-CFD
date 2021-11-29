@@ -50,6 +50,8 @@ namespace cupcfd
 
 					Polygon();
 
+					Polygon(const Polygon<S,T,N,V>& p);
+
 					template<class...Args>
 					Polygon(Args...v);
 

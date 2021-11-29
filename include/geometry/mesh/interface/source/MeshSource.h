@@ -650,9 +650,8 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
-																		cupcfd::comm::Communicator& comm,
-																		L * cellLabels, I nCellLabels);
+					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I>& graph,
+																		L *cellLabels, I nCellLabels);
 
 					/**
 					 * Build a Distributed Adjacency List Connectivity Graph from a Mesh Source
@@ -690,7 +689,7 @@ namespace cupcfd
 					 * @retval cupcfd::error::E_SUCCESS The method completed successfully
 					 */
 					__attribute__((warn_unused_result))
-					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I> ** graph,
+					cupcfd::error::eCodes buildDistributedAdjacencyList(cupcfd::data_structures::DistributedAdjacencyList<I,I>& graph,
 																		cupcfd::comm::Communicator& comm);
 			};
 		}

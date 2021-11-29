@@ -44,7 +44,7 @@ namespace cupcfd
 				// Polygon centroid is area-weighted average of triangles centroids:
 				euc::EuclideanPoint<T,3> centroid(T(0), T(0), T(0));
 				T area = this->getArea();
-				for (int i2=2; i2<V; i2++) {
+				for (uint i2=2; i2<V; i2++) {
 					const uint i1=i2-1;
 					Triangle3D<T> tri(this->vertices[0], this->vertices[i1], this->vertices[i2]);
 					centroid = centroid + (tri.getCentroid() * tri.getArea());

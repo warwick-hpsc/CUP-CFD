@@ -41,7 +41,7 @@ namespace cupcfd
 		template <class I, class T>
 		PartitionerParmetisConfig<I,T> * PartitionerParmetisConfig<I,T>::clone()
 		{
-			return new PartitionerParmetisConfig(*this);
+			return new PartitionerParmetisConfig();
 		}
 
 		template <class I, class T>

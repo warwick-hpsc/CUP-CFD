@@ -459,14 +459,6 @@ namespace cupcfd
 			cupcfd::error::eCodes intersectCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
 				cupcfd::error::eCodes status;
 
-				// If not sorted, make a copy and use that
-				bool source1Sorted;
-				bool source2Sorted;
-				*count = 0;
-
-				source1Sorted = cupcfd::utility::drivers::is_sorted(source1, nSource1);
-				source2Sorted = cupcfd::utility::drivers::is_sorted(source2, nSource2);
-
 				T * source1Ptr;
 				I nSource1Ptr;
 
@@ -493,6 +485,12 @@ namespace cupcfd
 
 			template <class I, class T>
 			cupcfd::error::eCodes intersectArray(T * source1, I nSource1, T * source2, I nSource2, T ** result, I * nResult) {
+				if (nSource1 == 0 || nSource2 == 0) {
+					*nResult = 0;
+					*result = nullptr;
+					return cupcfd::error::E_SUCCESS;
+				}
+
 				cupcfd::error::eCodes status;
 
 				bool sorted1;

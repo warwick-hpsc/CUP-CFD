@@ -219,6 +219,8 @@ int main (int argc, char ** argv)
 		// be moved out to get input from a generic 'source' structure.
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
+
+		delete meshConfig;
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINIAOS) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -266,6 +268,8 @@ int main (int argc, char ** argv)
 		// be moved out to get input from a generic 'source' structure.
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr);
+
+		delete meshConfig;
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -313,6 +317,8 @@ int main (int argc, char ** argv)
 		// be moved out to get input from a generic 'source' structure.
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr);
+
+		delete meshConfig;
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -360,6 +366,8 @@ int main (int argc, char ** argv)
 		// be moved out to get input from a generic 'source' structure.
 
 		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>,int,float,int> run(configPath, meshPtr);
+
+		delete meshConfig;
 	}
 
 	// Deregister the Custom MPI Types

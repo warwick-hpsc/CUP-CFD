@@ -32,6 +32,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		DistributionUniform<I,T>::DistributionUniform(DistributionUniform<I,T>& source)
+		: Distribution<I,T>(source)
 		{
 			this->dist = source.dist;
 			this->rEngine = source.rEngine;

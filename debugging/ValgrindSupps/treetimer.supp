@@ -1,0 +1,18 @@
+
+##
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: indirect
+   ...
+   fun:TreeTimer*
+   ...
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: indirect,definite
+   ...
+   fun:*treetimer*
+   ...
+}

@@ -1,0 +1,39 @@
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:dlopen@@GLIBC_2.2.5
+   obj:/usr/lib/x86_64-linux-gnu/libibverbs.so.1.5.22.1
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   ...
+   fun:dlopen@@GLIBC_2.2.5
+   obj:/usr/lib/x86_64-linux-gnu/libibverbs.so.1.5.22.1
+   obj:/usr/lib/x86_64-linux-gnu/libibverbs.so.1.5.22.1
+}
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   ...
+   fun:dlopen@@GLIBC_2.2.5
+   obj:/usr/lib/x86_64-linux-gnu/libibverbs.so.1.5.22.1
+   obj:/usr/lib/x86_64-linux-gnu/libibverbs.so.1.5.22.1
+}
+
+{
+   x
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:calloc
+   ...
+   fun:__gmon_start__
+   obj:/lib/x86_64-linux-gnu/librt-2.28.so
+}

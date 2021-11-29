@@ -28,6 +28,7 @@ namespace cupcfd
 
 		template <class I, class T>
 		VectorSourceFileConfig<I,T>::VectorSourceFileConfig(VectorSourceFileConfig<I,T>& source)
+		: VectorSourceConfig<I,T>()
 		{
 			*this = source;
 		}

@@ -1,0 +1,72 @@
+
+{
+   x
+   Memcheck:Value8
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Cond
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   mmap(offset)
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   mmap(length)
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   munmap(length)
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPID_Init
+   ...
+}
+
+
+{
+   x
+   Memcheck:Param
+   write(buf)
+   ...
+   obj:/usr/lib/libibverbs/libipathverbs-rdmav2.so
+   ...
+   fun:MPIDI_OFI_mpi_init_hook
+   ...
+}
+

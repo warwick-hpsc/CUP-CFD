@@ -54,6 +54,16 @@ namespace cupcfd
 			}
 
 			template <class T, unsigned int N>
+			EuclideanVector<T,N>::EuclideanVector(const EuclideanVector& v)
+			: CustomMPIType()
+			{
+				for(uint i = 0; i < N; i++)
+				{
+					this->cmp[i] = v.cmp[i];
+				}
+			}
+
+			template <class T, unsigned int N>
 			template <class...Args>
 			EuclideanVector<T,N>::EuclideanVector(Args...src)
 			: CustomMPIType(),

@@ -31,6 +31,7 @@ namespace cupcfd
 				// Get the datatype based on the type of the dummy variable
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
+				#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 				T dummy;
 				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
 				#pragma GCC diagnostic pop
@@ -85,6 +86,7 @@ namespace cupcfd
 				// Get the datatype based on the type of the dummy variable
 				#pragma GCC diagnostic push
 				#pragma GCC diagnostic ignored "-Wuninitialized"
+				#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 				T dummy;
 				cupcfd::comm::mpi::getMPIType(dummy, &dTypeSend);
 				#pragma GCC diagnostic pop

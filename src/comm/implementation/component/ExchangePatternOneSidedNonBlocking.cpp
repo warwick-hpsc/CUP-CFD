@@ -53,6 +53,23 @@ namespace cupcfd
 			if(this->targetDispls != nullptr) {
 				free(this->targetDispls);
 			}
+
+			if (this->info != MPI_INFO_NULL) {
+				MPI_Info_free(&this->info);
+			}
+			if (this->win != MPI_WIN_NULL) {
+				MPI_Win_fence(0, this->win);
+				MPI_Win_free(&this->win);
+			}
+			if (this->winData != nullptr) {
+				free(this->winData);
+			}
+			if (this->sendGroup != MPI_GROUP_EMPTY) {
+				MPI_Group_free(&this->sendGroup);
+			}
+			if (this->recvGroup != MPI_GROUP_EMPTY) {
+				MPI_Group_free(&this->recvGroup);
+			}
 		}
 
 		template <class T>
@@ -152,6 +169,7 @@ namespace cupcfd
 			MPI_Comm_group(this->comm.comm, &tmpGroup);
 			MPI_Group_incl(tmpGroup, this->nSProc, this->sProc, &this->sendGroup);
 			MPI_Group_incl(tmpGroup, this->nRProc, this->rProc, &this->recvGroup);
+			MPI_Group_free(&tmpGroup);
 
 			return cupcfd::error::E_SUCCESS;
 		}
@@ -215,6 +233,7 @@ namespace cupcfd
 			MPI_Datatype dType;
 			#pragma GCC diagnostic push
 			#pragma GCC diagnostic ignored "-Wuninitialized"
+			#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 			T dummy;
 			cupcfd::comm::mpi::getMPIType(dummy, &dType);
 			#pragma GCC diagnostic pop

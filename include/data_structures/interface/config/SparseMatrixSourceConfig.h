@@ -41,14 +41,6 @@ namespace cupcfd
 				SparseMatrixSourceConfig();
 
 				/**
-				 * Constructor:
-				 * Copy values from source into a new object.
-				 *
-				 * @param source The source object to copy the values from
-				 */
-				SparseMatrixSourceConfig(SparseMatrixSourceConfig& source);
-
-				/**
 				 * Deconstructor.
 				 */
 				virtual ~SparseMatrixSourceConfig();
