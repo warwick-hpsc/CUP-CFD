@@ -78,7 +78,9 @@ namespace cupcfd
 				__attribute__((warn_unused_result))
 				inline cupcfd::error::eCodes addParticle(const ParticleSimple<I,T>& particle);
 				__attribute__((warn_unused_result))
-				inline cupcfd::error::eCodes setParticleInactive(I particleID);
+				inline cupcfd::error::eCodes setParticleInactive(I particleIndex);
+				__attribute__((warn_unused_result))
+				cupcfd::error::eCodes deactivateDecayedParticles();
 				__attribute__((warn_unused_result))
 				cupcfd::error::eCodes removeInactiveParticles();
 

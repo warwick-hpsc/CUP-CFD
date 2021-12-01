@@ -41,6 +41,7 @@ namespace cupcfd
 			this->lastCellGlobalID = source.lastCellGlobalID;
 			this->lastLastCellGlobalID = source.lastLastCellGlobalID;
 			this->particleID = source.particleID;
+			this->inactive = source.inactive;
 			this->rank = source.rank;
 			this->lastRank = source.lastRank;
 			this->travelDt = source.travelDt;
@@ -94,16 +95,12 @@ namespace cupcfd
 		
 		template <class I, class T>
 		inline void ParticleSimple<I,T>::setInactive() {
-			this->decayLevel = T(0);
+			this->inactive = true;
 		}
 		
 		template <class I, class T>
 		inline bool ParticleSimple<I,T>::getInactive() const {
-			if(this->decayLevel > T(0)) {
-				return false;
-			}
-			
-			return true;
+			return this->inactive;
 		}
 
 		template <class I, class T>
@@ -129,7 +126,8 @@ namespace cupcfd
 		cupcfd::error::eCodes ParticleSimple<I,T>::updateStateAtomic(
 			cupcfd::geometry::mesh::UnstructuredMeshInterface<M,I,T,L>& mesh __attribute__((unused)), 
 			I cellLocalID __attribute__((unused)), 
-			T dt __attribute__((unused))) {
+			T dt) {
+			this->decayLevel -= this->decayRate * dt;
 			return cupcfd::error::E_SUCCESS;
 		}														    
 
@@ -298,7 +296,7 @@ namespace cupcfd
 			cupcfd::error::eCodes status;
 			int mpiErr;
 
-			const int nb = 14;
+			const int nb = 15;
 
 			// Keep as blocks of size 1 incase of compiler rearranging members
 			int blocklengths[nb];
@@ -353,6 +351,12 @@ namespace cupcfd
 			cupcfd::comm::mpi::getMPIType(this->particleID, &componentType);
 			structTypes[idx] = componentType;
 			displ[idx] = (MPI_Aint) ( (char*)&(this->particleID) - (char*)this );
+			idx++;
+			
+			// inactive?
+			cupcfd::comm::mpi::getMPIType(this->inactive, &componentType);
+			structTypes[idx] = componentType;
+			displ[idx] = (MPI_Aint) ( (char*)&(this->inactive) - (char*)this );
 			idx++;
 
 			// Cell global ID

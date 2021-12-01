@@ -83,19 +83,35 @@ namespace cupcfd
 		}
 		
 		template <class M, class I, class T, class L>
-		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setParticleInactive(I particleID) {
-			// particleID for this scheme is the index in the vector
+		inline cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::setParticleInactive(I particleIndex) {
+			// particleIndex for this scheme is the index in the vector
 			
 			// Check particle is not already inactive
-			if(!(this->particles[particleID].getInactive())) {
-				this->particles[particleID].setInactive();
+			if(!(DBG_SAFE_VECTOR_LOOKUP(this->particles,particleIndex).getInactive())) {
+				DBG_SAFE_VECTOR_LOOKUP(this->particles,particleIndex).setInactive();
 
 				this->nActiveParticles = this->nActiveParticles - 1;
 				
 				// If it had a travel time, it would also have been counted as a travelling particle,
 				// so reduce this counter also
-				if(this->particles[particleID].getTravelTime() > T(0)) {
+				if(DBG_SAFE_VECTOR_LOOKUP(this->particles,particleIndex).getTravelTime() > T(0)) {
 					this->nTravelParticles = this->nTravelParticles - 1;
+				}
+			}
+
+			return cupcfd::error::E_SUCCESS;
+		}
+
+		template <class M, class I, class T, class L>
+		cupcfd::error::eCodes ParticleSystemSimple<M,I,T,L>::deactivateDecayedParticles() {
+			// A decayed particle cannot mark itself inactive, the system needs to know this state change, 
+			// so also needs to perform the state change.
+			cupcfd::error::eCodes status;
+			I loopCount = this->getNParticles();
+			for (I i=0; i<loopCount; i++) {
+				if (DBG_SAFE_VECTOR_LOOKUP(this->particles,i).decayLevel <= T(0.0)) {
+					status = this->setParticleInactive(i);
+					CHECK_ECODE(status)
 				}
 			}
 
@@ -367,6 +383,9 @@ namespace cupcfd
 				// Particles that do not have to go off-node, but have travel time remaining, should be separated from those that have
 				// no move travel time to speed up subsequent atomic steps in updating the system state (since those with no further travel
 				// time should be skipped)
+
+				status = this->deactivateDecayedParticles();
+				CHECK_ECODE(status)
 				
 				// Remove Dead Particles (They have no further effect on the system and we don't want to exchange dead particles)
 				status = this->removeInactiveParticles();

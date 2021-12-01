@@ -71,6 +71,8 @@ namespace cupcfd
 				 */
 				cupcfd::geometry::euclidean::EuclideanVector<T,3> jerk;
 
+				bool inactive;
+
 				/**
 				 * 'Decay' Level
 				 * Means by which we can let a particle decay and disappear from the system.
