@@ -17,7 +17,7 @@
 #include "tt_interface_c.h"
 
 #include <cstdlib>
-
+#include "src/structures.h"
 #include <iostream>
 
 namespace cupcfd
@@ -55,7 +55,7 @@ namespace cupcfd
 		}
 
 		template <class C, class I, class T>
-		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark(int testvar) {
+		cupcfd::error::eCodes BenchmarkLinearSolver<C,I,T>::runBenchmark(MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[]) {
 			cupcfd::error::eCodes status;
 
 			// Get the non-zero rows assigned to this rank

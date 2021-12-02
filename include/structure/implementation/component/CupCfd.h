@@ -19,6 +19,7 @@
 
 #include "Benchmark.h"
 #include "mpi.h"
+#include "src/structures.h"
 
 namespace cupcfd
 {
@@ -40,8 +41,11 @@ namespace cupcfd
 			/** Benchmarks to Run **/
 			std::vector<cupcfd::benchmark::Benchmark<I,T> *> benchmarks;
 
-			MPI_Fint custom;
-			int testvar;
+			//MPI_Fint custom;
+			//struct unit units[1];
+			//struct locators relative_positions[1];
+			//int instance_number;
+
 			// === Constructors/Deconstructors ===
 
 			/**
@@ -56,7 +60,7 @@ namespace cupcfd
 			 *
 			 * @param jsonFilePath Path to JSON Configuration File
 			 */
-			CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr, int testvar, MPI_Fint custom);
+			CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr, MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[]);
 
 			/**
 			 *

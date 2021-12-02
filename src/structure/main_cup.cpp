@@ -63,15 +63,13 @@
 #include "EuclideanPoint.h"
 #include "EuclideanVector.h"
 #include "ParticleSimple.h"
-
+#include "src/structures.h"
 
 namespace mesh = cupcfd::geometry::mesh;
 
-int main_cup (int argc, char ** argv, MPI_Fint custom)
+int main_cup (int argc, char** argv, MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[])
 {
-	printf("Get here 1");
 	cupcfd::error::eCodes status;
-	printf("Get here 2");
 	// Add ifdef for petsc?
 	PETSC_COMM_WORLD=MPI_Comm_f2c(custom);
 	PetscInitialize(&argc, &argv, NULL, NULL);
@@ -222,7 +220,7 @@ int main_cup (int argc, char ** argv, MPI_Fint custom)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr, testvar, custom);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,double,int>,int,double,int> run(configPath, meshPtr, custom, instance_number, units, relative_positions);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINIAOS) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -270,7 +268,7 @@ int main_cup (int argc, char ** argv, MPI_Fint custom)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr, testvar, custom);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdAoSMesh<int,float,int>,int,float,int> run(configPath, meshPtr, custom, instance_number, units, relative_positions);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_DOUBLE && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -318,7 +316,7 @@ int main_cup (int argc, char ** argv, MPI_Fint custom)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr, testvar, custom);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,double,int>,int,double,int> run(configPath, meshPtr, custom, instance_number, units, relative_positions);
 	}
 	else if(iData == cupcfd::INT_DATATYPE_INT && fData == cupcfd::FLOAT_DATATYPE_FLOAT && mData == cupcfd::MESH_DATATYPE_MINISOA) {
 		// Mesh is reused across multiple components, so it is loaded as its own configuration step
@@ -366,7 +364,7 @@ int main_cup (int argc, char ** argv, MPI_Fint custom)
 		// ToDo: For now, it is hard-coded to read from a JSON file (by passing the path), but it should technically
 		// be moved out to get input from a generic 'source' structure.
 
-		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>,int,float,int> run(configPath, meshPtr, testvar, custom);
+		cupcfd::CupCfd<cupcfd::geometry::mesh::CupCfdSoAMesh<int,float,int>,int,float,int> run(configPath, meshPtr, custom, instance_number, units, relative_positions);
 	}
 
 	// Deregister the Custom MPI Types
@@ -404,7 +402,6 @@ int main_cup (int argc, char ** argv, MPI_Fint custom)
 		std::cout << "GET TO HERE?\n";
 	}
 	TreeTimerFinalize(); // TODO: Not a clean finalization - need to add multiple comms support to treetimer at some point
-
 	if(comm.rank == 0) {
 		std::cout << "cup-cfd has completed" << std::endl;
 	}

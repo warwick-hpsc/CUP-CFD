@@ -14,6 +14,7 @@
 
 #include "tt_interface_c.h"
 #include <cstdlib>
+#include "src/structures.h"
 
 namespace cupcfd
 {
@@ -49,7 +50,7 @@ namespace cupcfd
 		}
 
 		template <class I, class T>
-		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark(int testvar) {
+		cupcfd::error::eCodes BenchmarkExchange<I,T>::runBenchmark(MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[]) {
 			cupcfd::error::eCodes status;
 
 			// Expected size of data array is determined at init time (this is array of data both local and to be sent)

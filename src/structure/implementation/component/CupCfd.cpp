@@ -39,11 +39,12 @@
 #include <iostream>
 #include "Communicator.h"
 #include "SparseMatrixCSR.h"
+#include "src/structures.h"
 
 namespace cupcfd
 {
 	template <class M, class I, class T, class L>
-	CupCfd<M,I,T,L>::CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr, int testvar, MPI_Fint custom)
+	CupCfd<M,I,T,L>::CupCfd(std::string jsonFilePath, std::shared_ptr<M> meshPtr, MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[])
 	: meshPtr(meshPtr)
 	{
 		cupcfd::error::eCodes status;
@@ -55,7 +56,7 @@ namespace cupcfd
 		// For now, will use random values.
 
 		cupcfd::comm::Communicator comm(MPI_Comm_f2c(custom));
-
+		int testvar = 8;
 		// === Search for benchmark configurations ===
 		Json::Value configData;
 		std::ifstream source(jsonFilePath, std::ifstream::binary);
@@ -93,7 +94,7 @@ namespace cupcfd
 						}
 						else {
 							// Run Benchmark
-							status = fvmBench->runBenchmark(testvar);
+							status = fvmBench->runBenchmark(custom, instance_number, units, relative_positions);
 							HARD_CHECK_ECODE(status);
 							delete(fvmBench);
 						}
@@ -124,7 +125,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Exchange Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = exchangeBench->runBenchmark(testvar);
+							status = exchangeBench->runBenchmark(custom, instance_number, units, relative_positions);
 							HARD_CHECK_ECODE(status)
 							delete(exchangeBench);
 						}
@@ -156,7 +157,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Linear Solver Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = linearSolverBench->runBenchmark(testvar);
+							status = linearSolverBench->runBenchmark(custom, instance_number, units, relative_positions);
 							HARD_CHECK_ECODE(status)
 							delete(linearSolverBench);
 						}
@@ -189,7 +190,7 @@ namespace cupcfd
 							std::cout << "Error Encountered: Failed to build Simple Particle Benchmark with current configuration. Please check the provided configuration is correct.\n";
 						}
 						else {
-							status = benchmarkParticleSystem->runBenchmark(testvar);
+							status = benchmarkParticleSystem->runBenchmark(custom, instance_number, units, relative_positions);
 							HARD_CHECK_ECODE(status)
 							delete(benchmarkParticleSystem);
 						}

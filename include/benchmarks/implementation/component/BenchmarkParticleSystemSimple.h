@@ -18,6 +18,8 @@
 #include "ParticleSystemSimple.h"
 #include <string>
 #include "Distribution.h"
+#include "src/structures.h"
+#include "mpi.h"
 
 namespace cupcfd
 {
@@ -63,7 +65,7 @@ namespace cupcfd
 				void setupBenchmark();
 				void recordParameters();
 				__attribute__((warn_unused_result))
-				cupcfd::error::eCodes runBenchmark(int testvar);
+				cupcfd::error::eCodes runBenchmark(MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[]);
 		};
 	}
 }

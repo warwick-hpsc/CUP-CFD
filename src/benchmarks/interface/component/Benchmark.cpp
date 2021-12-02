@@ -34,13 +34,13 @@ namespace cupcfd
 		template <class I, class T>
 		void Benchmark<I,T>::startBenchmarkBlock(std::string blockName)
 		{
-			TreeTimerEnterBlockMethod(blockName.c_str());
+			TreeTimerEnterMethod(blockName.c_str());
 		}
 
 		template <class I, class T>
 		void Benchmark<I,T>::stopBenchmarkBlock(std::string blockName)
 		{
-			TreeTimerExitBlock(blockName.c_str());
+			TreeTimerExit(blockName.c_str());
 		}
 	}
 }

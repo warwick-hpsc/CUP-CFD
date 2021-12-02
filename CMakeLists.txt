@@ -141,8 +141,8 @@ endif(USE_PETSC)
 # Currently default to always needing this
 # Should set via CMake Line but can be set here if needed
 #set(SQLITE_LIBS /path/to/sqlite3/lib/libsqlite3.so)
-set(TREETIMER_LIBS /rr-home/awp/cup-cfd-install/treetimer/libtt.a)
-set(TREETIMER_INCLUDE /rr-home/awp/cup-cfd-install/treetimer/include/timing_library/interface)
+#set(TREETIMER_LIBS /rr-home/awp/cup-cfd-install/treetimer/libtt.a)
+#set(TREETIMER_INCLUDE /rr-home/awp/cup-cfd-install/treetimer/include/timing_library/interface)
 
 # ====================================================================================================================================
 # ============================================== Third-Party Libraries ===============================================================
@@ -173,6 +173,9 @@ endif(USE_PETSC)
 
 # === Timer Library Include ===
 set(CORE_INCLUDE ${CORE_INCLUDE} ${TREETIMER_INCLUDE})
+
+# === Coupler Headers Include ===
+set(CORE_INCLUDE ${CORE_INCLUDE} ${COUPLER_HEADERS_INCLUDE})
 
 # ====================================================================================================================================
 # The following sections should not be edited if only configuring for build purposes.

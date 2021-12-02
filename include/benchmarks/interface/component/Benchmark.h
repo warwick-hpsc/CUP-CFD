@@ -14,9 +14,9 @@
 #define CUPCFD_BENCHMARK_BENCHMARK_INCLUDE_H
 
 #include <string>
-
+#include "mpi.h"
 #include "Error.h"
-
+#include "src/structures.h"
 namespace cupcfd
 {
 	namespace benchmark
@@ -100,7 +100,7 @@ namespace cupcfd
 				 * @return error code
 				 */
 				__attribute__((warn_unused_result))
-				virtual cupcfd::error::eCodes runBenchmark(int testvar) = 0;
+				virtual cupcfd::error::eCodes runBenchmark(MPI_Fint custom, int instance_number, struct unit units[], struct locators relative_positions[]) = 0;
 		};
 	}
 }

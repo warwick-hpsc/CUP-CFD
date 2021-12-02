@@ -322,8 +322,8 @@ namespace cupcfd
 			}
 
             template <class I, class T>
-            // cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
-			void minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
+            cupcfd::error::eCodes minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
+		//void minusCount(T * source1, I nSource1, T * source2, I nSource2, I * count) {
 				// If not sorted, make a copy and use that
 				bool source1Sorted;
 				bool source2Sorted;
@@ -366,7 +366,7 @@ namespace cupcfd
 					free(source2Ptr);
 				}
 
-				// return cupcfd::error::E_SUCCESS;
+				return cupcfd::error::E_SUCCESS;
 			}
 
 			template <class I, class T>
