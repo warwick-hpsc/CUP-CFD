@@ -1,0 +1,36 @@
+
+   Dolfyn
+   Copyright 2003-2010 Henk Krus, Cyclone Fluid Dynamics BV
+
+   This product includes software developed by
+   Cyclone Fluid Dynamics BV, Waalre, NL
+   http://www.cyclone.nl
+
+   This software contains code by Yousef Saad, Sparsekit2,
+   copyrighted the Regents of the University of Minnesota. 
+   Sparskit is free software; you  can redistribute it and/or 
+   modify it under the terms of the GNU Lesser GPL.
+   http://www-users.cs.umn.edu/~saad/software/SPARSKIT/sparskit.html
+   
+   A few subroutines are from the Lapack suite. 
+   Copyright 1992-2010 The University of Tennessee. 
+   http://www.netlib.org/lapack/
+   
+   Module with patches (c) 2004-2010 by Bouke Tuinstra
+   see http://www.home.zonnet.nl/bouke_1/dolfyn
+
+   Scalar modules (c) 2006-2010 Henk Krus and Bouke Tuinstra
+
+   Tecplot interface (tecplt.f90) (c) 2006-2010 by Shibo (Harry) Kuang
+   University of New South Wales, Sydney, Australia
+
+   Particle modules (c) 2010 Henk Krus and Shibo Kuang.
+
+   Particles added to vtk.f90 in 2007 by Johan Jacobs,
+   Simex-Technology, summer 2007
+
+   Select kernels ported to C++ (c) 2020-2021 University of Warwick High Performance and Scientific Computing group.
+   While the port intended to retain original logic and behaviour, 
+   note that divergences may exist and so the behaviour of this port 
+   should not be considered fully representative of Dolfyn.
+
